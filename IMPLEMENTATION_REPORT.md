@@ -68,7 +68,13 @@ hash-generator, jwt-decode, random-string-generator, password-generator, qr-code
 
 ## Git Commits
 
-Work is on `develop`. Initial implementation commit: `80f6554` (`Add: build initial Woori Tools service`). No main merge or production deployment is planned.
+Work is on `develop` and pushed to `origin/develop`. Implementation commits:
+
+- `80f6554` Add: build initial Woori Tools service
+- `065d212` Update: record implementation verification
+- `734285a` Fix: handle local dates in timestamp converter
+
+No main merge or production deployment was performed.
 
 ## Next Recommended Work
 
