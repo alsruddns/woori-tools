@@ -49,6 +49,8 @@ Multi-stage standalone Dockerfile with Node 20 Alpine, pnpm frozen install, non-
 
 `pnpm build` succeeded after fixes. Next.js generated the 50 tool pages, four non-empty category pages, privacy/terms, robots, and sitemap routes as static output.
 
+Standalone runtime smoke checks: `/` returned 307 to `/tools`; `/tools`, representative image/PDF/text/developer routes, `/privacy`, `/terms`, `robots.txt`, and `sitemap.xml` returned 200; an unknown tool slug returned 404.
+
 ## Lint Result
 
 `pnpm lint` succeeded with no warnings.
@@ -66,7 +68,7 @@ hash-generator, jwt-decode, random-string-generator, password-generator, qr-code
 
 ## Git Commits
 
-Work is on `develop`; no main merge or production deployment is planned.
+Work is on `develop`. Initial implementation commit: `80f6554` (`Add: build initial Woori Tools service`). No main merge or production deployment is planned.
 
 ## Next Recommended Work
 
