@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://www.woori.today"),
+  metadataBase: new URL("https://www.woori.today/tools/"),
   title: { default: "Woori Tools | 무료 온라인 도구 모음", template: "%s | Woori Tools" },
   description: "이미지, PDF, 텍스트, 개발자 도구를 브라우저에서 간편하게 사용하세요.",
   applicationName: "Woori Tools",
