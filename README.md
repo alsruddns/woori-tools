@@ -26,7 +26,7 @@ docker build -t woori-tools .
 docker run --rm -p 3002:3002 woori-tools
 ```
 
-이미지는 standalone output을 사용하고 컨테이너는 non-root `nextjs` 사용자로 3002 포트에서 실행됩니다. Nginx에서 서비스하려면 `/tools` 경로를 애플리케이션으로 전달하고 정적 파일 경로도 함께 전달하도록 설정하세요. Next.js `basePath`는 사용하지 않습니다.
+이미지는 standalone output을 사용하고 컨테이너는 non-root `nextjs` 사용자로 3002 포트에서 실행됩니다. Next.js `basePath`는 `/tools`이며, Nginx는 `/tools` 요청과 Next.js static asset 요청을 컨테이너에 전달해야 합니다. Docker health check는 `/tools/robots.txt`를 확인합니다.
 
 ## URL 및 구조
 
@@ -67,7 +67,7 @@ src/seo/                  SEO 공통 로직 경계
 
 ## 운영 참고
 
-서비스 공개 도메인은 `https://www.woori.today`입니다. `/`는 `/tools`로 redirect합니다. sitemap과 robots는 Next.js metadata routes에서 생성됩니다. Docker/Nginx 배포 시 `/tools` 아래 실제 route 전달이 되도록 proxy 규칙을 확인하세요. production 배포는 이 저장소의 CI 또는 운영 절차에 따라 별도 진행합니다.
+서비스 공개 도메인은 `https://www.woori.today`입니다. 모든 앱 경로는 `/tools` basePath 아래 공개됩니다. sitemap과 robots는 Next.js metadata routes에서 생성됩니다. `main` 브랜치 push 시 GitHub Actions가 GHCR 이미지를 빌드하고 iwinv 서버의 Compose 서비스를 갱신합니다. 운영 Compose 설정은 `/opt/services/compose`에서 관리합니다.
 
 ## 향후 도구 후보
 
