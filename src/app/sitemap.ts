@@ -1,11 +1,8 @@
 import type { MetadataRoute } from "next";
 import { tools } from "@/registry/tools";
-import { absoluteUrl } from "@/lib/seo";
+import { SERVICE_BASE_URL } from "@/lib/seo";
+import { createSitemapEntries } from "@/lib/sitemap-entries.mjs";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  return tools.map((tool) => ({
-    url: absoluteUrl(`/${tool.slug}`),
-    changeFrequency: "monthly",
-    priority: 0.7,
-  }));
+  return createSitemapEntries(tools.map(({ slug }) => slug), SERVICE_BASE_URL);
 }

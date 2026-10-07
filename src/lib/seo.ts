@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
 
-export const SITE_ORIGIN = "https://www.woori.today";
+const siteOrigin = (process.env.SITE_URL ?? "https://www.woori.today").replace(/\/+$/, "");
+export const SITE_ORIGIN = siteOrigin;
 export const SITE_BASE_PATH = "/tools";
+export const SERVICE_BASE_URL = `${siteOrigin}${SITE_BASE_PATH}`;
 export const SITE_NAME = "Woori Tools";
 
 export function absoluteUrl(path: string) {
   const normalizedPath = path.startsWith("/") ? path : `/${path}`;
-  return `${SITE_ORIGIN}${SITE_BASE_PATH}${normalizedPath === "/" ? "" : normalizedPath}`;
+  return `${SERVICE_BASE_URL}${normalizedPath === "/" ? "" : normalizedPath}`;
 }
 
 type PageMetadataInput = {
