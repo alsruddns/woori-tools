@@ -1,8 +1,33 @@
 import type { MetadataRoute } from "next";
+import { locales } from "@/i18n/routing";
+import { SITE_ORIGIN } from "@/lib/seo";
+import { categories } from "@/registry/categories";
 import { tools } from "@/registry/tools";
-import { SERVICE_BASE_URL } from "@/lib/seo";
-import { createSitemapEntries } from "@/lib/sitemap-entries.mjs";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  return createSitemapEntries(tools.map(({ slug }) => slug), SERVICE_BASE_URL);
+  const paths = [
+    "/tools",
+    "/privacy",
+    "/terms",
+    ...categories
+      .filter((category) => tools.some((tool) => tool.category === category.id))
+      .map((category) => `/tools/category/${category.id}`),
+    ...tools.map((tool) => `/tools/${tool.slug}`),
+  ];
+  const lastModified = new Date();
+
+  return paths.flatMap((path) => {
+    const languages = Object.fromEntries(
+      locales.map((locale) => [locale, `${SITE_ORIGIN}/${locale}${path}`]),
+    );
+    languages["x-default"] = `${SITE_ORIGIN}/ko${path}`;
+
+    return locales.map((locale) => ({
+      url: `${SITE_ORIGIN}/${locale}${path}`,
+      lastModified,
+      changeFrequency: path === "/tools" ? "weekly" as const : "monthly" as const,
+      priority: path === "/tools" ? 1 : 0.8,
+      alternates: { languages },
+    }));
+  });
 }

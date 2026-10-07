@@ -1,46 +1,55 @@
 import type { Metadata } from "next";
+import { locales, type Locale } from "@/i18n/routing";
 
 const siteOrigin = (process.env.SITE_URL ?? "https://www.woori.today").replace(/\/+$/, "");
 export const SITE_ORIGIN = siteOrigin;
-export const SITE_BASE_PATH = "/tools";
-export const SERVICE_BASE_URL = `${siteOrigin}${SITE_BASE_PATH}`;
 export const SITE_NAME = "Woori Tools";
 
-export function absoluteUrl(path: string) {
-  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
-  return `${SERVICE_BASE_URL}${normalizedPath === "/" ? "" : normalizedPath}`;
-}
-
-type PageMetadataInput = {
-  title: string;
-  description: string;
-  path: string;
-  keywords?: string[];
+const ogLocales: Record<Locale, string> = {
+  ko: "ko_KR",
+  en: "en_US",
+  ja: "ja_JP",
+  zh: "zh_CN",
 };
 
-export function createPageMetadata({ title, description, path, keywords }: PageMetadataInput): Metadata {
-  const url = absoluteUrl(path);
+export function absoluteUrl(path: string): string {
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+  return `${SITE_ORIGIN}${normalizedPath}`;
+}
+
+export function localizedUrl(locale: Locale, path: string): string {
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+  return absoluteUrl(`/${locale}${normalizedPath}`);
+}
+
+export function languageAlternates(path: string): Record<string, string> {
+  return {
+    ...Object.fromEntries(locales.map((locale) => [locale, localizedUrl(locale, path)])),
+    "x-default": localizedUrl("ko", path),
+  };
+}
+
+export function pageMetadata({
+  locale,
+  path,
+  title,
+  description,
+  keywords,
+}: {
+  locale: Locale;
+  path: string;
+  title: string;
+  description: string;
+  keywords?: string[];
+}): Metadata {
+  const url = localizedUrl(locale, path);
   const fullTitle = `${title} | ${SITE_NAME}`;
   return {
     title,
     description,
-    ...(keywords ? { keywords } : {}),
-    alternates: {
-      canonical: url,
-      languages: { "ko-KR": url, "x-default": url },
-    },
-    openGraph: {
-      type: "website",
-      siteName: SITE_NAME,
-      locale: "ko_KR",
-      url,
-      title: fullTitle,
-      description,
-    },
-    twitter: {
-      card: "summary",
-      title: fullTitle,
-      description,
-    },
+    keywords,
+    alternates: { canonical: url, languages: languageAlternates(path) },
+    openGraph: { siteName: SITE_NAME, locale: ogLocales[locale], type: "website", title: fullTitle, description, url },
+    twitter: { card: "summary", title: fullTitle, description },
   };
 }
