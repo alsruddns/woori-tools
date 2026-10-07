@@ -6,7 +6,7 @@ export const SITE_NAME = "Woori Tools";
 
 export function absoluteUrl(path: string) {
   const normalizedPath = path.startsWith("/") ? path : `/${path}`;
-  return `${SITE_ORIGIN}${SITE_BASE_PATH}${normalizedPath === "/" ? "/" : normalizedPath}`;
+  return `${SITE_ORIGIN}${SITE_BASE_PATH}${normalizedPath === "/" ? "" : normalizedPath}`;
 }
 
 type PageMetadataInput = {
