@@ -2,8 +2,9 @@ import Link from "next/link";
 import { ToolDirectory } from "@/components/tool/tool-directory";
 import { categories } from "@/registry/categories";
 import { tools } from "@/registry/tools";
+import { createPageMetadata } from "@/lib/seo";
 
-export const metadata = { title: "무료 온라인 도구 모음", description: "이미지, PDF, 텍스트, 개발자 도구를 브라우저에서 안전하게 사용하세요.", alternates: { canonical: "https://www.woori.today/tools/", languages: { "ko-KR": "https://www.woori.today/tools/", "x-default": "https://www.woori.today/tools/" } }, openGraph: { url: "https://www.woori.today/tools/", title: "Woori Tools | 무료 온라인 도구 모음", description: "이미지, PDF, 텍스트, 개발자 도구를 브라우저에서 안전하게 사용하세요." }, twitter: { card: "summary", title: "Woori Tools | 무료 온라인 도구 모음", description: "이미지, PDF, 텍스트, 개발자 도구를 브라우저에서 안전하게 사용하세요." } };
+export const metadata = createPageMetadata({ title: "무료 온라인 도구 모음", description: "이미지, PDF, 텍스트, 개발자 도구를 브라우저에서 안전하게 사용하세요.", path: "/" });
 
 export default function ToolsPage() {
   const popular = ["jpg-to-png", "image-compress", "pdf-merge", "character-count", "json-formatter", "uuid-generator"];

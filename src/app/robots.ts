@@ -1,2 +1,10 @@
 import type { MetadataRoute } from "next";
-export default function robots():MetadataRoute.Robots{return{rules:{userAgent:"*",allow:"/tools/"},sitemap:"https://www.woori.today/tools/sitemap.xml",host:"https://www.woori.today"};}
+import { SITE_ORIGIN, SITE_BASE_PATH } from "@/lib/seo";
+
+export default function robots(): MetadataRoute.Robots {
+  return {
+    rules: { userAgent: "*", allow: `${SITE_BASE_PATH}/` },
+    sitemap: `${SITE_ORIGIN}${SITE_BASE_PATH}/sitemap.xml`,
+    host: SITE_ORIGIN,
+  };
+}
