@@ -20,3 +20,7 @@ test("all four locale alternates are declared", () => {
   assert.match(source, /Object\.fromEntries\(locales\.map\(\(locale\) => \[locale, localizedUrl\(locale, path\)\]\)\)/);
   for (const locale of ["ko", "en", "ja", "zh"]) assert.ok(source.includes(`  ${locale}:`));
 });
+
+test("Google AdSense account verification is configured in the shared locale metadata", () => {
+  assert.match(layout, /verification:\s*\{\s*other:\s*\{\s*"google-adsense-account":\s*"ca-pub-8033378933696766"/);
+});

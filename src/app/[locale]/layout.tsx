@@ -22,6 +22,11 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_ORIGIN),
   title: { default: "Woori Tools", template: "%s | Woori Tools" },
   applicationName: SITE_NAME,
+  verification: {
+    other: {
+      "google-adsense-account": "ca-pub-8033378933696766",
+    },
+  },
   icons: {
     icon: "/_assets/tools/icons/icon.png",
     apple: "/_assets/tools/icons/apple-icon.png",
