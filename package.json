@@ -10,14 +10,19 @@
     "test": "node --test"
   },
   "dependencies": {
+    "cron-parser": "^5.10.1",
+    "dompurify": "^3.4.16",
     "fflate": "^0.8.3",
     "heic2any": "^0.0.4",
+    "marked": "^18.1.0",
     "next": "16.3.8",
     "papaparse": "^5.7.0",
     "pdf-lib": "^1.17.1",
+    "prettier": "^3.9.9",
     "qrcode": "^1.5.4",
     "react": "19.2.8",
     "react-dom": "19.2.8",
+    "sql-formatter": "^15.9.0",
     "yaml": "^2.9.1"
   },
   "devDependencies": {

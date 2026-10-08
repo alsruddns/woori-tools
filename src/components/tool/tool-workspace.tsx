@@ -10,6 +10,7 @@ import { processPdf as processPdfFile } from "@/lib/pdf/process-pdf";
 import { processText as processTextTool } from "@/lib/text/process-text";
 import { randomInt } from "@/lib/random";
 import { QrWorkspace } from "@/components/tool/qr-workspace";
+import { MarkdownWorkspace } from "@/components/tool/markdown-workspace";
 
 const MAX_IMAGE = 30 * 1024 * 1024;
 const MAX_PDF = 50 * 1024 * 1024;
@@ -44,6 +45,7 @@ export function ToolWorkspace({ tool, locale, messages }: { tool: ToolDefinition
     const stem = files[0].name.replace(/\.[^.]+$/, "").replace(/[\\/:*?"<>|]/g, "-");
     return stem || "download";
   }, [files]);
+  if (tool.slug === "markdown-preview") return <MarkdownWorkspace locale={locale} />;
   if (["wifi-qr","contact-qr","phone-qr","email-qr"].includes(tool.slug)) return <QrWorkspace slug={tool.slug} locale={locale} />;
   if (tool.slug === "random-wheel") return <RandomWheel locale={locale} />;
   if (tool.category === "date-time") return <DateTimeTool slug={tool.slug} locale={locale} />;
