@@ -3,6 +3,9 @@ import { categories, type ToolCategory } from "./categories";
 
 const names: Record<Locale, Record<ToolCategory, { name: string; description: string }>> = {
   ko: {
+    random: { name: "랜덤 · 추첨", description: "무작위 선택과 공정한 추첨 도구" },
+    "date-time": { name: "날짜 · 시간", description: "시간을 재고 일정한 간격을 관리하는 도구" },
+    utility: { name: "생활", description: "일상에서 바로 쓰는 편리한 도구" },
     image: { name: "이미지", description: "이미지 변환과 편집 도구" },
     pdf: { name: "PDF", description: "브라우저에서 사용하는 PDF 도구" },
     text: { name: "텍스트", description: "텍스트 정리와 비교 도구" },
@@ -10,6 +13,9 @@ const names: Record<Locale, Record<ToolCategory, { name: string; description: st
     qr: { name: "QR · 생활", description: "QR 코드와 생활 도구" },
   },
   en: {
+    random: { name: "Random & Pickers", description: "Fair random selection and drawing tools" },
+    "date-time": { name: "Date & Time", description: "Tools for timing and managing time" },
+    utility: { name: "Utilities", description: "Useful tools for everyday tasks" },
     image: { name: "Image", description: "Convert and edit images" },
     pdf: { name: "PDF", description: "PDF tools that run in your browser" },
     text: { name: "Text", description: "Format and compare text" },
@@ -17,6 +23,9 @@ const names: Record<Locale, Record<ToolCategory, { name: string; description: st
     qr: { name: "QR & Utilities", description: "QR codes and everyday utilities" },
   },
   ja: {
+    random: { name: "ランダム・抽選", description: "ランダム選択や公平な抽選に使えるツール" },
+    "date-time": { name: "日付・時間", description: "時間計測や時間管理に便利なツール" },
+    utility: { name: "生活ツール", description: "日常ですぐに使える便利なツール" },
     image: { name: "画像", description: "画像の変換と編集ツール" },
     pdf: { name: "PDF", description: "ブラウザーで使えるPDFツール" },
     text: { name: "テキスト", description: "テキストの整理と比較ツール" },
@@ -24,6 +33,9 @@ const names: Record<Locale, Record<ToolCategory, { name: string; description: st
     qr: { name: "QR・ユーティリティ", description: "QRコードと日常に便利なツール" },
   },
   zh: {
+    random: { name: "随机与抽选", description: "公平随机选择与抽选工具" },
+    "date-time": { name: "日期与时间", description: "计时与时间管理工具" },
+    utility: { name: "生活工具", description: "日常任务中实用的工具" },
     image: { name: "图片", description: "图像转换与编辑工具" },
     pdf: { name: "PDF", description: "在浏览器中使用的PDF工具" },
     text: { name: "文本", description: "文本整理与比较工具" },
