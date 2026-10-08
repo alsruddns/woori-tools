@@ -9,7 +9,7 @@ const entries: Array<[string, ToolCategory, string, string, string[], boolean]> 
   ["lotto-number-generator","random","로또 번호 생성기","중복 없이 무작위 로또 번호를 만듭니다.",["로또","번호 생성","lotto"],true],
   ["random-number","random","랜덤 숫자 뽑기","범위와 개수를 정해 중복 여부를 선택하며 숫자를 추첨합니다.",["랜덤","숫자","추첨","random number"],true],
   ["random-name-picker","random","랜덤 이름 뽑기","이름 목록에서 원하는 인원을 무작위로 뽑습니다.",["랜덤 이름","이름 추첨","random name"],true],
-  ["random-wheel","random","룰렛 돌리기","항목을 입력하고 온라인 룰렛으로 하나를 선택합니다.",["룰렛","랜덤 룰렛","온라인 룰렛","random wheel"],true],
+  ["random-wheel","random","룰렛 돌리기","항목을 입력해 룰렛을 돌려 보세요. 점심 메뉴나 오늘 먹을 음식도 무작위로 고를 수 있습니다.",["룰렛","랜덤 룰렛","온라인 룰렛","오늘 뭐 먹지","점심 메뉴 추천","랜덤 음식 선택","random wheel","random food picker"],true],
   ["ladder-game","random","사다리타기","참가자와 결과를 연결하는 무작위 온라인 사다리를 만듭니다.",["사다리타기","온라인 사다리타기","랜덤 사다리"],true],
   ["draw-lots","random","제비뽑기","참가자 목록에서 당첨자를 무작위로 선정합니다.",["제비뽑기","당첨자","추첨"],true],
   ["random-team-maker","random","랜덤 팀 나누기","참가자를 균등하게 섞어 팀을 편성합니다.",["팀 나누기","조 편성","랜덤 조 편성"],true],
