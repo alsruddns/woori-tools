@@ -43,4 +43,4 @@ jobs:
           printf '%s\n' "$SERVER_SSH_KEY" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H "$SERVER_HOST" >> ~/.ssh/known_hosts
-          ssh "$SERVER_USER@$SERVER_HOST" 'cd /opt/services/compose && docker compose pull tools && docker compose up -d tools'
+          ssh "$SERVER_USER@$SERVER_HOST" 'cd /opt/services/compose && docker compose --env-file .env.moneybook pull tools && docker compose --env-file .env.moneybook up -d tools'
