@@ -3,9 +3,16 @@
 ## Project
 
 - Project name: woori-tools
-- Public URL namespace: /tools
+- Public URL namespace: /{locale}/tools
 - Production domain: https://www.woori.today
-- All tool pages must live under /tools.
+- Supported locales: `ko`, `en`, `ja`, `zh` (default: `ko`).
+- All public pages use locale prefixes. Tool pages live under `/{locale}/tools`.
+- Tool URLs: `/ko/tools/{slug}`, `/en/tools/{slug}`, `/ja/tools/{slug}`, `/zh/tools/{slug}`.
+- Tool slugs are never translated.
+- Existing legacy `/tools/*` routes redirect permanently to `/ko/tools/*`.
+- Every new public tool must include translations for all supported locales.
+- SEO metadata must provide canonical, hreflang, and x-default URLs.
+- Do not hard-code duplicated locale strings in components; use shared i18n dictionaries/helpers.
 - Do not use /calculators.
 - Do not use /calculator or /calc.
 - Do not use money-book related URL namespaces.
@@ -46,10 +53,10 @@ Every tool must have one unique URL.
 
 Examples:
 
-- /tools/jpg-to-png
-- /tools/image-compress
-- /tools/pdf-merge
-- /tools/json-formatter
+- /ko/tools/jpg-to-png
+- /en/tools/image-compress
+- /ja/tools/pdf-merge
+- /zh/tools/json-formatter
 
 URL slugs:
 
@@ -132,7 +139,7 @@ Do not include file names, contents, EXIF/GPS information, or result data in ana
 
 ## SEO and Routes
 
-- One tool has one indexable URL: `/tools/{slug}`.
+- One tool has one indexable URL per locale: `/{locale}/tools/{slug}`.
 - Use registry metadata for unique titles, descriptions, canonical URLs, sitemap entries, and related tools.
 - Do not create empty indexable category pages.
 - Structured data must describe visible, real page content.
