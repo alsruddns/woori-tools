@@ -8,7 +8,7 @@ import type { Locale } from "@/i18n/routing";
 import { processImage as processImageFile } from "@/lib/image/process-image";
 import { processPdf as processPdfFile } from "@/lib/pdf/process-pdf";
 import { processText as processTextTool } from "@/lib/text/process-text";
-import { randomInt } from "@/lib/random";
+import { CountdownWorkspace } from "@/components/tool/countdown-workspace";
 import { QrWorkspace } from "@/components/tool/qr-workspace";
 import { MarkdownWorkspace } from "@/components/tool/markdown-workspace";
 import { BarcodeWorkspace } from "@/components/tool/barcode-workspace";
@@ -16,6 +16,7 @@ import { RandomStringWorkspace } from "@/components/tool/random-string-workspace
 import { LadderWorkspace } from "@/components/tool/ladder-workspace";
 import { DailyFortuneWorkspace, TarotWorkspace } from "@/components/tool/fortune-workspace";
 import { SajuWorkspace } from "@/components/tool/saju-workspace";
+import { DiceWorkspace, LottoWorkspace, RandomNameWorkspace, RandomNumberWorkspace, RandomOrderWorkspace, RandomSeatWorkspace, RandomTeamWorkspace, RandomWheelWorkspace } from "@/components/tool/special-random-workspaces";
 
 const MAX_IMAGE = 30 * 1024 * 1024;
 const MAX_PDF = 50 * 1024 * 1024;
@@ -53,12 +54,20 @@ export function ToolWorkspace({ tool, locale, messages }: { tool: ToolDefinition
   if (tool.slug === "tarot-card") return <TarotWorkspace locale={locale} />;
   if (tool.slug === "daily-fortune") return <DailyFortuneWorkspace locale={locale} />;
   if (tool.slug === "saju") return <SajuWorkspace locale={locale} />;
+  if (tool.slug === "lotto-number-generator") return <LottoWorkspace locale={locale} />;
+  if (tool.slug === "dice-roller") return <DiceWorkspace locale={locale} />;
+  if (tool.slug === "random-number") return <RandomNumberWorkspace locale={locale} />;
+  if (tool.slug === "random-name-picker" || tool.slug === "draw-lots") return <RandomNameWorkspace slug={tool.slug} locale={locale} />;
+  if (tool.slug === "random-team-maker") return <RandomTeamWorkspace locale={locale} />;
+  if (tool.slug === "random-order") return <RandomOrderWorkspace locale={locale} />;
+  if (tool.slug === "random-seat") return <RandomSeatWorkspace locale={locale} />;
   if (["password-generator","random-string-generator"].includes(tool.slug)) return <RandomStringWorkspace slug={tool.slug} locale={locale} />;
   if (tool.slug === "ladder-game") return <LadderWorkspace locale={locale} />;
   if (tool.slug === "markdown-preview") return <MarkdownWorkspace locale={locale} />;
   if (tool.slug === "barcode-generator") return <BarcodeWorkspace locale={locale} />;
   if (["wifi-qr","contact-qr","phone-qr","email-qr"].includes(tool.slug)) return <QrWorkspace slug={tool.slug} locale={locale} />;
-  if (tool.slug === "random-wheel") return <RandomWheel locale={locale} />;
+  if (tool.slug === "random-wheel") return <RandomWheelWorkspace locale={locale} />;
+  if (tool.slug === "timer" || tool.slug === "pomodoro-timer") return <CountdownWorkspace slug={tool.slug} locale={locale} />;
   if (tool.category === "date-time") return <DateTimeTool slug={tool.slug} locale={locale} />;
 
   function selectFiles(list: FileList | null) {
@@ -113,7 +122,6 @@ export function ToolWorkspace({ tool, locale, messages }: { tool: ToolDefinition
   const needsFiles=isImage||isPdf||isFileTool;
   const needsSecond=tool.slug==="text-compare"||tool.slug==="regex-tester"||tool.slug==="remove-characters"||tool.slug==="duty-picker";
   return <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7" aria-label={messages.workspaceLabel.replace("{tool}", tool.title)}>
-    <p className="mb-5 rounded-xl bg-emerald-50 p-3 text-sm text-emerald-900">🔒 {messages.filePrivacy}</p>
     {needsFiles ? <div>
       <label htmlFor="tool-files" onDragOver={(e)=>e.preventDefault()} onDrop={(e)=>{e.preventDefault();selectFiles(e.dataTransfer.files);}} className="flex min-h-36 cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 p-6 text-center hover:border-indigo-400"><span className="font-semibold text-slate-800">{messages.chooseOrDrop}</span><span className="mt-2 text-sm text-slate-500">{messages.fileLimit.replace("{size}",isImage?"30":"50")}</span></label>
       <input id="tool-files" type="file" accept={isImage?"image/*,.heic,.heif":isPdf?"application/pdf,.pdf":undefined} multiple={isFileTool||tool.slug==="image-collage"||tool.slug==="pdf-merge"||tool.slug==="images-to-pdf"} onChange={(e)=>selectFiles(e.target.files)} className="sr-only" />
@@ -178,11 +186,4 @@ function DateTimeTool({slug,locale}:{slug:string;locale:Locale}) {
   if(slug==="stopwatch")return <section className="rounded-3xl border bg-white p-6 text-center"><p className="font-mono text-4xl tabular-nums sm:text-6xl">{format(elapsed)}</p><div className="mt-6 flex flex-wrap justify-center gap-3"><button className="rounded-xl bg-indigo-600 px-5 py-3 text-white" onClick={()=>setRunning(!running)}>{running?t.pause:elapsed?t.resume:t.start}</button><button className="rounded-xl border px-5 py-3" onClick={()=>{setElapsed(0);setLaps([]);setRunning(false)}}>{t.reset}</button><button disabled={!running} className="rounded-xl border px-5 py-3 disabled:opacity-50" onClick={()=>setLaps(v=>[elapsed,...v])}>{t.lap}</button></div><ol className="mt-5 space-y-2 text-left">{laps.map((lap,i)=><li key={`${lap}-${i}`} className="flex justify-between border-b py-2"><span>{t.laps} {laps.length-i}</span><span className="font-mono">{format(lap)}</span></li>)}</ol></section>;
   const begin=(next:number)=>{setRemaining(next);setRunning(true);setHasStarted(true)}; const timerMode=slug==="timer"; const total=timerMode?(hours*3600+minutes*60+seconds):mode?5*60:25*60;
   return <section className="rounded-3xl border bg-white p-6 text-center"><p className="text-sm font-medium text-slate-500">{slug==="pomodoro-timer"?`${mode?t.break:t.focus} · ${t.session}`:t.remaining}</p><p className="mt-2 font-mono text-5xl tabular-nums sm:text-6xl">{format(remaining*1000).slice(0,8)}</p>{!running&&<div className="mx-auto mt-5 grid max-w-md grid-cols-3 gap-3">{[[t.hours,hours,setHours],[t.minutes,minutes,setMinutes],[t.seconds,seconds,setSeconds]].map(([label,value,setter])=><label key={String(label)} className="text-sm">{String(label)}<input type="number" min="0" max="999" value={Number(value)} onChange={e=>(setter as (n:number)=>void)(Math.max(0,Number(e.target.value)||0))} className="mt-1 w-full rounded-lg border p-2 text-center" /></label>)}</div>}<div className="mt-5 flex flex-wrap justify-center gap-3"><button className="rounded-xl bg-indigo-600 px-5 py-3 text-white" onClick={()=>running?setRunning(false):begin(remaining||total)}>{running?t.pause:t.start}</button><button className="rounded-xl border px-5 py-3" onClick={()=>{setRunning(false);setRemaining(0);setHasStarted(false)}}>{t.reset}</button>{slug==="pomodoro-timer"&&<button className="rounded-xl border px-5 py-3" onClick={()=>{setMode(!mode);setRunning(false);setRemaining((mode?25:5)*60)}}>{mode?t.focus:t.break}</button>}</div>{hasStarted&&remaining===0&&!running&&<p aria-live="polite" className="mt-4 text-amber-700">{t.done}</p>}</section>;
-}
-
-function RandomWheel({locale}:{locale:Locale}) {
-  const copy:Record<Locale,{label:string;spin:string;spinning:string;winner:string;remove:string;reset:string;placeholder:string}>={ko:{label:"항목을 줄마다 입력",spin:"룰렛 돌리기",spinning:"돌리는 중…",winner:"선택 결과",remove:"선택 항목 제거 후 다시 돌리기",reset:"초기화",placeholder:"예: 점심 메뉴\n피자\n국수"},en:{label:"Enter one choice per line",spin:"Spin the wheel",spinning:"Spinning…",winner:"Selected choice",remove:"Remove winner before next spin",reset:"Reset",placeholder:"Lunch\nPizza\nNoodles"},ja:{label:"選択肢を1行ずつ入力",spin:"ルーレットを回す",spinning:"回転中…",winner:"選ばれた項目",remove:"次の抽選前に当選項目を削除",reset:"リセット",placeholder:"ランチ\nピザ\n麺類"},zh:{label:"每行输入一个选项",spin:"旋转转盘",spinning:"旋转中…",winner:"抽中结果",remove:"下次抽选前移除该选项",reset:"重置",placeholder:"午餐\n披萨\n面食"}};
-  const t=copy[locale];const [items,setItems]=useState<string[]>(()=>locale==="ko"?["항목 1","항목 2","항목 3","항목 4"]:locale==="ja"?["項目1","項目2","項目3","項目4"]:locale==="zh"?["选项1","选项2","选项3","选项4"]:["Option 1","Option 2","Option 3","Option 4"]);const [turn,setTurn]=useState(0);const [winner,setWinner]=useState("");const [spinning,setSpinning]=useState(false);const values=items.map(s=>s.trim()).filter(Boolean);const segment=values.length?360/values.length:360;const colors=["#6366f1","#0ea5e9","#10b981","#f59e0b","#ec4899","#8b5cf6"];
-  function spin(){if(spinning||!values.length)return;const index=randomInt(0,values.length-1);const target=turn+1800+(360-index*segment-segment/2);setTurn(target);setWinner(values[index]);setSpinning(true);window.setTimeout(()=>setSpinning(false),4200);}
-  return <section className="rounded-3xl border bg-white p-5 sm:p-7"><label htmlFor="wheel-options" className="block text-sm font-medium">{t.label}</label><textarea id="wheel-options" rows={5} value={items.join("\n")} onChange={e=>{setItems(e.target.value.split(/\r?\n/));setWinner("")}} placeholder={t.placeholder} className="mt-2 w-full rounded-xl border p-3"/><div className="mx-auto mt-6 flex max-w-md flex-col items-center"><div className="relative aspect-square w-full max-w-80"><div aria-hidden="true" className="absolute left-1/2 top-0 z-10 -translate-x-1/2 border-x-[14px] border-t-[28px] border-x-transparent border-t-rose-600"/><div aria-label={values.join(", ")} role="img" className="h-full w-full rounded-full border-4 border-white shadow-xl transition-transform duration-[4000ms] ease-out" style={{background:values.length?`conic-gradient(${values.map((_,i)=>`${colors[i%colors.length]} ${i*segment}deg ${(i+1)*segment}deg`).join(",")})`:"#cbd5e1",transform:`rotate(${turn}deg)`}}/><div className="absolute inset-0 flex items-center justify-center"><span className="rounded-full bg-white px-3 py-1 text-sm font-bold shadow">{values.length}</span></div></div><button type="button" disabled={spinning||!values.length} onClick={spin} className="mt-5 min-h-12 rounded-xl bg-indigo-600 px-6 font-semibold text-white disabled:opacity-50">{spinning?t.spinning:t.spin}</button></div>{winner&&<div className="mt-5 rounded-xl bg-emerald-50 p-4 text-center"><h3 className="font-semibold">{t.winner}</h3><p className="mt-1 text-xl">{winner}</p><label className="mt-3 inline-flex items-center gap-2 text-sm"><input type="checkbox" onChange={e=>{if(e.target.checked)setItems(old=>old.filter(item=>item.trim()!==winner))}}/>{t.remove}</label></div>}<button type="button" onClick={()=>{setItems([]);setWinner("");setTurn(0)}} className="mt-4 rounded-lg border px-4 py-2">{t.reset}</button></section>;
 }
