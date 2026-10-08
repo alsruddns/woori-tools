@@ -11,6 +11,7 @@ import { processText as processTextTool } from "@/lib/text/process-text";
 import { randomInt } from "@/lib/random";
 import { QrWorkspace } from "@/components/tool/qr-workspace";
 import { MarkdownWorkspace } from "@/components/tool/markdown-workspace";
+import { BarcodeWorkspace } from "@/components/tool/barcode-workspace";
 
 const MAX_IMAGE = 30 * 1024 * 1024;
 const MAX_PDF = 50 * 1024 * 1024;
@@ -46,6 +47,7 @@ export function ToolWorkspace({ tool, locale, messages }: { tool: ToolDefinition
     return stem || "download";
   }, [files]);
   if (tool.slug === "markdown-preview") return <MarkdownWorkspace locale={locale} />;
+  if (tool.slug === "barcode-generator") return <BarcodeWorkspace locale={locale} />;
   if (["wifi-qr","contact-qr","phone-qr","email-qr"].includes(tool.slug)) return <QrWorkspace slug={tool.slug} locale={locale} />;
   if (tool.slug === "random-wheel") return <RandomWheel locale={locale} />;
   if (tool.category === "date-time") return <DateTimeTool slug={tool.slug} locale={locale} />;
@@ -97,7 +99,7 @@ export function ToolWorkspace({ tool, locale, messages }: { tool: ToolDefinition
   }
   async function processFileTool(){if(!files.length)throw new Error(messages.errors.noContent);if(tool.slug==="duplicate-file-checker"){const hashed=await Promise.all(files.map(async file=>{const digest=await crypto.subtle.digest("SHA-256",await file.arrayBuffer());return {name:file.name,hash:Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,"0")).join("")}}));const groups=new Map<string,string[]>();hashed.forEach(({name,hash})=>groups.set(hash,[...(groups.get(hash)??[]),name]));const duplicates=[...groups.values()].filter(group=>group.length>1);setResult(duplicates.length?duplicates.map((group,i)=>`Group ${i+1}:\n${group.join("\n")}`).join("\n\n"):"No identical file contents found.");return;}if(tool.slug==="zip-files"||tool.slug==="bulk-file-renamer"||tool.slug==="filename-cleaner"){const {zip}=await import("fflate");const entries:Record<string,Uint8Array>={};const report:string[]=[];for(const [index,file] of files.entries()){const original=file.name.split(/[\\/]/).pop()||`file-${index+1}`;let name=original;if(tool.slug==="bulk-file-renamer"){const [prefix="",suffix="",find="",replace=""]=text.split("\n");const dot=original.lastIndexOf(".");const stem=dot>0?original.slice(0,dot):original,ext=dot>0?original.slice(dot):"";name=`${prefix}${find?stem.replaceAll(find,replace):stem}${suffix}${ext}`;}if(tool.slug==="filename-cleaner")name=original.normalize("NFKC").replace(/[<>:"/\\|?*\u0000-\u001f]/g,"").trim().replace(/\s+/g,"_").replace(/_+/g,"_")||`file-${index+1}`;name=safeArchiveName(name);const unique=uniqueName(name,entries);entries[unique]=new Uint8Array(await file.arrayBuffer());report.push(`${original} → ${unique}`);}const data=await new Promise<Uint8Array>((resolve,reject)=>zip(entries,{level:3},(error,result)=>error?reject(error):resolve(result)));const archive=new ArrayBuffer(data.byteLength);new Uint8Array(archive).set(data);setOutputUrl(URL.createObjectURL(new Blob([archive],{type:"application/zip"})));setResult(report.join("\n"));return;}const rows=await Promise.all(files.map(async file=>{const parts=file.name.split("."),extension=parts.length>1?parts.pop()!.toLowerCase():"(none)";if(tool.slug==="file-size-checker")return `${file.name}\t${formatFileSize(file.size)}`;if(tool.slug==="file-extension-checker")return `${file.name}\t.${extension}\t${file.type||"unknown MIME"}`;if(tool.slug==="file-hash"){const digest=await crypto.subtle.digest("SHA-256",await file.arrayBuffer());return `${file.name}\tSHA-256\t${Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,"0")).join("")}`;}const bytes=new Uint8Array(await file.slice(0,16).arrayBuffer());const signature=signatureType(bytes);return `${file.name}\t${file.type||"unknown MIME"}\t${signature}`;}));setResult(rows.join("\n"));}
   const needsFiles=isImage||isPdf||isFileTool;
-  const needsSecond=tool.slug==="text-compare"||tool.slug==="regex-tester"||tool.slug==="remove-characters";
+  const needsSecond=tool.slug==="text-compare"||tool.slug==="regex-tester"||tool.slug==="remove-characters"||tool.slug==="duty-picker";
   return <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7" aria-label={messages.workspaceLabel.replace("{tool}", tool.title)}>
     <p className="mb-5 rounded-xl bg-emerald-50 p-3 text-sm text-emerald-900">🔒 {messages.filePrivacy}</p>
     {needsFiles ? <div>
