@@ -15,6 +15,22 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.12.1
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -46,3 +62,11 @@ jobs:
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H "$SERVER_HOST" >> ~/.ssh/known_hosts
           ssh "$SERVER_USER@$SERVER_HOST" 'cd /opt/services/compose && docker compose --env-file .env.moneybook pull tools && docker compose --env-file .env.moneybook up -d tools'
+
+      - name: Check production health
+        run: curl --fail --silent --show-error --retry 12 --retry-delay 5 --retry-connrefused https://www.woori.today/robots.txt
+
+      - name: Submit URLs to IndexNow
+        env:
+          INDEXNOW_BASE_SHA: ${{ github.event.before }}
+        run: pnpm exec node scripts/submit-indexnow.mjs
