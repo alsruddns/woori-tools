@@ -1,19 +1,10 @@
 import type { MetadataRoute } from "next";
 import { locales } from "@/i18n/routing";
 import { SITE_ORIGIN } from "@/lib/seo";
-import { categories } from "@/registry/categories";
 import { tools } from "@/registry/tools";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const paths = [
-    "/tools",
-    "/privacy",
-    "/terms",
-    ...categories
-      .filter((category) => tools.some((tool) => tool.category === category.id))
-      .map((category) => `/tools/category/${category.id}`),
-    ...tools.map((tool) => `/tools/${tool.slug}`),
-  ];
+  const paths = ["/tools", ...tools.map((tool) => `/tools/${tool.slug}`)];
   const lastModified = new Date();
 
   return paths.flatMap((path) => {

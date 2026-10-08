@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { locales, type Locale } from "@/i18n/routing";
 
-const siteOrigin = (process.env.SITE_URL ?? "https://www.woori.today").replace(/\/+$/, "");
+const siteOrigin = "https://www.woori.today";
 export const SITE_ORIGIN = siteOrigin;
 export const SITE_NAME = "Woori Tools";
 

@@ -2,7 +2,6 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import ts from "typescript";
-import { createSitemapEntries } from "../src/lib/sitemap-entries.mjs";
 
 const registrySource = await readFile(new URL("../src/registry/tools.ts", import.meta.url), "utf8");
 const { outputText } = ts.transpileModule(registrySource, {
@@ -11,43 +10,21 @@ const { outputText } = ts.transpileModule(registrySource, {
 const { tools: publicTools, filterPublicTools } = await import(
   `data:text/javascript;base64,${Buffer.from(outputText).toString("base64")}`
 );
-const registrySlugs = publicTools.map(({ slug }) => slug);
 const sitemapSource = await readFile(new URL("../src/app/sitemap.ts", import.meta.url), "utf8");
+const nextConfig = await readFile(new URL("../next.config.ts", import.meta.url), "utf8");
 
-test("sitemap is built only from the public tool registry", async () => {
-  assert.ok(registrySlugs.length > 0);
-  assert.match(sitemapSource, /createSitemapEntries\(tools\.map\(\(\{ slug \}\) => slug\), SERVICE_BASE_URL\)/);
-
-  const entries = createSitemapEntries(registrySlugs, "https://www.woori.today/tools");
-  const urls = entries.map(({ url }) => url);
-
-  assert.deepEqual(urls, registrySlugs.map((slug) => `https://www.woori.today/tools/${slug}`));
+test("sitemap contains only locale landing pages and public registry tools", () => {
+  const slugs = publicTools.map(({ slug }) => slug);
+  assert.match(sitemapSource, /const paths = \["\/tools", \.\.\.tools\.map\(\(tool\) => `\/tools\/\$\{tool\.slug\}`\)\]/);
+  assert.match(sitemapSource, /locales\.map\(\(locale\) => \(\{/);
+  assert.ok(publicTools.every(({ isPublic }) => isPublic));
+  const paths = ["/tools", ...slugs.map((slug) => `/tools/${slug}`)];
+  const urls = paths.flatMap((path) => ["ko", "en", "ja", "zh"].map((locale) => `https://www.woori.today/${locale}${path}`));
   assert.equal(new Set(urls).size, urls.length);
-  assert.ok(urls.every((url) => new URL(url).pathname.startsWith("/tools/")));
-  assert.ok(urls.every((url) => !/\/tools\/(?:category\/|privacy(?:\/|$)|terms(?:\/|$))/.test(url)));
-});
-
-test("sitemap URLs do not gain duplicate slashes from a trailing base URL slash", () => {
-  const entries = createSitemapEntries(["jpg-to-png"], "https://www.woori.today/tools/");
-
-  assert.equal(entries[0].url, "https://www.woori.today/tools/jpg-to-png");
-  assert.equal(new URL(entries[0].url).pathname.includes("//"), false);
-});
-
-test("unregistered, 404, and internal routes are not included", () => {
-  const urls = createSitemapEntries(registrySlugs, "https://www.woori.today/tools")
-    .map(({ url }) => url);
-  const excludedPaths = [
-    "does-not-exist",
-    "internal-preview",
-    "privacy",
-    "terms",
-    "category/image",
-  ];
-
-  for (const path of excludedPaths) {
-    assert.equal(urls.includes(`https://www.woori.today/tools/${path}`), false, `${path} must not be listed`);
-  }
+  assert.ok(urls.every((url) => /^https:\/\/www\.woori\.today\/(ko|en|ja|zh)\/tools(?:\/[^/]+)?$/.test(url)));
+  assert.equal(urls.some((url) => url.includes("does-not-exist")), false);
+  assert.match(sitemapSource, /"x-default"\] = `\$\{SITE_ORIGIN\}\/ko\$\{path\}`/);
+  assert.match(nextConfig, /source: "\/tools-sitemap\.xml", destination: "\/sitemap\.xml"/);
 });
 
 test("unpublished registry tools are excluded from the public tool list", () => {
@@ -55,7 +32,5 @@ test("unpublished registry tools are excluded from the public tool list", () => 
     { slug: "published-tool", isPublic: true },
     { slug: "draft-tool", isPublic: false },
   ]);
-
   assert.deepEqual(visible.map(({ slug }) => slug), ["published-tool"]);
-  assert.ok(publicTools.every(({ isPublic }) => isPublic));
 });
