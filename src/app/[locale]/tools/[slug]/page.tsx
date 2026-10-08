@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ToolWorkspace } from "@/components/tool/tool-workspace";
+import { ToolDetailLayout } from "@/components/tool/tool-detail-layout";
 import { getMessages } from "@/i18n/messages";
 import { isLocale, localizePath, type Locale } from "@/i18n/routing";
 import { pageMetadata } from "@/lib/seo";
@@ -44,7 +45,7 @@ export default async function ToolPage({ params }: Props) {
   const usesFiles = tool.category === "image" || tool.category === "pdf";
   const url = `https://www.woori.today/${locale}/tools/${slug}`;
 
-  return (
+  return <ToolDetailLayout locale={locale}>
     <main className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
       <nav aria-label={messages.breadcrumb} className="mb-6 flex flex-wrap items-center gap-2 text-sm text-slate-500">
         <Link href={localizePath(locale, "/tools")} className="hover:text-indigo-700">{messages.tools}</Link>
@@ -139,5 +140,5 @@ export default async function ToolPage({ params }: Props) {
         </section>
       )}
     </main>
-  );
+  </ToolDetailLayout>;
 }
