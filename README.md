@@ -25,6 +25,10 @@ Ad slots are disabled by default. Set `NEXT_PUBLIC_ADS_ENABLED=true` to enable t
 
 To connect AdSense later: obtain AdSense approval, add its script and publisher ID, configure the left and right slot IDs, enable `NEXT_PUBLIC_ADS_ENABLED`, then verify production build, layout shift, mobile behavior, and `ads.txt`.
 
+## Analytics
+
+Set `NEXT_PUBLIC_GA_ID=G-ZJSJW06SCX` in the build/deployment environment to enable Google Analytics 4 on all locale pages. The shared locale layout loads the tag once and tracks App Router path changes. If the variable is unset, no GA scripts are rendered.
+
 ## Docker
 
 ```sh
