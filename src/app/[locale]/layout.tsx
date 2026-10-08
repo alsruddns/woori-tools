@@ -5,6 +5,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
+import { CopyToast } from "@/components/copy-toast";
+import { GoogleAnalytics } from "@/components/analytics/google-analytics";
 import { getMessages } from "@/i18n/messages";
 import { isLocale, locales, type Locale } from "@/i18n/routing";
 import { SITE_NAME, SITE_ORIGIN } from "@/lib/seo";
@@ -51,6 +53,8 @@ export default async function LocaleLayout({
         <SiteHeader locale={locale} messages={messages} />
         <div className="flex-1">{children}</div>
         <SiteFooter locale={locale} messages={messages} />
+        <CopyToast locale={locale} />
+        <GoogleAnalytics />
       </body>
     </html>
   );

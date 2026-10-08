@@ -9,7 +9,7 @@ import { tools } from "@/registry/tools";
 export function SiteHeader({ locale, messages }: { locale: Locale; messages: Dictionary }) {
   const visibleCategories = getLocalizedCategories(locale).filter((category) =>
     category.id !== "qr" && tools.some((tool) => tool.category === category.id),
-  );
+  ).slice(0, 4);
 
   return (
     <header className="border-b border-slate-200 bg-white">

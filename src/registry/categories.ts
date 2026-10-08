@@ -1,4 +1,8 @@
 export const categories = [
+  { id: "random", name: "랜덤 · 추첨", description: "무작위 선택과 공정한 추첨 도구" },
+  { id: "date-time", name: "날짜 · 시간", description: "시간을 재고 일정한 간격을 관리하는 도구" },
+  { id: "utility", name: "생활", description: "일상에서 바로 쓰는 편리한 도구" },
+  { id: "fortune", name: "운세 · 엔터테인먼트", description: "가볍게 즐기며 생각을 정리하는 운세와 카드 도구" },
   { id: "image", name: "이미지", description: "이미지 변환과 편집 도구" },
   { id: "pdf", name: "PDF", description: "브라우저에서 사용하는 PDF 도구" },
   { id: "text", name: "텍스트", description: "텍스트 정리와 비교 도구" },

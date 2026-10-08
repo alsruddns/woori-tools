@@ -3,9 +3,66 @@ import type { ToolCategory } from "./categories";
 export type ToolDefinition = {
   id: string; slug: string; category: ToolCategory; title: string; shortTitle: string;
   description: string; keywords: string[]; clientOnly: true; isPublic: boolean; acceptedTypes?: string[]; relatedTools?: string[];
+  featured?: boolean;
+  usesFileInput?: boolean;
 };
 
 const entries: Array<[string, ToolCategory, string, string, string[], boolean]> = [
+  ["lotto-number-generator","random","로또 번호 생성기","1부터 45까지 번호를 포함·제외하고 홀짝 비율을 정해 1게임 또는 5게임을 생성합니다.",["로또","번호 생성","lotto"],true],
+  ["tarot-card","fortune","타로카드","무료 타로카드 뽑기: 오늘의 타로와 과거·현재·미래 3장 배열을 즐겨 보세요.",["타로","무료 타로","오늘의 타로","타로카드 뽑기","3장 타로","연애 타로","tarot","占い","塔罗"],true],
+  ["daily-fortune","fortune","오늘의 운세","생년월일로 보는 무료 오늘 운세: 금전운, 연애운, 직장·학업운을 확인하세요.",["오늘의 운세","무료 운세","생년월일 운세","오늘 운세","금전운","연애운","daily fortune","今日の運勢","今日运势"],true],
+  ["saju","fortune","사주팔자","KASI 음력 자료와 절기 기준을 적용해 년주·월주·일주·시주와 오행 분포를 계산합니다.",["사주","사주팔자","만세력","사주 오행","saju","四柱推命","四柱"],true],
+  ["random-number","random","랜덤 숫자 뽑기","범위와 개수를 정해 중복 여부를 선택하며 숫자를 추첨합니다.",["랜덤","숫자","추첨","random number"],true],
+  ["random-name-picker","random","랜덤 이름 뽑기","이름 목록에서 원하는 인원을 무작위로 뽑습니다.",["랜덤 이름","이름 추첨","random name"],true],
+  ["random-wheel","random","룰렛 돌리기","입력한 항목이 룰렛 영역에 표시됩니다. 항목을 섞고 당첨 항목을 제거하며 다시 추첨할 수 있습니다.",["룰렛","랜덤 룰렛","온라인 룰렛","오늘 뭐 먹지","점심 메뉴 추천","랜덤 음식 선택","random wheel","random food picker"],true],
+  ["ladder-game","random","사다리타기","참가자와 결과를 연결하는 무작위 온라인 사다리를 만듭니다.",["사다리타기","온라인 사다리타기","랜덤 사다리"],false],
+  ["draw-lots","random","제비뽑기","참가자 목록에서 당첨자를 무작위로 선정합니다.",["제비뽑기","당첨자","추첨"],true],
+  ["random-team-maker","random","랜덤 팀 나누기","참가자를 균등하게 섞어 팀을 편성합니다.",["팀 나누기","조 편성","랜덤 조 편성"],true],
+  ["random-order","random","랜덤 순서 정하기","발표나 진행 순서를 무작위로 정합니다.",["순서 정하기","발표 순서","셔플"],true],
+  ["random-seat","random","랜덤 자리 배치","참가자 이름을 섞어 무작위 자리 순서를 배정합니다.",["랜덤 자리 배치","자리 추첨","좌석 배정"],true],
+  ["duty-picker","random","당번 정하기","참가자와 할 일을 입력해 공정하게 당번을 배정합니다.",["당번 정하기","청소 당번","역할 배정"],true],
+  ["dice-roller","random","주사위 굴리기","D4부터 D20까지 4~20면 주사위를 최대 20개까지 굴려 개별 결과와 합계·최소·최대·평균을 확인합니다.",["주사위","dice","랜덤"],true],
+  ["coin-flip","random","동전 던지기","동전을 여러 번 던지고 앞면과 뒷면 횟수를 확인합니다.",["동전 던지기","앞면","뒷면"],true],
+  ["stopwatch","date-time","스톱워치","밀리초 단위로 시간을 재고 랩 기록을 남깁니다.",["스톱워치","초시계","stopwatch"],true],
+  ["timer","date-time","온라인 타이머","시·분·초를 설정해 브라우저에서 타이머를 실행합니다.",["타이머","온라인 타이머","무료 타이머"],true],
+  ["pomodoro-timer","date-time","뽀모도로 타이머","집중 시간과 짧은 휴식·긴 휴식, 긴 휴식 전 세션 수를 설정해 집중 주기를 관리합니다.",["뽀모도로","집중 타이머","pomodoro"],true],
+  ["world-clock","date-time","세계 시간","주요 도시의 현재 시간을 브라우저 시간대로 확인합니다.",["세계 시간","도시 시간","timezone"],true],
+  ["password-generator","utility","비밀번호 생성기","Web Crypto 기반으로 안전한 무작위 비밀번호를 만듭니다.",["비밀번호","암호 생성","password"],true],
+  ["random-string-generator","utility","랜덤 문자열 생성기","문자 종류와 길이를 선택해 무작위 문자열을 생성합니다.",["랜덤 문자열","문자열 생성"],true],
+  ["wifi-qr","utility","Wi-Fi QR 코드 생성기","네트워크 정보를 QR 코드로 만들어 빠르게 Wi-Fi에 연결합니다.",["Wi-Fi QR","와이파이 QR","무선 인터넷"],true],
+  ["contact-qr","utility","연락처 QR 코드 생성기","이름과 연락처를 vCard QR 코드로 만듭니다.",["연락처 QR","명함 QR","vCard"],true],
+  ["phone-qr","utility","전화번호 QR 코드 생성기","스캔하면 전화 앱을 여는 전화번호 QR 코드를 만듭니다.",["전화 QR","전화번호 QR","tel QR"],true],
+  ["email-qr","utility","이메일 QR 코드 생성기","받는 사람과 제목을 포함한 이메일 작성 QR 코드를 만듭니다.",["이메일 QR","메일 QR","mailto"],true],
+  ["barcode-checker","utility","바코드 번호 검사","EAN-13과 UPC-A 체크섬이 올바른지 확인합니다.",["barcode","EAN-13","UPC-A"],true],
+  ["barcode-generator","utility","바코드 생성기","텍스트나 상품 번호로 CODE128 또는 EAN-13 바코드를 만듭니다.",["바코드 생성","CODE128","EAN-13"],true],
+  ["social-image-resize","image","SNS 이미지 크기 변경","SNS 게시물과 스토리에 맞는 이미지 크기로 조정합니다.",["인스타그램 크기","유튜브 썸네일","SNS 이미지"],true],
+  ["add-text-to-image","image","이미지에 텍스트 추가","브라우저 캔버스에서 이미지에 문구를 넣어 저장합니다.",["이미지 글자","사진 문구"],true],
+  ["instagram-grid-split","image","Instagram 사진 격자 분할","이미지를 3·6·9개 정사각형 타일로 나눠 ZIP으로 저장합니다.",["인스타그램 그리드","사진 3분할","인스타그램 사진 분할"],true],
+  ["image-collage","image","사진 콜라주 만들기","여러 사진을 2×2 또는 3×2 격자에 배치해 콜라주를 만듭니다.",["사진 콜라주","이미지 모음","사진 합치기"],true],
+  ["file-hash","utility","파일 해시 계산","파일을 업로드하지 않고 브라우저에서 SHA 해시를 계산합니다.",["SHA-256","파일 해시","checksum"],true],
+  ["mime-type-checker","utility","MIME 타입 확인","브라우저가 감지한 MIME 타입과 파일 시그니처를 확인합니다.",["MIME","파일 형식","file type"],true],
+  ["file-extension-checker","utility","파일 확장자 확인","선택한 파일의 확장자와 브라우저 MIME 타입을 확인합니다.",["확장자","파일 형식"],true],
+  ["file-size-checker","utility","파일 크기 확인","여러 파일의 이름과 크기를 브라우저에서 확인합니다.",["파일 크기","용량"],true],
+  ["duplicate-file-checker","utility","중복 파일 찾기","SHA-256 내용 해시를 비교해 내용이 같은 파일을 찾습니다.",["중복 파일","파일 중복 검사","duplicate files"],true],
+  ["zip-files","utility","ZIP 파일 만들기","선택한 파일을 브라우저에서 하나의 ZIP 파일로 묶습니다.",["ZIP 만들기","파일 압축","zip files"],true],
+  ["bulk-file-renamer","utility","파일명 일괄 변경","파일 이름 규칙을 적용한 복사본을 ZIP으로 다운로드합니다.",["파일명 일괄 변경","파일 이름 바꾸기"],true],
+  ["filename-cleaner","utility","파일명 정리","파일 이름의 공백과 특수문자를 정리한 ZIP을 만듭니다.",["파일명 정리","파일 이름 정리"],true],
+  ["shuffle-lines","text","텍스트 줄 섞기","입력한 줄을 무작위 순서로 섞습니다.",["줄 섞기","텍스트 셔플"],true],
+  ["add-line-numbers","text","줄 번호 붙이기","각 줄 앞에 시작 번호와 구분자를 추가합니다.",["줄 번호","라인 넘버"],true],
+  ["remove-line-numbers","text","줄 번호 제거","일반적인 형식의 줄 번호를 텍스트에서 제거합니다.",["줄 번호 제거"],true],
+  ["remove-empty-lines","text","빈 줄 제거","내용이 없는 줄만 제거하고 나머지 줄바꿈은 유지합니다.",["빈 줄 제거","공백 줄"],true],
+  ["remove-characters","text","특정 문자 제거","숫자, 영문, 한글, 특수문자 또는 지정 문자를 제거합니다.",["문자 제거","특수문자 제거"],true],
+  ["text-repeater","text","텍스트 반복","텍스트를 원하는 횟수만큼 반복하고 구분자를 추가합니다.",["텍스트 반복","문장 반복"],true],
+  ["text-to-file","text","텍스트 파일 만들기","입력한 내용을 TXT 또는 CSV 파일로 저장합니다.",["텍스트 파일","TXT 저장","CSV 만들기"],true],
+  ["lorem-ipsum","developer","Lorem Ipsum 생성기","레이아웃 시안에 사용할 더미 텍스트를 생성합니다.",["lorem ipsum","더미 텍스트"],true],
+  ["regex-tester","developer","정규식 테스트","샘플 텍스트에서 정규식 일치 결과를 확인합니다.",["regex","정규식 검사"],true],
+  ["color-converter","developer","HEX RGB 색상 변환","HEX, RGB, HSL 색상 값을 서로 변환합니다.",["HEX RGB 변환","색상 코드","HSL"],true],
+  ["cron-parser","developer","Cron 표현식 해석기","5필드 또는 6필드 Cron 표현식을 검사하고 다음 실행 시간을 확인합니다.",["cron","crontab","작업 스케줄"],true],
+  ["sql-formatter","developer","SQL 포맷터","SQL 쿼리를 읽기 좋게 정리합니다. 쿼리를 실행하지 않습니다.",["SQL 정렬","SQL formatter"],true],
+  ["html-formatter","developer","HTML 포맷터","HTML 코드를 브라우저에서 들여쓰기 정리합니다. 코드를 실행하지 않습니다.",["HTML 정렬","HTML formatter"],true],
+  ["css-formatter","developer","CSS 포맷터","CSS 코드를 보기 좋게 정리합니다.",["CSS 정렬","CSS formatter"],true],
+  ["javascript-formatter","developer","JavaScript 포맷터","JavaScript 코드를 실행하지 않고 포맷팅합니다.",["JS 정렬","JavaScript formatter"],true],
+  ["markdown-preview","developer","Markdown 미리보기","Markdown을 안전하게 미리 보고 원본 HTML은 실행하지 않습니다.",["Markdown 미리보기","마크다운 뷰어"],true],
   ["jpg-to-png","image","JPG → PNG 변환","JPG 이미지를 PNG 형식으로 변환합니다.",["jpg","jpeg","png","convert"], true],
   ["png-to-jpg","image","PNG → JPG 변환","PNG 이미지를 JPG로 변환합니다. 투명한 부분은 흰색으로 채웁니다.",["png","jpg","jpeg","convert"], true],
   ["webp-to-jpg","image","WEBP → JPG 변환","WEBP 이미지를 JPG 파일로 변환합니다.",["webp","jpg","convert"], true],
@@ -58,11 +115,24 @@ const entries: Array<[string, ToolCategory, string, string, string[], boolean]> 
   ["timestamp-converter","developer","Timestamp 변환기","Unix 초·밀리초와 날짜, ISO 8601 시간을 변환합니다.",["timestamp","unix","iso 8601"], true],
 ];
 
-const registeredTools: ToolDefinition[] = entries.map(([slug, category, title, description, keywords, isPublic]) => ({ id: slug, slug, category, title, shortTitle: title, description, keywords, clientOnly: true, isPublic, acceptedTypes: category === "image" ? ["image/*"] : category === "pdf" ? ["application/pdf"] : undefined }));
+const fileToolSlugs = new Set(["file-hash", "mime-type-checker", "file-extension-checker", "file-size-checker", "duplicate-file-checker", "zip-files", "bulk-file-renamer", "filename-cleaner"]);
+const registeredTools: ToolDefinition[] = entries.map(([slug, category, title, description, keywords, isPublic]) => ({ id: slug, slug, category, title, shortTitle: title, description, keywords, clientOnly: true, isPublic, usesFileInput: category === "image" || category === "pdf" || fileToolSlugs.has(slug), acceptedTypes: category === "image" ? ["image/*"] : category === "pdf" ? ["application/pdf"] : undefined }));
+const featuredSlugs = new Set([
+  "lotto-number-generator", "random-number", "random-name-picker", "random-wheel",
+  "random-team-maker", "stopwatch", "timer", "pomodoro-timer",
+  "wifi-qr", "password-generator", "zip-files",
+]);
+for (const tool of registeredTools) tool.featured = featuredSlugs.has(tool.slug);
 export const filterPublicTools = (items: ToolDefinition[]) => items.filter((tool) => tool.isPublic);
 export const tools = filterPublicTools(registeredTools);
 const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const duplicateSlugs = tools.map((tool) => tool.slug).filter((slug, i, all) => all.indexOf(slug) !== i);
 if (duplicateSlugs.length || tools.some((tool) => !slugPattern.test(tool.slug))) throw new Error(`Invalid or duplicate tool slug: ${duplicateSlugs.join(", ")}`);
-for (const tool of tools) tool.relatedTools = tools.filter((other) => other.category === tool.category && other.slug !== tool.slug).slice(0, 4).map((other) => other.slug);
+for (const tool of tools) if (!tool.relatedTools) tool.relatedTools = tools.filter((other) => other.category === tool.category && other.slug !== tool.slug).slice(0, 4).map((other) => other.slug);
+const tarot = tools.find((tool) => tool.slug === "tarot-card");
+const daily = tools.find((tool) => tool.slug === "daily-fortune");
+const saju = tools.find((tool) => tool.slug === "saju");
+if (tarot) tarot.relatedTools = ["daily-fortune", "saju"];
+if (daily) daily.relatedTools = ["tarot-card", "saju"];
+if (saju) saju.relatedTools = ["daily-fortune", "tarot-card"];
 export const getTool = (slug: string) => tools.find((tool) => tool.slug === slug);
