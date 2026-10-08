@@ -7,6 +7,9 @@ export type ToolDefinition = {
 
 const entries: Array<[string, ToolCategory, string, string, string[], boolean]> = [
   ["lotto-number-generator","random","로또 번호 생성기","중복 없이 무작위 로또 번호를 만듭니다.",["로또","번호 생성","lotto"],true],
+  ["tarot-card","fortune","타로카드","무료 타로카드 뽑기: 오늘의 타로와 과거·현재·미래 3장 배열을 즐겨 보세요.",["타로","무료 타로","오늘의 타로","타로카드 뽑기","3장 타로","연애 타로","tarot","占い","塔罗"],true],
+  ["daily-fortune","fortune","오늘의 운세","생년월일로 보는 무료 오늘 운세: 금전운, 연애운, 직장·학업운을 확인하세요.",["오늘의 운세","무료 운세","생년월일 운세","오늘 운세","금전운","연애운","daily fortune","今日の運勢","今日运势"],true],
+  ["saju","fortune","사주팔자","KASI 음력 자료와 절기 기준을 적용해 년주·월주·일주·시주와 오행 분포를 계산합니다.",["사주","사주팔자","만세력","사주 오행","saju","四柱推命","四柱"],true],
   ["random-number","random","랜덤 숫자 뽑기","범위와 개수를 정해 중복 여부를 선택하며 숫자를 추첨합니다.",["랜덤","숫자","추첨","random number"],true],
   ["random-name-picker","random","랜덤 이름 뽑기","이름 목록에서 원하는 인원을 무작위로 뽑습니다.",["랜덤 이름","이름 추첨","random name"],true],
   ["random-wheel","random","룰렛 돌리기","항목을 입력해 룰렛을 돌려 보세요. 점심 메뉴나 오늘 먹을 음식도 무작위로 고를 수 있습니다.",["룰렛","랜덤 룰렛","온라인 룰렛","오늘 뭐 먹지","점심 메뉴 추천","랜덤 음식 선택","random wheel","random food picker"],true],
@@ -116,5 +119,11 @@ export const tools = filterPublicTools(registeredTools);
 const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const duplicateSlugs = tools.map((tool) => tool.slug).filter((slug, i, all) => all.indexOf(slug) !== i);
 if (duplicateSlugs.length || tools.some((tool) => !slugPattern.test(tool.slug))) throw new Error(`Invalid or duplicate tool slug: ${duplicateSlugs.join(", ")}`);
-for (const tool of tools) tool.relatedTools = tools.filter((other) => other.category === tool.category && other.slug !== tool.slug).slice(0, 4).map((other) => other.slug);
+for (const tool of tools) if (!tool.relatedTools) tool.relatedTools = tools.filter((other) => other.category === tool.category && other.slug !== tool.slug).slice(0, 4).map((other) => other.slug);
+const tarot = tools.find((tool) => tool.slug === "tarot-card");
+const daily = tools.find((tool) => tool.slug === "daily-fortune");
+const saju = tools.find((tool) => tool.slug === "saju");
+if (tarot) tarot.relatedTools = ["daily-fortune", "saju"];
+if (daily) daily.relatedTools = ["tarot-card", "saju"];
+if (saju) saju.relatedTools = ["daily-fortune", "tarot-card"];
 export const getTool = (slug: string) => tools.find((tool) => tool.slug === slug);

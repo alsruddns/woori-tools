@@ -14,6 +14,8 @@ import { MarkdownWorkspace } from "@/components/tool/markdown-workspace";
 import { BarcodeWorkspace } from "@/components/tool/barcode-workspace";
 import { RandomStringWorkspace } from "@/components/tool/random-string-workspace";
 import { LadderWorkspace } from "@/components/tool/ladder-workspace";
+import { DailyFortuneWorkspace, TarotWorkspace } from "@/components/tool/fortune-workspace";
+import { SajuWorkspace } from "@/components/tool/saju-workspace";
 
 const MAX_IMAGE = 30 * 1024 * 1024;
 const MAX_PDF = 50 * 1024 * 1024;
@@ -48,6 +50,9 @@ export function ToolWorkspace({ tool, locale, messages }: { tool: ToolDefinition
     const stem = files[0].name.replace(/\.[^.]+$/, "").replace(/[\\/:*?"<>|]/g, "-");
     return stem || "download";
   }, [files]);
+  if (tool.slug === "tarot-card") return <TarotWorkspace locale={locale} />;
+  if (tool.slug === "daily-fortune") return <DailyFortuneWorkspace locale={locale} />;
+  if (tool.slug === "saju") return <SajuWorkspace locale={locale} />;
   if (["password-generator","random-string-generator"].includes(tool.slug)) return <RandomStringWorkspace slug={tool.slug} locale={locale} />;
   if (tool.slug === "ladder-game") return <LadderWorkspace locale={locale} />;
   if (tool.slug === "markdown-preview") return <MarkdownWorkspace locale={locale} />;

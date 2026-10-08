@@ -5,6 +5,9 @@ type Translation = readonly [title: string, description: string];
 
 const catalogs: Record<Exclude<Locale, "ko">, Record<string, Translation>> = {
   en: {
+    "tarot-card": ["Free Tarot Card Reading", "Draw a free daily tarot card or a three-card past, present, and future spread for reflection."],
+    "daily-fortune": ["Daily Fortune by Birth Date", "Free daily horoscope by birth date with money, love, and work readings, generated privately in your browser."],
+    saju: ["Saju Four Pillars Chart", "Calculate the year, month, day, and hour pillars from a solar or lunar birth date using KASI-based calendar data and solar-term boundaries."],
     "lotto-number-generator": ["Lotto Number Generator", "Generate a random set of lotto numbers without duplicates."],
     "random-number": ["Random Number Generator", "Draw numbers from a range with optional unique results and sorting."],
     "random-name-picker": ["Random Name Picker", "Pick one or more names from a list at random."],
@@ -109,6 +112,9 @@ const catalogs: Record<Exclude<Locale, "ko">, Record<string, Translation>> = {
     "timestamp-converter": ["Unix Timestamp Converter", "Convert Unix seconds or milliseconds to dates and ISO 8601 timestamps."],
   },
   ja: {
+    "tarot-card": ["無料タロット占い", "今日のタロット1枚引きや過去・現在・未来の3枚引きを、気軽な自己理解のヒントとして楽しめます。"],
+    "daily-fortune": ["生年月日で見る今日の運勢", "生年月日から今日の運勢を無料でチェック。金運・恋愛運・仕事運をブラウザー内で表示します。"],
+    saju: ["四柱推命の命式計算", "KASI基準の暦データと節入り時刻をもとに、太陰暦または太陽暦の生年月日から四柱を計算します。"],
     "lotto-number-generator": ["ロト番号ジェネレーター", "重複しないロト番号をランダムに生成します。"],
     "random-number": ["乱数ジェネレーター", "範囲と個数を指定して数字を抽選します。"],
     "random-name-picker": ["名前抽選ツール", "リストから名前をランダムに選びます。"],
@@ -213,6 +219,9 @@ const catalogs: Record<Exclude<Locale, "ko">, Record<string, Translation>> = {
     "timestamp-converter": ["Unixタイムスタンプを変換", "Unix秒・ミリ秒を日付やISO 8601形式に変換します。"],
   },
   zh: {
+    "tarot-card": ["免费塔罗牌占卜", "抽取今日塔罗牌，或使用过去、现在、未来三张牌阵，作为自我反思的参考。"],
+    "daily-fortune": ["按出生日期查看今日运势", "根据出生日期免费查看今日运势，涵盖财运、感情和工作学习，并在浏览器中生成。"],
+    saju: ["四柱命盘计算", "依据KASI历法数据与节气交接时刻，根据公历或农历出生日期计算年柱、月柱、日柱和时柱。"],
     "lotto-number-generator": ["乐透号码生成器", "随机生成一组不重复的乐透号码。"],
     "random-number": ["随机数字生成器", "设置范围和数量，随机抽取数字并选择是否允许重复。"],
     "random-name-picker": ["随机姓名抽选", "从名单中随机抽取一位或多位姓名。"],
@@ -327,7 +336,24 @@ export function localizeTool<T extends ToolDefinition>(tool: T, locale: Locale):
     : locale === "ja"
       ? ["無料オンラインツール", "ブラウザツール"]
       : ["免费在线工具", "浏览器工具"];
-  return { ...tool, title, shortTitle: title, description, keywords: [tool.slug, title, ...languageKeywords] };
+  const intentKeywords: Partial<Record<Locale, Record<string, string[]>>> = {
+    en: {
+      "tarot-card": ["free tarot", "daily tarot", "three card tarot", "love tarot"],
+      "daily-fortune": ["daily horoscope", "free fortune", "birth date horoscope", "love horoscope"],
+      saju: ["saju chart", "four pillars", "Korean lunar calendar", "birth chart"],
+    },
+    ja: {
+      "tarot-card": ["無料タロット", "今日のタロット", "タロット3枚引き", "恋愛タロット"],
+      "daily-fortune": ["今日の運勢", "無料占い", "生年月日占い", "恋愛運"],
+      saju: ["四柱推命", "命式計算", "韓国の万年暦", "生年月日"],
+    },
+    zh: {
+      "tarot-card": ["免费塔罗", "今日塔罗", "三张牌阵", "爱情塔罗"],
+      "daily-fortune": ["今日运势", "免费运势", "出生日期运势", "感情运势"],
+      saju: ["四柱命盘", "韩国万年历", "八字排盘", "出生日期"],
+    },
+  };
+  return { ...tool, title, shortTitle: title, description, keywords: [tool.slug, title, ...(intentKeywords[locale]?.[tool.slug] ?? []), ...languageKeywords] };
 }
 
 export function localizeTools<T extends ToolDefinition>(tools: T[], locale: Locale): T[] {
