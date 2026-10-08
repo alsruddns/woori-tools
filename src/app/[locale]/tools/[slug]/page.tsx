@@ -71,6 +71,15 @@ export default async function ToolPage({ params }: Props) {
         operatingSystem: "Any",
         offers: { "@type": "Offer", price: "0", priceCurrency: "KRW" },
       }).replace(/</g, "\\u003c") }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: messages.tools, item: `https://www.woori.today/${locale}/tools` },
+          { "@type": "ListItem", position: 2, name: category.name, item: `https://www.woori.today/${locale}/tools/category/${category.id}` },
+          { "@type": "ListItem", position: 3, name: tool.shortTitle, item: url },
+        ],
+      }).replace(/</g, "\\u003c") }} />
 
       <section className="mt-12">
         <h2 className="text-2xl font-bold">{messages.howTo}</h2>
