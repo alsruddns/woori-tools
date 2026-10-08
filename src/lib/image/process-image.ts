@@ -18,6 +18,7 @@ export async function processImage(slug:string,file:File,options:ImageOptions,lo
   try{
     if(bitmap.width*bitmap.height>MAX_PIXELS)throw new Error(messages.errors.pixels);
     if(slug==="image-info")return{result:`${messages.fileName}: ${file.name}\n${messages.mime}: ${file.type||messages.unknown}\n${messages.fileWidth}: ${bitmap.width}px\n${messages.fileHeight}: ${bitmap.height}px\n${messages.fileSize}: ${(file.size/1024).toFixed(1)} KB\n${messages.ratio}: ${(bitmap.width/bitmap.height).toFixed(3)}:1`};
+    if(slug==="instagram-grid-split")return await splitImageGrid(bitmap,Number(options.option)||9);
     const canvas=document.createElement("canvas");let w=bitmap.width,h=bitmap.height;
     if(slug==="favicon-generator"){w=32;h=32;}
     if(slug==="image-resize"){w=Math.max(1,Math.min(12000,Number(options.width)||1));h=options.keepRatio?Math.max(1,Math.round(w*bitmap.height/bitmap.width)):Math.max(1,Math.min(12000,Number(options.height)||1));}
@@ -40,6 +41,16 @@ export async function processImage(slug:string,file:File,options:ImageOptions,lo
     try{const blob=await new Promise<Blob>((resolve,reject)=>canvas.toBlob((value)=>value?resolve(value):reject(new Error(messages.errors.imageOutput)),outputMime(slug),options.quality));return{blob,result:`${messages.completedStatus} ${(blob.size/1024).toFixed(1)} KB · ${outWidth} × ${outHeight}px`};}
     finally{canvas.width=0;canvas.height=0;}
   }finally{bitmap.close();}
+}
+
+async function splitImageGrid(bitmap:ImageBitmap,tileCount:number):Promise<ProcessedImage>{
+  if(![3,6,9].includes(tileCount))throw new Error("Choose 3, 6, or 9 tiles.");
+  const columns=3,rows=tileCount/columns,targetRatio=columns/rows,sourceRatio=bitmap.width/bitmap.height;
+  const cropWidth=sourceRatio>targetRatio?bitmap.height*targetRatio:bitmap.width,cropHeight=sourceRatio>targetRatio?bitmap.height:bitmap.width/targetRatio;
+  const left=(bitmap.width-cropWidth)/2,top=(bitmap.height-cropHeight)/2,tileWidth=cropWidth/columns,tileHeight=cropHeight/rows,size=Math.max(1,Math.floor(Math.min(tileWidth,tileHeight)));
+  const {zip}=await import("fflate");const files:Record<string,Uint8Array>={};let total=0;
+  for(let row=0;row<rows;row++)for(let column=0;column<columns;column++){const canvas=document.createElement("canvas");canvas.width=size;canvas.height=size;const ctx=canvas.getContext("2d");if(!ctx)throw new Error("Could not start image processing.");ctx.drawImage(bitmap,left+column*tileWidth,top+row*tileHeight,tileWidth,tileHeight,0,0,size,size);const blob=await new Promise<Blob>((resolve,reject)=>canvas.toBlob(value=>value?resolve(value):reject(new Error("Could not export a tile.")),"image/png"));canvas.width=0;canvas.height=0;total+=blob.size;if(total>80*1024*1024)throw new Error("The generated tiles exceed the 80 MB browser limit.");files[`tile-${String(row*columns+column+1).padStart(2,"0")}.png`]=new Uint8Array(await blob.arrayBuffer());}
+  const data=await new Promise<Uint8Array>((resolve,reject)=>zip(files,{level:2},(error,result)=>error?reject(error):resolve(result)));const buffer=new ArrayBuffer(data.byteLength);new Uint8Array(buffer).set(data);return{blob:new Blob([buffer],{type:"application/zip"}),result:`${tileCount} square PNG tiles · ${size} × ${size}px`};
 }
 
 function outputMime(slug:string){if(slug.includes("png")||slug==="favicon-generator")return"image/png";if(slug.includes("webp"))return"image/webp";return"image/jpeg";}
