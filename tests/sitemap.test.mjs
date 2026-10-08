@@ -36,6 +36,7 @@ test("sitemap is generated from the public registry and includes every locale", 
   assert.match(sitemapSource, /createSitemapEntries\(\{[\s\S]*?tools,[\s\S]*?locales,[\s\S]*?languageAlternates/);
   assert.ok(publicTools.length > 0);
   assert.ok(publicTools.every(({ isPublic }) => isPublic));
+  assert.equal(publicTools.some(({ slug }) => slug === "ladder-game"), false);
 
   const listingEntries = entries.filter(({ url }) => /\/tools$/.test(url));
   const detailEntries = entries.filter(({ url }) => /\/tools\/[^/]+$/.test(url));

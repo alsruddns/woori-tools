@@ -4,27 +4,28 @@ export type ToolDefinition = {
   id: string; slug: string; category: ToolCategory; title: string; shortTitle: string;
   description: string; keywords: string[]; clientOnly: true; isPublic: boolean; acceptedTypes?: string[]; relatedTools?: string[];
   featured?: boolean;
+  usesFileInput?: boolean;
 };
 
 const entries: Array<[string, ToolCategory, string, string, string[], boolean]> = [
-  ["lotto-number-generator","random","로또 번호 생성기","중복 없이 무작위 로또 번호를 만듭니다.",["로또","번호 생성","lotto"],true],
+  ["lotto-number-generator","random","로또 번호 생성기","1부터 45까지 번호를 포함·제외하고 홀짝 비율을 정해 1게임 또는 5게임을 생성합니다.",["로또","번호 생성","lotto"],true],
   ["tarot-card","fortune","타로카드","무료 타로카드 뽑기: 오늘의 타로와 과거·현재·미래 3장 배열을 즐겨 보세요.",["타로","무료 타로","오늘의 타로","타로카드 뽑기","3장 타로","연애 타로","tarot","占い","塔罗"],true],
   ["daily-fortune","fortune","오늘의 운세","생년월일로 보는 무료 오늘 운세: 금전운, 연애운, 직장·학업운을 확인하세요.",["오늘의 운세","무료 운세","생년월일 운세","오늘 운세","금전운","연애운","daily fortune","今日の運勢","今日运势"],true],
   ["saju","fortune","사주팔자","KASI 음력 자료와 절기 기준을 적용해 년주·월주·일주·시주와 오행 분포를 계산합니다.",["사주","사주팔자","만세력","사주 오행","saju","四柱推命","四柱"],true],
   ["random-number","random","랜덤 숫자 뽑기","범위와 개수를 정해 중복 여부를 선택하며 숫자를 추첨합니다.",["랜덤","숫자","추첨","random number"],true],
   ["random-name-picker","random","랜덤 이름 뽑기","이름 목록에서 원하는 인원을 무작위로 뽑습니다.",["랜덤 이름","이름 추첨","random name"],true],
-  ["random-wheel","random","룰렛 돌리기","항목을 입력해 룰렛을 돌려 보세요. 점심 메뉴나 오늘 먹을 음식도 무작위로 고를 수 있습니다.",["룰렛","랜덤 룰렛","온라인 룰렛","오늘 뭐 먹지","점심 메뉴 추천","랜덤 음식 선택","random wheel","random food picker"],true],
-  ["ladder-game","random","사다리타기","참가자와 결과를 연결하는 무작위 온라인 사다리를 만듭니다.",["사다리타기","온라인 사다리타기","랜덤 사다리"],true],
+  ["random-wheel","random","룰렛 돌리기","입력한 항목이 룰렛 영역에 표시됩니다. 항목을 섞고 당첨 항목을 제거하며 다시 추첨할 수 있습니다.",["룰렛","랜덤 룰렛","온라인 룰렛","오늘 뭐 먹지","점심 메뉴 추천","랜덤 음식 선택","random wheel","random food picker"],true],
+  ["ladder-game","random","사다리타기","참가자와 결과를 연결하는 무작위 온라인 사다리를 만듭니다.",["사다리타기","온라인 사다리타기","랜덤 사다리"],false],
   ["draw-lots","random","제비뽑기","참가자 목록에서 당첨자를 무작위로 선정합니다.",["제비뽑기","당첨자","추첨"],true],
   ["random-team-maker","random","랜덤 팀 나누기","참가자를 균등하게 섞어 팀을 편성합니다.",["팀 나누기","조 편성","랜덤 조 편성"],true],
   ["random-order","random","랜덤 순서 정하기","발표나 진행 순서를 무작위로 정합니다.",["순서 정하기","발표 순서","셔플"],true],
   ["random-seat","random","랜덤 자리 배치","참가자 이름을 섞어 무작위 자리 순서를 배정합니다.",["랜덤 자리 배치","자리 추첨","좌석 배정"],true],
   ["duty-picker","random","당번 정하기","참가자와 할 일을 입력해 공정하게 당번을 배정합니다.",["당번 정하기","청소 당번","역할 배정"],true],
-  ["dice-roller","random","주사위 굴리기","D4부터 D20까지 주사위를 굴리고 합계를 확인합니다.",["주사위","dice","랜덤"],true],
+  ["dice-roller","random","주사위 굴리기","D4부터 D20까지 4~20면 주사위를 최대 20개까지 굴려 개별 결과와 합계·최소·최대·평균을 확인합니다.",["주사위","dice","랜덤"],true],
   ["coin-flip","random","동전 던지기","동전을 여러 번 던지고 앞면과 뒷면 횟수를 확인합니다.",["동전 던지기","앞면","뒷면"],true],
   ["stopwatch","date-time","스톱워치","밀리초 단위로 시간을 재고 랩 기록을 남깁니다.",["스톱워치","초시계","stopwatch"],true],
   ["timer","date-time","온라인 타이머","시·분·초를 설정해 브라우저에서 타이머를 실행합니다.",["타이머","온라인 타이머","무료 타이머"],true],
-  ["pomodoro-timer","date-time","뽀모도로 타이머","집중과 휴식 시간을 번갈아 관리합니다.",["뽀모도로","집중 타이머","pomodoro"],true],
+  ["pomodoro-timer","date-time","뽀모도로 타이머","집중 시간과 짧은 휴식·긴 휴식, 긴 휴식 전 세션 수를 설정해 집중 주기를 관리합니다.",["뽀모도로","집중 타이머","pomodoro"],true],
   ["world-clock","date-time","세계 시간","주요 도시의 현재 시간을 브라우저 시간대로 확인합니다.",["세계 시간","도시 시간","timezone"],true],
   ["password-generator","utility","비밀번호 생성기","Web Crypto 기반으로 안전한 무작위 비밀번호를 만듭니다.",["비밀번호","암호 생성","password"],true],
   ["random-string-generator","utility","랜덤 문자열 생성기","문자 종류와 길이를 선택해 무작위 문자열을 생성합니다.",["랜덤 문자열","문자열 생성"],true],
@@ -114,10 +115,11 @@ const entries: Array<[string, ToolCategory, string, string, string[], boolean]> 
   ["timestamp-converter","developer","Timestamp 변환기","Unix 초·밀리초와 날짜, ISO 8601 시간을 변환합니다.",["timestamp","unix","iso 8601"], true],
 ];
 
-const registeredTools: ToolDefinition[] = entries.map(([slug, category, title, description, keywords, isPublic]) => ({ id: slug, slug, category, title, shortTitle: title, description, keywords, clientOnly: true, isPublic, acceptedTypes: category === "image" ? ["image/*"] : category === "pdf" ? ["application/pdf"] : undefined }));
+const fileToolSlugs = new Set(["file-hash", "mime-type-checker", "file-extension-checker", "file-size-checker", "duplicate-file-checker", "zip-files", "bulk-file-renamer", "filename-cleaner"]);
+const registeredTools: ToolDefinition[] = entries.map(([slug, category, title, description, keywords, isPublic]) => ({ id: slug, slug, category, title, shortTitle: title, description, keywords, clientOnly: true, isPublic, usesFileInput: category === "image" || category === "pdf" || fileToolSlugs.has(slug), acceptedTypes: category === "image" ? ["image/*"] : category === "pdf" ? ["application/pdf"] : undefined }));
 const featuredSlugs = new Set([
   "lotto-number-generator", "random-number", "random-name-picker", "random-wheel",
-  "ladder-game", "random-team-maker", "stopwatch", "timer", "pomodoro-timer",
+  "random-team-maker", "stopwatch", "timer", "pomodoro-timer",
   "wifi-qr", "password-generator", "zip-files",
 ]);
 for (const tool of registeredTools) tool.featured = featuredSlugs.has(tool.slug);

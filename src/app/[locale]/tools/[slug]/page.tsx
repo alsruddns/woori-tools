@@ -58,7 +58,7 @@ export default async function ToolPage({ params }: Props) {
       <header className="mb-7">
         <h1 className="text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">{tool.title}</h1>
         <p className="mt-3 max-w-3xl text-lg leading-8 text-slate-600">{tool.description}</p>
-        <p className="mt-3 text-sm text-emerald-800">🔒 {messages.filePrivacy}</p>
+        {tool.usesFileInput && <p className="mt-3 text-sm text-emerald-800">🔒 {messages.filePrivacy}</p>}
       </header>
 
       <ToolWorkspace key={`${locale}-${tool.slug}`} tool={tool} locale={locale} messages={messages} />
