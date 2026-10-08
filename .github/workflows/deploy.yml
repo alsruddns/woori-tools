@@ -32,6 +32,8 @@ jobs:
           context: .
           push: true
           tags: ghcr.io/alsruddns/woori-tools:latest
+          build-args: |
+            NEXT_PUBLIC_GA_ID=G-ZJSJW06SCX
 
       - name: Deploy on iwinv
         env:
