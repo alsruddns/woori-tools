@@ -3,6 +3,10 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   output: "standalone",
   poweredByHeader: false,
+  assetPrefix: "/_assets/tools",
+  images: {
+    path: "/_assets/tools/_next/image",
+  },
   async rewrites() {
     return { beforeFiles: [{ source: "/tools-sitemap.xml", destination: "/sitemap.xml" }] };
   },
