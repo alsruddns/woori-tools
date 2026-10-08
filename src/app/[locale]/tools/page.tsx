@@ -27,6 +27,8 @@ export default async function ToolsHomePage({ params }: Props) {
   const popularSlugs = ["jpg-to-png", "image-compress", "pdf-merge", "character-count", "json-formatter", "uuid-generator"];
   const popular = popularSlugs.map((slug) => localizeTool(tools.find((tool) => tool.slug === slug)!, locale));
   const categories = getLocalizedCategories(locale).filter((category) => tools.some((tool) => tool.category === category.id));
+  const categoryOrder = new Map(categories.map((category, index) => [category.id, index]));
+  const orderedTools = [...localizedTools].sort((a, b) => (categoryOrder.get(a.category) ?? Number.MAX_SAFE_INTEGER) - (categoryOrder.get(b.category) ?? Number.MAX_SAFE_INTEGER));
 
   return (
     <main className="mx-auto w-full max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
@@ -34,7 +36,7 @@ export default async function ToolsHomePage({ params }: Props) {
         <p className="font-semibold text-indigo-700">{messages.homeEyebrow}</p>
         <h1 className="mt-3 text-4xl font-bold tracking-tight text-slate-950 sm:text-5xl">{messages.homeTitle}</h1>
         <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-600">{messages.homeDescription}</p>
-        <ToolDirectory tools={localizedTools} locale={locale} />
+        <ToolDirectory tools={orderedTools} locale={locale} />
       </section>
 
       <section className="py-12">
@@ -60,7 +62,7 @@ export default async function ToolsHomePage({ params }: Props) {
       <section className="py-8">
         <h2 className="text-2xl font-bold">{messages.allTools}</h2>
         <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {localizedTools.map((tool) => <ToolCard key={tool.slug} locale={locale} tool={tool} />)}
+          {orderedTools.map((tool) => <ToolCard key={tool.slug} locale={locale} tool={tool} />)}
         </div>
       </section>
       <p className="mt-8 rounded-2xl bg-emerald-50 p-5 text-sm text-emerald-900">{messages.filePrivacy}</p>

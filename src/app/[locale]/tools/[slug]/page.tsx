@@ -8,6 +8,7 @@ import { pageMetadata } from "@/lib/seo";
 import { findLocalizedCategory } from "@/registry/category-translations";
 import { localizeTool, localizeTools } from "@/registry/tool-translations";
 import { getTool, tools } from "@/registry/tools";
+import { getToolContent } from "@/registry/tool-content";
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
 
@@ -37,6 +38,7 @@ export default async function ToolPage({ params }: Props) {
   const category = findLocalizedCategory(tool.category, locale);
   if (!category) notFound();
   const messages = getMessages(locale);
+  const seoContent = getToolContent(slug, locale);
   const related = (baseTool.relatedTools ?? []).map((id) => getTool(id)).filter((item) => item !== undefined);
   const localizedTools = localizeTools(related, locale);
   const usesFiles = tool.category === "image" || tool.category === "pdf";
@@ -81,7 +83,20 @@ export default async function ToolPage({ params }: Props) {
         ],
       }).replace(/</g, "\\u003c") }} />
 
-      <section className="mt-12">
+      {seoContent ? <section className="mt-12 space-y-8">
+        <article>
+          <h2 className="text-2xl font-bold">{seoContent.headings.overview}</h2>
+          <p className="mt-3 leading-7 text-slate-700">{seoContent.overview}</p>
+        </article>
+        <article>
+          <h2 className="text-2xl font-bold">{seoContent.headings.how}</h2>
+          <ol className="mt-4 list-inside list-decimal space-y-2 text-slate-700">{seoContent.steps.map((step) => <li key={step}>{step}</li>)}</ol>
+        </article>
+        <article><h2 className="text-xl font-bold">{seoContent.headings.example}</h2><p className="mt-2 leading-7 text-slate-700">{seoContent.example}</p></article>
+        <article><h2 className="text-xl font-bold">{seoContent.headings.options}</h2><p className="mt-2 leading-7 text-slate-700">{seoContent.options}</p></article>
+        <article><h2 className="text-xl font-bold">{seoContent.headings.privacy}</h2><p className="mt-2 rounded-xl bg-emerald-50 p-4 text-sm leading-6 text-emerald-900">{seoContent.headings.privacyAnswer}</p></article>
+        <article><h2 className="text-xl font-bold">{seoContent.headings.warning}</h2><p className="mt-2 leading-7 text-slate-700">{seoContent.caution}</p></article>
+      </section> : <section className="mt-12">
         <h2 className="text-2xl font-bold">{messages.howTo}</h2>
         <ol className="mt-4 list-inside list-decimal space-y-2 text-slate-700">
           <li>{tool.description}</li>
@@ -92,15 +107,19 @@ export default async function ToolPage({ params }: Props) {
         <h2 className="mt-9 text-2xl font-bold">{messages.introduction}</h2>
         <p className="mt-3 leading-7 text-slate-700">{tool.description} {messages.introPrivacy}</p>
         <p className="mt-4 rounded-xl bg-emerald-50 p-4 text-sm leading-6 text-emerald-900">{messages.privacyNotice}</p>
-      </section>
+      </section>}
 
       <section className="mt-10">
-        <h2 className="text-2xl font-bold">{messages.faq}</h2>
+        <h2 className="text-2xl font-bold">{seoContent?.headings.faq ?? messages.faq}</h2>
         <div className="mt-4 divide-y divide-slate-200 rounded-2xl border border-slate-200">
-          {[messages.freeQuestion, messages.privacyQuestion, messages.sizeQuestion].map((question, index) => (
+          {(seoContent ? [
+            [seoContent.headings.privacyQuestion, seoContent.headings.privacyAnswer],
+            [seoContent.headings.example, seoContent.example],
+            [seoContent.headings.options, `${seoContent.options} ${seoContent.caution}`],
+          ] : [messages.freeQuestion, messages.privacyQuestion, messages.sizeQuestion].map((question, index) => [question, index === 0 ? tool.description : index === 1 ? messages.privacyAnswer : messages.sizeAnswer])).map(([question, answer], index) => (
             <details key={question} className="group p-4" open={index === 0}>
-              <summary className="cursor-pointer font-medium">{index === 0 ? `${tool.title}: ${question}` : question}</summary>
-              <p className="mt-3 text-sm leading-6 text-slate-600">{index === 0 ? tool.description : index === 1 ? messages.privacyAnswer : messages.sizeAnswer}</p>
+              <summary className="cursor-pointer font-medium">{question}</summary>
+              <p className="mt-3 text-sm leading-6 text-slate-600">{answer}</p>
             </details>
           ))}
         </div>
