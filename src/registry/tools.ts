@@ -3,6 +3,7 @@ import type { ToolCategory } from "./categories";
 export type ToolDefinition = {
   id: string; slug: string; category: ToolCategory; title: string; shortTitle: string;
   description: string; keywords: string[]; clientOnly: true; isPublic: boolean; acceptedTypes?: string[]; relatedTools?: string[];
+  featured?: boolean;
 };
 
 const entries: Array<[string, ToolCategory, string, string, string[], boolean]> = [
@@ -114,6 +115,12 @@ const entries: Array<[string, ToolCategory, string, string, string[], boolean]> 
 ];
 
 const registeredTools: ToolDefinition[] = entries.map(([slug, category, title, description, keywords, isPublic]) => ({ id: slug, slug, category, title, shortTitle: title, description, keywords, clientOnly: true, isPublic, acceptedTypes: category === "image" ? ["image/*"] : category === "pdf" ? ["application/pdf"] : undefined }));
+const featuredSlugs = new Set([
+  "lotto-number-generator", "random-number", "random-name-picker", "random-wheel",
+  "ladder-game", "random-team-maker", "stopwatch", "timer", "pomodoro-timer",
+  "wifi-qr", "password-generator", "zip-files",
+]);
+for (const tool of registeredTools) tool.featured = featuredSlugs.has(tool.slug);
 export const filterPublicTools = (items: ToolDefinition[]) => items.filter((tool) => tool.isPublic);
 export const tools = filterPublicTools(registeredTools);
 const slugPattern = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;

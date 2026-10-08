@@ -5,14 +5,14 @@ import { useMemo, useState } from "react";
 import { getMessages } from "@/i18n/messages";
 import { localizePath, type Locale } from "@/i18n/routing";
 import type { ToolDefinition } from "@/registry/tools";
+import { matchesToolSearch } from "@/lib/tool-navigation";
 
 export function ToolDirectory({ tools, locale }: { tools: ToolDefinition[]; locale: Locale }) {
   const [query, setQuery] = useState("");
   const messages = getMessages(locale);
   const filtered = useMemo(() => {
-    const q = query.trim().toLocaleLowerCase();
-    return q ? tools.filter((tool) => `${tool.title} ${tool.description} ${tool.keywords.join(" ")}`.toLocaleLowerCase().includes(q)) : [];
-  }, [query, tools]);
+    return query.trim() ? tools.filter((tool) => matchesToolSearch(tool, query, locale)) : [];
+  }, [query, tools, locale]);
   return <div className="relative mt-8 max-w-2xl">
     <label htmlFor="tool-search" className="sr-only">{messages.search}</label>
     <input id="tool-search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder={messages.searchPlaceholder} className="w-full rounded-2xl border border-slate-200 bg-white px-5 py-4 text-base shadow-sm outline-none placeholder:text-slate-400 focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100" />
