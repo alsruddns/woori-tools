@@ -22,6 +22,10 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_ORIGIN),
   title: { default: "Woori Tools", template: "%s | Woori Tools" },
   applicationName: SITE_NAME,
+  icons: {
+    icon: "/_assets/tools/icons/icon.png",
+    apple: "/_assets/tools/icons/apple-icon.png",
+  },
 };
 
 export default async function LocaleLayout({

@@ -20,7 +20,7 @@ export function SiteHeader({ locale, messages }: { locale: Locale; messages: Dic
           className="flex shrink-0 items-center gap-2"
         >
           <Image
-            src="/images/brand/woori-logo.png"
+            src="/_assets/tools/images/brand/woori-logo.png"
             alt="woori.today"
             width={419}
             height={99}
