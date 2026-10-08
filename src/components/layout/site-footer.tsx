@@ -1,3 +1,20 @@
 import Link from "next/link";
+import type { Dictionary } from "@/i18n/messages";
+import { localizePath, type Locale } from "@/i18n/routing";
 
-export function SiteFooter() { return <footer className="mt-16 border-t border-slate-200 bg-white"><div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm text-slate-600 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8"><div><p className="font-semibold text-slate-900">Woori Tools</p><p className="mt-1">브라우저에서 간편하게 사용하는 무료 온라인 도구 모음</p></div><nav aria-label="푸터" className="flex gap-5"><Link href="/privacy" className="hover:text-indigo-700">개인정보 안내</Link><Link href="/terms" className="hover:text-indigo-700">이용 안내</Link></nav></div></footer>; }
+export function SiteFooter({ locale, messages }: { locale: Locale; messages: Dictionary }) {
+  return (
+    <footer className="mt-16 border-t border-slate-200 bg-white">
+      <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-8 text-sm text-slate-600 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
+        <div>
+          <p className="font-semibold text-slate-900">Woori Tools</p>
+          <p className="mt-1">{messages.footerTagline}</p>
+        </div>
+        <nav aria-label={messages.terms} className="flex gap-5">
+          <Link href={localizePath(locale, "/privacy")} className="hover:text-indigo-700">{messages.privacy}</Link>
+          <Link href={localizePath(locale, "/terms")} className="hover:text-indigo-700">{messages.terms}</Link>
+        </nav>
+      </div>
+    </footer>
+  );
+}
