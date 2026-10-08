@@ -9,6 +9,7 @@ import { processImage as processImageFile } from "@/lib/image/process-image";
 import { processPdf as processPdfFile } from "@/lib/pdf/process-pdf";
 import { processText as processTextTool } from "@/lib/text/process-text";
 import { parseRenameOptions, renameFileNames } from "@/lib/file-renamer.mjs";
+import { copyText } from "@/lib/copy-to-clipboard";
 import { CountdownWorkspace } from "@/components/tool/countdown-workspace";
 import { WorldClockWorkspace } from "@/components/tool/world-clock-workspace";
 import { QrWorkspace } from "@/components/tool/qr-workspace";
@@ -139,7 +140,7 @@ export function ToolWorkspace({ tool, locale, messages }: { tool: ToolDefinition
     <div className="mt-5 flex flex-wrap gap-3"><button type="button" onClick={process} disabled={busy} className="min-h-12 rounded-xl bg-indigo-600 px-6 font-semibold text-white hover:bg-indigo-700 disabled:cursor-wait disabled:opacity-60">{busy?messages.processing:tool.category==="image"||tool.category==="pdf"?messages.process:messages.run}</button><button type="button" onClick={()=>{setText("");setSecondText("");setResult("");setOutputUrl("");setError("");}} className="min-h-12 rounded-xl border border-slate-300 px-5 font-medium hover:bg-slate-50">{messages.reset}</button></div>
     <p role="status" aria-live="polite" className="sr-only">{busy?messages.processingStatus:result?messages.completedStatus:""}</p>
     {error&&<p role="alert" className="mt-4 rounded-xl bg-rose-50 p-4 text-sm text-rose-800">{error}</p>}
-    {result&&<div className="mt-5"><div className="flex flex-wrap items-center justify-between gap-3"><h3 className="font-semibold">{messages.result}</h3>{outputUrl&&<a href={outputUrl} download={downloadName(tool.slug,fileName)} className="rounded-xl bg-emerald-700 px-4 py-2.5 text-sm font-semibold text-white hover:bg-emerald-800">{messages.download}</a>}{!needsFiles&&<button type="button" onClick={()=>void navigator.clipboard.writeText(result).catch(()=>setError(messages.errors.copy))} className="rounded-xl border border-slate-300 px-4 py-2.5 text-sm font-medium hover:bg-slate-50">{messages.copy}</button>}</div><pre className="mt-3 max-h-96 overflow-auto whitespace-pre-wrap break-words rounded-xl bg-slate-950 p-4 text-sm leading-6 text-slate-100">{result}</pre></div>}
+    {result&&<div className="mt-5"><div className="flex flex-wrap items-center justify-between gap-3"><h3 className="font-semibold">{messages.result}</h3>{outputUrl&&<a href={outputUrl} download={downloadName(tool.slug,fileName)} className="rounded-xl bg-emerald-700 px-4 py-2.5 text-sm font-semibold text-white hover:bg-emerald-800">{messages.download}</a>}{!needsFiles&&<button type="button" onClick={()=>void copyText(result)} className="rounded-xl border border-slate-300 px-4 py-2.5 text-sm font-medium transition-transform active:scale-[0.98] hover:bg-slate-50">{messages.copy}</button>}</div><pre className="mt-3 max-h-96 overflow-auto whitespace-pre-wrap break-words rounded-xl bg-slate-950 p-4 text-sm leading-6 text-slate-100">{result}</pre></div>}
   </section>;
 }
 

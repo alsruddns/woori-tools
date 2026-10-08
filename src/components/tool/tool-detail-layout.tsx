@@ -25,6 +25,6 @@ export function ToolDetailLayout({ children, locale }: { children: React.ReactNo
     noResults={messages.sidebarNoResults}
     openLabel={messages.openToolMenu}
     closeLabel={messages.closeToolMenu}
-    adLabel={messages.adPlaceholder}
+    adLabel={process.env.NEXT_PUBLIC_ADS_ENABLED === "true" ? messages.adPlaceholder : ""}
   >{children}</ToolNavigationShell>;
 }

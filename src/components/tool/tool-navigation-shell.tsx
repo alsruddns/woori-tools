@@ -21,6 +21,8 @@ type Props = {
 };
 
 export function ToolNavigationShell(props: Props) {
+  const adsEnabled = process.env.NEXT_PUBLIC_ADS_ENABLED === "true";
+  const showAdPlaceholder = process.env.NEXT_PUBLIC_SHOW_AD_PLACEHOLDER === "true";
   const [open, setOpen] = useState(false);
   const openerRef = useRef<HTMLButtonElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -56,8 +58,12 @@ export function ToolNavigationShell(props: Props) {
     };
   }, [open]);
 
-  return <div className="mx-auto grid w-full max-w-[1900px] grid-cols-1 gap-x-4 px-3 min-[1200px]:grid-cols-[260px_minmax(0,1fr)] min-[1500px]:grid-cols-[170px_260px_minmax(0,1fr)_170px] min-[1500px]:px-4">
-    <AdRail label={props.adLabel} position="left-rail" className="min-[1500px]:block" />
+  const gridColumns = adsEnabled
+    ? "min-[1200px]:grid-cols-[260px_minmax(0,1fr)] min-[1500px]:grid-cols-[170px_260px_minmax(0,1fr)_170px]"
+    : "min-[1200px]:grid-cols-[260px_minmax(0,1fr)]";
+
+  return <div className={`mx-auto grid w-full max-w-[1900px] grid-cols-1 gap-x-4 px-3 ${gridColumns} min-[1500px]:px-4`}>
+    {adsEnabled && <AdRail label={props.adLabel} position="left-rail" className="min-[1500px]:block" showPlaceholder={showAdPlaceholder} />}
     <aside className="sticky top-16 hidden h-[calc(100vh-4rem)] min-w-0 border-r border-slate-200 bg-white min-[1200px]:block">
       <ToolSidebar {...props} />
     </aside>
@@ -69,7 +75,7 @@ export function ToolNavigationShell(props: Props) {
       </div>
       {props.children}
     </div>
-    <AdRail label={props.adLabel} position="right-rail" className="min-[1500px]:block" />
+    {adsEnabled && <AdRail label={props.adLabel} position="right-rail" className="min-[1500px]:block" showPlaceholder={showAdPlaceholder} />}
     {open && <div className="fixed inset-0 z-50 min-[1200px]:hidden" role="presentation">
       <button type="button" aria-label={props.closeLabel} tabIndex={-1} onClick={() => setOpen(false)} className="absolute inset-0 cursor-default bg-slate-950/40" />
       <section id="mobile-tool-navigation" role="dialog" aria-modal="true" aria-label={props.openLabel} className="absolute inset-y-0 left-0 flex w-[min(88vw,360px)] flex-col bg-white shadow-2xl">
@@ -83,11 +89,9 @@ export function ToolNavigationShell(props: Props) {
   </div>;
 }
 
-function AdRail({ label, position, className }: { label: string; position: "left-rail" | "right-rail"; className: string }) {
+function AdRail({ label, position, className, showPlaceholder }: { label: string; position: "left-rail" | "right-rail"; className: string; showPlaceholder: boolean }) {
   return <aside aria-label={label} className={`sticky top-20 hidden self-start ${className}`}>
-    <div className="mx-auto mt-4 flex h-[600px] w-[160px] items-center justify-center rounded-xl border border-dashed border-slate-200 bg-slate-50 text-xs text-slate-400" data-ad-slot={position}>
-      <span>{label}</span>
-    </div>
+    {showPlaceholder && <div className="mx-auto mt-4 flex h-[600px] w-[160px] items-center justify-center rounded-xl border border-dashed border-slate-200 bg-slate-50 text-xs text-slate-400" data-ad-slot={position}><span>{label}</span></div>}
   </aside>;
 }
 

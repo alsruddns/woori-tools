@@ -19,6 +19,12 @@ pnpm build
 pnpm start     # port 3002
 ```
 
+## Ads
+
+Ad slots are disabled by default. Set `NEXT_PUBLIC_ADS_ENABLED=true` to enable the desktop ad rails on tool detail pages. The current code does not load an AdSense script or publish ads. For layout checks only, set `NEXT_PUBLIC_SHOW_AD_PLACEHOLDER=true` as well to show placeholder boxes.
+
+To connect AdSense later: obtain AdSense approval, add its script and publisher ID, configure the left and right slot IDs, enable `NEXT_PUBLIC_ADS_ENABLED`, then verify production build, layout shift, mobile behavior, and `ads.txt`.
+
 ## Docker
 
 ```sh

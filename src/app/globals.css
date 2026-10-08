@@ -4,3 +4,10 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
+button {
+  transition: transform 120ms ease;
+}
+
+button:active:not(:disabled) {
+  transform: scale(0.98);
+}
