@@ -86,7 +86,11 @@ export async function submitIndexNow({ dryRun = process.env.INDEXNOW_DRY_RUN ===
     headers: { "Content-Type": "application/json; charset=utf-8" },
     body: JSON.stringify(body),
   });
-  if (!response.ok) throw new Error(`IndexNow submission failed: HTTP ${response.status} ${response.statusText}`);
+  if (!response.ok) {
+    const details = (await response.text()).trim();
+    const suffix = details ? `: ${details.slice(0, 2000)}` : "";
+    throw new Error(`IndexNow submission failed: HTTP ${response.status} ${response.statusText}${suffix}`);
+  }
   console.log(`Submitted ${body.urlList.length} URLs to IndexNow (HTTP ${response.status}).`);
   return body;
 }
