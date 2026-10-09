@@ -4,7 +4,7 @@ import { pathToFileURL } from "node:url";
 import ts from "typescript";
 
 export const INDEXNOW_ENDPOINT = "https://api.indexnow.org/IndexNow";
-export const INDEXNOW_KEY = "8d730277e73843358dbc63ab157816af";
+export const INDEXNOW_KEY = "bc52d22e38f7489988b717aa090fbdfb";
 export const INDEXNOW_KEY_LOCATION = `https://www.woori.today/${INDEXNOW_KEY}.txt`;
 export const SITE_ORIGIN = "https://www.woori.today";
 export const LOCALES = ["ko", "en", "ja", "zh"];
@@ -80,6 +80,17 @@ export async function submitIndexNow({ dryRun = process.env.INDEXNOW_DRY_RUN ===
     console.log(JSON.stringify(body, null, 2));
     return body;
   }
+
+  console.log(`Checking IndexNow key file: ${INDEXNOW_KEY_LOCATION}`);
+  const keyResponse = await fetch(INDEXNOW_KEY_LOCATION);
+  if (!keyResponse.ok) {
+    throw new Error(`IndexNow key file is not reachable: HTTP ${keyResponse.status} ${keyResponse.statusText}`);
+  }
+  const publishedKey = (await keyResponse.text()).trim();
+  if (publishedKey !== INDEXNOW_KEY) {
+    throw new Error("IndexNow key file content does not match the configured API key.");
+  }
+  console.log("IndexNow key file is reachable and matches the configured key.");
 
   const response = await fetch(INDEXNOW_ENDPOINT, {
     method: "POST",

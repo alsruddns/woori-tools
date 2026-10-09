@@ -33,6 +33,8 @@ test("IndexNow body matches the API shape and removes duplicate input URLs", () 
     urlList: [url],
   });
   assert.equal(INDEXNOW_ENDPOINT, "https://api.indexnow.org/IndexNow");
+  assert.equal(INDEXNOW_KEY, "bc52d22e38f7489988b717aa090fbdfb");
+  assert.equal(INDEXNOW_KEY_LOCATION, "https://www.woori.today/bc52d22e38f7489988b717aa090fbdfb.txt");
 });
 
 test("IndexNow key verification file is served from the public root", async () => {
