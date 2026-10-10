@@ -28,6 +28,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const seoTitle = rawLocale === "ko" && slug === "lotto-number-generator" ? "로또 번호 추첨기 | 로또 번호 생성기"
     : rawLocale === "ko" && slug === "powerball-number-generator" ? "파워볼 번호 추첨기 | Powerball 번호 생성기"
     : rawLocale === "ko" && slug === "mega-millions-number-generator" ? "메가밀리언 번호 추첨기 | Mega Millions 번호 생성기"
+    : rawLocale === "ko" && slug === "japan-loto6-number-generator" ? "일본 로또6 번호 추첨기 | LOTO 6 번호 생성기"
+    : rawLocale === "ko" && slug === "japan-loto7-number-generator" ? "일본 로또7 번호 추첨기 | LOTO 7 번호 생성기"
+    : rawLocale === "ko" && slug === "japan-mini-loto-number-generator" ? "일본 미니로또 번호 추첨기 | MINI LOTO 번호 생성기"
     : localized.title;
   return pageMetadata({ locale: rawLocale, path: `/tools/${slug}`, title: seoTitle, description: localized.description, keywords: localized.keywords });
 }

@@ -31,7 +31,7 @@ test("creates five distinct games", () => {
 import { generateLotteryGame, generateLotteryGames, lotteryRules } from "../src/lib/lottery.mjs";
 
 test("draws valid lottery results for 1,000 repetitions per game", () => {
-  for (const kind of ["lotto", "powerball", "megaMillions"]) {
+  for (const kind of ["lotto", "powerball", "megaMillions", "japanLoto6", "japanLoto7", "japanMiniLoto"]) {
     const rule = lotteryRules[kind];
     for (let index = 0; index < 1000; index++) {
       const { main, special } = generateLotteryGame(kind);
@@ -49,7 +49,13 @@ test("supports one or five American lottery games", () => {
   assert.deepEqual(lotteryRules.powerball, { mainMin: 1, mainMax: 69, mainCount: 5, specialMin: 1, specialMax: 26 });
   assert.deepEqual(lotteryRules.megaMillions, { mainMin: 1, mainMax: 70, mainCount: 5, specialMin: 1, specialMax: 24 });
   assert.deepEqual(lotteryRules.lotto, { mainMin: 1, mainMax: 45, mainCount: 6 });
+  assert.deepEqual(lotteryRules.japanLoto6, { mainMin: 1, mainMax: 43, mainCount: 6 });
+  assert.deepEqual(lotteryRules.japanLoto7, { mainMin: 1, mainMax: 37, mainCount: 7 });
+  assert.deepEqual(lotteryRules.japanMiniLoto, { mainMin: 1, mainMax: 31, mainCount: 5 });
   assert.equal(generateLotteryGames("powerball").length, 1);
   assert.equal(generateLotteryGames("megaMillions", 5).length, 5);
+  assert.equal(generateLotteryGames("japanLoto6", 5).length, 5);
+  assert.equal(generateLotteryGames("japanLoto7", 5).length, 5);
+  assert.equal(generateLotteryGames("japanMiniLoto", 5).length, 5);
   assert.throws(() => generateLotteryGames("powerball", 6));
 });

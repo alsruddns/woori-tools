@@ -61,6 +61,9 @@ export function ToolWorkspace({ tool, locale, messages }: { tool: ToolDefinition
   if (tool.slug === "lotto-number-generator") return <LottoWorkspace locale={locale} />;
   if (tool.slug === "powerball-number-generator") return <LotteryWorkspace locale={locale} kind="powerball" />;
   if (tool.slug === "mega-millions-number-generator") return <LotteryWorkspace locale={locale} kind="megaMillions" />;
+  if (tool.slug === "japan-loto6-number-generator") return <LotteryWorkspace locale={locale} kind="japanLoto6" />;
+  if (tool.slug === "japan-loto7-number-generator") return <LotteryWorkspace locale={locale} kind="japanLoto7" />;
+  if (tool.slug === "japan-mini-loto-number-generator") return <LotteryWorkspace locale={locale} kind="japanMiniLoto" />;
   if (tool.slug === "dice-roller") return <DiceWorkspace locale={locale} />;
   if (tool.slug === "random-number") return <RandomNumberWorkspace locale={locale} />;
   if (tool.slug === "random-name-picker" || tool.slug === "draw-lots") return <RandomNameWorkspace slug={tool.slug} locale={locale} />;
