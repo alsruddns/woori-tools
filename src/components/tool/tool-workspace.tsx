@@ -19,6 +19,7 @@ import { RandomStringWorkspace } from "@/components/tool/random-string-workspace
 import { LadderWorkspace } from "@/components/tool/ladder-workspace";
 import { DailyFortuneWorkspace, TarotWorkspace } from "@/components/tool/fortune-workspace";
 import { SajuWorkspace } from "@/components/tool/saju-workspace";
+import { LotteryWorkspace } from "@/components/tool/lottery-workspace";
 import { DiceWorkspace, LottoWorkspace, RandomNameWorkspace, RandomNumberWorkspace, RandomOrderWorkspace, RandomSeatWorkspace, RandomTeamWorkspace, RandomWheelWorkspace } from "@/components/tool/special-random-workspaces";
 
 const MAX_IMAGE = 30 * 1024 * 1024;
@@ -58,6 +59,8 @@ export function ToolWorkspace({ tool, locale, messages }: { tool: ToolDefinition
   if (tool.slug === "daily-fortune") return <DailyFortuneWorkspace locale={locale} />;
   if (tool.slug === "saju") return <SajuWorkspace locale={locale} />;
   if (tool.slug === "lotto-number-generator") return <LottoWorkspace locale={locale} />;
+  if (tool.slug === "powerball-number-generator") return <LotteryWorkspace locale={locale} kind="powerball" />;
+  if (tool.slug === "mega-millions-number-generator") return <LotteryWorkspace locale={locale} kind="megaMillions" />;
   if (tool.slug === "dice-roller") return <DiceWorkspace locale={locale} />;
   if (tool.slug === "random-number") return <RandomNumberWorkspace locale={locale} />;
   if (tool.slug === "random-name-picker" || tool.slug === "draw-lots") return <RandomNameWorkspace slug={tool.slug} locale={locale} />;

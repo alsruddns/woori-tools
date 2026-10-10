@@ -17,7 +17,13 @@ const copy = {
 type LottoHistory = { createdAt: string; games: number[][]; settings: { count: 1 | 5; included: number[]; excluded: number[]; oddCount: number | null; sorted: boolean } };
 
 export function LottoWorkspace({ locale }: { locale: Locale }) {
-  const t = copy[locale];
+  const lottoLabels = {
+    ko: { generate: "번호 추첨하기", again: "다시 추첨", five: "5게임 추첨", notice: "이 도구는 무작위 번호 추첨을 위한 도구이며, 당첨 번호를 예측하거나 당첨을 보장하지 않습니다." },
+    en: { generate: "Draw numbers", again: "Draw again", five: "Draw 5 games", notice: "This tool draws random numbers for entertainment. It cannot predict winning numbers or guarantee a prize." },
+    ja: { generate: "番号を抽選", again: "もう一度抽選", five: "5口を抽選", notice: "娯楽目的でランダムな番号を抽選するツールです。当選番号の予測や当選の保証はできません。" },
+    zh: { generate: "抽取号码", again: "再次抽取", five: "抽取5注", notice: "本工具仅供娱乐，随机抽取号码，不会预测中奖号码或保证中奖。" },
+  }[locale];
+  const t = { ...copy[locale], generate: lottoLabels.generate, again: lottoLabels.again, five: lottoLabels.five };
   const [mode, setMode] = useState<"include" | "exclude">("include");
   const [included, setIncluded] = useState<number[]>([]);
   const [excluded, setExcluded] = useState<number[]>([]);
@@ -54,6 +60,7 @@ export function LottoWorkspace({ locale }: { locale: Locale }) {
   const selected = mode === "include" ? included : excluded;
 
   return <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
+    <p className="mb-5 rounded-xl bg-indigo-50 p-3 text-sm text-indigo-900">{lottoLabels.notice}</p>
     <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(260px,0.8fr)]">
       <fieldset><legend className="text-sm font-semibold">{t.selection}</legend>
         <div className="mt-3 flex flex-wrap gap-2" role="group" aria-label={t.selectMode}>
