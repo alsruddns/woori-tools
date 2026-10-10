@@ -12,7 +12,7 @@ export function SiteFooter({ locale, messages }: { locale: Locale; messages: Dic
         </div>
         <nav aria-label={messages.terms} className="flex gap-5">
           <Link href={localizePath(locale, "/privacy")} className="hover:text-indigo-700">{messages.privacy}</Link>
-          <Link href={localizePath(locale, "/terms")} className="hover:text-indigo-700">{messages.terms}</Link>
+          <Link href="https://www.woori.today/terms" className="hover:text-indigo-700">{messages.terms}</Link>
         </nav>
       </div>
     </footer>
