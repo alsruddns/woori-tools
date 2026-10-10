@@ -19,6 +19,9 @@ export const lotteryRules = {
   lotto: { mainMin: 1, mainMax: 45, mainCount: 6 },
   powerball: { mainMin: 1, mainMax: 69, mainCount: 5, specialMin: 1, specialMax: 26 },
   megaMillions: { mainMin: 1, mainMax: 70, mainCount: 5, specialMin: 1, specialMax: 24 },
+  japanLoto6: { mainMin: 1, mainMax: 43, mainCount: 6 },
+  japanLoto7: { mainMin: 1, mainMax: 37, mainCount: 7 },
+  japanMiniLoto: { mainMin: 1, mainMax: 31, mainCount: 5 },
 };
 
 export function generateLotteryGame(kind) {

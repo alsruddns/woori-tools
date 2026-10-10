@@ -50,6 +50,9 @@ test("sitemap is generated from the public registry and includes every locale", 
     for (const tool of publicTools) {
       assert.ok(entries.some(({ url }) => url === `${siteOrigin}/${locale}/tools/${tool.slug}`));
     }
+    for (const slug of ["japan-loto6-number-generator", "japan-loto7-number-generator", "japan-mini-loto-number-generator"]) {
+      assert.ok(entries.some(({ url }) => url === `${siteOrigin}/${locale}/tools/${slug}`));
+    }
   }
 
   for (const entry of entries) {
