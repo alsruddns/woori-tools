@@ -25,7 +25,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const tool = getTool(slug);
   if (!tool) return {};
   const localized = localizeTool(tool, rawLocale);
-  return pageMetadata({ locale: rawLocale, path: `/tools/${slug}`, title: localized.title, description: localized.description, keywords: localized.keywords });
+  const seoTitle = rawLocale === "ko" && slug === "lotto-number-generator" ? "로또 번호 추첨기 | 로또 번호 생성기"
+    : rawLocale === "ko" && slug === "powerball-number-generator" ? "파워볼 번호 추첨기 | Powerball 번호 생성기"
+    : rawLocale === "ko" && slug === "mega-millions-number-generator" ? "메가밀리언 번호 추첨기 | Mega Millions 번호 생성기"
+    : localized.title;
+  return pageMetadata({ locale: rawLocale, path: `/tools/${slug}`, title: seoTitle, description: localized.description, keywords: localized.keywords });
 }
 
 export default async function ToolPage({ params }: Props) {
