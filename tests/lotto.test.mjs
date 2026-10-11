@@ -21,6 +21,31 @@ test("rejects conflicting or impossible settings", () => {
   assert.throws(() => generateLottoGames({ included: [1, 3, 5, 7, 9, 11], oddCount: 0 }));
 });
 
+test("supports included and excluded options for US and Japan game sizes", () => {
+  const games = [
+    { min: 1, max: 69, numberCount: 5 },
+    { min: 1, max: 70, numberCount: 5 },
+    { min: 1, max: 43, numberCount: 6 },
+    { min: 1, max: 37, numberCount: 7 },
+    { min: 1, max: 31, numberCount: 5 },
+  ];
+  for (const rule of games) {
+    for (let repetition = 0; repetition < 1000; repetition++) {
+      const [game] = generateLottoGames({ ...rule, included: [1, 3], excluded: [2, 4], oddCount: 2 });
+      assert.equal(game.length, rule.numberCount);
+      assert.ok(game.includes(1) && game.includes(3));
+      assert.ok(game.every((number) => number >= rule.min && number <= rule.max && number !== 2 && number !== 4));
+      assert.equal(game.filter((number) => number % 2 === 1).length, 2);
+      assert.deepEqual(game, [...game].sort((a, b) => a - b));
+    }
+    const fiveGames = generateLottoGames({ ...rule, count: 5, included: [1, 3], excluded: [2, 4], oddCount: 2 });
+    assert.equal(fiveGames.length, 5);
+    assert.equal(new Set(fiveGames.map((game) => [...game].sort((a, b) => a - b).join(","))).size, 5);
+    assert.throws(() => generateLottoGames({ ...rule, included: [1], excluded: [1] }));
+  }
+  assert.throws(() => generateLottoGames({ min: 1, max: 31, numberCount: 5, included: [1, 3, 5, 7, 9], oddCount: 1 }));
+});
+
 test("creates five distinct games", () => {
   const games = generateLottoGames({ count: 5 });
   assert.equal(games.length, 5);

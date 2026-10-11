@@ -8,12 +8,12 @@ export type ToolDefinition = {
 };
 
 const entries: Array<[string, ToolCategory, string, string, string[], boolean]> = [
-  ["lotto-number-generator","random","로또 번호 추첨기","1~45 숫자 중 6개를 무작위 추첨합니다. 로또 번호 생성기로도 사용할 수 있습니다.",["로또","로또 번호 추첨","로또 번호 생성기","Lotto Number Generator"],true],
-  ["powerball-number-generator","random","파워볼 번호 추첨기","흰 공 1~69 중 5개와 Powerball 1~26 중 1개를 무작위 추첨합니다.",["파워볼 번호 추첨기","파워볼 번호 생성기","Powerball Number Generator"],true],
-  ["mega-millions-number-generator","random","메가밀리언 번호 추첨기","메인 번호 1~70 중 5개와 Mega Ball 1~24 중 1개를 무작위 추첨합니다.",["메가밀리언 번호 추첨기","메가밀리언 번호 생성기","Mega Millions Number Generator"],true],
-  ["japan-loto6-number-generator","random","일본 로또6 번호 추첨기","일본 LOTO 6 공식 규칙에 따라 1~43 중 서로 다른 번호 6개를 무작위로 추첨합니다.",["일본 로또6 번호 추첨기","일본 로또6 번호 생성기","로또6 번호 생성","LOTO 6","Japan LOTO 6 Number Generator"],true],
-  ["japan-loto7-number-generator","random","일본 로또7 번호 추첨기","일본 LOTO 7 공식 규칙에 따라 1~37 중 서로 다른 번호 7개를 무작위로 추첨합니다.",["일본 로또7 번호 추첨기","일본 로또7 번호 생성기","로또7 번호 생성","LOTO 7","Japan LOTO 7 Number Generator"],true],
-  ["japan-mini-loto-number-generator","random","일본 미니로또 번호 추첨기","일본 MINI LOTO 공식 규칙에 따라 1~31 중 서로 다른 번호 5개를 무작위로 추첨합니다.",["일본 미니로또 번호 추첨기","일본 미니로또 번호 생성기","미니로또 번호 생성","MINI LOTO","Japan Mini Loto Number Generator"],true],
+  ["lotto-number-generator","random","로또 번호 추첨기","1~45 숫자 중 6개의 번호를 무작위 추첨합니다. 포함·제외 번호와 홀짝 비율을 설정할 수 있어 로또 번호 생성기로도 사용할 수 있습니다.",["로또","로또 번호 추첨","로또 번호 생성기","Lotto Number Generator"],true],
+  ["powerball-number-generator","random","파워볼 번호 추첨기","포함·제외 번호와 홀짝 비율을 설정해 흰 공 1~69 중 5개를 추첨하고, Powerball 1~26 중 1개를 별도로 생성합니다.",["파워볼 번호 추첨기","파워볼 번호 생성기","Powerball Number Generator"],true],
+  ["mega-millions-number-generator","random","메가밀리언 번호 추첨기","포함·제외 번호와 홀짝 비율을 설정해 메인 번호 1~70 중 5개를 추첨하고, Mega Ball 1~24 중 1개를 별도로 생성합니다.",["메가밀리언 번호 추첨기","메가밀리언 번호 생성기","Mega Millions Number Generator"],true],
+  ["japan-loto6-number-generator","random","일본 로또6 번호 추첨기","일본 LOTO 6 규칙에 따라 1~43 중 6개를 추첨합니다. 포함·제외 번호, 홀짝 비율, 게임 수를 설정할 수 있습니다.",["일본 로또6 번호 추첨기","일본 로또6 번호 생성기","로또6 번호 생성","LOTO 6","Japan LOTO 6 Number Generator"],true],
+  ["japan-loto7-number-generator","random","일본 로또7 번호 추첨기","일본 LOTO 7 규칙에 따라 1~37 중 7개를 추첨합니다. 포함·제외 번호, 홀짝 비율, 게임 수를 설정할 수 있습니다.",["일본 로또7 번호 추첨기","일본 로또7 번호 생성기","로또7 번호 생성","LOTO 7","Japan LOTO 7 Number Generator"],true],
+  ["japan-mini-loto-number-generator","random","일본 미니로또 번호 추첨기","일본 MINI LOTO 규칙에 따라 1~31 중 5개를 추첨합니다. 포함·제외 번호, 홀짝 비율, 게임 수를 설정할 수 있습니다.",["일본 미니로또 번호 추첨기","일본 미니로또 번호 생성기","미니로또 번호 생성","MINI LOTO","Japan Mini Loto Number Generator"],true],
   ["tarot-card","fortune","타로카드","무료 타로카드 뽑기: 오늘의 타로와 과거·현재·미래 3장 배열을 즐겨 보세요.",["타로","무료 타로","오늘의 타로","타로카드 뽑기","3장 타로","연애 타로","tarot","占い","塔罗"],true],
   ["daily-fortune","fortune","오늘의 운세","생년월일로 보는 무료 오늘 운세: 금전운, 연애운, 직장·학업운을 확인하세요.",["오늘의 운세","무료 운세","생년월일 운세","오늘 운세","금전운","연애운","daily fortune","今日の運勢","今日运势"],true],
   ["saju","fortune","사주팔자","KASI 음력 자료와 절기 기준을 적용해 년주·월주·일주·시주와 오행 분포를 계산합니다.",["사주","사주팔자","만세력","사주 오행","saju","四柱推命","四柱"],true],

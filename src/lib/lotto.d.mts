@@ -4,5 +4,8 @@ export type LottoOptions = {
   excluded?: number[];
   oddCount?: number | null;
   sorted?: boolean;
+  min?: number;
+  max?: number;
+  numberCount?: number;
 };
 export function generateLottoGames(options?: LottoOptions): number[][];

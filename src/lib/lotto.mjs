@@ -22,25 +22,26 @@ function choose(n, k) {
   return Math.round(result);
 }
 
-export function generateLottoGames({ count = 1, included = [], excluded = [], oddCount = null, sorted = true } = {}) {
+export function generateLottoGames({ count = 1, included = [], excluded = [], oddCount = null, sorted = true, min = 1, max = 45, numberCount = 6 } = {}) {
   if (![1, 5].includes(count)) throw new Error("Choose one or five games.");
+  if (!Number.isInteger(min) || !Number.isInteger(max) || min < 1 || max < min || !Number.isInteger(numberCount) || numberCount < 1 || numberCount > max - min + 1) throw new Error("Choose a valid number range and game size.");
   const include = [...new Set(included)];
   const exclude = [...new Set(excluded)];
   if (include.length !== included.length || exclude.length !== excluded.length) throw new Error("Number selections must be unique.");
-  if (include.some((number) => !Number.isInteger(number) || number < 1 || number > 45) || exclude.some((number) => !Number.isInteger(number) || number < 1 || number > 45)) throw new Error("Numbers must be between 1 and 45.");
-  if (include.length > 6) throw new Error("Choose at most six included numbers.");
+  if (include.some((number) => !Number.isInteger(number) || number < min || number > max) || exclude.some((number) => !Number.isInteger(number) || number < min || number > max)) throw new Error(`Numbers must be between ${min} and ${max}.`);
+  if (include.length > numberCount) throw new Error(`Choose at most ${numberCount} included numbers.`);
   if (include.some((number) => exclude.includes(number))) throw new Error("A number cannot be both included and excluded.");
-  if (oddCount !== null && (!Number.isInteger(oddCount) || oddCount < 0 || oddCount > 6)) throw new Error("Choose a valid odd/even ratio.");
+  if (oddCount !== null && (!Number.isInteger(oddCount) || oddCount < 0 || oddCount > numberCount)) throw new Error("Choose a valid odd/even ratio.");
 
-  const availableOdd = Array.from({ length: 45 }, (_, index) => index + 1).filter((number) => number % 2 && !exclude.includes(number) && !include.includes(number));
-  const availableEven = Array.from({ length: 45 }, (_, index) => index + 1).filter((number) => !(number % 2) && !exclude.includes(number) && !include.includes(number));
+  const availableOdd = Array.from({ length: max - min + 1 }, (_, index) => index + min).filter((number) => number % 2 && !exclude.includes(number) && !include.includes(number));
+  const availableEven = Array.from({ length: max - min + 1 }, (_, index) => index + min).filter((number) => !(number % 2) && !exclude.includes(number) && !include.includes(number));
   const includedOdd = include.filter((number) => number % 2).length;
   const targetOdd = oddCount ?? null;
   const oddNeeded = targetOdd === null ? undefined : targetOdd - includedOdd;
-  if (oddNeeded !== undefined && (oddNeeded < 0 || oddNeeded > availableOdd.length || 6 - targetOdd - (include.length - includedOdd) > availableEven.length)) {
+  if (oddNeeded !== undefined && (oddNeeded < 0 || oddNeeded > availableOdd.length || numberCount - targetOdd - (include.length - includedOdd) > availableEven.length)) {
     throw new Error("The included and excluded numbers cannot satisfy this odd/even ratio.");
   }
-  const remainingSlots = 6 - include.length;
+  const remainingSlots = numberCount - include.length;
   const candidateCount = targetOdd === null
     ? choose(availableOdd.length + availableEven.length, remainingSlots)
     : choose(availableOdd.length, oddNeeded) * choose(availableEven.length, remainingSlots - oddNeeded);
