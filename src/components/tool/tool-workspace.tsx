@@ -58,11 +58,11 @@ export function ToolWorkspace({ tool, locale, messages }: { tool: ToolDefinition
   if (tool.slug === "daily-fortune") return <DailyFortuneWorkspace locale={locale} />;
   if (tool.slug === "saju") return <SajuWorkspace locale={locale} />;
   if (tool.slug === "lotto-number-generator") return <LottoWorkspace locale={locale} />;
-  if (tool.slug === "powerball-number-generator") return <LottoWorkspace locale={locale} min={1} max={69} numberCount={5} historyKey="woori-powerball-history" specialBall={{ min: 1, max: 26, label: { ko: "Powerball", en: "Powerball", ja: "Powerball", zh: "Powerball" } }} />;
-  if (tool.slug === "mega-millions-number-generator") return <LottoWorkspace locale={locale} min={1} max={70} numberCount={5} historyKey="woori-mega-millions-history" specialBall={{ min: 1, max: 24, label: { ko: "Mega Ball", en: "Mega Ball", ja: "Mega Ball", zh: "Mega Ball" } }} />;
-  if (tool.slug === "japan-loto6-number-generator") return <LottoWorkspace locale={locale} min={1} max={43} numberCount={6} historyKey="woori-japan-loto6-history" />;
-  if (tool.slug === "japan-loto7-number-generator") return <LottoWorkspace locale={locale} min={1} max={37} numberCount={7} historyKey="woori-japan-loto7-history" />;
-  if (tool.slug === "japan-mini-loto-number-generator") return <LottoWorkspace locale={locale} min={1} max={31} numberCount={5} historyKey="woori-japan-mini-loto-history" />;
+  if (tool.slug === "powerball-number-generator") return <LottoWorkspace locale={locale} min={1} max={69} numberCount={5} historyKey="lottery-history:powerball-number-generator" specialBall={{ min: 1, max: 26, label: { ko: "Powerball", en: "Powerball", ja: "Powerball", zh: "Powerball" } }} />;
+  if (tool.slug === "mega-millions-number-generator") return <LottoWorkspace locale={locale} min={1} max={70} numberCount={5} historyKey="lottery-history:mega-millions-number-generator" specialBall={{ min: 1, max: 24, label: { ko: "Mega Ball", en: "Mega Ball", ja: "Mega Ball", zh: "Mega Ball" } }} />;
+  if (tool.slug === "japan-loto6-number-generator") return <LottoWorkspace locale={locale} min={1} max={43} numberCount={6} historyKey="lottery-history:japan-loto6-number-generator" />;
+  if (tool.slug === "japan-loto7-number-generator") return <LottoWorkspace locale={locale} min={1} max={37} numberCount={7} historyKey="lottery-history:japan-loto7-number-generator" />;
+  if (tool.slug === "japan-mini-loto-number-generator") return <LottoWorkspace locale={locale} min={1} max={31} numberCount={5} historyKey="lottery-history:japan-mini-loto-number-generator" />;
   if (tool.slug === "dice-roller") return <DiceWorkspace locale={locale} />;
   if (tool.slug === "random-number") return <RandomNumberWorkspace locale={locale} />;
   if (tool.slug === "random-name-picker" || tool.slug === "draw-lots") return <RandomNameWorkspace slug={tool.slug} locale={locale} />;

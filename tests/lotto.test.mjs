@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { generateLottoGames } from "../src/lib/lotto.mjs";
+import { generateLottoGames, generateSpecialBalls, lotteryHistoryStorageKey } from "../src/lib/lotto.mjs";
 
 test("generates six unique numbers between 1 and 45", () => {
   const [game] = generateLottoGames();
@@ -50,6 +50,30 @@ test("creates five distinct games", () => {
   const games = generateLottoGames({ count: 5 });
   assert.equal(games.length, 5);
   assert.equal(new Set(games.map((game) => [...game].sort((a, b) => a - b).join(","))).size, 5);
+});
+
+test("supports automatic, included, and excluded Powerball and Mega Ball selections", () => {
+  for (const { min, max } of [{ min: 1, max: 26 }, { min: 1, max: 24 }]) {
+    for (let repetition = 0; repetition < 1000; repetition++) {
+      const [automatic] = generateSpecialBalls({ min, max });
+      const [included] = generateSpecialBalls({ count: 5, min, max, mode: "include", number: min + 2 });
+      const excluded = generateSpecialBalls({ count: 5, min, max, mode: "exclude", number: min + 2 });
+      assert.ok(automatic >= min && automatic <= max);
+      assert.equal(included, min + 2);
+      assert.equal(excluded.length, 5);
+      assert.ok(excluded.every((number) => number >= min && number <= max && number !== min + 2));
+    }
+    assert.throws(() => generateSpecialBalls({ min, max, mode: "include" }));
+    assert.throws(() => generateSpecialBalls({ min, max, mode: "exclude" }));
+    assert.ok(generateSpecialBalls({ min, max, mode: "exclude", number: min }).every((number) => number !== min));
+  }
+});
+
+test("keeps recent lottery history isolated by tool slug", () => {
+  const slugs = ["lotto-number-generator", "powerball-number-generator", "mega-millions-number-generator", "japan-loto6-number-generator", "japan-loto7-number-generator", "japan-mini-loto-number-generator"];
+  const keys = slugs.map(lotteryHistoryStorageKey);
+  assert.deepEqual(keys, slugs.map((slug) => `lottery-history:${slug}`));
+  assert.equal(new Set(keys).size, slugs.length);
 });
 
 

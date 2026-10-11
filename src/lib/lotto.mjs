@@ -22,6 +22,24 @@ function choose(n, k) {
   return Math.round(result);
 }
 
+export function lotteryHistoryStorageKey(slug) {
+  return `lottery-history:${slug}`;
+}
+
+export function generateSpecialBalls({ count = 1, min, max, mode = "auto", number = null } = {}) {
+  if (!Number.isInteger(count) || count < 1 || count > 5 || !Number.isInteger(min) || !Number.isInteger(max) || min < 1 || max < min) {
+    throw new Error("Choose a valid special ball range and game count.");
+  }
+  if (mode === "auto") return Array.from({ length: count }, () => randomInt(min, max));
+  if (!["include", "exclude"].includes(mode) || !Number.isInteger(number) || number < min || number > max) {
+    throw new Error("Choose a valid special ball number.");
+  }
+  if (mode === "include") return Array(count).fill(number);
+  const available = Array.from({ length: max - min + 1 }, (_, index) => index + min).filter((value) => value !== number);
+  if (available.length === 0) throw new Error("The excluded special ball leaves no valid number.");
+  return Array.from({ length: count }, () => available[randomInt(0, available.length - 1)]);
+}
+
 export function generateLottoGames({ count = 1, included = [], excluded = [], oddCount = null, sorted = true, min = 1, max = 45, numberCount = 6 } = {}) {
   if (![1, 5].includes(count)) throw new Error("Choose one or five games.");
   if (!Number.isInteger(min) || !Number.isInteger(max) || min < 1 || max < min || !Number.isInteger(numberCount) || numberCount < 1 || numberCount > max - min + 1) throw new Error("Choose a valid number range and game size.");
