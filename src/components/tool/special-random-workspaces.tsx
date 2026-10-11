@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import type { Locale } from "@/i18n/routing";
 import { randomInt, secureShuffle, pickUnique, pickUniqueRange } from "@/lib/random";
-import { generateLottoGames } from "@/lib/lotto.mjs";
+import { generateLottoGames, generateSpecialBalls, lotteryHistoryStorageKey } from "@/lib/lotto.mjs";
 import { divideEvenly, normalizeWheelItems, rollDice } from "@/lib/random-tools.mjs";
 import { copyText as copyToClipboard } from "@/lib/copy-to-clipboard";
 
@@ -14,11 +14,11 @@ const copy = {
   zh: { generate: "生成号码", again: "重新生成", copy: "复制", copyAll: "复制全部", reset: "重置条件", games: "注数", one: "1注", five: "5注", include: "包含号码", exclude: "排除号码", selection: "选择号码", included: "包含", excluded: "排除", clear: "清除选择", oddEven: "奇偶比例", auto: "自动", odd: "奇数", even: "偶数", sorted: "升序排列", unique: "不重复", history: "最近生成记录", clearHistory: "清空记录", reuse: "再次使用", count: "项", draw: "掷骰子", die: "面骰子", diceCount: "骰子数量", total: "合计", minimum: "最小值", maximum: "最大值", average: "平均值", explanation: "D代表Dice（骰子），后面的数字表示面数。D6是六面骰子，D20是二十面骰子。", participants: "参与者（每行一人）", participantCount: "人", drawCount: "中奖人数", repeats: "允许重复中奖", removeWinner: "从名单中移除中奖者", shuffle: "打乱名单", teams: "分组设置", teamCount: "队伍数量", teamSize: "每队人数", byTeams: "按队伍数量", bySize: "按每队人数", teamNames: "队伍名称（可选，每行一个）", result: "结果", participantsRequired: "请至少输入一名参与者。", invalidCount: "请检查中奖人数。", includeMax: "最多选择六个包含号码。", selectMode: "选择模式", copyFailed: "复制失败。" },
 } as const;
 
-type LottoHistory = { createdAt: string; games: number[][]; specials?: number[]; settings: { count: 1 | 5; included: number[]; excluded: number[]; oddCount: number | null; sorted: boolean } };
+type LottoHistory = { createdAt: string; games: number[][]; specials?: number[]; settings: { count: 1 | 5; included: number[]; excluded: number[]; oddCount: number | null; sorted: boolean; specialMode?: "auto" | "include" | "exclude"; specialNumber?: number | null } };
 
 type LottoWorkspaceProps = { locale: Locale; min?: number; max?: number; numberCount?: number; historyKey?: string; specialBall?: { label: Record<Locale, string>; min: number; max: number } };
 
-export function LottoWorkspace({ locale, min = 1, max = 45, numberCount = 6, historyKey = "woori-lotto-history", specialBall }: LottoWorkspaceProps) {
+export function LottoWorkspace({ locale, min = 1, max = 45, numberCount = 6, historyKey = lotteryHistoryStorageKey("lotto-number-generator"), specialBall }: LottoWorkspaceProps) {
   const lottoLabels = {
     ko: { generate: "번호 추첨하기", again: "다시 추첨", five: "5게임 추첨", notice: "이 도구는 무작위 번호 추첨을 위한 도구이며, 당첨 번호를 예측하거나 당첨을 보장하지 않습니다." },
     en: { generate: "Draw numbers", again: "Draw again", five: "Draw 5 games", notice: "This tool draws random numbers for entertainment. It cannot predict winning numbers or guarantee a prize." },
@@ -27,6 +27,10 @@ export function LottoWorkspace({ locale, min = 1, max = 45, numberCount = 6, his
   }[locale];
   const t = { ...copy[locale], generate: lottoLabels.generate, again: lottoLabels.again, five: lottoLabels.five };
   const includeLimit = { ko: `포함 번호는 최대 ${numberCount}개까지 선택할 수 있습니다.`, en: `Choose up to ${numberCount} included numbers.`, ja: `含める数字は最大${numberCount}個まで選べます。`, zh: `最多可选择${numberCount}个包含号码。` }[locale];
+  const selectionConflict = { ko: { included: "포함 번호로 선택된 번호입니다.", excluded: "제외 번호로 선택된 번호입니다." }, en: { included: "This number is already included.", excluded: "This number is already excluded." }, ja: { included: "この数字はすでに含める番号に選択されています。", excluded: "この数字はすでに除外番号に選択されています。" }, zh: { included: "该号码已设为包含号码。", excluded: "该号码已设为排除号码。" } }[locale];
+  const specialPrompt = { ko: "특수 번호 선택", en: "Choose a special ball", ja: "特別数字を選択", zh: "选择特别号码" }[locale];
+  const specialRequired = { ko: "포함 또는 제외할 특수 번호를 선택하세요.", en: "Choose a special ball number to include or exclude.", ja: "含める、または除外する特別数字を選択してください。", zh: "请选择要包含或排除的特别号码。" }[locale];
+  const officialNotice = { ko: "실제 구매 방법과 최신 규칙은 해당 복권의 공식 안내를 확인하세요.", en: "Check the lottery's official guidance for purchase eligibility and current rules.", ja: "購入条件や最新ルールは、各宝くじの公式案内をご確認ください。", zh: "购买条件及最新规则请查看相应彩票的官方说明。" }[locale];
   const [mode, setMode] = useState<"include" | "exclude">("include");
   const [included, setIncluded] = useState<number[]>([]);
   const [excluded, setExcluded] = useState<number[]>([]);
@@ -35,17 +39,20 @@ export function LottoWorkspace({ locale, min = 1, max = 45, numberCount = 6, his
   const [sorted, setSorted] = useState(true);
   const [games, setGames] = useState<number[][]>([]);
   const [specials, setSpecials] = useState<number[]>([]);
+  const [specialMode, setSpecialMode] = useState<"auto" | "include" | "exclude">("auto");
+  const [specialNumber, setSpecialNumber] = useState<number | null>(null);
   const [history, setHistory] = useState<LottoHistory[]>([]);
   const [error, setError] = useState("");
   const [hydrated, setHydrated] = useState(false);
-  useEffect(() => { const id = window.setTimeout(() => { try { setHistory(JSON.parse(localStorage.getItem(historyKey) || "[]").slice(0, 20)); } catch { setHistory([]); } setHydrated(true); }, 0); return () => window.clearTimeout(id); }, [historyKey]);
+  useEffect(() => { const id = window.setTimeout(() => { try { const stored = localStorage.getItem(historyKey) ?? (historyKey === lotteryHistoryStorageKey("lotto-number-generator") ? localStorage.getItem("woori-lotto-history") : null); const parsed: unknown = JSON.parse(stored || "[]"); setHistory(Array.isArray(parsed) ? parsed.slice(0, 20) : []); } catch { setHistory([]); } setHydrated(true); }, 0); return () => window.clearTimeout(id); }, [historyKey]);
   useEffect(() => { if (hydrated) localStorage.setItem(historyKey, JSON.stringify(history.slice(0, 20))); }, [history, hydrated, historyKey]);
 
   function generate() {
     try {
-      const settings = { count, included, excluded, oddCount, sorted };
+      if (specialBall && specialMode !== "auto" && specialNumber === null) { setError(specialRequired); return; }
+      const settings = { count, included, excluded, oddCount, sorted, specialMode, specialNumber };
       const next = generateLottoGames({ ...settings, min, max, numberCount });
-      const nextSpecials = specialBall ? next.map(() => randomInt(specialBall.min, specialBall.max)) : [];
+      const nextSpecials = specialBall ? generateSpecialBalls({ count, min: specialBall.min, max: specialBall.max, mode: specialMode, number: specialNumber }) : [];
       setGames(next);
       setSpecials(nextSpecials);
       setHistory((old) => [{ createdAt: new Date().toISOString(), games: next, specials: nextSpecials, settings }, ...old].slice(0, 20));
@@ -54,42 +61,46 @@ export function LottoWorkspace({ locale, min = 1, max = 45, numberCount = 6, his
   }
   function toggleNumber(number: number) {
     if (mode === "include") {
-      if (included.includes(number)) setIncluded((old) => old.filter((item) => item !== number));
-      else if (included.length < numberCount) setIncluded((old) => [...old, number].sort((a, b) => a - b));
-      else setError(includeLimit);
+      if (excluded.includes(number)) { setError(selectionConflict.excluded); return; }
+      if (included.includes(number)) { setIncluded((old) => old.filter((item) => item !== number)); setError(""); return; }
+      if (included.length >= numberCount) { setError(includeLimit); return; }
+      setIncluded((old) => [...old, number].sort((a, b) => a - b));
     } else {
+      if (included.includes(number)) { setError(selectionConflict.included); return; }
       setExcluded((old) => old.includes(number) ? old.filter((item) => item !== number) : [...old, number].sort((a, b) => a - b));
     }
+    setError("");
   }
   async function copyText(value: string) { await copyToClipboard(value); }
-  const gameText = (value: number[][], extra: number[] = specials) => value.map((game, index) => `${index + 1}: ${[...game, ...(extra[index] === undefined ? [] : [extra[index]])].join(", ")}`).join("\n");
+  const gameText = (value: number[][], extra: number[] = specials) => value.map((game, index) => `${index + 1}: ${game.join(", ")}${extra[index] === undefined ? "" : ` + ${extra[index]}`}`).join("\n");
   const selected = mode === "include" ? included : excluded;
 
   return <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
-    <p className="mb-5 rounded-xl bg-indigo-50 p-3 text-sm text-indigo-900">{lottoLabels.notice}</p>
+    <p className="mb-5 rounded-xl bg-indigo-50 p-3 text-sm text-indigo-900">{lottoLabels.notice} {officialNotice}</p>
     <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(260px,0.8fr)]">
       <fieldset><legend className="text-sm font-semibold">{t.selection}</legend>
         <div className="mt-3 flex flex-wrap gap-2" role="group" aria-label={t.selectMode}>
-          <button type="button" onClick={() => setMode("include")} aria-pressed={mode === "include"} className={`rounded-lg border px-3 py-2 text-sm ${mode === "include" ? "border-indigo-600 bg-indigo-50 text-indigo-800" : "border-slate-300"}`}>{t.include}</button>
-          <button type="button" onClick={() => setMode("exclude")} aria-pressed={mode === "exclude"} className={`rounded-lg border px-3 py-2 text-sm ${mode === "exclude" ? "border-rose-500 bg-rose-50 text-rose-800" : "border-slate-300"}`}>{t.exclude}</button>
+          <button type="button" onClick={() => { setMode("include"); setError(""); }} aria-pressed={mode === "include"} className={`rounded-lg border px-3 py-2 text-sm ${mode === "include" ? "border-indigo-600 bg-indigo-50 text-indigo-800" : "border-slate-300"}`}>{t.include}</button>
+          <button type="button" onClick={() => { setMode("exclude"); setError(""); }} aria-pressed={mode === "exclude"} className={`rounded-lg border px-3 py-2 text-sm ${mode === "exclude" ? "border-rose-500 bg-rose-50 text-rose-800" : "border-slate-300"}`}>{t.exclude}</button>
         </div>
         <p className="mt-3 text-sm text-slate-600">{mode === "include" ? t.include : t.exclude}: {selected.length ? selected.map((number) => <button key={number} type="button" onClick={() => toggleNumber(number)} className="ml-1 rounded-full bg-slate-100 px-2.5 py-1 font-semibold">{number} ×</button>) : "—"}</p>
         <div className="mt-3 grid grid-cols-5 gap-2 sm:grid-cols-9">{Array.from({ length: max - min + 1 }, (_, index) => index + min).map((number) => {
           const includedValue = included.includes(number), excludedValue = excluded.includes(number), active = mode === "include" ? includedValue : excludedValue;
-          return <button key={number} type="button" aria-pressed={active} disabled={mode === "include" ? excludedValue : includedValue} onClick={() => toggleNumber(number)} className={`aspect-square min-h-10 rounded-full border text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-30 ${active ? mode === "include" ? "border-indigo-700 bg-indigo-600 text-white" : "border-rose-700 bg-rose-600 text-white" : "border-slate-200 bg-white hover:border-indigo-400"}`}>{number}</button>;
+          return <button key={number} type="button" aria-pressed={active} onClick={() => toggleNumber(number)} className={`aspect-square min-h-10 rounded-full border text-sm font-semibold transition ${active ? mode === "include" ? "border-indigo-700 bg-indigo-600 text-white" : "border-rose-700 bg-rose-600 text-white" : includedValue || excludedValue ? "border-slate-200 bg-slate-100 text-slate-400" : "border-slate-200 bg-white hover:border-indigo-400"}`}>{number}</button>;
         })}</div>
-        <div className="mt-3 flex flex-wrap gap-4"><button type="button" onClick={() => { setIncluded([]); setExcluded([]); setError(""); }} className="text-sm text-slate-600 underline">{t.clear}</button><button type="button" onClick={() => { setIncluded([]); setExcluded([]); setCount(1); setOddCount(null); setSorted(true); setMode("include"); setGames([]); setSpecials([]); setError(""); }} className="text-sm text-slate-600 underline">{t.reset}</button></div>
+        <div className="mt-3 flex flex-wrap gap-4"><button type="button" onClick={() => { setIncluded([]); setExcluded([]); setError(""); }} className="text-sm text-slate-600 underline">{t.clear}</button><button type="button" onClick={() => { setIncluded([]); setExcluded([]); setCount(1); setOddCount(null); setSorted(true); setMode("include"); setGames([]); setSpecials([]); setSpecialMode("auto"); setSpecialNumber(null); setError(""); }} className="text-sm text-slate-600 underline">{t.reset}</button></div>
       </fieldset>
       <div className="space-y-5">
         <fieldset><legend className="text-sm font-semibold">{t.games}</legend><div className="mt-2 grid grid-cols-2 gap-2">{([1, 5] as const).map((value) => <button key={value} type="button" aria-pressed={count === value} onClick={() => setCount(value)} className={`rounded-xl border p-3 font-semibold ${count === value ? "border-indigo-600 bg-indigo-50 text-indigo-800" : "border-slate-300"}`}>{value === 1 ? t.one : t.five}</button>)}</div></fieldset>
+        {specialBall && <fieldset><legend className="text-sm font-semibold">{specialBall.label[locale]}</legend><div className="mt-2 grid gap-2 sm:grid-cols-2"><select aria-label={specialBall.label[locale]} value={specialMode} onChange={(event) => { setSpecialMode(event.target.value as "auto" | "include" | "exclude"); setSpecialNumber(null); setError(""); }} className="min-h-11 rounded-xl border bg-white p-3"><option value="auto">{t.auto}</option><option value="include">{t.included}</option><option value="exclude">{t.excluded}</option></select>{specialMode !== "auto" && <select aria-label={specialPrompt} value={specialNumber ?? ""} onChange={(event) => { setSpecialNumber(event.target.value ? Number(event.target.value) : null); setError(""); }} className="min-h-11 rounded-xl border bg-white p-3"><option value="">{specialPrompt}</option>{Array.from({ length: specialBall.max - specialBall.min + 1 }, (_, index) => index + specialBall.min).map((number) => <option key={number} value={number}>{number}</option>)}</select>}</div></fieldset>}
         <label className="block text-sm font-semibold">{t.oddEven}<select value={oddCount === null ? "auto" : oddCount} onChange={(event) => setOddCount(event.target.value === "auto" ? null : Number(event.target.value))} className="mt-2 block w-full rounded-xl border border-slate-300 bg-white p-3"><option value="auto">{t.auto}</option>{Array.from({ length: numberCount + 1 }, (_, odd) => <option key={odd} value={odd}>{t.odd} {odd} / {t.even} {numberCount - odd}</option>)}</select></label>
         <label className="flex min-h-10 items-center gap-2 text-sm"><input type="checkbox" checked={sorted} onChange={(event) => setSorted(event.target.checked)} />{t.sorted}</label>
         <button type="button" onClick={generate} className="min-h-12 w-full rounded-xl bg-indigo-600 px-5 font-semibold text-white hover:bg-indigo-700">{games.length ? t.again : t.generate}</button>
       </div>
     </div>
     {error && <p role="alert" className="mt-4 rounded-xl bg-rose-50 p-3 text-sm text-rose-800">{error}</p>}
-    {games.length > 0 && <section className="mt-6 rounded-2xl bg-slate-50 p-4 sm:p-5"><div className="flex flex-wrap items-center justify-between gap-3"><h3 className="font-semibold">{t.result}</h3><button type="button" onClick={() => void copyText(gameText(games))} className="rounded-lg border bg-white px-3 py-2 text-sm">{t.copyAll}</button></div><div className="mt-4 grid gap-3">{games.map((game, index) => <article key={`${history[0]?.createdAt}-${index}`} className="flex flex-wrap items-center justify-between gap-2 rounded-xl border bg-white p-3"><div><h4 className="mb-2 text-sm font-semibold">{index + 1}{locale === "ko" ? "게임" : locale === "ja" ? "口" : locale === "zh" ? "注" : " game"}</h4><div className="flex flex-wrap gap-2">{game.map((number) => <span key={number} className="grid size-10 place-items-center rounded-full bg-indigo-100 font-bold text-indigo-900">{number}</span>)}</div>{specialBall && specials[index] !== undefined && <div className="mt-2 flex items-center gap-2"><span className="text-sm font-medium">{specialBall.label[locale]}</span><span className="grid size-10 place-items-center rounded-full bg-rose-100 font-bold text-rose-900">{specials[index]}</span></div>}</div><button type="button" onClick={() => void copyText([...game, ...(specials[index] === undefined ? [] : [specials[index]])].join(", "))} className="rounded-lg border px-3 py-2 text-sm">{t.copy}</button></article>)}</div></section>}
-    <section className="mt-7 border-t border-slate-200 pt-5"><div className="flex flex-wrap items-center justify-between gap-3"><h3 className="font-semibold">{t.history}</h3>{history.length > 0 && <button type="button" onClick={() => setHistory([])} className="text-sm text-rose-700 underline">{t.clearHistory}</button>}</div>{history.length === 0 ? <p className="mt-2 text-sm text-slate-500">—</p> : <ul className="mt-3 space-y-2">{history.map((entry, index) => <li key={`${entry.createdAt}-${index}`} className="rounded-xl border p-3"><div className="flex flex-wrap items-center justify-between gap-2"><time className="text-xs text-slate-500">{new Intl.DateTimeFormat(locale, { dateStyle: "short", timeStyle: "short" }).format(new Date(entry.createdAt))}</time><div className="flex gap-2"><button type="button" onClick={() => void copyText(entry.games.map((game, gameIndex) => `${gameIndex + 1}: ${[...game, ...(entry.specials?.[gameIndex] === undefined ? [] : [entry.specials[gameIndex]])].join(", ")}`).join("\n"))} className="text-sm text-indigo-700 underline">{t.copy}</button><button type="button" onClick={() => { setGames(entry.games); setSpecials(entry.specials ?? []); setCount(entry.settings.count); setIncluded(entry.settings.included); setExcluded(entry.settings.excluded); setOddCount(entry.settings.oddCount); setSorted(entry.settings.sorted); }} className="text-sm text-indigo-700 underline">{t.reuse}</button></div></div><p className="mt-1 text-sm">{entry.games.map((game, gameIndex) => `${gameIndex + 1}: ${[...game, ...(entry.specials?.[gameIndex] === undefined ? [] : [entry.specials[gameIndex]])].join(", ")}`).join(" / ")}</p></li>)}</ul>}</section>
+    {games.length > 0 && <section className="mt-6 rounded-2xl bg-slate-50 p-4 sm:p-5"><div className="flex flex-wrap items-center justify-between gap-3"><h3 className="font-semibold">{t.result}</h3><button type="button" onClick={() => void copyText(gameText(games))} className="rounded-lg border bg-white px-3 py-2 text-sm">{t.copyAll}</button></div><div className="mt-4 grid gap-3">{games.map((game, index) => <article key={`${history[0]?.createdAt}-${index}`} className="flex flex-wrap items-center justify-between gap-2 rounded-xl border bg-white p-3"><div><h4 className="mb-2 text-sm font-semibold">{index + 1}{locale === "ko" ? "게임" : locale === "ja" ? "口" : locale === "zh" ? "注" : " game"}</h4><div className="flex flex-wrap gap-2">{game.map((number) => <span key={number} className="grid size-10 place-items-center rounded-full bg-indigo-100 font-bold text-indigo-900">{number}</span>)}</div>{specialBall && specials[index] !== undefined && <div className="mt-2 flex items-center gap-2"><span aria-hidden="true" className="mr-1 text-slate-500">+</span><span className="text-sm font-medium">{specialBall.label[locale]}</span><span className="grid size-10 place-items-center rounded-full bg-rose-100 font-bold text-rose-900">{specials[index]}</span></div>}</div><button type="button" onClick={() => void copyText(`${game.join(", ")}${specials[index] === undefined ? "" : ` + ${specials[index]}`}`)} className="rounded-lg border px-3 py-2 text-sm">{t.copy}</button></article>)}</div></section>}
+    <section className="mt-7 border-t border-slate-200 pt-5"><div className="flex flex-wrap items-center justify-between gap-3"><h3 className="font-semibold">{t.history}</h3>{history.length > 0 && <button type="button" onClick={() => setHistory([])} className="text-sm text-rose-700 underline">{t.clearHistory}</button>}</div>{history.length === 0 ? <p className="mt-2 text-sm text-slate-500">—</p> : <ul className="mt-3 space-y-2">{history.map((entry, index) => <li key={`${entry.createdAt}-${index}`} className="rounded-xl border p-3"><div className="flex flex-wrap items-center justify-between gap-2"><time className="text-xs text-slate-500">{new Intl.DateTimeFormat(locale, { dateStyle: "short", timeStyle: "short" }).format(new Date(entry.createdAt))}</time><div className="flex gap-2"><button type="button" onClick={() => void copyText(entry.games.map((game, gameIndex) => `${gameIndex + 1}: ${game.join(", ")}${entry.specials?.[gameIndex] === undefined ? "" : ` + ${entry.specials[gameIndex]}`}`).join("\n"))} className="text-sm text-indigo-700 underline">{t.copy}</button><button type="button" onClick={() => { setGames(entry.games); setSpecials(entry.specials ?? []); setSpecialMode(entry.settings.specialMode ?? "auto"); setSpecialNumber(entry.settings.specialNumber ?? null); setCount(entry.settings.count); setIncluded(entry.settings.included); setExcluded(entry.settings.excluded); setOddCount(entry.settings.oddCount); setSorted(entry.settings.sorted); }} className="text-sm text-indigo-700 underline">{t.reuse}</button></div></div><p className="mt-1 text-sm">{entry.games.map((game, gameIndex) => `${gameIndex + 1}: ${game.join(", ")}${entry.specials?.[gameIndex] === undefined ? "" : ` + ${entry.specials[gameIndex]}`}`).join(" / ")}</p></li>)}</ul>}</section>
   </section>;
 }
 

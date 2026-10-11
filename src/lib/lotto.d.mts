@@ -9,3 +9,5 @@ export type LottoOptions = {
   numberCount?: number;
 };
 export function generateLottoGames(options?: LottoOptions): number[][];
+export function generateSpecialBalls(options: { count?: number; min: number; max: number; mode?: "auto" | "include" | "exclude"; number?: number | null }): number[];
+export function lotteryHistoryStorageKey(slug: string): string;
