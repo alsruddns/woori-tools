@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import type { Locale } from "@/i18n/routing";
+import type { UiLocale } from "@/i18n/routing";
 
-type Props={slug:string;locale:Locale};
+type Props={slug:string;locale:UiLocale};
 type Form=Record<string,string|boolean>;
-const text:Record<Locale,Record<string,string>>={
+const text:Record<string,Record<string,string>>={
   ko:{ssid:"Wi-Fi 이름 (SSID)",password:"비밀번호",security:"보안 방식",hidden:"숨겨진 네트워크",name:"이름",phone:"전화번호",email:"이메일",company:"회사",url:"웹사이트",to:"받는 사람",subject:"제목",body:"본문",generate:"QR 코드 만들기",download:"PNG 다운로드",privacy:"입력한 정보는 이 브라우저에서 QR 코드로 변환되며 서버로 전송되지 않습니다.",required:"필수 항목을 입력해 주세요.",none:"없음",wpa:"WPA/WPA2",wep:"WEP"},
   en:{ssid:"Wi-Fi name (SSID)",password:"Password",security:"Security",hidden:"Hidden network",name:"Name",phone:"Phone",email:"Email",company:"Company",url:"Website",to:"Recipient",subject:"Subject",body:"Body",generate:"Create QR code",download:"Download PNG",privacy:"Your details are encoded in this browser and are not sent to a server.",required:"Complete the required fields.",none:"None",wpa:"WPA/WPA2",wep:"WEP"},
   ja:{ssid:"Wi-Fi名 (SSID)",password:"パスワード",security:"セキュリティ",hidden:"非公開ネットワーク",name:"名前",phone:"電話番号",email:"メールアドレス",company:"会社",url:"ウェブサイト",to:"宛先",subject:"件名",body:"本文",generate:"QRコードを作成",download:"PNGをダウンロード",privacy:"入力内容はこのブラウザー内でQRコードに変換され、サーバーには送信されません。",required:"必須項目を入力してください。",none:"なし",wpa:"WPA/WPA2",wep:"WEP"},

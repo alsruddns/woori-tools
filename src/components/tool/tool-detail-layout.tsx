@@ -7,7 +7,7 @@ import { tools } from "@/registry/tools";
 
 export function ToolDetailLayout({ children, locale }: { children: React.ReactNode; locale: Locale }) {
   const messages = getMessages(locale);
-  const localizedTools = localizeTools(tools, locale);
+  const localizedTools = localizeTools(tools.filter((tool) => tool.supportedLocales.includes(locale)), locale);
   const sections: NavigationSection[] = getLocalizedCategories(locale)
     .map((category) => ({
       id: category.id,

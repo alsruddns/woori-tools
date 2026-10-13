@@ -17,6 +17,7 @@ const nextConfig: NextConfig = {
       { source: "/tools/en/:slug", destination: "/en/tools/:slug", permanent: true },
       { source: "/tools/ja/:slug", destination: "/ja/tools/:slug", permanent: true },
       { source: "/tools/zh/:slug", destination: "/zh/tools/:slug", permanent: true },
+      ...["es", "pt-br", "de", "fr", "vi", "id", "th", "zh-tw", "it", "nl", "hi"].map((locale) => ({ source: `/tools/${locale}/:slug`, destination: `/${locale}/tools/:slug`, permanent: true })),
       { source: "/tools/:path*", destination: "/ko/tools/:path*", permanent: true },
     ];
   },

@@ -1,16 +1,9 @@
 import type { Metadata } from "next";
-import { locales, type Locale } from "@/i18n/routing";
+import { getLocaleConfig, hreflangs, locales, type Locale } from "@/i18n/routing";
 
 const siteOrigin = "https://www.woori.today";
 export const SITE_ORIGIN = siteOrigin;
 export const SITE_NAME = "Woori Tools";
-
-const ogLocales: Record<Locale, string> = {
-  ko: "ko_KR",
-  en: "en_US",
-  ja: "ja_JP",
-  zh: "zh_CN",
-};
 
 export function absoluteUrl(path: string): string {
   const normalizedPath = path.startsWith("/") ? path : `/${path}`;
@@ -22,9 +15,9 @@ export function localizedUrl(locale: Locale, path: string): string {
   return absoluteUrl(`/${locale}${normalizedPath}`);
 }
 
-export function languageAlternates(path: string): Record<string, string> {
+export function languageAlternates(path: string, supportedLocales: readonly Locale[] = locales): Record<string, string> {
   return {
-    ...Object.fromEntries(locales.map((locale) => [locale, localizedUrl(locale, path)])),
+    ...Object.fromEntries(supportedLocales.map((locale) => [hreflangs[locale], localizedUrl(locale, path)])),
     "x-default": localizedUrl("ko", path),
   };
 }
@@ -35,12 +28,14 @@ export function pageMetadata({
   title,
   description,
   keywords,
+  supportedLocales,
 }: {
   locale: Locale;
   path: string;
   title: string;
   description: string;
   keywords?: string[];
+  supportedLocales?: readonly Locale[];
 }): Metadata {
   const url = localizedUrl(locale, path);
   const fullTitle = `${title} | ${SITE_NAME}`;
@@ -48,8 +43,8 @@ export function pageMetadata({
     title,
     description,
     keywords,
-    alternates: { canonical: url, languages: languageAlternates(path) },
-    openGraph: { siteName: SITE_NAME, locale: ogLocales[locale], type: "website", title: fullTitle, description, url },
+    alternates: { canonical: url, languages: languageAlternates(path, supportedLocales) },
+    openGraph: { siteName: SITE_NAME, locale: getLocaleConfig(locale)?.intlLocale.replace("-", "_") ?? "en_US", type: "website", title: fullTitle, description, url },
     twitter: { card: "summary", title: fullTitle, description },
   };
 }

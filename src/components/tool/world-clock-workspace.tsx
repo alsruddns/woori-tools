@@ -1,24 +1,24 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import type { Locale } from "@/i18n/routing";
+import type { UiLocale } from "@/i18n/routing";
 
 const fallbackZones = ["Asia/Seoul", "Asia/Tokyo", "Asia/Shanghai", "Asia/Singapore", "Europe/London", "Europe/Paris", "America/New_York", "America/Los_Angeles", "Australia/Sydney", "Pacific/Auckland"];
 const defaultZones = ["Asia/Seoul", "Asia/Tokyo", "America/New_York", "America/Los_Angeles", "Europe/London", "Europe/Paris", "Asia/Singapore", "Australia/Sydney"];
-const labels: Record<Locale, Record<string, string>> = {
+const labels: Record<string, Record<string, string>> = {
   ko: { title: "세계 시간", add: "도시 추가", remove: "삭제", search: "시간대 검색", none: "표시할 도시가 없습니다." },
   en: { title: "World clock", add: "Add city", remove: "Remove", search: "Search time zones", none: "No cities to display." },
   ja: { title: "世界時計", add: "都市を追加", remove: "削除", search: "タイムゾーンを検索", none: "表示する都市がありません。" },
   zh: { title: "世界时钟", add: "添加城市", remove: "删除", search: "搜索时区", none: "没有可显示的城市。" },
 };
-const zoneNames: Record<Locale, Record<string, string>> = {
+const zoneNames: Record<string, Record<string, string>> = {
   ko: { "Asia/Seoul": "서울", "Asia/Tokyo": "도쿄", "Asia/Shanghai": "상하이", "Asia/Singapore": "싱가포르", "Europe/London": "런던", "Europe/Paris": "파리", "America/New_York": "뉴욕", "America/Los_Angeles": "로스앤젤레스", "Australia/Sydney": "시드니", "Pacific/Auckland": "오클랜드" },
   en: { "Asia/Seoul": "Seoul", "Asia/Tokyo": "Tokyo", "Asia/Shanghai": "Shanghai", "Asia/Singapore": "Singapore", "Europe/London": "London", "Europe/Paris": "Paris", "America/New_York": "New York", "America/Los_Angeles": "Los Angeles", "Australia/Sydney": "Sydney", "Pacific/Auckland": "Auckland" },
   ja: { "Asia/Seoul": "ソウル", "Asia/Tokyo": "東京", "Asia/Shanghai": "上海", "Asia/Singapore": "シンガポール", "Europe/London": "ロンドン", "Europe/Paris": "パリ", "America/New_York": "ニューヨーク", "America/Los_Angeles": "ロサンゼルス", "Australia/Sydney": "シドニー", "Pacific/Auckland": "オークランド" },
   zh: { "Asia/Seoul": "首尔", "Asia/Tokyo": "东京", "Asia/Shanghai": "上海", "Asia/Singapore": "新加坡", "Europe/London": "伦敦", "Europe/Paris": "巴黎", "America/New_York": "纽约", "America/Los_Angeles": "洛杉矶", "Australia/Sydney": "悉尼", "Pacific/Auckland": "奥克兰" },
 };
 
-export function WorldClockWorkspace({ locale }: { locale: Locale }) {
+export function WorldClockWorkspace({ locale }: { locale:UiLocale }) {
   const t = labels[locale];
   const zones = useMemo(() => {
     try { return typeof Intl.supportedValuesOf === "function" ? Intl.supportedValuesOf("timeZone") : fallbackZones; } catch { return fallbackZones; }

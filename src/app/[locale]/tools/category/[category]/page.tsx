@@ -34,7 +34,8 @@ export default async function CategoryPage({ params }: Props) {
   if (!isLocale(rawLocale)) notFound();
   const locale: Locale = rawLocale;
   const category = findLocalizedCategory(id, locale);
-  const list = localizeTools(tools.filter((tool) => tool.category === id), locale);
+  const list = localizeTools(tools.filter((tool) => tool.category === id && tool.supportedLocales.includes(locale)), locale);
+  if (!list.length) notFound();
   if (!category || !list.length) notFound();
   const messages = getMessages(locale);
   const title = messages.categoryHeading.replace("{category}", category.name);

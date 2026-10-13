@@ -3,11 +3,22 @@
 import { useEffect, useState } from "react";
 import type { Locale } from "@/i18n/routing";
 
-const copyMessages: Record<Locale, { success: string; failure: string }> = {
+const copyMessages: Record<string, { success: string; failure: string }> = {
   ko: { success: "복사됐습니다.", failure: "복사에 실패했습니다." },
   en: { success: "Copied.", failure: "Failed to copy." },
   ja: { success: "コピーしました。", failure: "コピーに失敗しました。" },
   zh: { success: "已复制。", failure: "复制失败。" },
+  es: { success: "Copiado.", failure: "No se pudo copiar." },
+  "pt-br": { success: "Copiado.", failure: "Não foi possível copiar." },
+  de: { success: "Kopiert.", failure: "Kopieren fehlgeschlagen." },
+  fr: { success: "Copié.", failure: "Échec de la copie." },
+  vi: { success: "Đã sao chép.", failure: "Không thể sao chép." },
+  id: { success: "Disalin.", failure: "Gagal menyalin." },
+  th: { success: "คัดลอกแล้ว", failure: "คัดลอกไม่สำเร็จ" },
+  "zh-tw": { success: "已複製。", failure: "複製失敗。" },
+  it: { success: "Copiato.", failure: "Copia non riuscita." },
+  nl: { success: "Gekopieerd.", failure: "Kopiëren mislukt." },
+  hi: { success: "कॉपी किया गया।", failure: "कॉपी नहीं हो सका।" },
 };
 
 export function CopyToast({ locale }: { locale: Locale }) {

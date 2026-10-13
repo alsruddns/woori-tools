@@ -8,7 +8,7 @@ import { SiteFooter } from "@/components/layout/site-footer";
 import { CopyToast } from "@/components/copy-toast";
 import { GoogleAnalytics } from "@/components/analytics/google-analytics";
 import { getMessages } from "@/i18n/messages";
-import { isLocale, locales, type Locale } from "@/i18n/routing";
+import { getLocaleConfig, isLocale, locales, type Locale } from "@/i18n/routing";
 import { SITE_NAME, SITE_ORIGIN } from "@/lib/seo";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
@@ -47,8 +47,9 @@ export default async function LocaleLayout({
   const locale: Locale = rawLocale;
   const messages = getMessages(locale);
 
+  const intlLocale = getLocaleConfig(locale)?.intlLocale ?? "en-US";
   return (
-    <html lang={locale} className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
+    <html lang={intlLocale} className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col bg-slate-50 text-slate-900">
         <SiteHeader locale={locale} messages={messages} />
         <div className="flex-1">{children}</div>
