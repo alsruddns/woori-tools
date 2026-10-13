@@ -69,4 +69,5 @@ jobs:
       - name: Submit URLs to IndexNow
         env:
           INDEXNOW_BASE_SHA: ${{ github.event.before }}
+          INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
         run: pnpm exec node scripts/submit-indexnow.mjs

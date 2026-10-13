@@ -1,22 +1,25 @@
 import Image from "next/image";
 import Link from "next/link";
+import { FamilySiteSelector } from "@/components/layout/family-site-selector";
 import { LanguageSelector } from "@/components/layout/language-selector";
+import { siteChromeMessages } from "@/i18n/site-chrome-messages";
 import type { Dictionary } from "@/i18n/messages";
 import { localizePath, type Locale } from "@/i18n/routing";
 import { getLocalizedCategories } from "@/registry/category-translations";
 import { tools } from "@/registry/tools";
 
 export function SiteHeader({ locale, messages }: { locale: Locale; messages: Dictionary }) {
+  const chrome = siteChromeMessages[locale];
   const visibleCategories = getLocalizedCategories(locale).filter((category) =>
     category.id !== "qr" && tools.some((tool) => tool.category === category.id && tool.supportedLocales.includes(locale)),
   ).slice(0, 4);
 
   return (
     <header className="border-b border-slate-200 bg-white">
-      <div className="mx-auto flex min-h-16 max-w-6xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex min-h-16 max-w-6xl items-center justify-between gap-2 px-4 sm:gap-3 sm:px-6 lg:px-8">
         <Link
-          href={localizePath(locale, "/tools")}
-          aria-label="woori.today 홈"
+          href={`/${locale}`}
+          aria-label={chrome.logoHome}
           className="flex shrink-0 items-center gap-2"
         >
           <Image
@@ -24,16 +27,16 @@ export function SiteHeader({ locale, messages }: { locale: Locale; messages: Dic
             alt="woori.today"
             width={419}
             height={99}
-            sizes="(max-width: 639px) 135px, 160px"
+            sizes="(max-width: 639px) 92px, 160px"
             priority
-            className="h-auto w-[135px] sm:w-[160px]"
+            className="h-auto w-[92px] sm:w-[160px]"
           />
-          <span className="text-sm font-semibold tracking-tight text-slate-700 sm:text-base">
+          <span className="hidden text-sm font-semibold tracking-tight text-slate-700 sm:inline sm:text-base">
             Tools
           </span>
         </Link>
-        <div className="flex items-center gap-3 sm:gap-5">
-          <nav aria-label={messages.tools} className="flex items-center gap-3 text-sm sm:gap-5">
+        <div className="flex min-w-0 items-center gap-1.5 sm:gap-5">
+          <nav aria-label={messages.tools} className="hidden items-center gap-3 text-sm sm:flex sm:gap-5">
             <Link href={localizePath(locale, "/tools")} className="font-medium text-slate-700 hover:text-indigo-700">
               {messages.tools}
             </Link>
@@ -45,6 +48,7 @@ export function SiteHeader({ locale, messages }: { locale: Locale; messages: Dic
               ))}
             </div>
           </nav>
+          <FamilySiteSelector locale={locale} />
           <LanguageSelector locale={locale} />
         </div>
       </div>
