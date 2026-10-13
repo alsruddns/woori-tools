@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import type { UiLocale } from "@/i18n/routing";
+import type { RouteLocale } from "@/i18n/routing";
 
 const labels: Record<string, Record<string, string>> = {
   ko: { hours: "시", minutes: "분", seconds: "초", start: "시작", pause: "일시정지", resume: "계속", reset: "초기화", focus: "집중", short: "짧은 휴식", long: "긴 휴식", cycles: "긴 휴식까지 세션 수", session: "세션", presets: "빠른 설정", complete: "시간이 끝났습니다.", next: "다음 세션 시작", cyclesDone: "완료한 집중 세션", phaseFocus: "집중 시간", phaseShort: "짧은 휴식", phaseLong: "긴 휴식" },
@@ -10,11 +10,25 @@ const labels: Record<string, Record<string, string>> = {
   zh: { hours: "小时", minutes: "分钟", seconds: "秒", start: "开始", pause: "暂停", resume: "继续", reset: "重置", focus: "专注", short: "短休息", long: "长休息", cycles: "长休息前的专注次数", session: "阶段", presets: "快捷时长", complete: "时间到。", next: "开始下一阶段", cyclesDone: "已完成专注次数", phaseFocus: "专注时间", phaseShort: "短休息", phaseLong: "长休息" },
 };
 const presetLabels: Record<string, string[]> = { ko: ["1분", "3분", "5분", "10분", "30분", "1시간"], en: ["1 min", "3 min", "5 min", "10 min", "30 min", "1 hour"], ja: ["1分", "3分", "5分", "10分", "30分", "1時間"], zh: ["1分钟", "3分钟", "5分钟", "10分钟", "30分钟", "1小时"] };
+Object.assign(labels, {
+  es:{hours:"Horas",minutes:"Minutos",seconds:"Segundos",start:"Iniciar",pause:"Pausar",resume:"Continuar",reset:"Reiniciar",focus:"Concentración",short:"Descanso corto",long:"Descanso largo",cycles:"Sesiones antes del descanso largo",session:"Sesión",presets:"Duraciones rápidas",complete:"Se acabó el tiempo.",next:"Iniciar la siguiente sesión",cyclesDone:"Sesiones de concentración completadas",phaseFocus:"Tiempo de concentración",phaseShort:"Descanso corto",phaseLong:"Descanso largo"},
+  "pt-br":{hours:"Horas",minutes:"Minutos",seconds:"Segundos",start:"Iniciar",pause:"Pausar",resume:"Continuar",reset:"Reiniciar",focus:"Foco",short:"Pausa curta",long:"Pausa longa",cycles:"Sessões até a pausa longa",session:"Sessão",presets:"Durações rápidas",complete:"O tempo acabou.",next:"Iniciar próxima sessão",cyclesDone:"Sessões de foco concluídas",phaseFocus:"Tempo de foco",phaseShort:"Pausa curta",phaseLong:"Pausa longa"},
+  de:{hours:"Stunden",minutes:"Minuten",seconds:"Sekunden",start:"Starten",pause:"Pausieren",resume:"Fortsetzen",reset:"Zurücksetzen",focus:"Fokus",short:"Kurze Pause",long:"Lange Pause",cycles:"Fokusphasen bis zur langen Pause",session:"Einheit",presets:"Schnellauswahl",complete:"Die Zeit ist abgelaufen.",next:"Nächste Einheit starten",cyclesDone:"Abgeschlossene Fokuseinheiten",phaseFocus:"Fokuszeit",phaseShort:"Kurze Pause",phaseLong:"Lange Pause"},
+  fr:{hours:"Heures",minutes:"Minutes",seconds:"Secondes",start:"Démarrer",pause:"Mettre en pause",resume:"Reprendre",reset:"Réinitialiser",focus:"Concentration",short:"Pause courte",long:"Pause longue",cycles:"Sessions avant la longue pause",session:"Session",presets:"Durées rapides",complete:"Le temps est écoulé.",next:"Démarrer la session suivante",cyclesDone:"Sessions de concentration terminées",phaseFocus:"Temps de concentration",phaseShort:"Pause courte",phaseLong:"Pause longue"},
+  vi:{hours:"Giờ",minutes:"Phút",seconds:"Giây",start:"Bắt đầu",pause:"Tạm dừng",resume:"Tiếp tục",reset:"Đặt lại",focus:"Tập trung",short:"Nghỉ ngắn",long:"Nghỉ dài",cycles:"Số phiên trước khi nghỉ dài",session:"Phiên",presets:"Thời lượng nhanh",complete:"Đã hết giờ.",next:"Bắt đầu phiên tiếp theo",cyclesDone:"Phiên tập trung đã hoàn thành",phaseFocus:"Thời gian tập trung",phaseShort:"Nghỉ ngắn",phaseLong:"Nghỉ dài"},
+  id:{hours:"Jam",minutes:"Menit",seconds:"Detik",start:"Mulai",pause:"Jeda",resume:"Lanjutkan",reset:"Atur ulang",focus:"Fokus",short:"Istirahat singkat",long:"Istirahat panjang",cycles:"Sesi sebelum istirahat panjang",session:"Sesi",presets:"Durasi cepat",complete:"Waktu habis.",next:"Mulai sesi berikutnya",cyclesDone:"Sesi fokus selesai",phaseFocus:"Waktu fokus",phaseShort:"Istirahat singkat",phaseLong:"Istirahat panjang"},
+  th:{hours:"ชั่วโมง",minutes:"นาที",seconds:"วินาที",start:"เริ่ม",pause:"หยุดชั่วคราว",resume:"ทำต่อ",reset:"รีเซ็ต",focus:"จดจ่อ",short:"พักสั้น",long:"พักยาว",cycles:"รอบก่อนพักยาว",session:"รอบ",presets:"ตั้งเวลาเร็ว",complete:"หมดเวลาแล้ว",next:"เริ่มรอบถัดไป",cyclesDone:"รอบจดจ่อที่เสร็จแล้ว",phaseFocus:"เวลาจดจ่อ",phaseShort:"พักสั้น",phaseLong:"พักยาว"},
+  "zh-tw":{hours:"小時",minutes:"分鐘",seconds:"秒",start:"開始",pause:"暫停",resume:"繼續",reset:"重設",focus:"專注",short:"短休息",long:"長休息",cycles:"長休息前的專注次數",session:"階段",presets:"快速設定",complete:"時間到了。",next:"開始下一階段",cyclesDone:"已完成的專注階段",phaseFocus:"專注時間",phaseShort:"短休息",phaseLong:"長休息"},
+  it:{hours:"Ore",minutes:"Minuti",seconds:"Secondi",start:"Avvia",pause:"Pausa",resume:"Riprendi",reset:"Reimposta",focus:"Concentrazione",short:"Pausa breve",long:"Pausa lunga",cycles:"Sessioni prima della pausa lunga",session:"Sessione",presets:"Durate rapide",complete:"Tempo scaduto.",next:"Avvia la sessione successiva",cyclesDone:"Sessioni di concentrazione completate",phaseFocus:"Tempo di concentrazione",phaseShort:"Pausa breve",phaseLong:"Pausa lunga"},
+  nl:{hours:"Uren",minutes:"Minuten",seconds:"Seconden",start:"Starten",pause:"Pauzeren",resume:"Hervatten",reset:"Opnieuw instellen",focus:"Focus",short:"Korte pauze",long:"Lange pauze",cycles:"Focussessies tot de lange pauze",session:"Sessie",presets:"Snelle tijden",complete:"De tijd is om.",next:"Volgende sessie starten",cyclesDone:"Voltooide focussessies",phaseFocus:"Focustijd",phaseShort:"Korte pauze",phaseLong:"Lange pauze"},
+  hi:{hours:"घंटे",minutes:"मिनट",seconds:"सेकंड",start:"शुरू करें",pause:"रोकें",resume:"जारी रखें",reset:"रीसेट करें",focus:"ध्यान",short:"छोटा विराम",long:"लंबा विराम",cycles:"लंबे विराम से पहले के सत्र",session:"सत्र",presets:"त्वरित अवधि",complete:"समय पूरा हुआ।",next:"अगला सत्र शुरू करें",cyclesDone:"पूरे हुए ध्यान सत्र",phaseFocus:"ध्यान का समय",phaseShort:"छोटा विराम",phaseLong:"लंबा विराम"},
+});
+Object.assign(presetLabels, {es:["1 min","3 min","5 min","10 min","30 min","1 h"],"pt-br":["1 min","3 min","5 min","10 min","30 min","1 h"],de:["1 Min.","3 Min.","5 Min.","10 Min.","30 Min.","1 Std."],fr:["1 min","3 min","5 min","10 min","30 min","1 h"],vi:["1 phút","3 phút","5 phút","10 phút","30 phút","1 giờ"],id:["1 mnt","3 mnt","5 mnt","10 mnt","30 mnt","1 jam"],th:["1 นาที","3 นาที","5 นาที","10 นาที","30 นาที","1 ชม."],"zh-tw":["1 分鐘","3 分鐘","5 分鐘","10 分鐘","30 分鐘","1 小時"],it:["1 min","3 min","5 min","10 min","30 min","1 ora"],nl:["1 min","3 min","5 min","10 min","30 min","1 uur"],hi:["1 मिनट","3 मिनट","5 मिनट","10 मिनट","30 मिनट","1 घंटा"]});
 
 type Phase = "focus" | "short" | "long";
 type Settings = { focus: number; short: number; long: number; cycleLength: number };
 
-export function CountdownWorkspace({ slug, locale }: { slug: "timer" | "pomodoro-timer"; locale:UiLocale }) {
+export function CountdownWorkspace({ slug, locale }: { slug: "timer" | "pomodoro-timer"; locale:RouteLocale }) {
   const t = labels[locale];
   const [settings, setSettings] = useState<Settings>({ focus: 25, short: 5, long: 15, cycleLength: 4 });
   const [settingsLoaded, setSettingsLoaded] = useState(false);
