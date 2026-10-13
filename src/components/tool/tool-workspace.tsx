@@ -19,6 +19,7 @@ import { RandomStringWorkspace } from "@/components/tool/random-string-workspace
 import { LadderWorkspace } from "@/components/tool/ladder-workspace";
 import { DailyFortuneWorkspace, TarotWorkspace } from "@/components/tool/fortune-workspace";
 import { SajuWorkspace } from "@/components/tool/saju-workspace";
+import { JapanToolsWorkspace } from "@/components/tool/japan-tools-workspace";
 import { DiceWorkspace, LottoWorkspace, RandomNameWorkspace, RandomNumberWorkspace, RandomOrderWorkspace, RandomSeatWorkspace, RandomTeamWorkspace, RandomWheelWorkspace } from "@/components/tool/special-random-workspaces";
 
 const MAX_IMAGE = 30 * 1024 * 1024;
@@ -71,6 +72,7 @@ export function ToolWorkspace({ tool, locale, phaseLocale, messages }: { tool: T
     const stem = files[0].name.replace(/\.[^.]+$/, "").replace(/[\\/:*?"<>|]/g, "-");
     return stem || "download";
   }, [files]);
+  if (["wareki-converter", "hiragana-katakana-converter", "fullwidth-halfwidth-converter", "japanese-romaji-converter", "japanese-number-kanji-converter", "yakudoshi-calculator", "japanese-zodiac-calculator", "numbers3-number-generator", "numbers4-number-generator", "bingo5-number-generator"].includes(tool.slug)) return <JapanToolsWorkspace slug={tool.slug} locale={phaseLocale} />;
   if (tool.slug === "tarot-card") return <TarotWorkspace locale={phaseLocale} />;
   if (tool.slug === "daily-fortune") return <DailyFortuneWorkspace locale={phaseLocale} />;
   if (tool.slug === "saju") return <SajuWorkspace locale={phaseLocale} />;
