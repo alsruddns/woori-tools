@@ -7,10 +7,11 @@ import { createIndexNowBody, createIndexNowUrls, INDEXNOW_ENDPOINT, INDEXNOW_KEY
 const routingSource = await readFile(new URL("../src/i18n/routing.ts", import.meta.url), "utf8");
 const routingModule = ts.transpileModule(routingSource, { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } });
 const { locales } = await import(`data:text/javascript;base64,${Buffer.from(routingModule.outputText).toString("base64")}`);
-const registrySource = (await readFile(new URL("../src/registry/tools.ts", import.meta.url), "utf8")).replace(
-  'import { locales, type RouteLocale as Locale } from "../i18n/routing";',
-  `const locales = ${JSON.stringify(locales)};`,
-);
+const countrySlugSource = await readFile(new URL("../src/lib/country-tool-slugs.ts", import.meta.url), "utf8");
+const countrySlugs = [...countrySlugSource.matchAll(/"([a-z0-9-]+)"/g)].map((match) => match[1]);
+let registrySource = await readFile(new URL("../src/registry/tools.ts", import.meta.url), "utf8");
+registrySource = registrySource.replace('import { locales, type RouteLocale as Locale } from "../i18n/routing";', `const locales = ${JSON.stringify(locales)};`);
+registrySource = registrySource.replace('import { COUNTRY_TOOL_SLUGS } from "../lib/country-tool-slugs";', `const COUNTRY_TOOL_SLUGS = ${JSON.stringify(countrySlugs)};`);
 const { outputText } = ts.transpileModule(registrySource, {
   compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
 });

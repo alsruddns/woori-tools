@@ -1,5 +1,6 @@
 import type { ToolCategory } from "./categories";
 import { locales, type RouteLocale as Locale } from "../i18n/routing";
+import { COUNTRY_TOOL_SLUGS } from "../lib/country-tool-slugs";
 
 export type ToolDefinition = {
   id: string; slug: string; category: ToolCategory; title: string; shortTitle: string;
@@ -130,6 +131,7 @@ const entries: Array<[string, ToolCategory, string, string, string[], boolean]> 
   ["numbers3-number-generator","random","일본 넘버즈3 번호 생성기","일본 공식 규칙에 맞춰 0부터 9까지의 숫자로 3자리 넘버즈3 번호를 생성합니다.",["numbers 3","ナンバーズ3","番号"],true],
   ["numbers4-number-generator","random","일본 넘버즈4 번호 생성기","일본 공식 규칙에 맞춰 0부터 9까지의 숫자로 4자리 넘버즈4 번호를 생성합니다.",["numbers 4","ナンバーズ4","番号"],true],
   ["bingo5-number-generator","random","일본 빙고5 번호 생성기","일본 빙고5의 8개 칸별 공식 숫자 범위에 따라 한 장의 카드를 생성합니다.",["bingo 5","ビンゴ5","番号"],true],
+  ...COUNTRY_TOOL_SLUGS.map((slug) => [slug, slug.includes("validator") ? "developer" : ["chinese-zodiac-calculator","chinese-sexagenary-cycle-calculator"].includes(slug) ? "date-time" : "text", slug, slug, [slug], true] as [string, ToolCategory, string, string, string[], boolean]),
 ];
 
 const fileToolSlugs = new Set(["file-hash", "mime-type-checker", "file-extension-checker", "file-size-checker", "duplicate-file-checker", "zip-files", "bulk-file-renamer", "filename-cleaner"]);
@@ -163,6 +165,18 @@ setRelated("japanese-number-kanji-converter", ["hiragana-katakana-converter", "f
 setRelated("numbers3-number-generator", ["numbers4-number-generator", "bingo5-number-generator", "japan-loto6-number-generator", "japan-loto7-number-generator", "japan-mini-loto-number-generator"]);
 setRelated("numbers4-number-generator", ["numbers3-number-generator", "bingo5-number-generator", "japan-loto6-number-generator", "japan-loto7-number-generator", "japan-mini-loto-number-generator"]);
 setRelated("bingo5-number-generator", ["numbers3-number-generator", "numbers4-number-generator", "japan-loto6-number-generator", "japan-loto7-number-generator", "japan-mini-loto-number-generator"]);
+const countryRelated: string[][] = [
+  ["simplified-traditional-chinese-converter","chinese-number-kanji-converter","rmb-uppercase-converter","chinese-zodiac-calculator","chinese-sexagenary-cycle-calculator","chinese-phone-number-formatter"],
+  ["indian-number-format-converter","lakh-crore-converter","pan-format-validator","gstin-format-validator"],
+  ["germany-iban-validator","german-number-format-converter","german-date-format-converter"],
+  ["spain-dni-validator","spain-nie-validator","spanish-number-format-converter"],
+  ["france-phone-number-formatter","french-number-format-converter","french-date-format-converter"],
+  ["brazil-cpf-validator","brazil-cnpj-validator","brazil-phone-number-formatter"],
+  ["netherlands-iban-validator","dutch-number-format-converter"],
+  ["vietnam-phone-number-formatter","vietnam-number-format-converter"],
+  ["italy-fiscal-code-format-validator","italy-number-format-converter"],
+];
+for (const group of countryRelated) for (const slug of group) setRelated(slug, group.filter((other) => other !== slug).slice(0, 5));
 const lotto = tools.find((tool) => tool.slug === "lotto-number-generator");
 const powerball = tools.find((tool) => tool.slug === "powerball-number-generator");
 const megaMillions = tools.find((tool) => tool.slug === "mega-millions-number-generator");
