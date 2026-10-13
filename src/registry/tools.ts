@@ -120,6 +120,16 @@ const entries: Array<[string, ToolCategory, string, string, string[], boolean]> 
   ["url-encode-decode","developer","URL 인코더·디코더","URL 텍스트를 인코딩하거나 디코딩합니다.",["url","encode","decode"], true],
   ["uuid-generator","developer","UUID 생성기","Web Crypto API로 UUID를 여러 개 생성합니다.",["uuid","guid","random"], true],
   ["timestamp-converter","developer","Timestamp 변환기","Unix 초·밀리초와 날짜, ISO 8601 시간을 변환합니다.",["timestamp","unix","iso 8601"], true],
+  ["wareki-converter","utility","일본 연호·서기 변환기","일본의 실제 연호 시작일을 기준으로 서기 날짜와 메이지·다이쇼·쇼와·헤이세이·레이와 날짜를 변환합니다.",["wareki","和暦","西暦","令和","平成","昭和"],true],
+  ["hiragana-katakana-converter","text","히라가나·가타카나 변환기","브라우저에서 히라가나와 가타카나를 양방향으로 변환합니다.",["hiragana","katakana","ひらがな","カタカナ"],true],
+  ["fullwidth-halfwidth-converter","text","전각·반각 변환기","일본어 전각과 반각 문자, 가나, 숫자, 기호를 브라우저에서 변환합니다.",["fullwidth","halfwidth","全角","半角"],true],
+  ["japanese-romaji-converter","text","일본어 로마자 변환기","히라가나와 가타카나를 햅번식 로마자로 변환합니다. 한자의 읽기는 추정하지 않습니다.",["romaji","kana","ローマ字","ひらがな"],true],
+  ["japanese-number-kanji-converter","text","일본 숫자·한자 숫자 변환기","숫자와 일본 한자 숫자를 일·십·백·천·만·억·조 단위로 변환합니다.",["kanji number","漢数字","数字"],true],
+  ["yakudoshi-calculator","date-time","일본 액년 계산기","일본의 세는나이 기준으로 남녀 액년의 전액·본액·후액을 확인합니다.",["yakudoshi","厄年","厄年早見"],true],
+  ["japanese-zodiac-calculator","date-time","일본 간지 계산기","출생연도로 일본 십이지와 육십간지를 계산합니다.",["eto","干支","十二支","十干十二支"],true],
+  ["numbers3-number-generator","random","일본 넘버즈3 번호 생성기","일본 공식 규칙에 맞춰 0부터 9까지의 숫자로 3자리 넘버즈3 번호를 생성합니다.",["numbers 3","ナンバーズ3","番号"],true],
+  ["numbers4-number-generator","random","일본 넘버즈4 번호 생성기","일본 공식 규칙에 맞춰 0부터 9까지의 숫자로 4자리 넘버즈4 번호를 생성합니다.",["numbers 4","ナンバーズ4","番号"],true],
+  ["bingo5-number-generator","random","일본 빙고5 번호 생성기","일본 빙고5의 8개 칸별 공식 숫자 범위에 따라 한 장의 카드를 생성합니다.",["bingo 5","ビンゴ5","番号"],true],
 ];
 
 const fileToolSlugs = new Set(["file-hash", "mime-type-checker", "file-extension-checker", "file-size-checker", "duplicate-file-checker", "zip-files", "bulk-file-renamer", "filename-cleaner"]);
@@ -142,6 +152,17 @@ const saju = tools.find((tool) => tool.slug === "saju");
 if (tarot) tarot.relatedTools = ["daily-fortune", "saju"];
 if (daily) daily.relatedTools = ["tarot-card", "saju"];
 if (saju) saju.relatedTools = ["daily-fortune", "tarot-card"];
+const setRelated = (slug: string, related: string[]) => { const tool = tools.find((item) => item.slug === slug); if (tool) tool.relatedTools = related; };
+setRelated("wareki-converter", ["yakudoshi-calculator", "japanese-zodiac-calculator"]);
+setRelated("yakudoshi-calculator", ["wareki-converter", "japanese-zodiac-calculator"]);
+setRelated("japanese-zodiac-calculator", ["wareki-converter", "yakudoshi-calculator"]);
+setRelated("hiragana-katakana-converter", ["fullwidth-halfwidth-converter", "japanese-romaji-converter", "japanese-number-kanji-converter"]);
+setRelated("fullwidth-halfwidth-converter", ["hiragana-katakana-converter", "japanese-romaji-converter", "japanese-number-kanji-converter"]);
+setRelated("japanese-romaji-converter", ["hiragana-katakana-converter", "fullwidth-halfwidth-converter", "japanese-number-kanji-converter"]);
+setRelated("japanese-number-kanji-converter", ["hiragana-katakana-converter", "fullwidth-halfwidth-converter", "japanese-romaji-converter"]);
+setRelated("numbers3-number-generator", ["numbers4-number-generator", "bingo5-number-generator", "japan-loto6-number-generator", "japan-loto7-number-generator", "japan-mini-loto-number-generator"]);
+setRelated("numbers4-number-generator", ["numbers3-number-generator", "bingo5-number-generator", "japan-loto6-number-generator", "japan-loto7-number-generator", "japan-mini-loto-number-generator"]);
+setRelated("bingo5-number-generator", ["numbers3-number-generator", "numbers4-number-generator", "japan-loto6-number-generator", "japan-loto7-number-generator", "japan-mini-loto-number-generator"]);
 const lotto = tools.find((tool) => tool.slug === "lotto-number-generator");
 const powerball = tools.find((tool) => tool.slug === "powerball-number-generator");
 const megaMillions = tools.find((tool) => tool.slug === "mega-millions-number-generator");

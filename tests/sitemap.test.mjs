@@ -42,7 +42,7 @@ test("sitemap is generated from the public registry and includes every locale", 
   assert.ok(publicTools.length > 0);
   assert.ok(publicTools.every(({ isPublic }) => isPublic));
   assert.equal(publicTools.some(({ slug }) => slug === "ladder-game"), false);
-  assert.equal(publicTools.length, 109);
+  assert.equal(publicTools.length, 119);
   assert.match(localeLayoutSource, /return locales\.map\(\(locale\) => \(\{ locale \}\)\)/);
   assert.match(toolPageSource, /supportedLocales\.includes\(params\.locale as Locale\)/);
 
@@ -53,7 +53,7 @@ test("sitemap is generated from the public registry and includes every locale", 
   const expectedDetailCount = publicTools.reduce((sum, tool) => sum + tool.supportedLocales.length, 0);
   assert.equal(detailEntries.length, expectedDetailCount);
   assert.equal(entries.length, expectedDetailCount + 15);
-  assert.equal(entries.length, 1650);
+  assert.equal(entries.length, 1800);
   assert.equal(new Set(entries.map(({ url }) => url)).size, entries.length);
 
   const publishedRouteMatrix = publicTools.flatMap(({ slug, supportedLocales }) => supportedLocales.map((locale) => `${siteOrigin}/${locale}/tools/${slug}`));

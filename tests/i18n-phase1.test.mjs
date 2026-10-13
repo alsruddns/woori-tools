@@ -15,7 +15,13 @@ const { tools } = await importTs("../src/registry/tools.ts", [[
   'import { locales, type RouteLocale as Locale } from "../i18n/routing";',
   `const locales = ${JSON.stringify(locales)};`,
 ]]);
-const { localizeTool } = await importTs("../src/registry/tool-translations.ts");
+const japanTranslationModule = await importTs("../src/registry/japan-tool-translations.ts");
+globalThis.__japanToolTranslations = japanTranslationModule.japanToolTranslations;
+globalThis.__japanToolKeywords = japanTranslationModule.japanToolKeywords;
+const { localizeTool } = await importTs("../src/registry/tool-translations.ts", [[
+  'import { japanToolKeywords, japanToolTranslations } from "./japan-tool-translations";',
+  'const japanToolTranslations = globalThis.__japanToolTranslations; const japanToolKeywords = globalThis.__japanToolKeywords;',
+]]);
 const { getToolContent } = await importTs("../src/registry/tool-content.ts");
 const expandedModule = await importTs("../src/i18n/expanded-messages.ts");
 globalThis.__getExpandedMessages = expandedModule.getExpandedMessages;
@@ -27,7 +33,7 @@ const { getTarotInterpretation } = await importTs("../src/lib/fortune/tarot-loca
 
 test("all published registry tools support all 15 route locales", () => {
   assert.equal(locales.length, 15);
-  assert.equal(tools.length, 109);
+  assert.equal(tools.length, 119);
   assert.equal(tools.some(({ slug }) => slug === "ladder-game"), false);
   const omissions = [];
   for (const tool of tools) {
@@ -44,6 +50,27 @@ test("all published registry tools support all 15 route locales", () => {
     }
   }
   assert.deepEqual(omissions, [], `Localization omissions:\n${omissions.join("\n")}`);
+});
+
+test("Japan-specific tools have translated metadata, complete page content, and related links", () => {
+  const slugs = ["wareki-converter","hiragana-katakana-converter","fullwidth-halfwidth-converter","japanese-romaji-converter","japanese-number-kanji-converter","yakudoshi-calculator","japanese-zodiac-calculator","numbers3-number-generator","numbers4-number-generator","bingo5-number-generator"];
+  const omissions = [];
+  for (const slug of slugs) {
+    const tool = tools.find((item) => item.slug === slug);
+    if (!tool) { omissions.push(`${slug}: missing registry entry`); continue; }
+    if (!tool.relatedTools?.length) omissions.push(`${slug}: missing related tools`);
+    for (const related of tool.relatedTools ?? []) if (!tools.some((item) => item.slug === related)) omissions.push(`${slug}: unresolved related tool ${related}`);
+    for (const locale of locales) {
+      const localized = localizeTool(tool, locale);
+      const content = getToolContent(slug, locale, localized.description);
+      if (!localized.title?.trim() || !localized.description?.trim()) omissions.push(`${slug}/${locale}: missing metadata`);
+      if (locale !== "ko" && (localized.title === tool.title || localized.description === tool.description)) omissions.push(`${slug}/${locale}: metadata fallback`);
+      if (!content?.overview || content.steps.length !== 3 || !content.example || !content.options || !content.caution || !content.headings.faq) omissions.push(`${slug}/${locale}: incomplete page copy`);
+      if (locale !== "ja" && /[\u3040-\u30ff]/u.test(localized.title)) omissions.push(`${slug}/${locale}: Japanese title fallback`);
+      if (locale === "ja" && (!localized.keywords.length || !localized.keywords.some((keyword) => keyword.includes("変換") || keyword.includes("計算") || keyword.includes("番号") || keyword.includes("予想") || keyword.includes("早見")))) omissions.push(`${slug}/ja: missing Japanese search intent terms`);
+    }
+  }
+  assert.deepEqual(omissions, [], omissions.join("\n"));
 });
 
 test("Phase 1 keeps the locale route and hreflang spellings distinct", async () => {
@@ -140,6 +167,7 @@ test("interactive workspace dictionaries cover all locales with complete transla
     ["../src/components/tool/ladder-workspace.tsx", ["labels"]],
     ["../src/components/tool/world-clock-workspace.tsx", ["labels", "zoneNames"]],
     ["../src/components/tool/countdown-workspace.tsx", ["labels"]],
+    ["../src/components/tool/japan-tools-workspace.tsx", ["copy"]],
     ["../src/components/tool/special-random-workspaces.tsx", ["copy", "lottoLabels", "selectionConflict", "specialPrompt", "specialRequired", "officialNotice", "translations", "wheelCopy", "starterByLocale", "teamPrefix", "labels"]],
     ["../src/components/tool/fortune-workspace.tsx", ["tarotText", "dailyText", "dailyPools", "tarotNames"]],
     ["../src/components/tool/saju-workspace.tsx", ["labels"]],
