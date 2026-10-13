@@ -24,7 +24,7 @@ export default async function ToolsHomePage({ params }: Props) {
   const locale: Locale = rawLocale;
   const messages = getMessages(locale);
   const categories = getLocalizedCategories(locale).filter((category) => tools.some((tool) => tool.category === category.id));
-  const orderedTools = localizeTools(tools, locale);
+  const orderedTools = localizeTools(tools.filter((tool) => tool.supportedLocales.includes(locale)), locale);
   const featured = orderedTools.filter((tool) => tool.featured);
 
   return (

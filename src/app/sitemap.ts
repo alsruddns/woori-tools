@@ -9,6 +9,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     tools,
     locales,
     siteOrigin: SITE_ORIGIN,
-    languageAlternates,
+    languageAlternates: (path, supportedLocales) => languageAlternates(path, supportedLocales as import("@/i18n/routing").Locale[] | undefined),
   });
 }

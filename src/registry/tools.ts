@@ -1,10 +1,12 @@
 import type { ToolCategory } from "./categories";
+import { locales, type RouteLocale as Locale } from "../i18n/routing";
 
 export type ToolDefinition = {
   id: string; slug: string; category: ToolCategory; title: string; shortTitle: string;
   description: string; keywords: string[]; clientOnly: true; isPublic: boolean; acceptedTypes?: string[]; relatedTools?: string[];
   featured?: boolean;
   usesFileInput?: boolean;
+  supportedLocales: readonly Locale[];
 };
 
 const entries: Array<[string, ToolCategory, string, string, string[], boolean]> = [
@@ -121,7 +123,7 @@ const entries: Array<[string, ToolCategory, string, string, string[], boolean]> 
 ];
 
 const fileToolSlugs = new Set(["file-hash", "mime-type-checker", "file-extension-checker", "file-size-checker", "duplicate-file-checker", "zip-files", "bulk-file-renamer", "filename-cleaner"]);
-const registeredTools: ToolDefinition[] = entries.map(([slug, category, title, description, keywords, isPublic]) => ({ id: slug, slug, category, title, shortTitle: title, description, keywords, clientOnly: true, isPublic, usesFileInput: category === "image" || category === "pdf" || fileToolSlugs.has(slug), acceptedTypes: category === "image" ? ["image/*"] : category === "pdf" ? ["application/pdf"] : undefined }));
+const registeredTools: ToolDefinition[] = entries.map(([slug, category, title, description, keywords, isPublic]) => ({ id: slug, slug, category, title, shortTitle: title, description, keywords, clientOnly: true, isPublic, supportedLocales: locales, usesFileInput: category === "image" || category === "pdf" || fileToolSlugs.has(slug), acceptedTypes: category === "image" ? ["image/*"] : category === "pdf" ? ["application/pdf"] : undefined }));
 const featuredSlugs = new Set([
   "lotto-number-generator", "random-number", "random-name-picker", "random-wheel",
   "random-team-maker", "stopwatch", "timer", "pomodoro-timer",

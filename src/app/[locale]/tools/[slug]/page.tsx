@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { ToolWorkspace } from "@/components/tool/tool-workspace";
 import { ToolDetailLayout } from "@/components/tool/tool-detail-layout";
 import { getMessages } from "@/i18n/messages";
-import { isLocale, localizePath, type Locale } from "@/i18n/routing";
+import { getUiLocale, isLocale, localizePath, type Locale } from "@/i18n/routing";
 import { pageMetadata } from "@/lib/seo";
 import { findLocalizedCategory } from "@/registry/category-translations";
 import { localizeTool, localizeTools } from "@/registry/tool-translations";
@@ -15,15 +15,15 @@ type Props = { params: Promise<{ locale: string; slug: string }> };
 
 export const dynamicParams = false;
 
-export function generateStaticParams() {
-  return tools.map(({ slug }) => ({ slug }));
+export function generateStaticParams({ params }: { params: { locale: string } }) {
+  return tools.filter(({ supportedLocales }) => supportedLocales.includes(params.locale as Locale)).map(({ slug }) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale: rawLocale, slug } = await params;
   if (!isLocale(rawLocale)) return {};
   const tool = getTool(slug);
-  if (!tool) return {};
+  if (!tool || !tool.supportedLocales.includes(rawLocale)) return {};
   const localized = localizeTool(tool, rawLocale);
   const seoTitle = rawLocale === "ko" && slug === "lotto-number-generator" ? "로또 번호 추첨기 | 로또 번호 생성기"
     : rawLocale === "ko" && slug === "powerball-number-generator" ? "파워볼 번호 추첨기 | Powerball 번호 생성기"
@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     : rawLocale === "ko" && slug === "japan-loto7-number-generator" ? "일본 로또7 번호 추첨기 | LOTO 7 번호 생성기"
     : rawLocale === "ko" && slug === "japan-mini-loto-number-generator" ? "일본 미니로또 번호 추첨기 | MINI LOTO 번호 생성기"
     : localized.title;
-  return pageMetadata({ locale: rawLocale, path: `/tools/${slug}`, title: seoTitle, description: localized.description, keywords: localized.keywords });
+  return pageMetadata({ locale: rawLocale, path: `/tools/${slug}`, title: seoTitle, description: localized.description, keywords: localized.keywords, supportedLocales: tool.supportedLocales });
 }
 
 export default async function ToolPage({ params }: Props) {
@@ -40,14 +40,14 @@ export default async function ToolPage({ params }: Props) {
   if (!isLocale(rawLocale)) notFound();
   const locale: Locale = rawLocale;
   const baseTool = getTool(slug);
-  if (!baseTool) notFound();
+  if (!baseTool || !baseTool.supportedLocales.includes(locale)) notFound();
 
   const tool = localizeTool(baseTool, locale);
   const category = findLocalizedCategory(tool.category, locale);
   if (!category) notFound();
   const messages = getMessages(locale);
-  const seoContent = getToolContent(slug, locale);
-  const related = (baseTool.relatedTools ?? []).map((id) => getTool(id)).filter((item) => item !== undefined);
+  const seoContent = getToolContent(slug, locale, tool.description);
+  const related = (baseTool.relatedTools ?? []).map((id) => getTool(id)).filter((item): item is NonNullable<typeof item> => item !== undefined && item.supportedLocales.includes(locale));
   const localizedTools = localizeTools(related, locale);
   const usesFiles = tool.category === "image" || tool.category === "pdf";
   const url = `https://www.woori.today/${locale}/tools/${slug}`;
@@ -68,7 +68,7 @@ export default async function ToolPage({ params }: Props) {
         {tool.usesFileInput && <p className="mt-3 text-sm text-emerald-800">🔒 {messages.filePrivacy}</p>}
       </header>
 
-      <ToolWorkspace key={`${locale}-${tool.slug}`} tool={tool} locale={locale} messages={messages} />
+      <ToolWorkspace key={`${locale}-${tool.slug}`} tool={tool} locale={getUiLocale(locale)} phaseLocale={locale} messages={messages} />
 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
         "@context": "https://schema.org",

@@ -7,7 +7,7 @@ export const INDEXNOW_ENDPOINT = "https://api.indexnow.org/IndexNow";
 export const INDEXNOW_KEY = "bc52d22e38f7489988b717aa090fbdfb";
 export const INDEXNOW_KEY_LOCATION = `https://www.woori.today/${INDEXNOW_KEY}.txt`;
 export const SITE_ORIGIN = "https://www.woori.today";
-export const LOCALES = ["ko", "en", "ja", "zh"];
+export const LOCALES = ["ko", "en", "ja", "zh", "es", "pt-br", "de", "fr", "vi", "id", "th", "zh-tw", "it", "nl", "hi"];
 const registryPath = "src/registry/tools.ts";
 
 async function importRegistry(source) {
@@ -20,8 +20,8 @@ async function importRegistry(source) {
 export function createIndexNowUrls(tools, slugs = null) {
   const publicTools = tools.filter(({ isPublic }) => isPublic);
   const selectedTools = slugs === null ? publicTools : publicTools.filter(({ slug }) => slugs.has(slug));
-  const paths = ["/tools", ...selectedTools.map(({ slug }) => `/tools/${slug}`)];
-  return [...new Set(paths.flatMap((path) => LOCALES.map((locale) => `${SITE_ORIGIN}/${locale}${path}`)))];
+  const paths = [{ path: "/tools", locales: LOCALES }, ...selectedTools.map(({ slug, supportedLocales = ["ko", "en", "ja", "zh"] }) => ({ path: `/tools/${slug}`, locales: supportedLocales }))];
+  return [...new Set(paths.flatMap(({ path, locales }) => locales.map((locale) => `${SITE_ORIGIN}/${locale}${path}`)))];
 }
 
 export function createIndexNowBody(urlList) {
@@ -57,8 +57,8 @@ async function getSubmissionSlugs(tools, baseSha) {
 
     const previousSource = gitOutput("show", `${baseSha}:${registryPath}`);
     const previousModule = await importRegistry(previousSource);
-    const metadata = ({ slug, category, title, description, keywords, isPublic }) =>
-      JSON.stringify({ slug, category, title, description, keywords, isPublic });
+    const metadata = ({ slug, category, title, description, keywords, isPublic, supportedLocales }) =>
+      JSON.stringify({ slug, category, title, description, keywords, isPublic, supportedLocales });
     const previousBySlug = new Map(previousModule.tools.map((tool) => [tool.slug, metadata(tool)]));
     return new Set(tools.filter((tool) => previousBySlug.get(tool.slug) !== metadata(tool)).map(({ slug }) => slug));
   } catch (error) {

@@ -4,21 +4,27 @@ import test from "node:test";
 import ts from "typescript";
 import { createIndexNowBody, createIndexNowUrls, INDEXNOW_ENDPOINT, INDEXNOW_KEY, INDEXNOW_KEY_LOCATION } from "../scripts/submit-indexnow.mjs";
 
-const registrySource = await readFile(new URL("../src/registry/tools.ts", import.meta.url), "utf8");
+const routingSource = await readFile(new URL("../src/i18n/routing.ts", import.meta.url), "utf8");
+const routingModule = ts.transpileModule(routingSource, { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } });
+const { locales } = await import(`data:text/javascript;base64,${Buffer.from(routingModule.outputText).toString("base64")}`);
+const registrySource = (await readFile(new URL("../src/registry/tools.ts", import.meta.url), "utf8")).replace(
+  'import { locales, type RouteLocale as Locale } from "../i18n/routing";',
+  `const locales = ${JSON.stringify(locales)};`,
+);
 const { outputText } = ts.transpileModule(registrySource, {
   compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
 });
 const { tools } = await import(`data:text/javascript;base64,${Buffer.from(outputText).toString("base64")}`);
-
-test("IndexNow URLs include public tools and all locales without duplicates or legacy paths", () => {
+test("IndexNow URLs include only locales supported by each public tool", () => {
   const urls = createIndexNowUrls([...tools, { slug: "private-tool", isPublic: false }]);
   assert.equal(new Set(urls).size, urls.length);
-  assert.equal(urls.length, tools.length * 4 + 4);
+  assert.equal(urls.length, tools.reduce((sum, tool) => sum + tool.supportedLocales.length, 0) + 15);
   assert.ok(!urls.some((url) => url.includes("private-tool")));
-  assert.ok(urls.every((url) => /^https:\/\/www\.woori\.today\/(ko|en|ja|zh)\/tools(?:\/[^/]+)?$/.test(url)));
-  for (const locale of ["ko", "en", "ja", "zh"]) {
+  assert.deepEqual(locales, ["ko", "en", "ja", "zh", "es", "pt-br", "de", "fr", "vi", "id", "th", "zh-tw", "it", "nl", "hi"]);
+  assert.ok(urls.every((url) => new RegExp(`^https://www\\.woori\\.today/(${locales.join("|")})/tools(?:/[^/]+)?$`).test(url)));
+  for (const locale of locales) {
     assert.ok(urls.includes(`https://www.woori.today/${locale}/tools`));
-    for (const tool of tools) assert.ok(urls.includes(`https://www.woori.today/${locale}/tools/${tool.slug}`));
+    for (const tool of tools) assert.equal(urls.includes(`https://www.woori.today/${locale}/tools/${tool.slug}`), tool.supportedLocales.includes(locale));
   }
   assert.ok(urls.every((url) => !new URL(url).pathname.startsWith("/tools/")));
 });

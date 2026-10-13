@@ -1,6 +1,4 @@
-import type { Locale } from "@/i18n/routing";
-
-export type TarotCard = { id: string; name: Record<Locale, string>; upright: Record<Locale, string>; reversed: Record<Locale, string>; keywords: Record<Locale, string[]> };
+export type TarotCard = { id: string; name: Record<string, string>; upright: Record<string, string>; reversed: Record<string, string>; keywords: Record<string, string[]> };
 
 // Original text-only Major Arcana deck. No Rider–Waite artwork or copied card descriptions.
 export const tarotDeck: TarotCard[] = [

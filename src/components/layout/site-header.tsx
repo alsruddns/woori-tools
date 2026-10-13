@@ -8,7 +8,7 @@ import { tools } from "@/registry/tools";
 
 export function SiteHeader({ locale, messages }: { locale: Locale; messages: Dictionary }) {
   const visibleCategories = getLocalizedCategories(locale).filter((category) =>
-    category.id !== "qr" && tools.some((tool) => tool.category === category.id),
+    category.id !== "qr" && tools.some((tool) => tool.category === category.id && tool.supportedLocales.includes(locale)),
   ).slice(0, 4);
 
   return (

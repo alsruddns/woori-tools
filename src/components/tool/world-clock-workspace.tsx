@@ -1,24 +1,52 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import type { Locale } from "@/i18n/routing";
+import type { UiLocale } from "@/i18n/routing";
 
 const fallbackZones = ["Asia/Seoul", "Asia/Tokyo", "Asia/Shanghai", "Asia/Singapore", "Europe/London", "Europe/Paris", "America/New_York", "America/Los_Angeles", "Australia/Sydney", "Pacific/Auckland"];
 const defaultZones = ["Asia/Seoul", "Asia/Tokyo", "America/New_York", "America/Los_Angeles", "Europe/London", "Europe/Paris", "Asia/Singapore", "Australia/Sydney"];
-const labels: Record<Locale, Record<string, string>> = {
+const labels: Record<string, Record<string, string>> = {
   ko: { title: "세계 시간", add: "도시 추가", remove: "삭제", search: "시간대 검색", none: "표시할 도시가 없습니다." },
   en: { title: "World clock", add: "Add city", remove: "Remove", search: "Search time zones", none: "No cities to display." },
   ja: { title: "世界時計", add: "都市を追加", remove: "削除", search: "タイムゾーンを検索", none: "表示する都市がありません。" },
   zh: { title: "世界时钟", add: "添加城市", remove: "删除", search: "搜索时区", none: "没有可显示的城市。" },
 };
-const zoneNames: Record<Locale, Record<string, string>> = {
+Object.assign(labels, {
+  es:{title:"Reloj mundial",add:"Añadir ciudad",remove:"Quitar",search:"Buscar zonas horarias",none:"No hay ciudades para mostrar."},
+  "pt-br":{title:"Relógio mundial",add:"Adicionar cidade",remove:"Remover",search:"Buscar fusos horários",none:"Não há cidades para exibir."},
+  de:{title:"Weltuhr",add:"Stadt hinzufügen",remove:"Entfernen",search:"Zeitzonen suchen",none:"Keine Städte zum Anzeigen."},
+  fr:{title:"Horloge mondiale",add:"Ajouter une ville",remove:"Supprimer",search:"Rechercher des fuseaux horaires",none:"Aucune ville à afficher."},
+  vi:{title:"Đồng hồ thế giới",add:"Thêm thành phố",remove:"Xóa",search:"Tìm múi giờ",none:"Không có thành phố để hiển thị."},
+  id:{title:"Jam dunia",add:"Tambah kota",remove:"Hapus",search:"Cari zona waktu",none:"Tidak ada kota untuk ditampilkan."},
+  th:{title:"นาฬิกาโลก",add:"เพิ่มเมือง",remove:"นำออก",search:"ค้นหาเขตเวลา",none:"ไม่มีเมืองให้แสดง"},
+  "zh-tw":{title:"世界時鐘",add:"新增城市",remove:"移除",search:"搜尋時區",none:"沒有可顯示的城市。"},
+  it:{title:"Orologio mondiale",add:"Aggiungi città",remove:"Rimuovi",search:"Cerca fusi orari",none:"Nessuna città da visualizzare."},
+  nl:{title:"Wereldklok",add:"Stad toevoegen",remove:"Verwijderen",search:"Tijdzones zoeken",none:"Geen steden om weer te geven."},
+  hi:{title:"विश्व घड़ी",add:"शहर जोड़ें",remove:"हटाएँ",search:"समय क्षेत्र खोजें",none:"दिखाने के लिए कोई शहर नहीं है।"},
+});
+
+const zoneNames: Record<string, Record<string, string>> = {
   ko: { "Asia/Seoul": "서울", "Asia/Tokyo": "도쿄", "Asia/Shanghai": "상하이", "Asia/Singapore": "싱가포르", "Europe/London": "런던", "Europe/Paris": "파리", "America/New_York": "뉴욕", "America/Los_Angeles": "로스앤젤레스", "Australia/Sydney": "시드니", "Pacific/Auckland": "오클랜드" },
   en: { "Asia/Seoul": "Seoul", "Asia/Tokyo": "Tokyo", "Asia/Shanghai": "Shanghai", "Asia/Singapore": "Singapore", "Europe/London": "London", "Europe/Paris": "Paris", "America/New_York": "New York", "America/Los_Angeles": "Los Angeles", "Australia/Sydney": "Sydney", "Pacific/Auckland": "Auckland" },
   ja: { "Asia/Seoul": "ソウル", "Asia/Tokyo": "東京", "Asia/Shanghai": "上海", "Asia/Singapore": "シンガポール", "Europe/London": "ロンドン", "Europe/Paris": "パリ", "America/New_York": "ニューヨーク", "America/Los_Angeles": "ロサンゼルス", "Australia/Sydney": "シドニー", "Pacific/Auckland": "オークランド" },
   zh: { "Asia/Seoul": "首尔", "Asia/Tokyo": "东京", "Asia/Shanghai": "上海", "Asia/Singapore": "新加坡", "Europe/London": "伦敦", "Europe/Paris": "巴黎", "America/New_York": "纽约", "America/Los_Angeles": "洛杉矶", "Australia/Sydney": "悉尼", "Pacific/Auckland": "奥克兰" },
 };
 
-export function WorldClockWorkspace({ locale }: { locale: Locale }) {
+Object.assign(zoneNames, {
+  es:{"Asia/Seoul":"Seúl","Asia/Tokyo":"Tokio","Asia/Shanghai":"Shanghái","Asia/Singapore":"Singapur","Europe/London":"Londres","Europe/Paris":"París","America/New_York":"Nueva York","America/Los_Angeles":"Los Ángeles","Australia/Sydney":"Sídney","Pacific/Auckland":"Auckland"},
+  "pt-br":{"Asia/Seoul":"Seul","Asia/Tokyo":"Tóquio","Asia/Shanghai":"Xangai","Asia/Singapore":"Singapura","Europe/London":"Londres","Europe/Paris":"Paris","America/New_York":"Nova York","America/Los_Angeles":"Los Angeles","Australia/Sydney":"Sydney","Pacific/Auckland":"Auckland"},
+  de:{"Asia/Seoul":"Seoul","Asia/Tokyo":"Tokio","Asia/Shanghai":"Shanghai","Asia/Singapore":"Singapur","Europe/London":"London","Europe/Paris":"Paris","America/New_York":"New York","America/Los_Angeles":"Los Angeles","Australia/Sydney":"Sydney","Pacific/Auckland":"Auckland"},
+  fr:{"Asia/Seoul":"Séoul","Asia/Tokyo":"Tokyo","Asia/Shanghai":"Shanghai","Asia/Singapore":"Singapour","Europe/London":"Londres","Europe/Paris":"Paris","America/New_York":"New York","America/Los_Angeles":"Los Angeles","Australia/Sydney":"Sydney","Pacific/Auckland":"Auckland"},
+  vi:{"Asia/Seoul":"Seoul","Asia/Tokyo":"Tokyo","Asia/Shanghai":"Thượng Hải","Asia/Singapore":"Singapore","Europe/London":"Luân Đôn","Europe/Paris":"Paris","America/New_York":"New York","America/Los_Angeles":"Los Angeles","Australia/Sydney":"Sydney","Pacific/Auckland":"Auckland"},
+  id:{"Asia/Seoul":"Seoul","Asia/Tokyo":"Tokyo","Asia/Shanghai":"Shanghai","Asia/Singapore":"Singapura","Europe/London":"London","Europe/Paris":"Paris","America/New_York":"New York","America/Los_Angeles":"Los Angeles","Australia/Sydney":"Sydney","Pacific/Auckland":"Auckland"},
+  th:{"Asia/Seoul":"โซล","Asia/Tokyo":"โตเกียว","Asia/Shanghai":"เซี่ยงไฮ้","Asia/Singapore":"สิงคโปร์","Europe/London":"ลอนดอน","Europe/Paris":"ปารีส","America/New_York":"นิวยอร์ก","America/Los_Angeles":"ลอสแอนเจลิส","Australia/Sydney":"ซิดนีย์","Pacific/Auckland":"โอ๊คแลนด์"},
+  "zh-tw":{"Asia/Seoul":"首爾","Asia/Tokyo":"東京","Asia/Shanghai":"上海","Asia/Singapore":"新加坡","Europe/London":"倫敦","Europe/Paris":"巴黎","America/New_York":"紐約","America/Los_Angeles":"洛杉磯","Australia/Sydney":"雪梨","Pacific/Auckland":"奧克蘭"},
+  it:{"Asia/Seoul":"Seul","Asia/Tokyo":"Tokyo","Asia/Shanghai":"Shanghai","Asia/Singapore":"Singapore","Europe/London":"Londra","Europe/Paris":"Parigi","America/New_York":"New York","America/Los_Angeles":"Los Angeles","Australia/Sydney":"Sydney","Pacific/Auckland":"Auckland"},
+  nl:{"Asia/Seoul":"Seoel","Asia/Tokyo":"Tokio","Asia/Shanghai":"Shanghai","Asia/Singapore":"Singapore","Europe/London":"Londen","Europe/Paris":"Parijs","America/New_York":"New York","America/Los_Angeles":"Los Angeles","Australia/Sydney":"Sydney","Pacific/Auckland":"Auckland"},
+  hi:{"Asia/Seoul":"सियोल","Asia/Tokyo":"टोक्यो","Asia/Shanghai":"शंघाई","Asia/Singapore":"सिंगापुर","Europe/London":"लंदन","Europe/Paris":"पेरिस","America/New_York":"न्यूयॉर्क","America/Los_Angeles":"लॉस एंजिलिस","Australia/Sydney":"सिडनी","Pacific/Auckland":"ऑकलैंड"},
+});
+
+export function WorldClockWorkspace({ locale }: { locale:UiLocale }) {
   const t = labels[locale];
   const zones = useMemo(() => {
     try { return typeof Intl.supportedValuesOf === "function" ? Intl.supportedValuesOf("timeZone") : fallbackZones; } catch { return fallbackZones; }
