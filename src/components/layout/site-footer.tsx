@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ContactDialog } from "@/components/layout/contact-dialog";
 import type { Dictionary } from "@/i18n/messages";
 import { localizePath, type Locale } from "@/i18n/routing";
 
@@ -10,9 +11,10 @@ export function SiteFooter({ locale, messages }: { locale: Locale; messages: Dic
           <p className="font-semibold text-slate-900">Woori Tools</p>
           <p className="mt-1">{messages.footerTagline}</p>
         </div>
-        <nav aria-label={messages.terms} className="flex gap-5">
+        <nav aria-label={messages.terms} className="flex flex-wrap items-center gap-x-5 gap-y-2">
           <Link href={localizePath(locale, "/privacy")} className="hover:text-indigo-700">{messages.privacy}</Link>
           <Link href={localizePath(locale, "/terms")} className="hover:text-indigo-700">{messages.terms}</Link>
+          <ContactDialog locale={locale} />
         </nav>
       </div>
     </footer>
