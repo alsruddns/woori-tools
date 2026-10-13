@@ -16,7 +16,7 @@ export function SiteHeader({ locale, messages }: { locale: Locale; messages: Dic
 
   return (
     <header className="border-b border-slate-200 bg-white">
-      <div className="mx-auto flex min-h-16 max-w-6xl items-center justify-between gap-2 px-4 sm:gap-3 sm:px-6 lg:px-8">
+      <div className="mx-auto flex min-h-16 max-w-6xl flex-wrap items-center justify-between gap-2 px-4 lg:flex-nowrap lg:gap-3 sm:px-6 lg:px-8">
         <Link
           href={`/${locale}`}
           aria-label={chrome.logoHome}
@@ -35,7 +35,7 @@ export function SiteHeader({ locale, messages }: { locale: Locale; messages: Dic
             Tools
           </span>
         </Link>
-        <div className="flex min-w-0 items-center gap-1.5 sm:gap-5">
+        <div className="flex min-w-0 flex-wrap items-center justify-end gap-1.5 lg:flex-nowrap lg:gap-5">
           <nav aria-label={messages.tools} className="hidden items-center gap-3 text-sm sm:flex sm:gap-5">
             <Link href={localizePath(locale, "/tools")} className="font-medium text-slate-700 hover:text-indigo-700">
               {messages.tools}
