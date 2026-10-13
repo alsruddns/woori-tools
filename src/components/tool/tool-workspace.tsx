@@ -23,6 +23,23 @@ import { DiceWorkspace, LottoWorkspace, RandomNameWorkspace, RandomNumberWorkspa
 
 const MAX_IMAGE = 30 * 1024 * 1024;
 const MAX_PDF = 50 * 1024 * 1024;
+const selectionLimitMessages: Record<RouteLocale, { files: string; images: string }> = {
+  ko:{files:"파일은 최대 100개, 전체 용량은 200MB까지 선택할 수 있습니다.",images:"이미지는 최대 6개, 전체 용량은 100MB까지 선택할 수 있습니다."},
+  en:{files:"Select up to 100 files and 200 MB total.",images:"Select up to 6 images and 100 MB total."},
+  ja:{files:"ファイルは最大100件、合計200 MBまで選択できます。",images:"画像は最大6枚、合計100 MBまで選択できます。"},
+  zh:{files:"最多可选择 100 个文件，总大小不超过 200 MB。",images:"最多可选择 6 张图片，总大小不超过 100 MB。"},
+  es:{files:"Selecciona hasta 100 archivos y un total máximo de 200 MB.",images:"Selecciona hasta 6 imágenes y un total máximo de 100 MB."},
+  "pt-br":{files:"Selecione até 100 arquivos, com no máximo 200 MB no total.",images:"Selecione até 6 imagens, com no máximo 100 MB no total."},
+  de:{files:"Wähle bis zu 100 Dateien mit insgesamt höchstens 200 MB aus.",images:"Wähle bis zu 6 Bilder mit insgesamt höchstens 100 MB aus."},
+  fr:{files:"Sélectionnez jusqu’à 100 fichiers, pour un total maximal de 200 Mo.",images:"Sélectionnez jusqu’à 6 images, pour un total maximal de 100 Mo."},
+  vi:{files:"Chọn tối đa 100 tệp với tổng dung lượng không quá 200 MB.",images:"Chọn tối đa 6 ảnh với tổng dung lượng không quá 100 MB."},
+  id:{files:"Pilih maksimal 100 file dengan total ukuran hingga 200 MB.",images:"Pilih maksimal 6 gambar dengan total ukuran hingga 100 MB."},
+  th:{files:"เลือกไฟล์ได้สูงสุด 100 ไฟล์ รวมไม่เกิน 200 MB",images:"เลือกรูปภาพได้สูงสุด 6 รูป รวมไม่เกิน 100 MB"},
+  "zh-tw":{files:"最多可選擇 100 個檔案，總大小不得超過 200 MB。",images:"最多可選擇 6 張圖片，總大小不得超過 100 MB。"},
+  it:{files:"Seleziona fino a 100 file, per un totale massimo di 200 MB.",images:"Seleziona fino a 6 immagini, per un totale massimo di 100 MB."},
+  nl:{files:"Selecteer maximaal 100 bestanden met in totaal maximaal 200 MB.",images:"Selecteer maximaal 6 afbeeldingen met in totaal maximaal 100 MB."},
+  hi:{files:"अधिकतम 100 फ़ाइलें चुनें, जिनका कुल आकार 200 MB तक हो।",images:"अधिकतम 6 चित्र चुनें, जिनका कुल आकार 100 MB तक हो।"},
+};
 
 export function ToolWorkspace({ tool, locale, phaseLocale, messages }: { tool: ToolDefinition; locale:UiLocale; phaseLocale:RouteLocale; messages: Dictionary }) {
   const isImage = tool.category === "image";
@@ -85,8 +102,8 @@ export function ToolWorkspace({ tool, locale, phaseLocale, messages }: { tool: T
     const limit = isImage ? MAX_IMAGE : isPdf ? MAX_PDF : 100 * 1024 * 1024;
     const bad = incoming.find((file) => file.size > limit);
     if (bad) { setError(messages.errors.tooLarge.replace("{size}", String(isImage ? 30 : 50))); return; }
-    if(isFileTool&&(incoming.length>100||incoming.reduce((sum,file)=>sum+file.size,0)>200*1024*1024)){setError("Select up to 100 files and 200 MB total.");return;}
-    if(tool.slug==="image-collage"&&(incoming.length>6||incoming.reduce((sum,file)=>sum+file.size,0)>100*1024*1024)){setError("Select up to 6 images and 100 MB total.");return;}
+    if(isFileTool&&(incoming.length>100||incoming.reduce((sum,file)=>sum+file.size,0)>200*1024*1024)){setError(selectionLimitMessages[phaseLocale].files);return;}
+    if(tool.slug==="image-collage"&&(incoming.length>6||incoming.reduce((sum,file)=>sum+file.size,0)>100*1024*1024)){setError(selectionLimitMessages[phaseLocale].images);return;}
     const valid = incoming.filter((file) => isImage ? (/^image\//.test(file.type) || /\.heic$/i.test(file.name)) : isPdf ? (file.type === "application/pdf" || /\.pdf$/i.test(file.name)) : true);
     if (valid.length !== incoming.length) { setError(isImage ? messages.errors.imageOnly : messages.errors.pdfOnly); return; }
     const selected = tool.slug==="image-collage" || isFileTool || (isPdf && tool.slug !== "pdf-split" && tool.slug !== "pdf-delete-pages" && tool.slug !== "pdf-rotate-pages" && tool.slug !== "pdf-add-page-numbers" && tool.slug !== "pdf-watermark" && tool.slug !== "pdf-metadata-viewer" && tool.slug !== "pdf-remove-metadata") ? valid : valid.slice(0, 1);

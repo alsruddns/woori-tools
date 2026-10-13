@@ -117,7 +117,15 @@ function readLocaleDictionary(sourceFile, declarationName) {
   }
   visit(sourceFile);
   assert.ok(found, `Could not find locale dictionary ${declarationName} in ${sourceFile.fileName}`);
-  const properties = found.properties.filter(ts.isPropertyAssignment);
+  const properties = [...found.properties.filter(ts.isPropertyAssignment)];
+  function collectAssignments(node) {
+    if (ts.isCallExpression(node) && node.expression.getText(sourceFile) === "Object.assign" && node.arguments[0]?.getText(sourceFile) === declarationName) {
+      const merged = unwrapObject(node.arguments[1]);
+      if (merged) properties.push(...merged.properties.filter(ts.isPropertyAssignment));
+    }
+    ts.forEachChild(node, collectAssignments);
+  }
+  collectAssignments(sourceFile);
   const keys = properties.map((property) => property.name.getText(sourceFile).replace(/^['"]|['"]$/g, ""));
   const directLocaleMap = locales.slice(4).every((locale) => keys.includes(locale)) && (keys.includes("en") || !locales.slice(0, 4).some((locale) => keys.includes(locale)));
   const entries = new Map(properties.map((property) => [property.name.getText(sourceFile).replace(/^['"]|['"]$/g, ""), directLocaleMap ? (unwrapObject(property.initializer) ?? property.initializer) : unwrapObject(property.initializer)]));
@@ -128,6 +136,10 @@ test("interactive workspace dictionaries cover all locales with complete transla
   const newLocales = locales.slice(4);
   const checks = [
     ["../src/components/copy-toast.tsx", ["copyMessages"]],
+    ["../src/components/tool/random-string-workspace.tsx", ["labels", "optionLegend"]],
+    ["../src/components/tool/ladder-workspace.tsx", ["labels"]],
+    ["../src/components/tool/world-clock-workspace.tsx", ["labels", "zoneNames"]],
+    ["../src/components/tool/countdown-workspace.tsx", ["labels"]],
     ["../src/components/tool/special-random-workspaces.tsx", ["copy", "lottoLabels", "selectionConflict", "specialPrompt", "specialRequired", "officialNotice", "translations", "wheelCopy", "starterByLocale", "teamPrefix", "labels"]],
     ["../src/components/tool/fortune-workspace.tsx", ["tarotText", "dailyText", "dailyPools", "tarotNames"]],
     ["../src/components/tool/saju-workspace.tsx", ["labels"]],
