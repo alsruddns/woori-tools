@@ -42,10 +42,11 @@ test("Spanish DNI and NIE checks use the official modulo-23 control letter", () 
   assert.equal(tools.validateSpanishId("dni", "12345678A").valid, false);
   assert.deepEqual(tools.validateSpanishId("nie", "X1234567L"), { valid:true, level:"checksum" });
 });
-test("PAN and GSTIN validators report structure without claiming government verification", () => {
+test("PAN reports structure only and GSTIN verifies its check character without claiming government verification", () => {
   assert.deepEqual(tools.validatePan("ABCPA1234F"), { valid:true, level:"format" });
-  assert.deepEqual(tools.validateGstin("27ABCPE1234F1Z5"), { valid:true, level:"format" });
-  assert.equal(tools.validateGstin("ABCDE1234F").valid, false);
+  assert.deepEqual(tools.validateGstin("27AAPFU0939F1ZV"), { valid:true, level:"checksum" });
+  assert.deepEqual(tools.validateGstin("27AAPFU0939F1ZA"), { valid:false, level:"checksum" });
+  assert.deepEqual(tools.validateGstin("ABCDE1234F"), { valid:false, level:"format" });
 });
 test("CPF checksum and numeric or alphanumeric CNPJ checksum validate", () => {
   assert.deepEqual(tools.validateCpf("529.982.247-25"), { valid:true, level:"checksum" });
@@ -65,4 +66,41 @@ test("Codice Fiscale checks its control character without claiming real identity
   assert.deepEqual(tools.validateCodiceFiscale("RSSMRA85T10A562S"), { valid:true, level:"checksum" });
   assert.equal(tools.validateCodiceFiscale("RSSMRA85T10A562A").valid, false);
   assert.equal(tools.validateCodiceFiscale("invalid").valid, false);
+});
+
+test("Italian VAT validates its modulo-10 control digit and rejects malformed identifiers", () => {
+  assert.deepEqual(tools.validateItalianVat("01114601006"), { valid:true, level:"checksum" });
+  assert.equal(tools.validateItalianVat("01114601007").valid, false);
+  assert.equal(tools.validateItalianVat("123").level, "format");
+});
+
+test("new country phone formats normalize local and international numbers without lookup", () => {
+  assert.equal(tools.formatPhone("taiwan-phone-number-formatter", "0912345678"), "+886 0912 345 678");
+  assert.equal(tools.formatPhone("india-phone-number-formatter", "+91 9876543210"), "+91 98765 43210");
+  assert.equal(tools.formatPhone("us-phone-number-formatter", "2125550123"), "+1 (212) 555-0123");
+  assert.throws(() => tools.formatPhone("us-phone-number-formatter", "1125550123"));
+});
+
+test("postal formatters normalize valid ZIP, Canadian, UK, Brazilian, and Australian patterns", () => {
+  assert.equal(tools.formatUsZip("123456789"), "12345-6789");
+  assert.equal(tools.formatCanadaPostalCode("k1a0b1"), "K1A 0B1");
+  assert.equal(tools.formatUkPostcode("sw1a1aa"), "SW1A 1AA");
+  assert.equal(tools.formatUkPostcode("GIR 0AA"), "GIR 0AA");
+  assert.equal(tools.formatBrazilCep("01001000"), "01001-000");
+  assert.deepEqual(tools.validateAustraliaPostcode("2000"), { valid:true, level:"format" });
+  assert.throws(() => tools.formatCanadaPostalCode("D1A 0B1"));
+  assert.throws(() => tools.formatUkPostcode("ABCDE"));
+  assert.throws(() => tools.formatUsZip("1234"));
+});
+
+test("localized dates round trip with leap-day validation and explicit US or UK order", () => {
+  assert.equal(tools.convertLocalizedDate("2024-02-29", "ES"), "29/02/2024");
+  assert.equal(tools.convertLocalizedDate("29/02/2024", "NL", "to-iso"), "2024-02-29");
+  assert.equal(tools.convertLocalizedDate("31/12/2026", "IT", "to-iso"), "2026-12-31");
+  assert.equal(tools.convertLocalizedDate("2026-03-04", "US"), "03/04/2026");
+  assert.equal(tools.convertLocalizedDate("2026-03-04", "UK"), "04/03/2026");
+  assert.equal(tools.convertLocalizedDate("03/04/2026", "US", "to-iso"), "2026-03-04");
+  assert.equal(tools.convertLocalizedDate("03/04/2026", "UK", "to-iso"), "2026-04-03");
+  assert.throws(() => tools.convertLocalizedDate("2025-02-29", "ES"));
+  assert.throws(() => tools.convertLocalizedDate("31/04/2026", "IT", "to-iso"));
 });

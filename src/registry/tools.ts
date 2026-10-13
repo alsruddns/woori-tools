@@ -131,7 +131,7 @@ const entries: Array<[string, ToolCategory, string, string, string[], boolean]> 
   ["numbers3-number-generator","random","일본 넘버즈3 번호 생성기","일본 공식 규칙에 맞춰 0부터 9까지의 숫자로 3자리 넘버즈3 번호를 생성합니다.",["numbers 3","ナンバーズ3","番号"],true],
   ["numbers4-number-generator","random","일본 넘버즈4 번호 생성기","일본 공식 규칙에 맞춰 0부터 9까지의 숫자로 4자리 넘버즈4 번호를 생성합니다.",["numbers 4","ナンバーズ4","番号"],true],
   ["bingo5-number-generator","random","일본 빙고5 번호 생성기","일본 빙고5의 8개 칸별 공식 숫자 범위에 따라 한 장의 카드를 생성합니다.",["bingo 5","ビンゴ5","番号"],true],
-  ...COUNTRY_TOOL_SLUGS.map((slug) => [slug, slug.includes("validator") ? "developer" : ["chinese-zodiac-calculator","chinese-sexagenary-cycle-calculator"].includes(slug) ? "date-time" : "text", slug, slug, [slug], true] as [string, ToolCategory, string, string, string[], boolean]),
+  ...COUNTRY_TOOL_SLUGS.map((slug) => [slug, slug.includes("validator") || slug.includes("postcode-formatter") || slug.includes("postal-code-formatter") || slug.includes("zip-code-formatter") || slug.includes("cep-formatter") ? "developer" : ["chinese-zodiac-calculator","chinese-sexagenary-cycle-calculator"].includes(slug) || slug.includes("date-format-converter") ? "date-time" : "text", slug, slug, [slug], true] as [string, ToolCategory, string, string, string[], boolean]),
 ];
 
 const fileToolSlugs = new Set(["file-hash", "mime-type-checker", "file-extension-checker", "file-size-checker", "duplicate-file-checker", "zip-files", "bulk-file-renamer", "filename-cleaner"]);
@@ -166,15 +166,19 @@ setRelated("numbers3-number-generator", ["numbers4-number-generator", "bingo5-nu
 setRelated("numbers4-number-generator", ["numbers3-number-generator", "bingo5-number-generator", "japan-loto6-number-generator", "japan-loto7-number-generator", "japan-mini-loto-number-generator"]);
 setRelated("bingo5-number-generator", ["numbers3-number-generator", "numbers4-number-generator", "japan-loto6-number-generator", "japan-loto7-number-generator", "japan-mini-loto-number-generator"]);
 const countryRelated: string[][] = [
-  ["simplified-traditional-chinese-converter","chinese-number-kanji-converter","rmb-uppercase-converter","chinese-zodiac-calculator","chinese-sexagenary-cycle-calculator","chinese-phone-number-formatter"],
-  ["indian-number-format-converter","lakh-crore-converter","pan-format-validator","gstin-format-validator"],
+  ["simplified-traditional-chinese-converter","chinese-number-kanji-converter","rmb-uppercase-converter","chinese-zodiac-calculator","chinese-sexagenary-cycle-calculator","chinese-phone-number-formatter","taiwan-phone-number-formatter"],
+  ["indian-number-format-converter","lakh-crore-converter","pan-format-validator","gstin-format-validator","india-phone-number-formatter"],
   ["germany-iban-validator","german-number-format-converter","german-date-format-converter"],
-  ["spain-dni-validator","spain-nie-validator","spanish-number-format-converter"],
+  ["spain-dni-validator","spain-nie-validator","spanish-number-format-converter","spanish-date-format-converter"],
   ["france-phone-number-formatter","french-number-format-converter","french-date-format-converter"],
-  ["brazil-cpf-validator","brazil-cnpj-validator","brazil-phone-number-formatter"],
-  ["netherlands-iban-validator","dutch-number-format-converter"],
+  ["brazil-cpf-validator","brazil-cnpj-validator","brazil-phone-number-formatter","brazil-cep-formatter"],
+  ["netherlands-iban-validator","dutch-number-format-converter","dutch-date-format-converter"],
   ["vietnam-phone-number-formatter","vietnam-number-format-converter"],
-  ["italy-fiscal-code-format-validator","italy-number-format-converter"],
+  ["italy-fiscal-code-format-validator","italy-vat-number-validator","italy-number-format-converter","italian-date-format-converter"],
+  ["us-phone-number-formatter","us-zip-code-formatter","english-date-format-converter"],
+  ["canada-postal-code-formatter","us-phone-number-formatter","us-zip-code-formatter"],
+  ["uk-postcode-formatter","english-date-format-converter","german-date-format-converter","french-date-format-converter"],
+  ["australia-postcode-formatter","us-phone-number-formatter","canada-postal-code-formatter"],
 ];
 for (const group of countryRelated) for (const slug of group) setRelated(slug, group.filter((other) => other !== slug).slice(0, 5));
 const lotto = tools.find((tool) => tool.slug === "lotto-number-generator");

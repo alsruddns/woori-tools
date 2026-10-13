@@ -26,6 +26,23 @@ const words = [
   ["इनपुट","परिणाम","चलाएँ","रीसेट","कॉपी","कॉपी हो गया","उदाहरण: ","प्रक्रिया केवल ब्राउज़र में होती है। निजी डेटा और पहचान संख्या भेजी या सहेजी नहीं जाती।","चुने गए देश के नियमों के अनुसार प्रारूप बदलें या जाँचें।","इनपुट जाँचें।","इनपुट प्रारूप मान्य है।","चेकसम मान्य है।","प्रारूप जाँचा गया; जारी होने या वास्तविक वैधता की पुष्टि नहीं हुई।","दिशा","सरलीकृत से पारंपरिक","पारंपरिक से सरलीकृत","अरबी अंकों से चीनी अंकों में","चीनी अंकों से अरबी अंकों में","वर्ष","परिणाम कॉपी करें","प्रारूप जाँचें","प्रारूप अमान्य है या चेकसम मेल नहीं खाता।"],
 ];
 const ui = Object.fromEntries(locales.map((locale, index) => [locale, words[index]])) as Record<RouteLocale, string[]>;
+const extraUi: Record<RouteLocale, string[]> = {
+  ko:["ISO에서 현지 형식으로","현지 형식에서 ISO로","미국 날짜 형식","영국 날짜 형식","날짜 입력이 모호할 수 있습니다. 의도한 순서를 선택하세요.","형식 도구입니다. 실제 전화번호·주소·계좌 또는 등록 상태는 조회하지 않습니다."],
+  en:["ISO to local format","Local format to ISO","US date format","UK date format","Dates can be ambiguous. Select the intended order.","Formatting only. This does not look up a real phone number, address, account, or registration."],
+  ja:["ISOから現地形式へ","現地形式からISOへ","米国の日付形式","英国の日付形式","日付は曖昧な場合があります。順序を選択してください。","形式を整える機能です。電話番号・住所・口座や登録状況の実在確認は行いません。"],
+  zh:["ISO 转当地格式","当地格式转 ISO","美国日期格式","英国日期格式","日期可能有歧义，请选择预期顺序。","仅处理格式，不查询真实电话号码、地址、账户或登记状态。"],
+  es:["De ISO al formato local","Del formato local a ISO","Formato de fecha de EE. UU.","Formato de fecha del Reino Unido","Las fechas pueden ser ambiguas. Elige el orden deseado.","Solo da formato; no consulta teléfonos, direcciones, cuentas ni registros reales."],
+  "pt-br":["De ISO para o formato local","Do formato local para ISO","Formato de data dos EUA","Formato de data do Reino Unido","A data pode ser ambígua. Escolha a ordem desejada.","Apenas formata; não consulta números, endereços, contas ou registros reais."],
+  de:["ISO in lokales Format","Lokales Format in ISO","US-Datumsformat","Britisches Datumsformat","Datumsangaben können mehrdeutig sein. Wähle die gewünschte Reihenfolge.","Nur Formatierung; echte Telefonnummern, Adressen, Konten oder Registrierungen werden nicht abgefragt."],
+  fr:["ISO vers le format local","Format local vers ISO","Format de date américain","Format de date britannique","Une date peut être ambiguë. Choisissez l’ordre souhaité.","Mise en forme uniquement ; aucun numéro, adresse, compte ou enregistrement réel n’est consulté."],
+  vi:["Từ ISO sang định dạng địa phương","Từ định dạng địa phương sang ISO","Định dạng ngày của Mỹ","Định dạng ngày của Anh","Ngày có thể gây nhầm lẫn. Hãy chọn thứ tự mong muốn.","Chỉ định dạng; không tra cứu số điện thoại, địa chỉ, tài khoản hay đăng ký thực tế."],
+  id:["ISO ke format lokal","Format lokal ke ISO","Format tanggal AS","Format tanggal Britania Raya","Tanggal dapat ambigu. Pilih urutan yang dimaksud.","Hanya pemformatan; nomor telepon, alamat, rekening, atau pendaftaran nyata tidak diperiksa."],
+  th:["จาก ISO เป็นรูปแบบท้องถิ่น","จากรูปแบบท้องถิ่นเป็น ISO","รูปแบบวันที่สหรัฐฯ","รูปแบบวันที่สหราชอาณาจักร","วันที่อาจกำกวม โปรดเลือกลำดับที่ต้องการ","จัดรูปแบบเท่านั้น ไม่มีการค้นหาเบอร์โทร ที่อยู่ บัญชี หรือสถานะการจดทะเบียนจริง"],
+  "zh-tw":["ISO 轉當地格式","當地格式轉 ISO","美國日期格式","英國日期格式","日期可能有歧義，請選擇預期順序。","僅處理格式，不查詢真實電話、地址、帳戶或登記狀態。"],
+  it:["Da ISO al formato locale","Dal formato locale a ISO","Formato data statunitense","Formato data britannico","Le date possono essere ambigue. Scegli l’ordine desiderato.","Solo formattazione; non vengono consultati numeri, indirizzi, conti o registrazioni reali."],
+  nl:["Van ISO naar lokale notatie","Van lokale notatie naar ISO","Amerikaanse datumnotatie","Britse datumnotatie","Datums kunnen dubbelzinnig zijn. Kies de bedoelde volgorde.","Alleen opmaak; echte telefoonnummers, adressen, rekeningen of registraties worden niet opgezocht."],
+  hi:["ISO से स्थानीय प्रारूप","स्थानीय प्रारूप से ISO","अमेरिकी तारीख प्रारूप","ब्रिटिश तारीख प्रारूप","तारीख अस्पष्ट हो सकती है। इच्छित क्रम चुनें।","केवल प्रारूप बदलता है; वास्तविक फ़ोन, पता, खाता या पंजीकरण नहीं खोजा जाता।"],
+};
 const formatErrors: Record<RouteLocale,string> = {
   ko:"입력 형식이 올바르지 않습니다.",en:"The input format is invalid.",ja:"入力形式が正しくありません。",zh:"输入格式无效。",es:"El formato de entrada no es válido.","pt-br":"O formato informado é inválido.",de:"Das Eingabeformat ist ungültig.",fr:"Le format saisi est invalide.",vi:"Định dạng đầu vào không hợp lệ.",id:"Format masukan tidak valid.",th:"รูปแบบข้อมูลไม่ถูกต้อง","zh-tw":"輸入格式無效。",it:"Il formato inserito non è valido.",nl:"Het invoerformaat is ongeldig.",hi:"इनपुट प्रारूप अमान्य है।",
 };
@@ -46,14 +63,16 @@ const cycleNotes: Record<RouteLocale,string> = {
   nl:"De berekening gebruikt het Gregoriaanse jaar. Een geboortedatum rond Chinees Nieuwjaar kan bij het teken van het vorige jaar horen.",
   hi:"यह गणना ग्रेगोरियन वर्ष के आधार पर है। चंद्र नववर्ष के पास जन्म लेने वालों की राशि पिछले वर्ष की हो सकती है।",
 };
+const isPhoneTool = (slug: string) => slug.includes("phone-number-formatter");
+const isPostalTool = (slug: string) => slug.includes("postcode-formatter") || slug.includes("postal-code-formatter") || slug.includes("zip-code-formatter") || slug.includes("cep-formatter");
 
 export function CountryToolsWorkspace({ slug, locale }: { slug: CountryToolSlug; locale: RouteLocale }) {
-  const labels = ui[locale];
+  const labels = [...ui[locale], ...extraUi[locale]];
   const messages = getMessages(locale);
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
   const [error, setError] = useState("");
-  const [mode, setMode] = useState("forward");
+  const [mode, setMode] = useState(slug === "english-date-format-converter" ? "us" : "forward");
   function run() {
     setError(""); setOutput("");
     try {
@@ -65,8 +84,10 @@ export function CountryToolsWorkspace({ slug, locale }: { slug: CountryToolSlug;
       } else setError(result.level === "format" ? formatErrors[locale] : labels[20]);
     } catch { setError(labels[9]); }
   }
-  function reset() { setInput(""); setOutput(""); setError(""); setMode("forward"); }
+  function reset() { setInput(""); setOutput(""); setError(""); setMode(slug === "english-date-format-converter" ? "us" : "forward"); }
   const isDirectional = slug === "simplified-traditional-chinese-converter" || slug === "chinese-number-kanji-converter";
+  const isDateTool = slug.endsWith("date-format-converter");
+  const isEnglishDate = slug === "english-date-format-converter";
   const yearTool = slug === "chinese-zodiac-calculator" || slug === "chinese-sexagenary-cycle-calculator";
   const validator = slug.endsWith("validator");
   const examples: Partial<Record<CountryToolSlug,string>> = {
@@ -78,6 +99,7 @@ export function CountryToolsWorkspace({ slug, locale }: { slug: CountryToolSlug;
     "brazil-cpf-validator":"529.982.247-25", "brazil-cnpj-validator":"12.ABC.345/01DE-35", "brazil-phone-number-formatter":"11987654321",
     "netherlands-iban-validator":"NL91ABNA0417164300", "dutch-number-format-converter":"1234567.89", "vietnam-phone-number-formatter":"0912345678", "vietnam-number-format-converter":"1234567.89",
     "italy-fiscal-code-format-validator":"RSSMRA85T10A562S", "italy-number-format-converter":"1234567.89",
+    "taiwan-phone-number-formatter":"0912345678", "india-phone-number-formatter":"9876543210", "spanish-date-format-converter":"2026-10-13", "brazil-cep-formatter":"01001000", "dutch-date-format-converter":"2026-10-13", "italy-vat-number-validator":"01114601006", "italian-date-format-converter":"2026-10-13", "us-phone-number-formatter":"2125550123", "us-zip-code-formatter":"123456789", "canada-postal-code-formatter":"k1a0b1", "uk-postcode-formatter":"sw1a1aa", "australia-postcode-formatter":"2000", "english-date-format-converter":"2026-03-04",
   };
   const example = examples[slug] ?? "";
   return <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
@@ -85,10 +107,13 @@ export function CountryToolsWorkspace({ slug, locale }: { slug: CountryToolSlug;
     <p className="mt-3 text-sm text-slate-600">{labels[8]}</p>
     {yearTool && <p className="mt-2 text-sm text-amber-800">{cycleNotes[locale]}</p>}
     {isDirectional && <fieldset className="mt-4 flex flex-wrap gap-2"><legend className="mb-2 text-sm font-medium">{labels[13]}</legend><button type="button" aria-pressed={mode === "forward"} onClick={() => setMode("forward")} className="min-h-10 rounded-lg border px-3">{slug.includes("simplified-traditional") ? labels[14] : labels[16]}</button><button type="button" aria-pressed={mode === "reverse"} onClick={() => setMode("reverse")} className="min-h-10 rounded-lg border px-3">{slug.includes("simplified-traditional") ? labels[15] : labels[17]}</button></fieldset>}
+    {isDateTool && <fieldset className="mt-4 flex flex-wrap gap-2"><legend className="mb-2 text-sm font-medium">{labels[13]}</legend>{(isEnglishDate ? [["us", labels[24]],["uk", labels[25]],["us-reverse", `${labels[24]} → ISO`],["uk-reverse", `${labels[25]} → ISO`]] : [["forward", labels[22]],["reverse", labels[23]]]).map(([value, label]) => <button key={value} type="button" aria-pressed={mode === value} onClick={() => setMode(value)} className="min-h-10 rounded-lg border px-3">{label}</button>)}</fieldset>}
+    {isEnglishDate && <p className="mt-2 text-sm text-amber-800">{labels[26]}</p>}
     <label className="mt-4 block text-sm font-medium">{yearTool ? labels[18] : labels[0]}<textarea aria-label={yearTool ? labels[18] : labels[0]} rows={yearTool ? 1 : 5} inputMode={yearTool ? "numeric" : "text"} value={input} onChange={(event) => setInput(event.target.value)} className="mt-1 min-h-11 w-full rounded-xl border border-slate-300 bg-white p-3 font-mono" /></label>
     <button type="button" onClick={() => setInput(example)} className="mt-2 min-h-9 rounded-lg border px-3 text-sm">{labels[6]}{example}</button>
     <div className="mt-4 flex flex-wrap gap-3"><button type="button" onClick={run} className="min-h-11 rounded-xl bg-indigo-600 px-5 font-semibold text-white">{validator ? labels[19] : labels[2]}</button><button type="button" onClick={reset} className="min-h-11 rounded-xl border px-5">{messages.reset}</button></div>
     {error && <p role="alert" className="mt-3 text-sm text-rose-700">{error}</p>}
+    {(isPhoneTool(slug) || isPostalTool(slug)) && <p className="mt-3 text-sm text-slate-600">{labels[27]}</p>}
     {output && <section aria-live="polite" className="mt-5 rounded-2xl bg-slate-50 p-4"><h3 className="font-semibold">{labels[1]}</h3><pre className="mt-2 whitespace-pre-wrap break-all font-mono">{output}</pre><button type="button" onClick={() => void copyText(output)} className="mt-3 min-h-10 rounded-lg border px-4">{labels[4]}</button></section>}
   </section>;
 }

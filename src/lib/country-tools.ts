@@ -172,8 +172,18 @@ export function validatePan(input: string) {
 }
 export function validateGstin(input: string) {
   const value = input.toUpperCase().replace(/[\s-]/g, "");
-  const valid = /^(0[1-9]|[12][0-9]|3[0-8]|97)[A-Z]{3}[ABCFGHLJPT][A-Z][0-9]{4}[A-Z][1-9A-Z]Z[0-9A-Z]$/.test(value);
-  return { valid, level: "format" as const };
+  if (!/^(0[1-9]|[12][0-9]|3[0-8]|97)[A-Z]{3}[ABCFGHLJPT][A-Z][0-9]{4}[A-Z][1-9A-Z]Z[0-9A-Z]$/.test(value)) return { valid: false, level: "format" as const };
+  let sum = 0, weight = 2;
+  for (let index = 13; index >= 0; index--) {
+    const character = value[index];
+    const digit = character >= "A" ? character.charCodeAt(0) - 55 : Number(character);
+    const product = digit * weight;
+    sum += Math.floor(product / 36) + product % 36;
+    weight = weight === 2 ? 1 : 2;
+  }
+  const check = (36 - sum % 36) % 36;
+  const expected = check < 10 ? String(check) : String.fromCharCode(check + 55);
+  return { valid: expected === value[14], level: "checksum" as const };
 }
 export function validateCodiceFiscale(input: string) {
   const value = input.toUpperCase().replace(/\s/g, "");
@@ -186,8 +196,20 @@ export function validateCodiceFiscale(input: string) {
   return { valid: String.fromCharCode(65 + sum % 26) === value[15], level:"checksum" as const };
 }
 
+export function validateItalianVat(input: string) {
+  const value = input.replace(/[.\s]/g, "");
+  if (!/^\d{11}$/.test(value) || /^0{11}$/.test(value)) return { valid: false, level: "format" as const };
+  const sum = [...value.slice(0, 10)].reduce((total, char, index) => {
+    const digit = Number(char);
+    if (index % 2 === 0) return total + digit;
+    const doubled = digit * 2;
+    return total + (doubled > 9 ? doubled - 9 : doubled);
+  }, 0);
+  return { valid: (10 - sum % 10) % 10 === Number(value[10]), level: "checksum" as const };
+}
+
 const PHONE_COUNTRY: Record<string, { country: string }> = {
-  "chinese-phone-number-formatter": { country: "+86" }, "france-phone-number-formatter": { country: "+33" },
+  "chinese-phone-number-formatter": { country: "+86" }, "taiwan-phone-number-formatter": { country: "+886" }, "india-phone-number-formatter": { country: "+91" }, "us-phone-number-formatter": { country: "+1" }, "france-phone-number-formatter": { country: "+33" },
   "brazil-phone-number-formatter": { country: "+55" }, "vietnam-phone-number-formatter": { country: "+84" },
 };
 export function formatPhone(slug: string, input: string) {
@@ -196,9 +218,26 @@ export function formatPhone(slug: string, input: string) {
   if (!digits) throw new Error("invalid-phone");
   if (slug === "chinese-phone-number-formatter") {
     const local = digits.startsWith("86") && digits.length > 11 ? digits.slice(2) : digits;
-    if (local.length === 11) return `${country} ${local.slice(0, 3)} ${local.slice(3, 7)} ${local.slice(7)}`;
-    if (local.length >= 10 && local.length <= 12) return `${country} ${local.slice(0, 3)} ${local.slice(3)}`;
+    if (local.length === 11 && /^1[3-9]\d{9}$/.test(local)) return `${country} ${local.slice(0, 3)} ${local.slice(3, 7)} ${local.slice(7)}`;
+    if (/^0\d{9,11}$/.test(local)) return `${country} ${local.slice(0, 3)} ${local.slice(3, -4)} ${local.slice(-4)}`;
     throw new Error("invalid-phone");
+  }
+  if (slug === "taiwan-phone-number-formatter") {
+    const local = digits.startsWith("886") ? `0${digits.slice(3)}` : digits;
+    if (/^09\d{8}$/.test(local)) return `${country} ${local.slice(0, 4)} ${local.slice(4, 7)} ${local.slice(7)}`;
+    const landline = local.match(/^0(\d{1,2})(\d{6,8})$/);
+    if (landline) return `${country} ${landline[1]} ${landline[2].slice(0, -4)} ${landline[2].slice(-4)}`.replace(/\s+/g, " ").trim();
+    throw new Error("invalid-phone");
+  }
+  if (slug === "india-phone-number-formatter") {
+    const local = digits.startsWith("91") && digits.length === 12 ? digits.slice(2) : digits;
+    if (!/^[6-9]\d{9}$/.test(local)) throw new Error("invalid-phone");
+    return `${country} ${local.slice(0, 5)} ${local.slice(5)}`;
+  }
+  if (slug === "us-phone-number-formatter") {
+    const local = digits.startsWith("1") && digits.length === 11 ? digits.slice(1) : digits;
+    if (!/^[2-9]\d{2}[2-9]\d{6}$/.test(local)) throw new Error("invalid-phone");
+    return `+1 (${local.slice(0, 3)}) ${local.slice(3, 6)}-${local.slice(6)}`;
   }
   if (slug === "france-phone-number-formatter") {
     const local = digits.startsWith("33") && digits.length === 11 ? `0${digits.slice(2)}` : digits;
@@ -226,6 +265,58 @@ export function convertDate(input: string, country: "DE" | "FR") {
   return `${candidate.slice(8,10)}${separator}${candidate.slice(5,7)}${separator}${candidate.slice(0,4)}`;
 }
 
+export function convertLocalizedDate(input: string, style: "ES" | "NL" | "IT" | "US" | "UK", direction: "from-iso" | "to-iso" = "from-iso") {
+  const separators = style === "NL" ? "-" : "/";
+  let candidate: string;
+  if (direction === "from-iso") {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(input)) throw new Error("invalid-date");
+    candidate = input;
+  } else {
+    const parts = input.match(/^(\d{2})[./-](\d{2})[./-](\d{4})$/);
+    if (!parts) throw new Error("invalid-date");
+    const day = style === "US" ? parts[2] : parts[1];
+    const month = style === "US" ? parts[1] : parts[2];
+    candidate = `${parts[3]}-${month}-${day}`;
+  }
+  const date = new Date(`${candidate}T00:00:00.000Z`);
+  if (!Number.isFinite(date.valueOf()) || date.toISOString().slice(0, 10) !== candidate) throw new Error("invalid-date");
+  if (direction === "to-iso") return candidate;
+  const day = candidate.slice(8, 10), month = candidate.slice(5, 7), year = candidate.slice(0, 4);
+  return style === "US" ? `${month}/${day}/${year}` : `${day}${separators}${month}${separators}${year}`;
+}
+
+export function formatBrazilCep(input: string) {
+  const digits = input.replace(/\D/g, "");
+  if (!/^\d{8}$/.test(digits)) throw new Error("invalid-postal-code");
+  return `${digits.slice(0, 5)}-${digits.slice(5)}`;
+}
+
+export function formatUsZip(input: string) {
+  const digits = input.replace(/\D/g, "");
+  if (!/^\d{5}(?:\d{4})?$/.test(digits)) throw new Error("invalid-postal-code");
+  return digits.length === 9 ? `${digits.slice(0, 5)}-${digits.slice(5)}` : digits;
+}
+
+export function formatCanadaPostalCode(input: string) {
+  const value = input.toUpperCase().replace(/[\s-]/g, "");
+  if (!/^[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z]\d[ABCEGHJ-NPRSTV-Z]\d$/.test(value)) throw new Error("invalid-postal-code");
+  return `${value.slice(0, 3)} ${value.slice(3)}`;
+}
+
+export function formatUkPostcode(input: string) {
+  const value = input.toUpperCase().replace(/[\s-]/g, "");
+  const match = value.match(/^([A-Z]{1,2}\d[A-Z\d]?)(\d[A-Z]{2})$/);
+  if (!match || /^(GIR0AA|[A-Z]{2}0AA)$/.test(value)) {
+    if (value === "GIR0AA") return "GIR 0AA";
+    throw new Error("invalid-postal-code");
+  }
+  return `${match[1]} ${match[2]}`;
+}
+
+export function validateAustraliaPostcode(input: string) {
+  return /^\d{4}$/.test(input.trim()) ? { valid: true, level: "format" as const } : { valid: false, level: "format" as const };
+}
+
 export function runCountryTool(slug: CountryToolSlug, input: string, mode = "forward") {
   switch (slug) {
     case "simplified-traditional-chinese-converter": return convertSimplifiedTraditional(input, mode === "reverse" ? "to-simplified" : "to-traditional");
@@ -241,12 +332,22 @@ export function runCountryTool(slug: CountryToolSlug, input: string, mode = "for
     case "netherlands-iban-validator": return validateIban("NL", input);
     case "german-number-format-converter": case "spanish-number-format-converter": case "french-number-format-converter": case "dutch-number-format-converter": case "vietnam-number-format-converter": case "italy-number-format-converter": return formatNumber(input, slug);
     case "german-date-format-converter": case "french-date-format-converter": return convertDate(input, slug.startsWith("german") ? "DE" : "FR");
+    case "spanish-date-format-converter": return convertLocalizedDate(input, "ES", mode === "reverse" ? "to-iso" : "from-iso");
+    case "dutch-date-format-converter": return convertLocalizedDate(input, "NL", mode === "reverse" ? "to-iso" : "from-iso");
+    case "italian-date-format-converter": return convertLocalizedDate(input, "IT", mode === "reverse" ? "to-iso" : "from-iso");
+    case "english-date-format-converter": return convertLocalizedDate(input, mode.includes("us") ? "US" : "UK", mode.endsWith("reverse") ? "to-iso" : "from-iso");
     case "spain-dni-validator": return validateSpanishId("dni", input);
     case "spain-nie-validator": return validateSpanishId("nie", input);
     case "brazil-cpf-validator": return validateCpf(input);
     case "brazil-cnpj-validator": return validateCnpj(input);
     case "italy-fiscal-code-format-validator": return validateCodiceFiscale(input);
-    case "chinese-phone-number-formatter": case "france-phone-number-formatter": case "brazil-phone-number-formatter": case "vietnam-phone-number-formatter": return formatPhone(slug, input);
+    case "italy-vat-number-validator": return validateItalianVat(input);
+    case "brazil-cep-formatter": return formatBrazilCep(input);
+    case "us-zip-code-formatter": return formatUsZip(input);
+    case "canada-postal-code-formatter": return formatCanadaPostalCode(input);
+    case "uk-postcode-formatter": return formatUkPostcode(input);
+    case "australia-postcode-formatter": return validateAustraliaPostcode(input);
+    case "chinese-phone-number-formatter": case "taiwan-phone-number-formatter": case "india-phone-number-formatter": case "us-phone-number-formatter": case "france-phone-number-formatter": case "brazil-phone-number-formatter": case "vietnam-phone-number-formatter": return formatPhone(slug, input);
     default: throw new Error("unsupported-tool");
   }
 }
