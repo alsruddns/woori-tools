@@ -1,66 +1,86 @@
 import { execFileSync } from "node:child_process";
-import { readFile } from "node:fs/promises";
-import { pathToFileURL } from "node:url";
-import ts from "typescript";
+import { mkdtemp, mkdir, rm, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import { dirname, join } from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
+import { tsImport } from "tsx/esm/api";
 
 export const INDEXNOW_ENDPOINT = "https://api.indexnow.org/IndexNow";
-export const INDEXNOW_KEY = "bc52d22e38f7489988b717aa090fbdfb";
-export const INDEXNOW_KEY_LOCATION = `https://www.woori.today/${INDEXNOW_KEY}.txt`;
 export const SITE_ORIGIN = "https://www.woori.today";
-export const LOCALES = ["ko", "en", "ja", "zh", "es", "pt-br", "de", "fr", "vi", "id", "th", "zh-tw", "it", "nl", "hi"];
+export const INDEXNOW_HOST = "www.woori.today";
+const projectRoot = fileURLToPath(new URL("../", import.meta.url));
 const registryPath = "src/registry/tools.ts";
+const previousRegistryFiles = [registryPath, "src/i18n/routing.ts", "src/lib/country-tool-slugs.ts"];
 
-async function importRegistry(source) {
-  const { outputText } = ts.transpileModule(source, {
-    compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
-  });
-  return import(`data:text/javascript;base64,${Buffer.from(outputText).toString("base64")}`);
+const [{ tools }, { locales }] = await Promise.all([
+  tsImport("../src/registry/tools.ts", import.meta.url),
+  tsImport("../src/i18n/routing.ts", import.meta.url),
+]);
+export { tools as registryTools, locales as LOCALES };
+
+export function getIndexNowKey() {
+  const key = process.env.INDEXNOW_KEY?.trim();
+  if (!key) throw new Error("INDEXNOW_KEY is required");
+  return key;
 }
 
-export function createIndexNowUrls(tools, slugs = null) {
-  const publicTools = tools.filter(({ isPublic }) => isPublic);
+export function getIndexNowKeyLocation() {
+  return `${SITE_ORIGIN}/${getIndexNowKey()}.txt`;
+}
+
+export function createIndexNowUrls(toolDefinitions = tools, slugs = null) {
+  const publicTools = toolDefinitions.filter(({ isPublic }) => isPublic);
   const selectedTools = slugs === null ? publicTools : publicTools.filter(({ slug }) => slugs.has(slug));
-  const paths = [{ path: "/tools", locales: LOCALES }, ...selectedTools.map(({ slug, supportedLocales = ["ko", "en", "ja", "zh"] }) => ({ path: `/tools/${slug}`, locales: supportedLocales }))];
-  return [...new Set(paths.flatMap(({ path, locales }) => locales.map((locale) => `${SITE_ORIGIN}/${locale}${path}`)))];
+  const paths = [{ path: "/tools", locales }, ...selectedTools.map(({ slug, supportedLocales = locales }) => ({ path: `/tools/${slug}`, locales: supportedLocales }))];
+  return [...new Set(paths.flatMap(({ path, locales: supported }) => supported.map((locale) => `${SITE_ORIGIN}/${locale}${path}`)))];
 }
 
 export function createIndexNowBody(urlList) {
+  const key = getIndexNowKey();
   return {
-    host: "www.woori.today",
-    key: INDEXNOW_KEY,
-    keyLocation: INDEXNOW_KEY_LOCATION,
+    host: INDEXNOW_HOST,
+    key,
+    keyLocation: `${SITE_ORIGIN}/${key}.txt`,
     urlList: [...new Set(urlList)],
   };
 }
 
 function gitOutput(...args) {
-  return execFileSync("git", args, { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim();
+  return execFileSync("git", args, { cwd: projectRoot, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim();
 }
 
-async function getSubmissionSlugs(tools, baseSha) {
+async function loadRegistryAtCommit(commit) {
+  const temporaryRoot = await mkdtemp(join(tmpdir(), "woori-indexnow-"));
+  try {
+    for (const sourcePath of previousRegistryFiles) {
+      const targetPath = join(temporaryRoot, sourcePath);
+      await mkdir(dirname(targetPath), { recursive: true });
+      await writeFile(targetPath, gitOutput("show", `${commit}:${sourcePath}`), "utf8");
+    }
+    const previousToolsPath = join(temporaryRoot, registryPath);
+    return await tsImport(pathToFileURL(previousToolsPath).href, pathToFileURL(join(temporaryRoot, "indexnow-parent.mjs")).href);
+  } finally {
+    await rm(temporaryRoot, { recursive: true, force: true });
+  }
+}
+
+async function getSubmissionSlugs(toolDefinitions, baseSha) {
   if (!baseSha) return null;
 
   try {
     const changedPaths = gitOutput("diff", "--name-only", `${baseSha}...HEAD`).split(/\r?\n/).filter(Boolean);
-    if (
-      changedPaths.some(
-        (path) =>
-          path !== registryPath &&
-          ![".github/workflows/deploy.yml", "scripts/submit-indexnow.mjs"].includes(path) &&
-          path !== `public/${INDEXNOW_KEY}.txt`,
-      )
-    ) {
+    const ignoredPaths = [".github/workflows/deploy.yml", "scripts/submit-indexnow.mjs", `public/${process.env.INDEXNOW_KEY ?? ""}.txt`];
+    if (changedPaths.some((path) => path !== registryPath && !ignoredPaths.includes(path))) {
       console.log("Changed tool implementation files detected; submitting all public registry tools.");
       return null;
     }
     if (!changedPaths.includes(registryPath)) return new Set();
 
-    const previousSource = gitOutput("show", `${baseSha}:${registryPath}`);
-    const previousModule = await importRegistry(previousSource);
+    const previousModule = await loadRegistryAtCommit(baseSha);
     const metadata = ({ slug, category, title, description, keywords, isPublic, supportedLocales }) =>
       JSON.stringify({ slug, category, title, description, keywords, isPublic, supportedLocales });
     const previousBySlug = new Map(previousModule.tools.map((tool) => [tool.slug, metadata(tool)]));
-    return new Set(tools.filter((tool) => previousBySlug.get(tool.slug) !== metadata(tool)).map(({ slug }) => slug));
+    return new Set(toolDefinitions.filter((tool) => previousBySlug.get(tool.slug) !== metadata(tool)).map(({ slug }) => slug));
   } catch (error) {
     console.warn(`Could not compare the registry with ${baseSha}; submitting all public registry tools.`, error.message);
     return null;
@@ -68,8 +88,6 @@ async function getSubmissionSlugs(tools, baseSha) {
 }
 
 export async function buildIndexNowBody({ baseSha = process.env.INDEXNOW_BASE_SHA } = {}) {
-  const source = await readFile(new URL(`../${registryPath}`, import.meta.url), "utf8");
-  const { tools } = await importRegistry(source);
   const changedSlugs = await getSubmissionSlugs(tools, baseSha);
   return createIndexNowBody(createIndexNowUrls(tools, changedSlugs));
 }
@@ -81,16 +99,14 @@ export async function submitIndexNow({ dryRun = process.env.INDEXNOW_DRY_RUN ===
     return body;
   }
 
-  console.log(`Checking IndexNow key file: ${INDEXNOW_KEY_LOCATION}`);
-  const keyResponse = await fetch(INDEXNOW_KEY_LOCATION);
+  console.log(`Checking IndexNow key file: ${body.keyLocation}`);
+  const keyResponse = await fetch(body.keyLocation);
   if (!keyResponse.ok) {
     throw new Error(`IndexNow key file is not reachable: HTTP ${keyResponse.status} ${keyResponse.statusText}`);
   }
   const publishedKey = (await keyResponse.text()).trim();
-  if (publishedKey !== INDEXNOW_KEY) {
-    throw new Error("IndexNow key file content does not match the configured API key.");
-  }
-  console.log("IndexNow key file is reachable and matches the configured key.");
+  if (publishedKey !== body.key) throw new Error("IndexNow key file content does not match INDEXNOW_KEY.");
+  console.log("IndexNow key file is reachable and matches INDEXNOW_KEY.");
 
   const response = await fetch(INDEXNOW_ENDPOINT, {
     method: "POST",

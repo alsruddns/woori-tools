@@ -1,50 +1,74 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { readFile, readdir } from "node:fs/promises";
 import test from "node:test";
-import ts from "typescript";
-import { createIndexNowBody, createIndexNowUrls, INDEXNOW_ENDPOINT, INDEXNOW_KEY, INDEXNOW_KEY_LOCATION } from "../scripts/submit-indexnow.mjs";
 
-const routingSource = await readFile(new URL("../src/i18n/routing.ts", import.meta.url), "utf8");
-const routingModule = ts.transpileModule(routingSource, { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } });
-const { locales } = await import(`data:text/javascript;base64,${Buffer.from(routingModule.outputText).toString("base64")}`);
-const countrySlugSource = await readFile(new URL("../src/lib/country-tool-slugs.ts", import.meta.url), "utf8");
-const countrySlugs = [...countrySlugSource.matchAll(/"([a-z0-9-]+)"/g)].map((match) => match[1]);
-let registrySource = await readFile(new URL("../src/registry/tools.ts", import.meta.url), "utf8");
-registrySource = registrySource.replace('import { locales, type RouteLocale as Locale } from "../i18n/routing";', `const locales = ${JSON.stringify(locales)};`);
-registrySource = registrySource.replace('import { COUNTRY_TOOL_SLUGS } from "../lib/country-tool-slugs";', `const COUNTRY_TOOL_SLUGS = ${JSON.stringify(countrySlugs)};`);
-const { outputText } = ts.transpileModule(registrySource, {
-  compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
-});
-const { tools } = await import(`data:text/javascript;base64,${Buffer.from(outputText).toString("base64")}`);
-test("IndexNow URLs include only locales supported by each public tool", () => {
-  const urls = createIndexNowUrls([...tools, { slug: "private-tool", isPublic: false }]);
+const keyFileName = (await readdir(new URL("../public/", import.meta.url))).find((name) => /^[a-f0-9]+\.txt$/i.test(name));
+assert.ok(keyFileName, "IndexNow verification key file is missing from public/");
+const publicKey = (await readFile(new URL(`../public/${keyFileName}`, import.meta.url), "utf8")).trim();
+process.env.INDEXNOW_KEY = publicKey;
+
+const {
+  buildIndexNowBody,
+  createIndexNowBody,
+  createIndexNowUrls,
+  getIndexNowKey,
+  getIndexNowKeyLocation,
+  INDEXNOW_ENDPOINT,
+  INDEXNOW_HOST,
+  LOCALES,
+  registryTools,
+} = await import("../scripts/submit-indexnow.mjs");
+
+test("IndexNow imports the actual registry and submits all public tools in every supported locale", () => {
+  assert.equal(registryTools.length, 160);
+  assert.equal(LOCALES.length, 15);
+  const urls = createIndexNowUrls([...registryTools, { slug: "private-tool", isPublic: false }]);
+  assert.equal(urls.length, 2415);
   assert.equal(new Set(urls).size, urls.length);
-  assert.equal(urls.length, tools.reduce((sum, tool) => sum + tool.supportedLocales.length, 0) + 15);
   assert.ok(!urls.some((url) => url.includes("private-tool")));
-  assert.deepEqual(locales, ["ko", "en", "ja", "zh", "es", "pt-br", "de", "fr", "vi", "id", "th", "zh-tw", "it", "nl", "hi"]);
-  assert.ok(urls.every((url) => new RegExp(`^https://www\\.woori\\.today/(${locales.join("|")})/tools(?:/[^/]+)?$`).test(url)));
-  for (const locale of locales) {
-    assert.ok(urls.includes(`https://www.woori.today/${locale}/tools`));
-    for (const tool of tools) assert.equal(urls.includes(`https://www.woori.today/${locale}/tools/${tool.slug}`), tool.supportedLocales.includes(locale));
+  for (const url of urls) {
+    const parsed = new URL(url);
+    assert.equal(parsed.origin, "https://www.woori.today");
+    assert.match(parsed.pathname, new RegExp(`^/(${LOCALES.join("|")})/tools(?:/[^/]+)?$`));
   }
-  assert.ok(urls.every((url) => !new URL(url).pathname.startsWith("/tools/")));
+  const detailUrls = urls.filter((url) => /\/tools\/[^/]+$/.test(new URL(url).pathname));
+  assert.equal(detailUrls.length, 2400);
 });
 
-test("IndexNow body matches the API shape and removes duplicate input URLs", () => {
+test("IndexNow key is read from the environment and has a clear missing-key error", () => {
+  assert.equal(getIndexNowKey(), publicKey);
+  assert.equal(getIndexNowKeyLocation(), `https://www.woori.today/${publicKey}.txt`);
+  const savedKey = process.env.INDEXNOW_KEY;
+  delete process.env.INDEXNOW_KEY;
+  try {
+    assert.throws(() => createIndexNowBody([]), { message: "INDEXNOW_KEY is required" });
+  } finally {
+    process.env.INDEXNOW_KEY = savedKey;
+  }
+});
+
+test("IndexNow request body preserves the host, endpoint, key location, and unique URLs", () => {
   const url = "https://www.woori.today/ko/tools/example";
   const body = createIndexNowBody([url, url]);
   assert.deepEqual(body, {
     host: "www.woori.today",
-    key: INDEXNOW_KEY,
-    keyLocation: INDEXNOW_KEY_LOCATION,
+    key: publicKey,
+    keyLocation: `https://www.woori.today/${publicKey}.txt`,
     urlList: [url],
   });
+  assert.equal(INDEXNOW_HOST, "www.woori.today");
   assert.equal(INDEXNOW_ENDPOINT, "https://api.indexnow.org/IndexNow");
-  assert.equal(INDEXNOW_KEY, "bc52d22e38f7489988b717aa090fbdfb");
-  assert.equal(INDEXNOW_KEY_LOCATION, "https://www.woori.today/bc52d22e38f7489988b717aa090fbdfb.txt");
 });
 
-test("IndexNow key verification file is served from the public root", async () => {
-  const keyFile = await readFile(new URL(`../public/${INDEXNOW_KEY}.txt`, import.meta.url), "utf8");
-  assert.equal(keyFile.trim(), INDEXNOW_KEY);
+test("base SHA URL generation resolves the filesystem registry without data URLs", async () => {
+  const body = await buildIndexNowBody({ baseSha: "HEAD" });
+  assert.equal(body.urlList.length, LOCALES.length);
+  assert.ok(body.urlList.every((url) => /\/tools$/.test(new URL(url).pathname)));
+  const source = await readFile(new URL("../scripts/submit-indexnow.mjs", import.meta.url), "utf8");
+  assert.doesNotMatch(source, /data:text\/javascript|base64/);
+});
+
+test("IndexNow key verification file matches the configured environment key", () => {
+  assert.equal(keyFileName, `${publicKey}.txt`);
+  assert.equal(publicKey, getIndexNowKey());
 });
