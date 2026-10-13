@@ -1,4 +1,5 @@
 import type { Locale } from "./routing";
+import { getExpandedMessages } from "./expanded-messages";
 
 const messages = {
   ko: {
@@ -272,5 +273,15 @@ const phaseOneNavigationExtra: Record<string,Record<string,string>>={
 
 export function getMessages(locale: Locale): Dictionary {
   const existing = messages[locale as keyof typeof messages];
-  return existing ?? { ...messages.en, ...phaseOneCommon[locale], ...phaseOneVisibleExtra[locale], ...phaseOneNavigationExtra[locale] } as Dictionary;
+  if (existing) return existing;
+  const merged = { ...messages.en, ...phaseOneCommon[locale], ...phaseOneVisibleExtra[locale], ...phaseOneNavigationExtra[locale] } as Record<string, unknown>;
+  for (const [path, value] of Object.entries(getExpandedMessages(locale))) {
+    const [parent, child] = path.split(".");
+    if (child) {
+      merged[parent] = { ...(merged[parent] as Record<string, unknown>), [child]: value };
+    } else {
+      merged[parent] = value;
+    }
+  }
+  return merged as Dictionary;
 }

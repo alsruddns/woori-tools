@@ -4,15 +4,17 @@ import test from "node:test";
 import ts from "typescript";
 import { createIndexNowBody, createIndexNowUrls, INDEXNOW_ENDPOINT, INDEXNOW_KEY, INDEXNOW_KEY_LOCATION } from "../scripts/submit-indexnow.mjs";
 
-const registrySource = await readFile(new URL("../src/registry/tools.ts", import.meta.url), "utf8");
+const routingSource = await readFile(new URL("../src/i18n/routing.ts", import.meta.url), "utf8");
+const routingModule = ts.transpileModule(routingSource, { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } });
+const { locales } = await import(`data:text/javascript;base64,${Buffer.from(routingModule.outputText).toString("base64")}`);
+const registrySource = (await readFile(new URL("../src/registry/tools.ts", import.meta.url), "utf8")).replace(
+  'import { locales, type RouteLocale as Locale } from "../i18n/routing";',
+  `const locales = ${JSON.stringify(locales)};`,
+);
 const { outputText } = ts.transpileModule(registrySource, {
   compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
 });
 const { tools } = await import(`data:text/javascript;base64,${Buffer.from(outputText).toString("base64")}`);
-const routingSource = await readFile(new URL("../src/i18n/routing.ts", import.meta.url), "utf8");
-const routingModule = ts.transpileModule(routingSource, { compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 } });
-const { locales } = await import(`data:text/javascript;base64,${Buffer.from(routingModule.outputText).toString("base64")}`);
-
 test("IndexNow URLs include only locales supported by each public tool", () => {
   const urls = createIndexNowUrls([...tools, { slug: "private-tool", isPublic: false }]);
   assert.equal(new Set(urls).size, urls.length);

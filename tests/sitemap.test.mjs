@@ -13,8 +13,11 @@ async function importTypeScript(path, replacements = []) {
   return import(`data:text/javascript;base64,${Buffer.from(outputText).toString("base64")}`);
 }
 
-const { tools: publicTools, filterPublicTools } = await importTypeScript("../src/registry/tools.ts");
 const { locales, localeConfig, hreflangs } = await importTypeScript("../src/i18n/routing.ts");
+const { tools: publicTools, filterPublicTools } = await importTypeScript("../src/registry/tools.ts", [[
+  'import { locales, type RouteLocale as Locale } from "../i18n/routing";',
+  `const locales = ${JSON.stringify(locales)};`,
+]]);
 const seoSource = await readFile(new URL("../src/lib/seo.ts", import.meta.url), "utf8");
 const { languageAlternates } = await importTypeScript("../src/lib/seo.ts", [[
   'import { getLocaleConfig, hreflangs, locales, type Locale } from "@/i18n/routing";',
@@ -50,7 +53,7 @@ test("sitemap is generated from the public registry and includes every locale", 
   const expectedDetailCount = publicTools.reduce((sum, tool) => sum + tool.supportedLocales.length, 0);
   assert.equal(detailEntries.length, expectedDetailCount);
   assert.equal(entries.length, expectedDetailCount + 15);
-  assert.equal(entries.length, 616);
+  assert.equal(entries.length, 1650);
   assert.equal(new Set(entries.map(({ url }) => url)).size, entries.length);
 
   const publishedRouteMatrix = publicTools.flatMap(({ slug, supportedLocales }) => supportedLocales.map((locale) => `${siteOrigin}/${locale}/tools/${slug}`));
@@ -102,7 +105,7 @@ test("sitemap and SEO use the same language alternate helper", () => {
   assert.match(sitemapSource, /import \{[^}]*languageAlternates[^}]*\} from "@\/lib\/seo"/);
   assert.match(seoSource, /"x-default": localizedUrl\("ko", path\)/);
   assert.equal(entries.find(({ url }) => url.endsWith("/tools/lotto-number-generator")).alternates.languages && Object.keys(entries.find(({ url }) => url.endsWith("/tools/lotto-number-generator")).alternates.languages).length, 16);
-  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/image-compress")).alternates.languages).length, 5);
+  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/image-compress")).alternates.languages).length, 16);
   assert.equal(localeConfig.find(({ routeLocale }) => routeLocale === "pt-br").hreflang, "pt-BR");
   assert.equal(localeConfig.find(({ routeLocale }) => routeLocale === "zh-tw").hreflang, "zh-TW");
 });

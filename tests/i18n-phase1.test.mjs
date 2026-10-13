@@ -10,26 +10,33 @@ async function importTs(path, replacements = []) {
   return import(`data:text/javascript;base64,${Buffer.from(outputText).toString("base64")}`);
 }
 
-const { tools } = await importTs("../src/registry/tools.ts");
 const { locales } = await importTs("../src/i18n/routing.ts");
+const { tools } = await importTs("../src/registry/tools.ts", [[
+  'import { locales, type RouteLocale as Locale } from "../i18n/routing";',
+  `const locales = ${JSON.stringify(locales)};`,
+]]);
 const { localizeTool } = await importTs("../src/registry/tool-translations.ts");
 const { getToolContent } = await importTs("../src/registry/tool-content.ts");
-const { getMessages } = await importTs("../src/i18n/messages.ts");
-const firstFifteen = ["lotto-number-generator", "powerball-number-generator", "mega-millions-number-generator", "japan-loto6-number-generator", "japan-loto7-number-generator", "japan-mini-loto-number-generator", "tarot-card", "daily-fortune", "saju", "random-number", "random-name-picker", "random-wheel", "draw-lots", "random-team-maker", "random-order"];
+const expandedModule = await importTs("../src/i18n/expanded-messages.ts");
+globalThis.__getExpandedMessages = expandedModule.getExpandedMessages;
+const { getMessages } = await importTs("../src/i18n/messages.ts", [[
+  'import { getExpandedMessages } from "./expanded-messages";',
+  'const getExpandedMessages = globalThis.__getExpandedMessages;',
+]]);
+const { getTarotInterpretation } = await importTs("../src/lib/fortune/tarot-localization.ts");
 
-test("Phase 1 locale support matches the first 15 public registry tools", () => {
+test("all published registry tools support all 15 route locales", () => {
   assert.equal(locales.length, 15);
   assert.equal(tools.length, 109);
-  assert.deepEqual(tools.filter(({ supportedLocales }) => supportedLocales.length === 15).map(({ slug }) => slug), firstFifteen);
+  assert.equal(tools.some(({ slug }) => slug === "ladder-game"), false);
   const omissions = [];
   for (const tool of tools) {
-    const expected = firstFifteen.includes(tool.slug) ? locales : ["ko", "en", "ja", "zh"];
-    if (JSON.stringify(tool.supportedLocales) !== JSON.stringify(expected)) omissions.push(`${tool.slug}: ${tool.supportedLocales.join(",")}`);
+    if (JSON.stringify(tool.supportedLocales) !== JSON.stringify(locales)) omissions.push(`${tool.slug}: ${tool.supportedLocales.join(",")}`);
     for (const locale of tool.supportedLocales) {
       const localized = localizeTool(tool, locale);
       if (!localized.title?.trim()) omissions.push(`${tool.slug}/${locale}: missing name`);
       if (!localized.description?.trim()) omissions.push(`${tool.slug}/${locale}: missing description`);
-      if (firstFifteen.includes(tool.slug) && locale !== "ko" && locale !== "en" && locale !== "ja" && locale !== "zh") {
+      if (locale !== "ko" && locale !== "en" && locale !== "ja" && locale !== "zh") {
         if (localized.title === tool.title || localized.description === tool.description) omissions.push(`${tool.slug}/${locale}: English/Korean fallback`);
         const content = getToolContent(tool.slug, locale, localized.description);
         if (!content || !content.overview || content.steps.length < 3 || !content.example || !content.options || !content.caution || !content.headings.faq || !content.headings.privacyQuestion) omissions.push(`${tool.slug}/${locale}: missing localized guide/FAQ content`);
@@ -45,6 +52,18 @@ test("Phase 1 keeps the locale route and hreflang spellings distinct", async () 
   if (localeConfig.find(({ routeLocale }) => routeLocale === "pt-br")?.hreflang !== "pt-BR") omissions.push("pt-br must use pt-BR hreflang");
   if (localeConfig.find(({ routeLocale }) => routeLocale === "zh-tw")?.hreflang !== "zh-TW") omissions.push("zh-tw must use zh-TW hreflang");
   assert.deepEqual(omissions, []);
+});
+
+test("all Major Arcana have locale-specific upright and reversed interpretations", () => {
+  const ids = ["fool","magician","priestess","empress","emperor","hierophant","lovers","chariot","strength","hermit","wheel","justice","hanged-man","death","temperance","devil","tower","star","moon","sun","judgement","world"];
+  const omissions = [];
+  for (const locale of locales.slice(4)) for (const id of ids) {
+    const upright = getTarotInterpretation(locale, id, false);
+    const reversed = getTarotInterpretation(locale, id, true);
+    if (!upright || !reversed) omissions.push(`${locale}/${id}: missing interpretation`);
+    else if (upright === reversed) omissions.push(`${locale}/${id}: upright and reversed readings are identical`);
+  }
+  assert.deepEqual(omissions, [], `Tarot localization omissions:\n${omissions.join("\n")}`);
 });
 
 test("language switching stays on supported locales and falls back to English then Korean", async () => {
@@ -66,6 +85,22 @@ test("common navigation, privacy, search, and action labels are translated in ev
     for (const key of keys) if (dictionary[key] === english[key]) omissions.push(`${locale}: English fallback in ${key}`);
   }
   assert.deepEqual(omissions, [], `Common UI translation omissions:\n${omissions.join("\n")}`);
+});
+
+test("expanded shared dictionaries are complete and do not silently reuse English copy", () => {
+  const omissions = [];
+  const validSharedTerms = new Set(["es/horizontal","es/vertical","pt-br/horizontal","pt-br/vertical","de/horizontal","fr/rotation","fr/horizontal","fr/vertical","fr/portrait","fr/pageCount","id/horizontal","it/input","nl/contrast"]);
+  for (const locale of locales.slice(4)) {
+    let entries;
+    try { entries = expandedModule.getExpandedMessages(locale); }
+    catch (error) { omissions.push(`${locale}: ${error.message}`); continue; }
+    if (Object.keys(entries).length !== 117) omissions.push(`${locale}: expected 117 shared keys, got ${Object.keys(entries).length}`);
+    for (const [key, value] of Object.entries(entries)) {
+      if (!value?.trim()) omissions.push(`${locale}/${key}: empty translation`);
+      if (value === getMessages("en")[key] && !validSharedTerms.has(`${locale}/${key}`)) omissions.push(`${locale}/${key}: English fallback`);
+    }
+  }
+  assert.deepEqual(omissions, [], `Expanded shared dictionary omissions:\n${omissions.join("\n")}`);
 });
 
 function unwrapObject(node) {
@@ -94,7 +129,7 @@ test("interactive workspace dictionaries cover all locales with complete transla
   const checks = [
     ["../src/components/copy-toast.tsx", ["copyMessages"]],
     ["../src/components/tool/special-random-workspaces.tsx", ["copy", "lottoLabels", "selectionConflict", "specialPrompt", "specialRequired", "officialNotice", "translations", "wheelCopy", "starterByLocale", "teamPrefix", "labels"]],
-    ["../src/components/tool/fortune-workspace.tsx", ["tarotText", "dailyText", "dailyPools", "tarotNames", "tarotReading"]],
+    ["../src/components/tool/fortune-workspace.tsx", ["tarotText", "dailyText", "dailyPools", "tarotNames"]],
     ["../src/components/tool/saju-workspace.tsx", ["labels"]],
   ];
   const omissions = [];
