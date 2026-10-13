@@ -1,6 +1,7 @@
 import type { Locale } from "@/i18n/routing";
 import type { ToolDefinition } from "./tools";
 import { japanToolKeywords, japanToolTranslations } from "./japan-tool-translations";
+import { countryToolKeywords, countryToolTranslations } from "./country-tool-translations";
 
 type Translation = readonly [title: string, description: string];
 
@@ -416,6 +417,8 @@ const fortuneSlugs = new Set(["tarot-card", "daily-fortune", "saju"]);
 const drawSlugs = new Set(["random-name-picker", "random-wheel", "draw-lots", "random-team-maker", "random-order"]);
 
 export function localizeTool<T extends ToolDefinition>(tool: T, locale: Locale): T {
+  const countryCopy = countryToolTranslations[locale]?.[tool.slug];
+  if (countryCopy) return { ...tool, title: countryCopy[0], shortTitle: countryCopy[0], description: countryCopy[1], keywords: [tool.slug, countryCopy[0], ...(countryToolKeywords[tool.slug]?.[locale] ?? [])] };
   const japanCopy = japanToolTranslations[locale]?.[tool.slug];
   if (japanCopy) return { ...tool, title: japanCopy[0], shortTitle: japanCopy[0], description: japanCopy[1], keywords: [tool.slug, japanCopy[0], ...(japanToolKeywords[locale]?.[tool.slug] ?? [])] };
   if (!tool.supportedLocales.includes(locale)) throw new Error(`Unsupported ${locale} locale for ${tool.slug}`);

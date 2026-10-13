@@ -1,4 +1,5 @@
 import type { Locale } from "@/i18n/routing";
+import { COUNTRY_TOOL_SLUGS } from "@/lib/country-tool-slugs";
 
 type Copy = { overview:string; steps:string[]; example:string; options:string; caution:string };
 type LocalizedCopy = Record<string, Copy>;
@@ -199,6 +200,7 @@ const phaseGuides:Record<string,{steps:string[];example:string;options:string;ca
  hi:{steps:["इस्तेमाल के लिए जानकारी दर्ज करें या विकल्प चुनें।","उपलब्ध सेटिंग समायोजित करके आगे बढ़ने वाला बटन दबाएँ।","परिणाम देखें; आप इसे कॉपी, डाउनलोड या फिर से बना सकते हैं।"],example:"परिणाम इसी पेज पर तुरंत दिखते हैं और आप प्रक्रिया दोहरा सकते हैं।",options:"परिणाम बनाने से पहले चुने गए विकल्प लागू होते हैं।",caution:"परिणाम ब्राउज़र में स्थानीय रूप से बनते हैं। उपयोग से पहले जाँच लें।"},
 };
 const japanToolSlugs = new Set(["wareki-converter","hiragana-katakana-converter","fullwidth-halfwidth-converter","japanese-romaji-converter","japanese-number-kanji-converter","yakudoshi-calculator","japanese-zodiac-calculator","numbers3-number-generator","numbers4-number-generator","bingo5-number-generator"]);
+const countryToolSlugs = new Set<string>(COUNTRY_TOOL_SLUGS);
 const japanCoreGuides: Record<string, { steps:string[]; example:string; options:string; caution:string }> = {
   ko:{steps:["입력값을 적고 필요한 변환 방향이나 조건을 선택합니다.","실행 버튼을 누르면 브라우저에서 결과를 계산합니다.","결과와 안내를 확인한 뒤 복사하거나 다시 입력합니다."],example:"예: 레이와 원년 날짜를 서기 날짜로 바꾸거나, 일본어 가나를 로마자로 변환합니다.",options:"도구별 입력 형식과 일본 기준 규칙은 화면에 표시됩니다.",caution:"일본 연호·전통 정보는 날짜와 지역 관습에 따라 달라질 수 있습니다. 복권 번호는 당첨 예측이 아닙니다."},
   en:{steps:["Enter a value and choose a conversion direction or required options.","Run the tool to calculate the result locally in your browser.","Review the result and notes, then copy it or enter another value."],example:"For example, convert a Reiwa first-year date to Gregorian or transliterate Japanese kana to romaji.",options:"Each tool shows its input format and Japan-specific rules beside the controls.",caution:"Japanese era dates and traditions depend on actual dates and local customs. Lottery picks do not predict a draw."},
@@ -206,6 +208,7 @@ const japanCoreGuides: Record<string, { steps:string[]; example:string; options:
   zh:{steps:["输入内容，并选择转换方向或所需条件。","运行工具后，结果会在浏览器中计算。","查看结果和提示，然后复制或输入其他内容。"],example:"例如，将令和元年的日期转换为公历，或将日文假名转为罗马字。",options:"每个工具都会在操作区说明输入格式和日本相关规则。",caution:"日本年号日期和传统信息会因实际日期与地方习俗而异。号码不会预测开奖。"},
 };
 export function getToolContent(slug:string,locale:Locale,localizedDescription?:string) {
+  if (countryToolSlugs.has(slug)) { const guide=japanCoreGuides[locale] ?? phaseGuides[locale]; if (!guide) return undefined; return { overview: localizedDescription ?? guide.example, ...guide, headings: headings[locale] }; }
   if (japanToolSlugs.has(slug)) {
     const guide = japanCoreGuides[locale] ?? phaseGuides[locale];
     if (!guide) return undefined;

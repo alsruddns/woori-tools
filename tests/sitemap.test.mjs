@@ -14,10 +14,12 @@ async function importTypeScript(path, replacements = []) {
 }
 
 const { locales, localeConfig, hreflangs } = await importTypeScript("../src/i18n/routing.ts");
-const { tools: publicTools, filterPublicTools } = await importTypeScript("../src/registry/tools.ts", [[
-  'import { locales, type RouteLocale as Locale } from "../i18n/routing";',
-  `const locales = ${JSON.stringify(locales)};`,
-]]);
+const countrySlugSource = await readFile(new URL("../src/lib/country-tool-slugs.ts", import.meta.url), "utf8");
+const countrySlugs = [...countrySlugSource.matchAll(/"([a-z0-9-]+)"/g)].map((match) => match[1]);
+const { tools: publicTools, filterPublicTools } = await importTypeScript("../src/registry/tools.ts", [
+  ['import { locales, type RouteLocale as Locale } from "../i18n/routing";', `const locales = ${JSON.stringify(locales)};`],
+  ['import { COUNTRY_TOOL_SLUGS } from "../lib/country-tool-slugs";', `const COUNTRY_TOOL_SLUGS = ${JSON.stringify(countrySlugs)};`],
+]);
 const seoSource = await readFile(new URL("../src/lib/seo.ts", import.meta.url), "utf8");
 const { languageAlternates } = await importTypeScript("../src/lib/seo.ts", [[
   'import { getLocaleConfig, hreflangs, locales, type Locale } from "@/i18n/routing";',
@@ -42,7 +44,7 @@ test("sitemap is generated from the public registry and includes every locale", 
   assert.ok(publicTools.length > 0);
   assert.ok(publicTools.every(({ isPublic }) => isPublic));
   assert.equal(publicTools.some(({ slug }) => slug === "ladder-game"), false);
-  assert.equal(publicTools.length, 119);
+  assert.equal(publicTools.length, 147);
   assert.match(localeLayoutSource, /return locales\.map\(\(locale\) => \(\{ locale \}\)\)/);
   assert.match(toolPageSource, /supportedLocales\.includes\(params\.locale as Locale\)/);
 
@@ -53,7 +55,7 @@ test("sitemap is generated from the public registry and includes every locale", 
   const expectedDetailCount = publicTools.reduce((sum, tool) => sum + tool.supportedLocales.length, 0);
   assert.equal(detailEntries.length, expectedDetailCount);
   assert.equal(entries.length, expectedDetailCount + 15);
-  assert.equal(entries.length, 1800);
+  assert.equal(entries.length, 2220);
   assert.equal(new Set(entries.map(({ url }) => url)).size, entries.length);
 
   const publishedRouteMatrix = publicTools.flatMap(({ slug, supportedLocales }) => supportedLocales.map((locale) => `${siteOrigin}/${locale}/tools/${slug}`));

@@ -11,18 +11,33 @@ async function importTs(path, replacements = []) {
 }
 
 const { locales } = await importTs("../src/i18n/routing.ts");
-const { tools } = await importTs("../src/registry/tools.ts", [[
-  'import { locales, type RouteLocale as Locale } from "../i18n/routing";',
-  `const locales = ${JSON.stringify(locales)};`,
+const { COUNTRY_TOOL_SLUGS } = await importTs("../src/lib/country-tool-slugs.ts");
+globalThis.__countryToolSlugs = COUNTRY_TOOL_SLUGS;
+const countryTranslationModule = await importTs("../src/registry/country-tool-translations.ts", [[
+  'import { COUNTRY_TOOL_SLUGS } from "../lib/country-tool-slugs";',
+  `const COUNTRY_TOOL_SLUGS = globalThis.__countryToolSlugs;`,
 ]]);
+globalThis.__countryToolTranslations = countryTranslationModule.countryToolTranslations;
+globalThis.__countryToolKeywords = countryTranslationModule.countryToolKeywords;
+const { tools } = await importTs("../src/registry/tools.ts", [
+  ['import { locales, type RouteLocale as Locale } from "../i18n/routing";', `const locales = ${JSON.stringify(locales)};`],
+  ['import { COUNTRY_TOOL_SLUGS } from "../lib/country-tool-slugs";', `const COUNTRY_TOOL_SLUGS = globalThis.__countryToolSlugs;`],
+  ['import { countryToolTranslations } from "./country-tool-translations";', `const countryToolTranslations = globalThis.__countryToolTranslations;`],
+]);
 const japanTranslationModule = await importTs("../src/registry/japan-tool-translations.ts");
 globalThis.__japanToolTranslations = japanTranslationModule.japanToolTranslations;
 globalThis.__japanToolKeywords = japanTranslationModule.japanToolKeywords;
 const { localizeTool } = await importTs("../src/registry/tool-translations.ts", [[
   'import { japanToolKeywords, japanToolTranslations } from "./japan-tool-translations";',
   'const japanToolTranslations = globalThis.__japanToolTranslations; const japanToolKeywords = globalThis.__japanToolKeywords;',
+], [
+  'import { countryToolKeywords, countryToolTranslations } from "./country-tool-translations";',
+  'const countryToolTranslations = globalThis.__countryToolTranslations; const countryToolKeywords = globalThis.__countryToolKeywords;',
 ]]);
-const { getToolContent } = await importTs("../src/registry/tool-content.ts");
+const { getToolContent } = await importTs("../src/registry/tool-content.ts", [[
+  'import { COUNTRY_TOOL_SLUGS } from "@/lib/country-tool-slugs";',
+  `const COUNTRY_TOOL_SLUGS = globalThis.__countryToolSlugs;`,
+]]);
 const expandedModule = await importTs("../src/i18n/expanded-messages.ts");
 globalThis.__getExpandedMessages = expandedModule.getExpandedMessages;
 const { getMessages } = await importTs("../src/i18n/messages.ts", [[
@@ -33,7 +48,7 @@ const { getTarotInterpretation } = await importTs("../src/lib/fortune/tarot-loca
 
 test("all published registry tools support all 15 route locales", () => {
   assert.equal(locales.length, 15);
-  assert.equal(tools.length, 119);
+  assert.equal(tools.length, 147);
   assert.equal(tools.some(({ slug }) => slug === "ladder-game"), false);
   const omissions = [];
   for (const tool of tools) {
@@ -71,6 +86,48 @@ test("Japan-specific tools have translated metadata, complete page content, and 
     }
   }
   assert.deepEqual(omissions, [], omissions.join("\n"));
+});
+
+test("country-specific tools have localized metadata, privacy copy, and related links", () => {
+  const countrySlugs = COUNTRY_TOOL_SLUGS;
+  const privacyMarkers = {ko:"브라우저",en:"browser",ja:"ブラウザー",zh:"浏览器",es:"navegador","pt-br":"navegador",de:"Browser",fr:"navigateur",vi:"trình duyệt",id:"browser",th:"เบราว์เซอร์","zh-tw":"瀏覽器",it:"browser",nl:"browser",hi:"ब्राउज़र"};
+  const issues = [];
+  assert.equal(countrySlugs.length, 28);
+  for (const slug of countrySlugs) {
+    const tool = tools.find((entry) => entry.slug === slug);
+    if (!tool) { issues.push(`${slug}: missing registry entry`); continue; }
+    if (!tool.relatedTools?.length || tool.relatedTools.some((related) => !tools.some((entry) => entry.slug === related))) issues.push(`${slug}: missing or unresolved related links`);
+    for (const locale of locales) {
+      const localized = localizeTool(tool, locale);
+      const page = getToolContent(slug, locale, localized.description);
+      if (!localized.title || !localized.description || (locale !== "ko" && (localized.title === tool.title || localized.description === tool.description))) issues.push(`${slug}/${locale}: metadata fallback`);
+      if (!localized.description.includes(privacyMarkers[locale])) issues.push(`${slug}/${locale}: missing localized browser-only notice`);
+      if (!page?.overview || page.steps.length !== 3 || !page.example || !page.caution || !page.headings.faq || !page.headings.privacyQuestion) issues.push(`${slug}/${locale}: missing localized SEO guide`);
+    }
+  }
+  assert.deepEqual(issues, [], issues.join("\n"));
+});
+
+test("country-tool workspace copy provides localized controls, privacy, and validation outcomes for every locale", async () => {
+  const source = await readFile(new URL("../src/components/tool/country-tools-workspace.tsx", import.meta.url), "utf8");
+  assert.doesNotMatch(source, /localStorage|sessionStorage|fetch\s*\(|analytics/i, "identifier values must remain local and unsaved");
+  const ast = ts.createSourceFile("country-tools-workspace.tsx", source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+  let rows;
+  function visit(node) {
+    if (ts.isVariableDeclaration(node) && node.name.getText(ast) === "words" && ts.isArrayLiteralExpression(node.initializer)) rows = node.initializer.elements;
+    ts.forEachChild(node, visit);
+  }
+  visit(ast);
+  assert.equal(rows?.length, locales.length);
+  const english = rows[1];
+  for (let index = 0; index < rows.length; index++) {
+    const row = rows[index];
+    assert.equal(row.elements.length, 22, `${locales[index]} workspace dictionary key count`);
+    if (locales[index] !== "en") {
+      assert.notEqual(row.elements[7].getText(ast), english.elements[7].getText(ast), `${locales[index]} browser-only notice fallback`);
+      assert.notEqual(row.elements[12].getText(ast), english.elements[12].getText(ast), `${locales[index]} validation caveat fallback`);
+    }
+  }
 });
 
 test("Phase 1 keeps the locale route and hreflang spellings distinct", async () => {

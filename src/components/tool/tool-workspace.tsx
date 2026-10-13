@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import dynamic from "next/dynamic";
 import NextImage from "next/image";
 import type { ToolDefinition } from "@/registry/tools";
 import type { Dictionary } from "@/i18n/messages";
@@ -20,10 +21,12 @@ import { LadderWorkspace } from "@/components/tool/ladder-workspace";
 import { DailyFortuneWorkspace, TarotWorkspace } from "@/components/tool/fortune-workspace";
 import { SajuWorkspace } from "@/components/tool/saju-workspace";
 import { JapanToolsWorkspace } from "@/components/tool/japan-tools-workspace";
+import { COUNTRY_TOOL_SLUGS } from "@/lib/country-tool-slugs";
 import { DiceWorkspace, LottoWorkspace, RandomNameWorkspace, RandomNumberWorkspace, RandomOrderWorkspace, RandomSeatWorkspace, RandomTeamWorkspace, RandomWheelWorkspace } from "@/components/tool/special-random-workspaces";
 
 const MAX_IMAGE = 30 * 1024 * 1024;
 const MAX_PDF = 50 * 1024 * 1024;
+const CountryToolsWorkspace = dynamic(() => import("@/components/tool/country-tools-workspace").then((module) => module.CountryToolsWorkspace));
 const selectionLimitMessages: Record<RouteLocale, { files: string; images: string }> = {
   ko:{files:"파일은 최대 100개, 전체 용량은 200MB까지 선택할 수 있습니다.",images:"이미지는 최대 6개, 전체 용량은 100MB까지 선택할 수 있습니다."},
   en:{files:"Select up to 100 files and 200 MB total.",images:"Select up to 6 images and 100 MB total."},
@@ -72,6 +75,7 @@ export function ToolWorkspace({ tool, locale, phaseLocale, messages }: { tool: T
     const stem = files[0].name.replace(/\.[^.]+$/, "").replace(/[\\/:*?"<>|]/g, "-");
     return stem || "download";
   }, [files]);
+  if ((COUNTRY_TOOL_SLUGS as readonly string[]).includes(tool.slug)) return <CountryToolsWorkspace slug={tool.slug as (typeof COUNTRY_TOOL_SLUGS)[number]} locale={phaseLocale} />;
   if (["wareki-converter", "hiragana-katakana-converter", "fullwidth-halfwidth-converter", "japanese-romaji-converter", "japanese-number-kanji-converter", "yakudoshi-calculator", "japanese-zodiac-calculator", "numbers3-number-generator", "numbers4-number-generator", "bingo5-number-generator"].includes(tool.slug)) return <JapanToolsWorkspace slug={tool.slug} locale={phaseLocale} />;
   if (tool.slug === "tarot-card") return <TarotWorkspace locale={phaseLocale} />;
   if (tool.slug === "daily-fortune") return <DailyFortuneWorkspace locale={phaseLocale} />;
