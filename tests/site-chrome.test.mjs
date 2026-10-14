@@ -28,7 +28,7 @@ test("site navigation and contact copy is complete and localized for all 15 loca
   }
 });
 
-test("family site names and destinations are localized, ordered, and open securely in a new tab", async () => {
+test("family site trigger stays fixed while localized destinations open securely in a new tab", async () => {
   const selector = await readFile(new URL("../src/components/layout/family-site-selector.tsx", import.meta.url), "utf8");
   for (const locale of locales) {
     for (const field of ["label", "portal", "calculator", "tools", "moneyBook", "newTab"]) {
@@ -43,9 +43,11 @@ test("family site names and destinations are localized, ordered, and open secure
     [familySiteCopy.ko.label, familySiteCopy.ko.portal, familySiteCopy.ko.calculator, familySiteCopy.ko.tools, familySiteCopy.ko.moneyBook],
     ["패밀리사이트", "포탈", "계산기", "온라인 도구", "무료 공유 가계부"],
   );
-  assert.match(selector, /value=\{`\/\$\{locale\}`\}/);
-  assert.match(selector, /value=\{localizePath\(locale, "\/tools"\)\}/);
-  assert.match(selector, /window\.open\(event\.currentTarget\.value, "_blank", "noopener,noreferrer"\)/);
+  assert.match(selector, /defaultValue=""/);
+  assert.match(selector, /<option value="" disabled>\{family.label\}<\/option>/);
+  assert.doesNotMatch(selector, /<label htmlFor=/);
+  assert.match(selector, /event.currentTarget.value = ""/);
+  assert.match(selector, /window\.open\(destination\.href, "_blank", "noopener,noreferrer"\)/);
   assert.match(selector, /family\.label/);
 });
 
