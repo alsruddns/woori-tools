@@ -35,7 +35,7 @@ export function SiteHeader({ locale, messages }: { locale: Locale; messages: Dic
             Tools
           </span>
         </Link>
-        <div className="flex min-w-0 flex-wrap items-center justify-end gap-1.5 lg:flex-nowrap lg:gap-5">
+        <div className="flex min-w-0 shrink-0 flex-wrap items-center justify-end gap-1.5 lg:flex-nowrap lg:gap-5">
           <nav aria-label={messages.tools} className="hidden items-center gap-3 text-sm sm:flex sm:gap-5">
             <Link href={localizePath(locale, "/tools")} className="font-medium text-slate-700 hover:text-indigo-700">
               {messages.tools}

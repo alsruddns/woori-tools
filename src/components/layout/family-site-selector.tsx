@@ -26,7 +26,7 @@ export function FamilySiteSelector({ locale }: { locale: Locale }) {
           if (destination) window.open(destination.href, "_blank", "noopener,noreferrer");
           event.currentTarget.value = "";
         }}
-        className="h-10 w-[7.25rem] max-w-[40vw] min-w-0 cursor-pointer rounded-lg border border-slate-200 bg-white px-2 text-xs text-slate-700 focus-visible:outline-2 focus-visible:outline-indigo-600 sm:w-auto sm:max-w-72 sm:text-sm"
+        className="h-10 w-[6.5rem] max-w-[28vw] min-w-0 cursor-pointer rounded-lg border border-slate-200 bg-white px-1.5 text-[10px] text-slate-700 focus-visible:outline-2 focus-visible:outline-indigo-600 sm:w-auto sm:max-w-72 sm:px-2 sm:text-sm"
       >
         <option value="" disabled>{family.label}</option>
         {sites.map((site) => <option key={site.href} value={site.href}>{site.label}</option>)}
