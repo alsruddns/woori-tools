@@ -27,9 +27,9 @@ export function SiteHeader({ locale, messages }: { locale: Locale; messages: Dic
             alt="woori.today"
             width={419}
             height={99}
-            sizes="(max-width: 639px) 92px, 160px"
+            sizes="(max-width: 639px) 84px, 160px"
             priority
-            className="h-auto w-[92px] sm:w-[160px]"
+            className="h-auto w-[84px] sm:w-[160px]"
           />
           <span className="hidden text-sm font-semibold tracking-tight text-slate-700 sm:inline sm:text-base">
             Tools

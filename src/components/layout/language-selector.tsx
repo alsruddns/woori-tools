@@ -24,7 +24,7 @@ export function LanguageSelector({ locale }: { locale: Locale }) {
           const target = resolveLocaleSelection(requested, available);
           window.location.assign(switchLocalePath(pathname, target));
         }}
-        className="h-10 w-20 cursor-pointer rounded-lg border border-slate-200 bg-white px-1.5 text-sm text-slate-700 sm:w-28 sm:px-2"
+        className="h-10 w-[4.5rem] cursor-pointer rounded-lg border border-slate-200 bg-white px-1.5 text-sm text-slate-700 sm:w-28 sm:px-2"
       >
         {locales.map((item) => <option key={item} value={item}>{localeLabels[item]}{available.includes(item) ? "" : " —"}</option>)}
       </select>
