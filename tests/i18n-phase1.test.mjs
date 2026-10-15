@@ -88,6 +88,79 @@ test("Japan-specific tools have translated metadata, complete page content, and 
   assert.deepEqual(omissions, [], omissions.join("\n"));
 });
 
+test("generator action labels are explicit, localized, and non-empty in all 15 locales", async () => {
+  const source = await readFile(new URL("../src/components/tool/japan-tools-workspace.tsx", import.meta.url), "utf8");
+  const ast = ts.createSourceFile("japan-tools-workspace.tsx", source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+  let dictionary;
+  function visit(node) {
+    if (ts.isVariableDeclaration(node) && node.name.getText(ast) === "generatorButtonLabels" && ts.isObjectLiteralExpression(node.initializer)) dictionary = node.initializer;
+    ts.forEachChild(node, visit);
+  }
+  visit(ast);
+  assert.ok(dictionary, "generatorButtonLabels dictionary exists");
+  const entries = new Map(dictionary.properties.filter(ts.isPropertyAssignment).map((property) => [property.name.getText(ast).replace(/^['"]|['"]$/g, ""), property.initializer]));
+  const slugs = ["numbers3-number-generator", "numbers4-number-generator", "bingo5-number-generator"];
+  const omissions = [];
+  for (const locale of locales) {
+    const row = entries.get(locale);
+    if (!row || !ts.isObjectLiteralExpression(row)) { omissions.push(`${locale}: missing generator labels`); continue; }
+    for (const slug of slugs) {
+      const label = row.properties.find((property) => ts.isPropertyAssignment(property) && property.name.getText(ast).replace(/^['"]|['"]$/g, "") === slug)?.initializer;
+      if (!label || !ts.isStringLiteral(label) || !label.text.trim()) omissions.push(`${locale}/${slug}: empty primary action label`);
+    }
+    const reset = getMessages(locale).reset;
+    if (typeof reset !== "string" || !reset.trim()) omissions.push(`${locale}: empty reset button label`);
+  }
+  assert.deepEqual(omissions, [], omissions.join("\n"));
+});
+
+test("stopwatch action labels cover all locales and format hundredths from monotonic elapsed time", async () => {
+  const source = await readFile(new URL("../src/components/tool/tool-workspace.tsx", import.meta.url), "utf8");
+  const ast = ts.createSourceFile("tool-workspace.tsx", source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+  let labels;
+  let translated;
+  function visit(node) {
+    if (ts.isVariableDeclaration(node) && node.name.getText(ast) === "labels" && ts.isObjectLiteralExpression(node.initializer)) labels = node.initializer;
+    if (ts.isVariableDeclaration(node) && node.name.getText(ast) === "translated" && ts.isObjectLiteralExpression(node.initializer)) translated = node.initializer;
+    ts.forEachChild(node, visit);
+  }
+  visit(ast);
+  const translatedRows = new Map(translated.properties.filter(ts.isPropertyAssignment).map((property) => [property.name.getText(ast).replace(/^['"]|['"]$/g, ""), property.initializer]));
+  const baseRows = new Map(labels.properties.filter(ts.isPropertyAssignment).map((property) => [property.name.getText(ast).replace(/^['"]|['"]$/g, ""), property.initializer]));
+  const actionKeys = ["start", "pause", "resume", "reset", "lap"];
+  const issues = [];
+  for (const locale of locales) {
+    const row = baseRows.get(locale) ?? translatedRows.get(locale);
+    if (!row) { issues.push(`${locale}: missing stopwatch labels`); continue; }
+    if (baseRows.has(locale)) {
+      if (!ts.isObjectLiteralExpression(row)) { issues.push(`${locale}: invalid stopwatch label dictionary`); continue; }
+      for (const key of actionKeys) {
+        const value = row.properties.find((property) => ts.isPropertyAssignment(property) && property.name.getText(ast) === key)?.initializer;
+        if (!value || !ts.isStringLiteral(value) || !value.text.trim()) issues.push(`${locale}/${key}: missing label`);
+      }
+    } else {
+      if (!ts.isArrayLiteralExpression(row) || row.elements.length !== 15) { issues.push(`${locale}: expected 15 stopwatch labels`); continue; }
+      const values = row.elements;
+      for (const index of [0, 1, 2, 3, 4]) if (!ts.isStringLiteral(values[index]) || !values[index].text.trim()) issues.push(`${locale}/${actionKeys[index]}: missing label`);
+    }
+  }
+  assert.match(source, /performance\.now\(\)/, "stopwatch elapsed time uses performance.now");
+  assert.match(source, /requestAnimationFrame\(update\)/, "stopwatch display uses requestAnimationFrame");
+  assert.match(source, /Math\.floor\(milliseconds\/10\)%100/, "stopwatch displays hundredths");
+  assert.deepEqual(issues, [], issues.join("\n"));
+});
+
+test("tool sidebar stores and restores its own route-independent scroll position", async () => {
+  const source = await readFile(new URL("../src/components/tool/tool-navigation-shell.tsx", import.meta.url), "utf8");
+  assert.match(source, /woori-tools:sidebar-scroll:/, "scroll state uses a namespaced sessionStorage key");
+  assert.match(source, /sessionStorage\.getItem\(storageKey\)/, "scroll state is restored from sessionStorage");
+  assert.match(source, /sessionStorage\.setItem\(storageKey, String\(container\.scrollTop\)\)/, "sidebar scrollTop is saved");
+  assert.match(source, /requestAnimationFrame\(\(\) =>/, "scroll restore waits for layout");
+  assert.match(source, /addEventListener\("scroll", save/, "sidebar scroll is persisted while scrolling");
+  assert.match(source, /removeEventListener\("scroll", save\)/, "scroll listener is removed on cleanup");
+  assert.match(source, /\[storageKey, pathname\]/, "restore runs on route changes");
+});
+
 test("country-specific tools have localized metadata, privacy copy, and related links", () => {
   const countrySlugs = COUNTRY_TOOL_SLUGS;
   const privacyMarkers = {ko:"브라우저",en:"browser",ja:"ブラウザー",zh:"浏览器",es:"navegador","pt-br":"navegador",de:"Browser",fr:"navigateur",vi:"trình duyệt",id:"browser",th:"เบราว์เซอร์","zh-tw":"瀏覽器",it:"browser",nl:"browser",hi:"ब्राउज़र"};
