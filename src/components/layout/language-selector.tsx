@@ -24,7 +24,7 @@ export function LanguageSelector({ locale }: { locale: Locale }) {
           const target = resolveLocaleSelection(requested, available);
           window.location.assign(switchLocalePath(pathname, target));
         }}
-        className="h-10 w-16 max-w-[20vw] cursor-pointer rounded-lg border border-slate-200 bg-white px-1 text-xs text-slate-700 sm:w-28 sm:px-2 sm:text-sm"
+        className="h-10 w-[8.5rem] max-w-[42vw] cursor-pointer rounded-lg border border-slate-200 bg-white px-2 text-xs text-slate-700 focus-visible:outline-2 focus-visible:outline-indigo-600 sm:w-auto sm:min-w-[11rem] sm:text-sm"
       >
         {locales.map((item) => <option key={item} value={item}>{localeLabels[item]}{available.includes(item) ? "" : " —"}</option>)}
       </select>

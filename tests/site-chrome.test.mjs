@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { tsImport } from "tsx/esm/api";
 
-const [{ locales, localizePath }, { siteChromeMessages }, { familySiteCopy, additionalFamilySiteCopy }] = await Promise.all([
+const [{ locales, localeLabels, localizePath }, { siteChromeMessages }, { familySiteCopy, additionalFamilySiteCopy }] = await Promise.all([
   tsImport("../src/i18n/routing.ts", import.meta.url),
   tsImport("../src/i18n/site-chrome-messages.ts", import.meta.url),
   tsImport("../src/i18n/family-site-copy.ts", import.meta.url),
@@ -28,34 +28,54 @@ test("site navigation and contact copy is complete and localized for all 15 loca
   }
 });
 
-test("family site trigger stays fixed while localized destinations open securely in a new tab", async () => {
-  const selector = await readFile(new URL("../src/components/layout/family-site-selector.tsx", import.meta.url), "utf8");
+test("language selector exposes native language names while retaining locale route values", () => {
+  assert.deepEqual(localeLabels, {
+    ko: "한국어", en: "English", ja: "日本語", zh: "简体中文", es: "Español", "pt-br": "Português (Brasil)",
+    de: "Deutsch", fr: "Français", vi: "Tiếng Việt", id: "Bahasa Indonesia", th: "ไทย", "zh-tw": "繁體中文",
+    it: "Italiano", nl: "Nederlands", hi: "हिन्दी",
+  });
+});
+
+test("desktop and mobile Family Sites navigation has six locale-first links and a fixed trigger", async () => {
+  const [selector, { isFamilySiteActive }] = await Promise.all([
+    readFile(new URL("../src/components/layout/family-site-selector.tsx", import.meta.url), "utf8"),
+    tsImport("../src/components/layout/family-site-selector.tsx", import.meta.url),
+  ]);
   for (const locale of locales) {
-    for (const field of ["label", "portal", "calculator", "tools", "moneyBook", "newTab"]) {
-      assert.ok(familySiteCopy[locale][field], `${locale}/${field} should be translated`);
-    }
-    for (const field of ["documents", "quiz"]) assert.ok(additionalFamilySiteCopy[locale][field]?.trim(), `${locale}/${field} should be translated`);
+    for (const field of ["label", "portal", "calculator", "tools", "moneyBook", "newTab"]) assert.ok(familySiteCopy[locale][field]);
+    for (const field of ["documents", "quiz"]) assert.ok(additionalFamilySiteCopy[locale][field]?.trim());
     if (locale !== "en") assert.notEqual(familySiteCopy[locale].label, familySiteCopy.en.label);
-    assert.equal(localizePath(locale, "/money"), `/${locale}/money`);
-    assert.equal(localizePath(locale, "/calculators"), `/${locale}/calculators`);
-    assert.equal(localizePath(locale, "/tools"), `/${locale}/tools`);
-    assert.equal(localizePath(locale, "/docs"), `/${locale}/docs`);
-    assert.equal(localizePath(locale, "/quiz"), `/${locale}/quiz`);
+    for (const path of ["/calculators", "/tools", "/money", "/docs", "/quiz"]) assert.equal(localizePath(locale, path), `/${locale}${path}`);
+    assert.equal(isFamilySiteActive(`/${locale}/tools/example-tool`, `/${locale}/tools`), true);
+    assert.equal(isFamilySiteActive(`/${locale}/tools`, `/${locale}/tools`), true);
+    assert.equal(isFamilySiteActive(`/${locale}/toolsmith`, `/${locale}/tools`), false);
   }
-  assert.deepEqual(
-    [familySiteCopy.ko.label, familySiteCopy.ko.portal, familySiteCopy.ko.calculator, familySiteCopy.ko.tools, familySiteCopy.ko.moneyBook],
-    ["패밀리사이트", "포탈", "계산기", "온라인 도구", "무료 공유 가계부"],
-  );
-  assert.match(selector, /defaultValue=""/);
-  assert.match(selector, /<option value="" disabled>\{family.label\}<\/option>/);
-  assert.doesNotMatch(selector, /<label htmlFor=/);
-  assert.match(selector, /event.currentTarget.value = ""/);
-  assert.match(selector, /window\.open\(destination\.href, "_blank", "noopener,noreferrer"\)/);
+  assert.match(selector, /<nav aria-label=\{family\.label\} className="hidden min-w-0 flex-1 items-center justify-center gap-0\.5 lg:flex">/);
+  assert.match(selector, /<details className="relative shrink-0 lg:hidden">/);
+  assert.match(selector, /target="_blank"/);
+  assert.match(selector, /rel="noopener noreferrer"/);
+  assert.match(selector, /aria-current=\{active \? "page" : undefined\}/);
   assert.match(selector, /family\.label/);
   const orderedRoutes = ["/calculators", "/tools", "/money", "/docs", "/quiz"].map((path) => selector.indexOf(`"${path}"`));
-  assert.ok(orderedRoutes.every((index) => index >= 0), "all five locale-first service paths should be present after portal");
-  assert.deepEqual([...orderedRoutes].sort((a, b) => a - b), orderedRoutes, "service paths should keep the required order");
-  assert.doesNotMatch(selector, /\/(?:docs|quiz)\/\$\{locale\}/, "service-first URLs must not be used");
+  assert.ok(orderedRoutes.every((index) => index >= 0));
+  assert.deepEqual([...orderedRoutes].sort((a, b) => a - b), orderedRoutes);
+  assert.doesNotMatch(selector, /\/(?:docs|quiz)\/\$\{locale\}/);
+  assert.doesNotMatch(selector, /<select/);
+});
+
+test("footer keeps locale-first privacy and terms links and localized contact options", async () => {
+  const [footer, dialog] = await Promise.all([
+    readFile(new URL("../src/components/layout/site-footer.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../src/components/layout/contact-dialog.tsx", import.meta.url), "utf8"),
+  ]);
+  for (const locale of locales) {
+    assert.equal(localizePath(locale, "/privacy"), `/${locale}/privacy`);
+    assert.equal(localizePath(locale, "/terms"), `/${locale}/terms`);
+    for (const key of ["general", "collaboration", "advertising", "bugReport"]) assert.ok(siteChromeMessages[locale][key].trim());
+  }
+  assert.match(footer, /localizePath\(locale, "\/privacy"\)/);
+  assert.match(footer, /localizePath\(locale, "\/terms"\)/);
+  assert.match(dialog, /krdd125@gmail\.com/);
 });
 
 test("disabled ads suppress the rail and placeholder regardless of placeholder configuration", async () => {

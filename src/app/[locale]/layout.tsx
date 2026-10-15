@@ -51,7 +51,7 @@ export default async function LocaleLayout({
   return (
     <html lang={intlLocale} className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col bg-slate-50 text-slate-900">
-        <SiteHeader locale={locale} messages={messages} />
+        <SiteHeader locale={locale} />
         <div className="flex-1">{children}</div>
         <SiteFooter locale={locale} messages={messages} />
         <CopyToast locale={locale} />
