@@ -16,3 +16,21 @@ export const familySiteCopy: Record<import("@/i18n/routing").Locale, FamilySiteC
   nl: { label: "Verwante diensten", portal: "Portaal", calculator: "Rekenmachine", tools: "Online hulpmiddelen", moneyBook: "Gratis gedeeld huishoudboekje", newTab: "De gekozen dienst wordt in een nieuw tabblad geopend." },
   hi: { label: "\u0938\u0902\u092c\u0902\u0927\u093f\u0924 \u0938\u0947\u0935\u093e\u090f\u0901", portal: "\u092a\u094b\u0930\u094d\u091f\u0932", calculator: "\u0915\u0948\u0932\u0915\u0941\u0932\u0947\u091f\u0930", tools: "\u0911\u0928\u0932\u093e\u0907\u0928 \u091f\u0942\u0932", moneyBook: "\u092e\u0941\u092b\u093c\u094d\u0924 \u0938\u093e\u091d\u093e \u0916\u0930\u094d\u091a-\u092c\u0939\u0940", newTab: "\u091a\u0941\u0928\u0940 \u0917\u0908 \u0938\u0947\u0935\u093e \u0928\u090f \u091f\u0948\u092c \u092e\u0947\u0902 \u0916\u0941\u0932\u0947\u0917\u0940\u0964" },
 };
+
+export const additionalFamilySiteCopy: Record<import("@/i18n/routing").Locale, { documents: string; quiz: string }> = {
+  ko: { documents: "문서·양식", quiz: "퀴즈·테스트" },
+  en: { documents: "Documents & Forms", quiz: "Quizzes & Tests" },
+  ja: { documents: "文書・書式", quiz: "クイズ・テスト" },
+  zh: { documents: "文档与表单", quiz: "测验与测试" },
+  es: { documents: "Documentos y formularios", quiz: "Cuestionarios y pruebas" },
+  "pt-br": { documents: "Documentos e formulários", quiz: "Questionários e testes" },
+  de: { documents: "Dokumente & Formulare", quiz: "Quiz & Tests" },
+  fr: { documents: "Documents et formulaires", quiz: "Quiz et tests" },
+  vi: { documents: "Tài liệu & biểu mẫu", quiz: "Câu đố & bài kiểm tra" },
+  id: { documents: "Dokumen & formulir", quiz: "Kuis & tes" },
+  th: { documents: "เอกสารและแบบฟอร์ม", quiz: "ควิซและแบบทดสอบ" },
+  "zh-tw": { documents: "文件與表單", quiz: "問答與測驗" },
+  it: { documents: "Documenti e moduli", quiz: "Quiz e test" },
+  nl: { documents: "Documenten en formulieren", quiz: "Quizzen en tests" },
+  hi: { documents: "दस्तावेज़ और फ़ॉर्म", quiz: "क्विज़ और परीक्षण" },
+};
