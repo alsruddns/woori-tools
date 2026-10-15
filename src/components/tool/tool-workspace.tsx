@@ -22,6 +22,7 @@ import { DailyFortuneWorkspace, TarotWorkspace } from "@/components/tool/fortune
 import { SajuWorkspace } from "@/components/tool/saju-workspace";
 import { JapanToolsWorkspace } from "@/components/tool/japan-tools-workspace";
 import { COUNTRY_TOOL_SLUGS } from "@/lib/country-tool-slugs";
+import { BrowserDeveloperToolsWorkspace } from "@/components/tool/browser-developer-tools-workspace";
 import { DiceWorkspace, LottoWorkspace, RandomNameWorkspace, RandomNumberWorkspace, RandomOrderWorkspace, RandomSeatWorkspace, RandomTeamWorkspace, RandomWheelWorkspace } from "@/components/tool/special-random-workspaces";
 
 const MAX_IMAGE = 30 * 1024 * 1024;
@@ -75,6 +76,7 @@ export function ToolWorkspace({ tool, locale, phaseLocale, messages }: { tool: T
     const stem = files[0].name.replace(/\.[^.]+$/, "").replace(/[\\/:*?"<>|]/g, "-");
     return stem || "download";
   }, [files]);
+  if (tool.slug.startsWith("jwt-") || ["url-query-parameter-parser","user-agent-parser","ip-cidr-calculator","base32-encoder-decoder","ulid-generator","uuid-v7-generator","hash-compare","regex-replace","html-entity-encoder-decoder","chmod-calculator","json-path-tester","csv-tsv-converter","url-slug-generator","unicode-code-point-checker","pdf-page-size-checker"].includes(tool.slug)) return <BrowserDeveloperToolsWorkspace slug={tool.slug} locale={phaseLocale} title={tool.title} />;
   if ((COUNTRY_TOOL_SLUGS as readonly string[]).includes(tool.slug)) return <CountryToolsWorkspace slug={tool.slug as (typeof COUNTRY_TOOL_SLUGS)[number]} locale={phaseLocale} />;
   if (["wareki-converter", "hiragana-katakana-converter", "fullwidth-halfwidth-converter", "japanese-romaji-converter", "japanese-number-kanji-converter", "yakudoshi-calculator", "japanese-zodiac-calculator", "numbers3-number-generator", "numbers4-number-generator", "bingo5-number-generator"].includes(tool.slug)) return <JapanToolsWorkspace slug={tool.slug} locale={phaseLocale} />;
   if (tool.slug === "tarot-card") return <TarotWorkspace locale={phaseLocale} />;

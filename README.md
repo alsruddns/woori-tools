@@ -75,6 +75,10 @@ When adding a public tool:
 5. Confirm the language selector preserves the current page meaning.
 6. Run `pnpm lint` and `pnpm build`.
 
+## Service Catalog
+
+현재 공개·비공개 Tool, locale 지원, 정책 확인 필요 여부는 [`docs/service-catalog.md`](docs/service-catalog.md)를 참고합니다. Tool을 추가·삭제하거나 공개 상태 또는 locale 지원을 바꾸면 카탈로그도 반드시 함께 갱신하고 `pnpm check:service-catalog`를 실행합니다. 카탈로그 생성 명령은 `pnpm catalog:generate`입니다.
+
 Do not duplicate locale strings in components. Tool slugs are never translated.
 
 ## Privacy

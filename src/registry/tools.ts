@@ -131,11 +131,27 @@ const entries: Array<[string, ToolCategory, string, string, string[], boolean]> 
   ["numbers3-number-generator","random","일본 넘버즈3 번호 생성기","일본 공식 규칙에 맞춰 0부터 9까지의 숫자로 3자리 넘버즈3 번호를 생성합니다.",["numbers 3","ナンバーズ3","番号"],true],
   ["numbers4-number-generator","random","일본 넘버즈4 번호 생성기","일본 공식 규칙에 맞춰 0부터 9까지의 숫자로 4자리 넘버즈4 번호를 생성합니다.",["numbers 4","ナンバーズ4","番号"],true],
   ["bingo5-number-generator","random","일본 빙고5 번호 생성기","일본 빙고5의 8개 칸별 공식 숫자 범위에 따라 한 장의 카드를 생성합니다.",["bingo 5","ビンゴ5","番号"],true],
+  ["jwt-decoder","developer","JWT 디코더","JWT 페이로드를 브라우저에서 디코딩하고 exp 만료 시각을 확인합니다. 서명이나 토큰 유효성을 검증하지 않습니다.",["jwt decode","JWT 만료 확인","JSON Web Token"],true],
+  ["url-query-parameter-parser","developer","URL 쿼리 파라미터 분석기","URL 쿼리 문자열을 키와 값 목록으로 분리하고 반복된 파라미터를 확인합니다.",["query string parser","URL 파라미터","쿼리 분석"],true],
+  ["user-agent-parser","developer","User-Agent 분석기","브라우저 User-Agent 문자열에서 브라우저, 운영체제, 대략적인 버전을 로컬 규칙으로 추정합니다.",["browser parser","user agent checker","브라우저 정보"],true],
+  ["ip-cidr-calculator","developer","IPv4 CIDR 계산기","IPv4 CIDR 입력에서 네트워크, 브로드캐스트, 넷마스크, 사용 가능 주소 범위와 2진 주소를 계산합니다.",["subnet calculator","IPv4 subnet","CIDR 계산"],true],
+  ["base32-encoder-decoder","developer","Base32 인코더·디코더","UTF-8 텍스트를 RFC 4648 Base32로 인코딩하거나 Base32 문자열을 디코딩합니다.",["base32 encode","base32 decode","RFC 4648"],true],
+  ["ulid-generator","developer","ULID 생성기","현재 시각과 브라우저 난수를 사용해 정렬 가능한 ULID 식별자를 생성합니다.",["ULID","sortable id","식별자 생성"],true],
+  ["uuid-v7-generator","developer","UUID v7 생성기","현재 시각과 브라우저 난수를 사용해 RFC 9562 형식의 UUID v7 식별자를 생성합니다.",["UUID v7","time ordered UUID","RFC 9562"],true],
+  ["hash-compare","developer","해시 비교기","두 해시 문자열을 공백과 알고리즘 접두사를 무시하고 브라우저에서 비교합니다.",["compare hash","checksum compare","해시 일치 확인"],true],
+  ["regex-replace","developer","정규식 치환 도구","정규식 패턴과 치환 문자열을 사용해 샘플 텍스트를 브라우저에서 변환합니다.",["regex replace","regular expression replace","정규식 치환"],true],
+  ["html-entity-encoder-decoder","developer","HTML 엔티티 인코더·디코더","텍스트의 HTML 특수 문자를 엔티티로 인코딩하거나 엔티티를 일반 텍스트로 디코딩합니다.",["HTML escape","HTML entity decode","HTML 엔티티"],true],
+  ["chmod-calculator","developer","Linux 권한 계산기","숫자형 Linux chmod 권한을 rwx 기호와 소유자·그룹·기타 권한으로 변환합니다.",["chmod converter","unix permission","리눅스 권한"],true],
+  ["json-path-tester","developer","JSONPath 테스트 도구","JSON 문서에 제한된 JSONPath 표현식을 적용해 일치하는 값을 확인합니다.",["JSONPath evaluator","JSON query","JSON 경로"],true],
+  ["csv-tsv-converter","developer","CSV·TSV 변환기","따옴표와 쉼표를 포함한 CSV 및 탭 구분 TSV 데이터를 양방향 변환합니다.",["CSV to TSV","TSV to CSV","delimiter converter"],true],
+  ["url-slug-generator","utility","URL 슬러그 생성기","영문 제목에서 소문자와 하이픈을 사용한 URL 슬러그를 만듭니다.",["slugify","SEO slug","URL slug"],true],
+  ["unicode-code-point-checker","developer","유니코드 코드 포인트 확인기","문자열을 유니코드 코드 포인트, 16진수 표기, 십진수와 UTF-8 바이트 길이로 확인합니다.",["unicode inspector","code point checker","유니코드 확인"],true],
+  ["pdf-page-size-checker","pdf","PDF 페이지 크기 확인기","PDF 각 페이지의 가로·세로 크기를 포인트와 밀리미터 단위로 확인합니다.",["PDF dimensions","paper size checker","PDF 크기"],true],
   ...COUNTRY_TOOL_SLUGS.map((slug) => [slug, slug.includes("validator") || slug.includes("postcode-formatter") || slug.includes("postal-code-formatter") || slug.includes("zip-code-formatter") || slug.includes("cep-formatter") ? "developer" : ["chinese-zodiac-calculator","chinese-sexagenary-cycle-calculator"].includes(slug) || slug.includes("date-format-converter") ? "date-time" : "text", slug, slug, [slug], true] as [string, ToolCategory, string, string, string[], boolean]),
 ];
 
 const fileToolSlugs = new Set(["file-hash", "mime-type-checker", "file-extension-checker", "file-size-checker", "duplicate-file-checker", "zip-files", "bulk-file-renamer", "filename-cleaner"]);
-const registeredTools: ToolDefinition[] = entries.map(([slug, category, title, description, keywords, isPublic]) => ({ id: slug, slug, category, title, shortTitle: title, description, keywords, clientOnly: true, isPublic, supportedLocales: locales, usesFileInput: category === "image" || category === "pdf" || fileToolSlugs.has(slug), acceptedTypes: category === "image" ? ["image/*"] : category === "pdf" ? ["application/pdf"] : undefined }));
+export const registeredTools: ToolDefinition[] = entries.map(([slug, category, title, description, keywords, isPublic]) => ({ id: slug, slug, category, title, shortTitle: title, description, keywords, clientOnly: true, isPublic, supportedLocales: locales, usesFileInput: category === "image" || category === "pdf" || fileToolSlugs.has(slug), acceptedTypes: category === "image" ? ["image/*"] : category === "pdf" ? ["application/pdf"] : undefined }));
 const featuredSlugs = new Set([
   "lotto-number-generator", "random-number", "random-name-picker", "random-wheel",
   "random-team-maker", "stopwatch", "timer", "pomodoro-timer",

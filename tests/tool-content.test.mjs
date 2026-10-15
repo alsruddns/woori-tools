@@ -5,8 +5,11 @@ import ts from "typescript";
 
 let source = await readFile(new URL("../src/registry/tool-content.ts", import.meta.url), "utf8");
 const slugSource = await readFile(new URL("../src/lib/country-tool-slugs.ts", import.meta.url), "utf8");
+const newToolSource = await readFile(new URL("../src/registry/new-tool-translations.ts", import.meta.url), "utf8");
 const countrySlugs = [...slugSource.matchAll(/"([a-z0-9-]+)"/g)].map((match) => match[1]);
+const newToolSlugs = [...newToolSource.matchAll(/^  "([a-z0-9-]+)":/gm)].map((match) => match[1]);
 source = source.replace('import { COUNTRY_TOOL_SLUGS } from "@/lib/country-tool-slugs";', `const COUNTRY_TOOL_SLUGS = ${JSON.stringify(countrySlugs)};`);
+source = source.replace('import { newToolSlugs } from "@/registry/new-tool-translations";', `const newToolSlugs = ${JSON.stringify(newToolSlugs)};`);
 const { outputText } = ts.transpileModule(source, {
   compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
 });
