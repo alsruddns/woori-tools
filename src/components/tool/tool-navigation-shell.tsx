@@ -22,7 +22,7 @@ type Props = {
 
 export function ToolNavigationShell(props: Props) {
   const adsEnabled = process.env.NEXT_PUBLIC_ADS_ENABLED === "true";
-  const showAdPlaceholder = process.env.NEXT_PUBLIC_SHOW_AD_PLACEHOLDER === "true";
+  const showAdPlaceholder = adsEnabled && process.env.NEXT_PUBLIC_SHOW_AD_PLACEHOLDER === "true";
   const [open, setOpen] = useState(false);
   const openerRef = useRef<HTMLButtonElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);

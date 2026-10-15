@@ -36,7 +36,7 @@
 - 카테고리와 모든 공개 Tool에 접근할 수 있어야 한다.
 - route 이동 후 sidebar scroll 위치를 유지한다.
 - 가능하면 layout 내 sidebar를 유지해 remount를 피한다. 저장·복원이 필요한 경우 sessionStorage를 fallback으로 사용한다.
-- Tools fallback key: `woori-tools:sidebar-scroll`
+- Tools sessionStorage keys: desktop `woori-tools:sidebar-scroll:desktop`, mobile `woori-tools:sidebar-scroll:mobile`
 - main content scroll과 sidebar scroll은 독립적으로 관리한다.
 
 ## Buttons
@@ -96,10 +96,8 @@ mobile, tablet, desktop에서 레이아웃과 주요 동작을 확인한다.
 - 입력과 label을 연결하고 icon-only 컨트롤에 `aria-label`을 제공한다.
 - 키보드 조작, 명확한 focus 표시, 충분한 contrast를 지원한다.
 
-## 현재 구현 점검 메모
+## 구현 기준
 
-다음은 문서화 시 저장소 코드에서 확인한 차이다. 문서 작성 작업 범위에서는 코드를 변경하지 않았다.
-
-- Family Sites 구현에는 포탈, 계산기, 온라인 도구, 가계부 네 항목만 있다. 문서·양식과 퀴즈·테스트 항목은 아직 selector에 없다.
-- sidebar scroll 저장 key는 요청 기준의 단일 key가 아니라 `woori-tools:sidebar-scroll:desktop` 및 `woori-tools:sidebar-scroll:mobile`로 구분되어 있다.
-- `NEXT_PUBLIC_ADS_ENABLED`가 켜지고 `NEXT_PUBLIC_SHOW_AD_PLACEHOLDER=true`이면 광고 placeholder가 표시될 수 있다. 광고가 비활성화되면 광고 rail 자체를 렌더링하지 않는다.
+- Family Sites selector는 위 여섯 서비스를 위 순서대로 표시하며, 각 locale의 `/{locale}/...` 경로를 사용한다.
+- sidebar scroll 저장 key는 desktop `woori-tools:sidebar-scroll:desktop`, mobile `woori-tools:sidebar-scroll:mobile`로 분리한다.
+- `NEXT_PUBLIC_ADS_ENABLED`가 `true`일 때만 광고 rail을 렌더링한다. placeholder 설정은 광고가 활성화된 경우에만 적용한다.

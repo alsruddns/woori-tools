@@ -2,15 +2,18 @@
 
 import type { Locale } from "@/i18n/routing";
 import { localizePath } from "@/i18n/routing";
-import { familySiteCopy } from "@/i18n/family-site-copy";
+import { additionalFamilySiteCopy, familySiteCopy } from "@/i18n/family-site-copy";
 
 export function FamilySiteSelector({ locale }: { locale: Locale }) {
   const family = familySiteCopy[locale];
+  const additional = additionalFamilySiteCopy[locale];
   const sites = [
     { href: "/" + locale, label: family.portal },
     { href: localizePath(locale, "/calculators"), label: family.calculator },
     { href: localizePath(locale, "/tools"), label: family.tools },
     { href: localizePath(locale, "/money"), label: family.moneyBook },
+    { href: localizePath(locale, "/docs"), label: additional.documents },
+    { href: localizePath(locale, "/quiz"), label: additional.quiz },
   ];
 
   return (

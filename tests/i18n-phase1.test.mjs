@@ -160,6 +160,8 @@ test("stopwatch action labels cover all locales and format hundredths from monot
 test("tool sidebar stores and restores its own route-independent scroll position", async () => {
   const source = await readFile(new URL("../src/components/tool/tool-navigation-shell.tsx", import.meta.url), "utf8");
   assert.match(source, /woori-tools:sidebar-scroll:/, "scroll state uses a namespaced sessionStorage key");
+  assert.match(source, /onNavigate \? "mobile" : "desktop"/, "desktop and mobile use separate scroll containers and storage keys");
+  assert.match(source, /woori-tools:sidebar-scroll:\$\{onNavigate \? "mobile" : "desktop"\}/, "desktop/mobile persistence keys remain distinct");
   assert.match(source, /sessionStorage\.getItem\(storageKey\)/, "scroll state is restored from sessionStorage");
   assert.match(source, /sessionStorage\.setItem\(storageKey, String\(container\.scrollTop\)\)/, "sidebar scrollTop is saved");
   assert.match(source, /requestAnimationFrame\(\(\) =>/, "scroll restore waits for layout");

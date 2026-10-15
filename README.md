@@ -44,7 +44,9 @@ The standalone container runs as the non-root `nextjs` user on port 3002. Nginx 
 - Tool page: `/{locale}/tools/{slug}`
 - Category: `/{locale}/tools/category/{category}`
 - Policies: `/{locale}/privacy` and `/{locale}/terms`
-- Supported locales: `ko`, `en`, `ja`, and `zh`; default locale: `ko`
+- Supported locales: `ko`, `en`, `ja`, `zh`, `es`, `pt-br`, `de`, `fr`, `vi`, `id`, `th`, `zh-tw`, `it`, `nl`, and `hi`; default locale: `ko`
+- hreflang uses `pt-BR` for the `pt-br` route and `zh-TW` for the `zh-tw` route.
+- Example URLs: `/ko/tools`, `/en/tools`, `/pt-br/tools`, and `/zh-tw/tools`.
 - Legacy `/tools/*` URLs permanently redirect to the matching `/ko/tools/*` URL.
 - Tool slugs stay the same in every locale. Browser language detection is not used.
 
@@ -69,7 +71,7 @@ src/workers/             CPU-heavy processing boundaries
 When adding a public tool:
 
 1. Register the tool in the central tool registry.
-2. Add translations for `ko`, `en`, `ja`, and `zh`.
+2. Add translations for all supported locales: `ko`, `en`, `ja`, `zh`, `es`, `pt-br`, `de`, `fr`, `vi`, `id`, `th`, `zh-tw`, `it`, `nl`, and `hi`.
 3. Review localized SEO metadata and visible page content.
 4. Confirm automatic sitemap inclusion, canonical, hreflang, and x-default.
 5. Confirm the language selector preserves the current page meaning.

@@ -16,18 +16,18 @@
 - TypeScript
 - Tailwind CSS
 - pnpm
-- Vitest (프로젝트에 테스트를 추가할 때 사용)
+- Node.js 내장 테스트 러너 (`node --test`)
 - 프런트엔드 전용 처리와 브라우저 처리를 우선한다.
 
-현재 `package.json`의 `pnpm test`는 `node --test`를 실행한다. 테스트 러너를 Vitest로 변경하는 작업은 별도 검토 없이 이 문서만으로 수행하지 않는다.
+`package.json`의 `pnpm test`는 `node --test`를 실행한다. 테스트 러너는 Node.js 내장 테스트 러너다.
 
 ## 브랜치
 
 - `main`: 운영
-- `release`: 스테이징
-- `develop`: 개발 통합
+- `develop`: 개발 통합 및 integration
 - 일반 작업은 `develop`을 기준으로 한다.
-- 장기 `feature/*`, `dev` 브랜치를 작업 흐름에 사용하지 않는다.
+- 저장소에 `release` 브랜치는 현재 없다. 존재한다고 전제하지 않는다.
+- 장기 `feature/dev` 및 백업 브랜치는 현재 남아 있으며, 정리는 별도 작업으로 한다.
 
 실제 저장소에서 확인한 브랜치 구조와 위 운영 모델이 다르면 현재 저장소를 임의로 변경하지 말고 차이를 작업 결과에 보고한다.
 
@@ -62,6 +62,10 @@ hreflang 표기는 `pt-br` URL에 `pt-BR`, `zh-tw` URL에 `zh-TW`를 사용한�
 - 기본 한국어 legacy 경로: `/tools/{slug}` → `/ko/tools/{slug}`
 
 Tool slug는 locale에 따라 번역하지 않는다.
+
+## Sidebar scroll
+
+route 이동 후 sidebar의 scroll 위치를 보존한다. desktop과 mobile drawer는 scroll container가 다르므로 sessionStorage key도 각각 `woori-tools:sidebar-scroll:desktop`, `woori-tools:sidebar-scroll:mobile`로 분리한다. `main` 콘텐츠 scroll은 별도로 관리한다.
 
 ## SEO
 

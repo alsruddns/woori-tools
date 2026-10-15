@@ -3,7 +3,7 @@ import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { tsImport } from "tsx/esm/api";
 
-const [{ locales, localizePath }, { siteChromeMessages }, { familySiteCopy }] = await Promise.all([
+const [{ locales, localizePath }, { siteChromeMessages }, { familySiteCopy, additionalFamilySiteCopy }] = await Promise.all([
   tsImport("../src/i18n/routing.ts", import.meta.url),
   tsImport("../src/i18n/site-chrome-messages.ts", import.meta.url),
   tsImport("../src/i18n/family-site-copy.ts", import.meta.url),
@@ -34,10 +34,13 @@ test("family site trigger stays fixed while localized destinations open securely
     for (const field of ["label", "portal", "calculator", "tools", "moneyBook", "newTab"]) {
       assert.ok(familySiteCopy[locale][field], `${locale}/${field} should be translated`);
     }
+    for (const field of ["documents", "quiz"]) assert.ok(additionalFamilySiteCopy[locale][field]?.trim(), `${locale}/${field} should be translated`);
     if (locale !== "en") assert.notEqual(familySiteCopy[locale].label, familySiteCopy.en.label);
     assert.equal(localizePath(locale, "/money"), `/${locale}/money`);
     assert.equal(localizePath(locale, "/calculators"), `/${locale}/calculators`);
     assert.equal(localizePath(locale, "/tools"), `/${locale}/tools`);
+    assert.equal(localizePath(locale, "/docs"), `/${locale}/docs`);
+    assert.equal(localizePath(locale, "/quiz"), `/${locale}/quiz`);
   }
   assert.deepEqual(
     [familySiteCopy.ko.label, familySiteCopy.ko.portal, familySiteCopy.ko.calculator, familySiteCopy.ko.tools, familySiteCopy.ko.moneyBook],
@@ -49,6 +52,18 @@ test("family site trigger stays fixed while localized destinations open securely
   assert.match(selector, /event.currentTarget.value = ""/);
   assert.match(selector, /window\.open\(destination\.href, "_blank", "noopener,noreferrer"\)/);
   assert.match(selector, /family\.label/);
+  const orderedRoutes = ["/calculators", "/tools", "/money", "/docs", "/quiz"].map((path) => selector.indexOf(`"${path}"`));
+  assert.ok(orderedRoutes.every((index) => index >= 0), "all five locale-first service paths should be present after portal");
+  assert.deepEqual([...orderedRoutes].sort((a, b) => a - b), orderedRoutes, "service paths should keep the required order");
+  assert.doesNotMatch(selector, /\/(?:docs|quiz)\/\$\{locale\}/, "service-first URLs must not be used");
+});
+
+test("disabled ads suppress the rail and placeholder regardless of placeholder configuration", async () => {
+  const source = await readFile(new URL("../src/components/tool/tool-navigation-shell.tsx", import.meta.url), "utf8");
+  assert.match(source, /const adsEnabled = process\.env\.NEXT_PUBLIC_ADS_ENABLED === "true"/);
+  assert.match(source, /const showAdPlaceholder = adsEnabled && process\.env\.NEXT_PUBLIC_SHOW_AD_PLACEHOLDER === "true"/);
+  assert.match(source, /\{adsEnabled && <AdRail/);
+  assert.match(source, /\{showPlaceholder && <div/);
 });
 
 test("logo points to the localized portal and contact dialog is keyboard accessible", async () => {
