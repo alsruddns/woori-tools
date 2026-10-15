@@ -2,6 +2,7 @@ import type { Locale } from "@/i18n/routing";
 import type { ToolDefinition } from "./tools";
 import { japanToolKeywords, japanToolTranslations } from "./japan-tool-translations";
 import { countryToolKeywords, countryToolTranslations } from "./country-tool-translations";
+import { getNewToolTranslation } from "./new-tool-translations";
 
 type Translation = readonly [title: string, description: string];
 
@@ -417,6 +418,8 @@ const fortuneSlugs = new Set(["tarot-card", "daily-fortune", "saju"]);
 const drawSlugs = new Set(["random-name-picker", "random-wheel", "draw-lots", "random-team-maker", "random-order"]);
 
 export function localizeTool<T extends ToolDefinition>(tool: T, locale: Locale): T {
+  const newToolCopy = getNewToolTranslation(tool.slug, locale);
+  if (newToolCopy) return { ...tool, title: newToolCopy.title, shortTitle: newToolCopy.title, description: newToolCopy.description, keywords: newToolCopy.keywords };
   const countryCopy = countryToolTranslations[locale]?.[tool.slug];
   if (countryCopy) return { ...tool, title: countryCopy[0], shortTitle: countryCopy[0], description: countryCopy[1], keywords: [tool.slug, countryCopy[0], ...(countryToolKeywords[tool.slug]?.[locale] ?? [])] };
   const japanCopy = japanToolTranslations[locale]?.[tool.slug];

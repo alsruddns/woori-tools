@@ -1,5 +1,6 @@
 import type { Locale } from "@/i18n/routing";
 import { COUNTRY_TOOL_SLUGS } from "@/lib/country-tool-slugs";
+import { newToolSlugs } from "@/registry/new-tool-translations";
 
 type Copy = { overview:string; steps:string[]; example:string; options:string; caution:string };
 type LocalizedCopy = Record<string, Copy>;
@@ -207,7 +208,34 @@ const japanCoreGuides: Record<string, { steps:string[]; example:string; options:
   ja:{steps:["値を入力し、変換方向や必要な条件を選びます。","実行すると、結果はブラウザー内で計算されます。","結果と注意事項を確認し、コピーするか別の値を入力します。"],example:"例：令和元年の日付を西暦に変換したり、日本語のかなをローマ字に変換したりできます。",options:"入力形式と日本固有のルールは各ツールの操作欄に表示されます。",caution:"元号の日付と伝統的な情報は実際の日付や地域の慣習によって異なります。抽選番号は当せんを予測しません。"},
   zh:{steps:["输入内容，并选择转换方向或所需条件。","运行工具后，结果会在浏览器中计算。","查看结果和提示，然后复制或输入其他内容。"],example:"例如，将令和元年的日期转换为公历，或将日文假名转为罗马字。",options:"每个工具都会在操作区说明输入格式和日本相关规则。",caution:"日本年号日期和传统信息会因实际日期与地方习俗而异。号码不会预测开奖。"},
 };
+const newToolExamples: Record<string,string> = {
+  "jwt-decoder":"eyJhbGciOiJub25lIn0.eyJzdWIiOiJkZW1vIiwiZXhwIjoyMDAwMDAwMDAwfQ.signature",
+  "url-query-parameter-parser":"https://example.com/search?q=tools&tag=a&tag=b",
+  "user-agent-parser":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/122.0.0.0 Safari/537.36",
+  "ip-cidr-calculator":"192.168.1.15/24",
+  "base32-encoder-decoder":"Hello",
+  "ulid-generator":"Generate one or more sortable IDs locally.",
+  "uuid-v7-generator":"Generate one or more time-ordered UUID v7 values locally.",
+  "hash-compare":"Compare two SHA-256 digest strings, one in each input.",
+  "regex-replace":"Pattern /cat/i · sample Cat cat · replacement dog",
+  "html-entity-encoder-decoder":"A & B < C",
+  "chmod-calculator":"755",
+  "json-path-tester":"Document {\"items\":[{\"name\":\"A\"}]} · path $.items[*].name",
+  "csv-tsv-converter":"name,city\\nA,Seoul",
+  "url-slug-generator":"Crème brûlée: A Guide",
+  "unicode-code-point-checker":"A😀",
+  "pdf-page-size-checker":"Select any PDF to list each page width and height.",
+};
+const examplePrefixes: Record<Locale,string> = {
+  ko:"입력 예시:",en:"Example input:",ja:"入力例：",zh:"输入示例：",es:"Ejemplo de entrada:","pt-br":"Exemplo de entrada:",de:"Beispieleingabe:",fr:"Exemple de saisie :",vi:"Ví dụ đầu vào:",id:"Contoh masukan:",th:"ตัวอย่างข้อมูล:","zh-tw":"輸入範例：",it:"Esempio di input:",nl:"Voorbeeldinvoer:",hi:"इनपुट उदाहरण:",
+};
+
 export function getToolContent(slug:string,locale:Locale,localizedDescription?:string) {
+  if ((newToolSlugs as readonly string[]).includes(slug)) {
+    const guide = phaseGuides[locale];
+    const example = newToolExamples[slug];
+    return guide && example ? { overview:localizedDescription ?? guide.example, ...guide, example:`${examplePrefixes[locale]} ${example}`, headings:headings[locale] } : undefined;
+  }
   if (countryToolSlugs.has(slug)) { const guide=japanCoreGuides[locale] ?? phaseGuides[locale]; if (!guide) return undefined; return { overview: localizedDescription ?? guide.example, ...guide, headings: headings[locale] }; }
   if (japanToolSlugs.has(slug)) {
     const guide = japanCoreGuides[locale] ?? phaseGuides[locale];

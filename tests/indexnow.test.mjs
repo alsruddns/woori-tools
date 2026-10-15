@@ -20,10 +20,11 @@ const {
 } = await import("../scripts/submit-indexnow.mjs");
 
 test("IndexNow imports the actual registry and submits all public tools in every supported locale", () => {
-  assert.equal(registryTools.length, 160);
+  assert.ok(registryTools.length >= 160);
   assert.equal(LOCALES.length, 15);
   const urls = createIndexNowUrls([...registryTools, { slug: "private-tool", isPublic: false }]);
-  assert.equal(urls.length, 2415);
+  const expectedDetailCount = registryTools.reduce((sum, tool) => sum + (tool.isPublic ? LOCALES.length : 0), 0);
+  assert.equal(urls.length, expectedDetailCount + LOCALES.length);
   assert.equal(new Set(urls).size, urls.length);
   assert.ok(!urls.some((url) => url.includes("private-tool")));
   for (const url of urls) {
@@ -32,7 +33,7 @@ test("IndexNow imports the actual registry and submits all public tools in every
     assert.match(parsed.pathname, new RegExp(`^/(${LOCALES.join("|")})/tools(?:/[^/]+)?$`));
   }
   const detailUrls = urls.filter((url) => /\/tools\/[^/]+$/.test(new URL(url).pathname));
-  assert.equal(detailUrls.length, 2400);
+  assert.equal(detailUrls.length, expectedDetailCount);
 });
 
 test("IndexNow key is read from the environment and has a clear missing-key error", () => {
