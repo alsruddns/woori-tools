@@ -55,6 +55,24 @@ Object.assign(copy, {
   ko:{again:"다시 생성"},en:{again:"Generate again"},ja:{again:"もう一度生成"},zh:{again:"重新生成"},es:{again:"Generar de nuevo"},"pt-br":{again:"Gerar novamente"},de:{again:"Erneut erstellen"},fr:{again:"Générer à nouveau"},vi:{again:"Tạo lại"},id:{again:"Buat lagi"},th:{again:"สร้างอีกครั้ง"},"zh-tw":{again:"重新產生"},it:{again:"Genera di nuovo"},nl:{again:"Opnieuw genereren"},hi:{again:"फिर से बनाएँ"},
 });
 
+const generatorButtonLabels: Record<RouteLocale, Record<"numbers3-number-generator" | "numbers4-number-generator" | "bingo5-number-generator", string>> = {
+  ko:{"numbers3-number-generator":"Numbers 3 번호 생성","numbers4-number-generator":"Numbers 4 번호 생성","bingo5-number-generator":"Bingo 5 번호 생성"},
+  en:{"numbers3-number-generator":"Generate Numbers 3","numbers4-number-generator":"Generate Numbers 4","bingo5-number-generator":"Generate Bingo 5"},
+  ja:{"numbers3-number-generator":"ナンバーズ3を生成","numbers4-number-generator":"ナンバーズ4を生成","bingo5-number-generator":"ビンゴ5を生成"},
+  zh:{"numbers3-number-generator":"生成 Numbers 3 号码","numbers4-number-generator":"生成 Numbers 4 号码","bingo5-number-generator":"生成 Bingo 5 号码"},
+  es:{"numbers3-number-generator":"Generar Numbers 3","numbers4-number-generator":"Generar Numbers 4","bingo5-number-generator":"Generar Bingo 5"},
+  "pt-br":{"numbers3-number-generator":"Gerar Numbers 3","numbers4-number-generator":"Gerar Numbers 4","bingo5-number-generator":"Gerar Bingo 5"},
+  de:{"numbers3-number-generator":"Numbers 3 generieren","numbers4-number-generator":"Numbers 4 generieren","bingo5-number-generator":"Bingo 5 generieren"},
+  fr:{"numbers3-number-generator":"Générer Numbers 3","numbers4-number-generator":"Générer Numbers 4","bingo5-number-generator":"Générer Bingo 5"},
+  vi:{"numbers3-number-generator":"Tạo Numbers 3","numbers4-number-generator":"Tạo Numbers 4","bingo5-number-generator":"Tạo Bingo 5"},
+  id:{"numbers3-number-generator":"Buat Numbers 3","numbers4-number-generator":"Buat Numbers 4","bingo5-number-generator":"Buat Bingo 5"},
+  th:{"numbers3-number-generator":"สร้าง Numbers 3","numbers4-number-generator":"สร้าง Numbers 4","bingo5-number-generator":"สร้าง Bingo 5"},
+  "zh-tw":{"numbers3-number-generator":"產生 Numbers 3 號碼","numbers4-number-generator":"產生 Numbers 4 號碼","bingo5-number-generator":"產生 Bingo 5 號碼"},
+  it:{"numbers3-number-generator":"Genera Numbers 3","numbers4-number-generator":"Genera Numbers 4","bingo5-number-generator":"Genera Bingo 5"},
+  nl:{"numbers3-number-generator":"Numbers 3 genereren","numbers4-number-generator":"Numbers 4 genereren","bingo5-number-generator":"Bingo 5 genereren"},
+  hi:{"numbers3-number-generator":"Numbers 3 बनाएँ","numbers4-number-generator":"Numbers 4 बनाएँ","bingo5-number-generator":"Bingo 5 बनाएँ"},
+};
+
 const ERAS = ["明治", "大正", "昭和", "平成", "令和"];
 
 export function JapanToolsWorkspace({ slug, locale }: { slug: string; locale: RouteLocale }) {
@@ -128,7 +146,7 @@ export function JapanToolsWorkspace({ slug, locale }: { slug: string; locale: Ro
     {(slug === "yakudoshi-calculator") && <div className="mt-4 grid gap-3 sm:grid-cols-2"><label className="text-sm">{t.gender}<select value={gender} onChange={(e) => setGender(e.target.value as "male" | "female")} className={field}><option value="male">{t.male}</option><option value="female">{t.female}</option></select></label><label className="text-sm">{t.currentYear}<input type="number" min="1" max="9999" value={currentYear} onChange={(e) => setCurrentYear(e.target.value)} className={field}/></label></div>}
     {slug === "japanese-zodiac-calculator" && <p className="mt-2 text-sm text-slate-600">{t.branch} · {t.eto}</p>}
     {slug === "japanese-number-kanji-converter" && <p className="mt-2 text-sm text-slate-600">{integerNote[locale]}</p>}
-    <div className="mt-4 flex flex-wrap gap-3"><button type="button" onClick={run} className="min-h-11 rounded-xl bg-indigo-600 px-5 font-semibold text-white">{lottery ? (output ? t.again : t.generate) : t.convert}</button><button type="button" onClick={reset} className="min-h-11 rounded-xl border px-5">{m.reset}</button></div>
+    <div className="mt-4 flex flex-wrap gap-3"><button type="button" onClick={run} className="min-h-11 rounded-xl bg-indigo-600 px-5 font-semibold text-white">{lottery ? (output ? t.again : generatorButtonLabels[locale][slug as keyof typeof generatorButtonLabels[typeof locale]]) : t.convert}</button><button type="button" onClick={reset} className="min-h-11 rounded-xl border px-5">{m.reset}</button></div>
     {error && <p role="alert" className="mt-3 text-sm text-rose-700">{error}</p>}
     {output && <section aria-live="polite" className="mt-5 rounded-2xl bg-slate-50 p-4"><h3 className="font-semibold">{t.result}</h3>{slug === "bingo5-number-generator" ? <div className="mt-3 grid max-w-sm grid-cols-3 gap-2">{BINGO5_RANGES.map((range, index) => <div key={index} aria-label={range ? `${t.result} ${index + 1}: ${range[0]}–${range[1]}, ${output.split(" · ")[index]}` : t.free} className={`grid aspect-square place-items-center rounded-xl border text-lg font-bold ${range ? "bg-white" : "bg-indigo-100"}`}>{range ? output.split(" · ")[index] : t.free}</div>)}</div> : <pre className="mt-2 whitespace-pre-wrap break-all font-mono text-lg">{output}</pre>}<button type="button" onClick={copyResult} className="mt-3 min-h-10 rounded-lg border px-4">{t.copy}</button></section>}
     {slug === "yakudoshi-calculator" && <p className="mt-4 text-sm text-amber-800">{t.yakudoshiWarning}</p>}

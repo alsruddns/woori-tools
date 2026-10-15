@@ -98,18 +98,40 @@ function AdRail({ label, position, className, showPlaceholder }: { label: string
 function ToolSidebar({ locale, sections, searchLabel, noResults, onNavigate }: Props & { onNavigate?: () => void }) {
   const pathname = usePathname();
   const id = useId();
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const storageKey = `woori-tools:sidebar-scroll:${onNavigate ? "mobile" : "desktop"}`;
   const [query, setQuery] = useState("");
   const filteredSections = useMemo(() => sections.map((section) => ({
     ...section,
     tools: section.tools.filter((tool) => matchesToolSearch(tool, query, locale)),
   })).filter((section) => section.tools.length), [sections, query, locale]);
 
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+    const frame = window.requestAnimationFrame(() => {
+      try {
+        const saved = Number(window.sessionStorage.getItem(storageKey));
+        if (Number.isFinite(saved) && saved >= 0) container.scrollTop = Math.min(saved, container.scrollHeight - container.clientHeight);
+      } catch { /* session storage can be unavailable in restricted browsers */ }
+    });
+    const save = () => {
+      try { window.sessionStorage.setItem(storageKey, String(container.scrollTop)); } catch { /* keep navigation usable without storage */ }
+    };
+    container.addEventListener("scroll", save, { passive: true });
+    return () => {
+      window.cancelAnimationFrame(frame);
+      save();
+      container.removeEventListener("scroll", save);
+    };
+  }, [storageKey, pathname]);
+
   return <nav aria-label={searchLabel} className="flex h-full min-h-0 flex-col">
     <div className="border-b border-slate-200 p-4">
       <label htmlFor={`tool-nav-search-${id}`} className="sr-only">{searchLabel}</label>
       <input id={`tool-nav-search-${id}`} type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder={searchLabel} className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm outline-none placeholder:text-slate-400 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100" />
     </div>
-    <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-3">
+    <div ref={scrollContainerRef} className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-3">
       {filteredSections.length ? filteredSections.map((section) => <section key={section.id} className="mb-4">
         <h2 className="px-2 pb-1.5 text-xs font-bold uppercase tracking-wide text-slate-500">{section.name}</h2>
         <ul className="space-y-0.5">

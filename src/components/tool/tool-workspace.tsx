@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import NextImage from "next/image";
 import type { ToolDefinition } from "@/registry/tools";
@@ -235,11 +235,65 @@ function DateTimeTool({slug,locale}:{slug:string;locale:RouteLocale}) {
   };
   const labelKeys=["start","pause","resume","reset","lap","laps","hours","minutes","seconds","remaining","done","cities","focus","break","session"];
   const t={...labels[locale],...(translated[locale]?Object.fromEntries(labelKeys.map((key,index)=>[key,translated[locale][index]])): {})};
-  const cityNames:Record<string,string[]>={es:["Seúl","Tokio","Nueva York","Los Ángeles","Londres","París","Singapur","Sídney"],"pt-br":["Seul","Tóquio","Nova York","Los Angeles","Londres","Paris","Singapura","Sydney"],de:["Seoul","Tokio","New York","Los Angeles","London","Paris","Singapur","Sydney"],fr:["Séoul","Tokyo","New York","Los Angeles","Londres","Paris","Singapour","Sydney"],vi:["Seoul","Tokyo","New York","Los Angeles","Luân Đôn","Paris","Singapore","Sydney"],id:["Seoul","Tokyo","New York","Los Angeles","London","Paris","Singapura","Sydney"],th:["โซล","โตเกียว","นิวยอร์ก","ลอสแอนเจลิส","ลอนดอน","ปารีส","สิงคโปร์","ซิดนีย์"],"zh-tw":["首爾","東京","紐約","洛杉磯","倫敦","巴黎","新加坡","雪梨"],it:["Seoul","Tokyo","New York","Los Angeles","Londra","Parigi","Singapore","Sydney"],nl:["Seoel","Tokio","New York","Los Angeles","Londen","Parijs","Singapore","Sydney"],hi:["सियोल","टोक्यो","न्यूयॉर्क","लॉस एंजिलिस","लंदन","पेरिस","सिंगापुर","सिडनी"]}; const [elapsed,setElapsed]=useState(0); const [running,setRunning]=useState(false); const [laps,setLaps]=useState<number[]>([]); const [hours,setHours]=useState(0); const [minutes,setMinutes]=useState(slug==="pomodoro-timer"?25:0); const [seconds,setSeconds]=useState(0); const [remaining,setRemaining]=useState(0); const [clock,setClock]=useState(0); const [mode,setMode]=useState(false); const [hasStarted,setHasStarted]=useState(false);
-  useEffect(()=>{let previous=Date.now(),timerElapsed=0;const id=window.setInterval(()=>{const now=Date.now(),delta=now-previous;setClock(now);if(running){if(slug==="stopwatch")setElapsed(v=>v+delta);else{timerElapsed+=delta;if(timerElapsed>=1000){const secondsPassed=Math.floor(timerElapsed/1000);timerElapsed%=1000;if(remaining<=secondsPassed)setRunning(false);setRemaining(v=>Math.max(0,v-secondsPassed));}}}previous=now;},250);return()=>window.clearInterval(id);},[running,slug,remaining]);
+  const cityNames:Record<string,string[]>={es:["Seúl","Tokio","Nueva York","Los Ángeles","Londres","París","Singapur","Sídney"],"pt-br":["Seul","Tóquio","Nova York","Los Angeles","Londres","Paris","Singapura","Sydney"],de:["Seoul","Tokio","New York","Los Angeles","London","Paris","Singapur","Sydney"],fr:["Séoul","Tokyo","New York","Los Angeles","Londres","Paris","Singapour","Sydney"],vi:["Seoul","Tokyo","New York","Los Angeles","Luân Đôn","Paris","Singapore","Sydney"],id:["Seoul","Tokyo","New York","Los Angeles","London","Paris","Singapura","Sydney"],th:["โซล","โตเกียว","นิวยอร์ก","ลอสแอนเจลิส","ลอนดอน","ปารีส","สิงคโปร์","ซิดนีย์"],"zh-tw":["首爾","東京","紐約","洛杉磯","倫敦","巴黎","新加坡","雪梨"],it:["Seoul","Tokyo","New York","Los Angeles","Londra","Parigi","Singapore","Sydney"],nl:["Seoel","Tokio","New York","Los Angeles","Londen","Parijs","Singapore","Sydney"],hi:["सियोल","टोक्यो","न्यूयॉर्क","लॉस एंजिलिस","लंदन","पेरिस","सिंगापुर","सिडनी"]}; const [running,setRunning]=useState(false); const [hours,setHours]=useState(0); const [minutes,setMinutes]=useState(slug==="pomodoro-timer"?25:0); const [seconds,setSeconds]=useState(0); const [remaining,setRemaining]=useState(0); const [clock,setClock]=useState(0); const [mode,setMode]=useState(false); const [hasStarted,setHasStarted]=useState(false);
+  useEffect(()=>{if(slug==="stopwatch")return;let previous=Date.now(),timerElapsed=0;const id=window.setInterval(()=>{const now=Date.now(),delta=now-previous;setClock(now);if(running){timerElapsed+=delta;if(timerElapsed>=1000){const secondsPassed=Math.floor(timerElapsed/1000);timerElapsed%=1000;if(remaining<=secondsPassed)setRunning(false);setRemaining(v=>Math.max(0,v-secondsPassed));}}previous=now;},250);return()=>window.clearInterval(id);},[running,slug,remaining]);
   const format=(n:number)=>{const total=Math.floor(n/1000);return `${String(Math.floor(total/3600)).padStart(2,"0")}:${String(Math.floor(total/60)%60).padStart(2,"0")}:${String(total%60).padStart(2,"0")}.${String(n%1000).padStart(3,"0")}`;};
   if(slug==="world-clock") { const cities=[["Seoul","Asia/Seoul"],["Tokyo","Asia/Tokyo"],["New York","America/New_York"],["Los Angeles","America/Los_Angeles"],["London","Europe/London"],["Paris","Europe/Paris"],["Singapore","Asia/Singapore"],["Sydney","Australia/Sydney"]] as const; const localizedCities=cityNames[locale]??cities.map(([name])=>name); return <section className="rounded-3xl border bg-white p-6"><h2 className="text-xl font-semibold">{t.cities}</h2><div className="mt-4 grid gap-3 sm:grid-cols-2">{cities.map(([city,zone],index)=><article key={zone} className="rounded-xl bg-slate-50 p-4"><h3 className="font-medium">{localizedCities[index]??city}</h3><p className="mt-1 font-mono text-2xl">{new Intl.DateTimeFormat(locale,{timeZone:zone,hour:"2-digit",minute:"2-digit",second:"2-digit"}).format(clock)}</p><p className="text-sm text-slate-500">{new Intl.DateTimeFormat(locale,{timeZone:zone,dateStyle:"medium"}).format(clock)}</p></article>)}</div></section>; }
-  if(slug==="stopwatch")return <section className="rounded-3xl border bg-white p-6 text-center"><p className="font-mono text-4xl tabular-nums sm:text-6xl">{format(elapsed)}</p><div className="mt-6 flex flex-wrap justify-center gap-3"><button className="rounded-xl bg-indigo-600 px-5 py-3 text-white" onClick={()=>setRunning(!running)}>{running?t.pause:elapsed?t.resume:t.start}</button><button className="rounded-xl border px-5 py-3" onClick={()=>{setElapsed(0);setLaps([]);setRunning(false)}}>{t.reset}</button><button disabled={!running} className="rounded-xl border px-5 py-3 disabled:opacity-50" onClick={()=>setLaps(v=>[elapsed,...v].slice(0,100))}>{t.lap}</button></div>{laps.length>0&&<><h3 className="mt-6 text-left font-semibold">{t.laps}</h3><ol className="mt-2 space-y-2 text-left">{laps.map((lap,i)=>{const split=lap-(i===laps.length-1?0:laps[i+1]);return <li key={`${lap}-${i}`} className="grid grid-cols-3 items-center border-b py-2 text-sm"><span>{t.laps} {laps.length-i}</span><span className="font-mono text-slate-600">{format(split)}</span><span className="text-right font-mono">{format(lap)}</span></li>})}</ol></>}</section>;
+  if(slug==="stopwatch")return <Stopwatch labels={t}/>;
   const begin=(next:number)=>{setRemaining(next);setRunning(true);setHasStarted(true)}; const timerMode=slug==="timer"; const total=timerMode?(hours*3600+minutes*60+seconds):mode?5*60:25*60;
   return <section className="rounded-3xl border bg-white p-6 text-center"><p className="text-sm font-medium text-slate-500">{slug==="pomodoro-timer"?`${mode?t.break:t.focus} · ${t.session}`:t.remaining}</p><p className="mt-2 font-mono text-5xl tabular-nums sm:text-6xl">{format(remaining*1000).slice(0,8)}</p>{!running&&<div className="mx-auto mt-5 grid max-w-md grid-cols-3 gap-3">{[[t.hours,hours,setHours],[t.minutes,minutes,setMinutes],[t.seconds,seconds,setSeconds]].map(([label,value,setter])=><label key={String(label)} className="text-sm">{String(label)}<input type="number" min="0" max="999" value={Number(value)} onChange={e=>(setter as (n:number)=>void)(Math.max(0,Number(e.target.value)||0))} className="mt-1 w-full rounded-lg border p-2 text-center" /></label>)}</div>}<div className="mt-5 flex flex-wrap justify-center gap-3"><button className="rounded-xl bg-indigo-600 px-5 py-3 text-white" onClick={()=>running?setRunning(false):begin(remaining||total)}>{running?t.pause:t.start}</button><button className="rounded-xl border px-5 py-3" onClick={()=>{setRunning(false);setRemaining(0);setHasStarted(false)}}>{t.reset}</button>{slug==="pomodoro-timer"&&<button className="rounded-xl border px-5 py-3" onClick={()=>{setMode(!mode);setRunning(false);setRemaining((mode?25:5)*60)}}>{mode?t.focus:t.break}</button>}</div>{hasStarted&&remaining===0&&!running&&<p aria-live="polite" className="mt-4 text-amber-700">{t.done}</p>}</section>;
+}
+
+function Stopwatch({labels}:{labels:Record<string,string>}) {
+  const [running,setRunning]=useState(false);
+  const [elapsed,setElapsed]=useState(0);
+  const [laps,setLaps]=useState<number[]>([]);
+  const accumulatedRef=useRef(0);
+  const [startedAt,setStartedAt]=useState<number | null>(null);
+  const toggle=()=>{
+    if(running){
+      const now=performance.now();
+      const total=accumulatedRef.current+(now-(startedAt??now));
+      accumulatedRef.current=total;
+      setStartedAt(null);
+      setElapsed(total);
+      setRunning(false);
+    }else{
+      setStartedAt(performance.now());
+      setRunning(true);
+    }
+  };
+  const lap=()=>{
+    const current=accumulatedRef.current+(startedAt===null?0:performance.now()-startedAt);
+    setLaps((items)=>[current,...items].slice(0,100));
+  };
+  const reset=()=>{setStartedAt(null);accumulatedRef.current=0;setElapsed(0);setLaps([]);setRunning(false);};
+  return <section className="rounded-3xl border bg-white p-6 text-center"><StopwatchReadout accumulated={elapsed} startedAt={startedAt} running={running}/><div className="mt-6 flex flex-wrap justify-center gap-3"><button className="rounded-xl bg-indigo-600 px-5 py-3 text-white" onClick={toggle}>{running?labels.pause:elapsed?labels.resume:labels.start}</button><button className="rounded-xl border px-5 py-3" onClick={reset}>{labels.reset}</button><button disabled={!running} className="rounded-xl border px-5 py-3 disabled:opacity-50" onClick={lap}>{labels.lap}</button></div>{laps.length>0&&<><h3 className="mt-6 text-left font-semibold">{labels.laps}</h3><ol className="mt-2 space-y-2 text-left">{laps.map((value,index)=>{const split=value-(index===laps.length-1?0:laps[index+1]);return <li key={`${value}-${index}`} className="grid grid-cols-3 items-center border-b py-2 text-sm"><span>{labels.laps} {laps.length-index}</span><span className="font-mono text-slate-600">{formatStopwatch(split)}</span><span className="text-right font-mono">{formatStopwatch(value)}</span></li>})}</ol></>}</section>;
+}
+
+function StopwatchReadout({accumulated,startedAt,running}:{accumulated:number;startedAt:number|null;running:boolean}) {
+  const [displayed,setDisplayed]=useState(accumulated);
+  useEffect(()=>{
+    if(!running||startedAt===null)return;
+    let frame=0;
+    let lastHundredth=-1;
+    const update=()=>{
+      const elapsed=accumulated+(performance.now()-startedAt);
+      const hundredth=Math.floor(elapsed/10);
+      if(hundredth!==lastHundredth){lastHundredth=hundredth;setDisplayed(hundredth*10);}
+      frame=window.requestAnimationFrame(update);
+    };
+    frame=window.requestAnimationFrame(update);
+    return()=>window.cancelAnimationFrame(frame);
+  },[accumulated,startedAt,running]);
+  return <p className="font-mono text-4xl tabular-nums sm:text-6xl">{formatStopwatch(running?displayed:accumulated)}</p>;
+}
+
+function formatStopwatch(milliseconds:number){
+  const totalSeconds=Math.floor(milliseconds/1000);
+  const hours=Math.floor(totalSeconds/3600);
+  const minutes=Math.floor(totalSeconds/60)%60;
+  const seconds=totalSeconds%60;
+  const hundredths=Math.floor(milliseconds/10)%100;
+  return `${String(hours).padStart(2,"0")}:${String(minutes).padStart(2,"0")}:${String(seconds).padStart(2,"0")}.${String(hundredths).padStart(2,"0")}`;
 }
