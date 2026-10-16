@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { UiLocale } from "@/i18n/routing";
+import type { RouteLocale } from "@/i18n/routing";
 import { copyText as copyToClipboard } from "@/lib/copy-to-clipboard";
 import { randomInt } from "@/lib/random";
 
@@ -21,7 +21,7 @@ Object.assign(labels, {
   hi:{players:"प्रतिभागी (2–10)",outcomes:"परिणाम (समान संख्या)",make:"सीढ़ी वाला खेल बनाएँ",select:"रास्ता दिखाने के लिए प्रतिभागी चुनें",result:"सभी परिणाम",error:"2–10 प्रतिभागी और उतनी ही संख्या में परिणाम दर्ज करें।",copy:"परिणाम कॉपी करें"},
 });
 
-export function LadderWorkspace({locale}:{locale:UiLocale}){const t=labels[locale];const [playersText,setPlayersText]=useState("");const [outcomesText,setOutcomesText]=useState("");const [ladder,setLadder]=useState<Ladder|null>(null);const [selected,setSelected]=useState(0);const [error,setError]=useState("");function create(){const players=playersText.split(/\r?\n/).map(v=>v.trim()).filter(Boolean),outcomes=outcomesText.split(/\r?\n/).map(v=>v.trim()).filter(Boolean);if(players.length<2||players.length>10||players.length!==outcomes.length){setError(t.error);return}const rungs=Array.from({length:12},()=>{const row=Array(players.length-1).fill(false) as boolean[];for(let lane=0;lane<row.length;lane++){if(randomInt(0,99)<36){row[lane]=true;lane++}}return row});const ends=players.map((_,start)=>{let lane=start;for(const row of rungs){if(lane>0&&row[lane-1])lane--;else if(lane<row.length&&row[lane])lane++}return lane});setLadder({players,outcomes,rungs,ends});setSelected(0);setError("")}
+export function LadderWorkspace({locale}:{locale:RouteLocale}){const t=labels[locale];const [playersText,setPlayersText]=useState("");const [outcomesText,setOutcomesText]=useState("");const [ladder,setLadder]=useState<Ladder|null>(null);const [selected,setSelected]=useState(0);const [error,setError]=useState("");function create(){const players=playersText.split(/\r?\n/).map(v=>v.trim()).filter(Boolean),outcomes=outcomesText.split(/\r?\n/).map(v=>v.trim()).filter(Boolean);if(players.length<2||players.length>10||players.length!==outcomes.length){setError(t.error);return}const rungs=Array.from({length:12},()=>{const row=Array(players.length-1).fill(false) as boolean[];for(let lane=0;lane<row.length;lane++){if(randomInt(0,99)<36){row[lane]=true;lane++}}return row});const ends=players.map((_,start)=>{let lane=start;for(const row of rungs){if(lane>0&&row[lane-1])lane--;else if(lane<row.length&&row[lane])lane++}return lane});setLadder({players,outcomes,rungs,ends});setSelected(0);setError("")}
   const displayLabels=(list:string[],top:boolean)=>list.map((label,i)=><div key={`${i}-${label}`} className="absolute -translate-x-1/2 truncate text-center text-xs font-medium sm:text-sm" style={{left:`${40+i*520/Math.max(1,list.length-1)}px`,top:top?"4px":"374px",width:`${Math.max(40,500/list.length)}px`}}>{label}</div>);
   function pathFor(index:number){if(!ladder)return "";const n=ladder.players.length,spacing=520/(n-1),x0=40,y0=40,dy=26;let lane=index,d=`M ${x0+lane*spacing} ${y0}`;for(let row=0;row<ladder.rungs.length;row++){const y=y0+(row+1)*dy;d+=` L ${x0+lane*spacing} ${y}`;if(lane>0&&ladder.rungs[row][lane-1]){lane--;d+=` L ${x0+lane*spacing} ${y}`}else if(lane<ladder.rungs[row].length&&ladder.rungs[row][lane]){lane++;d+=` L ${x0+lane*spacing} ${y}`}}d+=` L ${x0+lane*spacing} 365`;return d}
   const results=ladder?ladder.players.map((p,i)=>`${p} → ${ladder.outcomes[ladder.ends[i]]}`).join("\n"):"";

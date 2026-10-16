@@ -430,7 +430,8 @@ export function localizeTool<T extends ToolDefinition>(tool: T, locale: Locale):
   if (phaseName) {
     const copy = phaseOneDescriptions[locale];
     const group = lotterySlugs.has(tool.slug) ? "lotto" : fortuneSlugs.has(tool.slug) ? "fortune" : drawSlugs.has(tool.slug) ? "draw" : "random";
-    return { ...tool, title: phaseName, shortTitle: phaseName, description: copy[group].replaceAll("{name}", phaseName), keywords: [tool.slug, phaseName] };
+    const localizedDescription = copy[group].replaceAll("{name}", phaseName);
+    return { ...tool, title: phaseName, shortTitle: phaseName, description: group === "draw" ? `${phaseName}: ${localizedDescription}` : localizedDescription, keywords: [tool.slug, phaseName] };
   }
   const [title, description] = catalogs[locale]?.[tool.slug] ?? composedTranslation(tool, locale) ?? [];
   if (!title || !description) throw new Error(`Missing ${locale} translation for ${tool.slug}`);

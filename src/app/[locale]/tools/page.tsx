@@ -8,6 +8,8 @@ import { pageMetadata } from "@/lib/seo";
 import { getLocalizedCategories } from "@/registry/category-translations";
 import { localizeTools } from "@/registry/tool-translations";
 import { tools } from "@/registry/tools";
+import { newToolSlugs } from "@/registry/new-tool-translations";
+import { homeContent } from "@/registry/home-content";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -23,9 +25,11 @@ export default async function ToolsHomePage({ params }: Props) {
   if (!isLocale(rawLocale)) notFound();
   const locale: Locale = rawLocale;
   const messages = getMessages(locale);
+  const editorial = homeContent[locale];
   const categories = getLocalizedCategories(locale).filter((category) => tools.some((tool) => tool.category === category.id));
   const orderedTools = localizeTools(tools.filter((tool) => tool.supportedLocales.includes(locale)), locale);
   const featured = orderedTools.filter((tool) => tool.featured);
+  const recent = orderedTools.filter((tool) => (newToolSlugs as readonly string[]).includes(tool.slug)).slice(0, 6);
 
   return (
     <main className="mx-auto w-full max-w-[1500px] px-4 py-8 sm:px-6 lg:px-8">
@@ -34,6 +38,14 @@ export default async function ToolsHomePage({ params }: Props) {
         <h1 className="mt-3 text-4xl font-bold tracking-tight text-slate-950 sm:text-5xl">{messages.homeTitle}</h1>
         <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-600">{messages.homeDescription}</p>
         <ToolDirectory tools={orderedTools} locale={locale} />
+      </section>
+
+      <section className="border-t border-slate-200 py-9 sm:py-11" aria-labelledby="recent-tools">
+        <h2 id="recent-tools" className="text-2xl font-bold text-slate-950">{editorial.recent}</h2>
+        <p className="mt-2 text-slate-600">{editorial.recentDescription}</p>
+        <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+          {recent.map((tool) => <ToolCard key={tool.slug} locale={locale} tool={tool} categoryName={categories.find((item) => item.id === tool.category)?.name ?? ""} />)}
+        </div>
       </section>
 
       <section className="py-10 sm:py-12" aria-labelledby="recommended-tools">
@@ -70,7 +82,10 @@ export default async function ToolsHomePage({ params }: Props) {
           {orderedTools.map((tool) => <ToolCard key={tool.slug} locale={locale} tool={tool} categoryName={categories.find((item) => item.id === tool.category)?.name ?? ""} />)}
         </div>
       </details>
-      <p className="mt-4 rounded-2xl bg-emerald-50 p-5 text-sm text-emerald-900">{messages.filePrivacy}</p>
+      <section className="mt-4 rounded-2xl bg-emerald-50 p-5 text-sm text-emerald-900" aria-labelledby="browser-processing">
+        <h2 id="browser-processing" className="text-lg font-bold">{editorial.browser}</h2>
+        <p className="mt-2 leading-7">{editorial.browserDescription} <Link href={localizePath(locale, "/privacy")} className="font-semibold underline underline-offset-2">{messages.privacy}</Link></p>
+      </section>
     </main>
   );
 }

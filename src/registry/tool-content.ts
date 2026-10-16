@@ -1,6 +1,6 @@
 import type { Locale } from "@/i18n/routing";
-import { COUNTRY_TOOL_SLUGS } from "@/lib/country-tool-slugs";
-import { newToolSlugs } from "@/registry/new-tool-translations";
+import { toolExampleInputs } from "@/registry/tool-example-inputs";
+import { getToolRiskNote } from "@/registry/tool-risk-notes";
 
 type Copy = { overview:string; steps:string[]; example:string; options:string; caution:string };
 type LocalizedCopy = Record<string, Copy>;
@@ -201,47 +201,57 @@ const phaseGuides:Record<string,{steps:string[];example:string;options:string;ca
  hi:{steps:["इस्तेमाल के लिए जानकारी दर्ज करें या विकल्प चुनें।","उपलब्ध सेटिंग समायोजित करके आगे बढ़ने वाला बटन दबाएँ।","परिणाम देखें; आप इसे कॉपी, डाउनलोड या फिर से बना सकते हैं।"],example:"परिणाम इसी पेज पर तुरंत दिखते हैं और आप प्रक्रिया दोहरा सकते हैं।",options:"परिणाम बनाने से पहले चुने गए विकल्प लागू होते हैं।",caution:"परिणाम ब्राउज़र में स्थानीय रूप से बनते हैं। उपयोग से पहले जाँच लें।"},
 };
 const japanToolSlugs = new Set(["wareki-converter","hiragana-katakana-converter","fullwidth-halfwidth-converter","japanese-romaji-converter","japanese-number-kanji-converter","yakudoshi-calculator","japanese-zodiac-calculator","numbers3-number-generator","numbers4-number-generator","bingo5-number-generator"]);
-const countryToolSlugs = new Set<string>(COUNTRY_TOOL_SLUGS);
+const coreGuides: Partial<Record<Locale, { steps:string[]; example:string; options:string; caution:string }>> = {
+  ko: { steps:["입력값이나 파일을 선택합니다.","필요한 옵션을 설정한 뒤 실행합니다.","결과를 확인하고 필요한 경우 복사하거나 다운로드합니다."], example:"도구에 맞는 예시 입력과 결과를 확인합니다.", options:"입력 형식과 선택 가능한 설정은 도구의 입력 영역에서 확인할 수 있습니다.", caution:"결과는 입력과 브라우저 환경에 따라 달라질 수 있습니다. 중요한 용도라면 원본과 결과를 확인하세요." },
+  en: { steps:["Enter text or select a file.","Choose relevant settings, then run the tool.","Review the result and copy or download it if available."], example:"Check a sample input and its result for this tool.", options:"The input area shows the accepted format and available controls for this tool.", caution:"Results can depend on the input and browser. Check the original and result before important use." },
+  ja: { steps:["値を入力するかファイルを選びます。","必要な設定を選んで実行します。","結果を確認し、必要に応じてコピーまたはダウンロードします。"], example:"このツールの入力と結果の例を確認します。", options:"入力形式と設定項目は各ツールの操作欄で確認できます。", caution:"結果は入力内容やブラウザー環境によって異なります。重要な用途では元データと結果を確認してください。" },
+  zh: { steps:["输入内容或选择文件。","选择所需设置并运行工具。","检查结果，并在需要时复制或下载。"], example:"查看此工具的示例输入和结果。", options:"输入区会显示此工具支持的格式与设置。", caution:"结果可能因输入内容和浏览器环境而异。重要用途请核对原始内容与结果。" },
+};
 const japanCoreGuides: Record<string, { steps:string[]; example:string; options:string; caution:string }> = {
   ko:{steps:["입력값을 적고 필요한 변환 방향이나 조건을 선택합니다.","실행 버튼을 누르면 브라우저에서 결과를 계산합니다.","결과와 안내를 확인한 뒤 복사하거나 다시 입력합니다."],example:"예: 레이와 원년 날짜를 서기 날짜로 바꾸거나, 일본어 가나를 로마자로 변환합니다.",options:"도구별 입력 형식과 일본 기준 규칙은 화면에 표시됩니다.",caution:"일본 연호·전통 정보는 날짜와 지역 관습에 따라 달라질 수 있습니다. 복권 번호는 당첨 예측이 아닙니다."},
   en:{steps:["Enter a value and choose a conversion direction or required options.","Run the tool to calculate the result locally in your browser.","Review the result and notes, then copy it or enter another value."],example:"For example, convert a Reiwa first-year date to Gregorian or transliterate Japanese kana to romaji.",options:"Each tool shows its input format and Japan-specific rules beside the controls.",caution:"Japanese era dates and traditions depend on actual dates and local customs. Lottery picks do not predict a draw."},
   ja:{steps:["値を入力し、変換方向や必要な条件を選びます。","実行すると、結果はブラウザー内で計算されます。","結果と注意事項を確認し、コピーするか別の値を入力します。"],example:"例：令和元年の日付を西暦に変換したり、日本語のかなをローマ字に変換したりできます。",options:"入力形式と日本固有のルールは各ツールの操作欄に表示されます。",caution:"元号の日付と伝統的な情報は実際の日付や地域の慣習によって異なります。抽選番号は当せんを予測しません。"},
   zh:{steps:["输入内容，并选择转换方向或所需条件。","运行工具后，结果会在浏览器中计算。","查看结果和提示，然后复制或输入其他内容。"],example:"例如，将令和元年的日期转换为公历，或将日文假名转为罗马字。",options:"每个工具都会在操作区说明输入格式和日本相关规则。",caution:"日本年号日期和传统信息会因实际日期与地方习俗而异。号码不会预测开奖。"},
 };
-const newToolExamples: Record<string,string> = {
-  "jwt-decoder":"eyJhbGciOiJub25lIn0.eyJzdWIiOiJkZW1vIiwiZXhwIjoyMDAwMDAwMDAwfQ.signature",
-  "url-query-parameter-parser":"https://example.com/search?q=tools&tag=a&tag=b",
-  "user-agent-parser":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/122.0.0.0 Safari/537.36",
-  "ip-cidr-calculator":"192.168.1.15/24",
-  "base32-encoder-decoder":"Hello",
-  "ulid-generator":"Generate one or more sortable IDs locally.",
-  "uuid-v7-generator":"Generate one or more time-ordered UUID v7 values locally.",
-  "hash-compare":"Compare two SHA-256 digest strings, one in each input.",
-  "regex-replace":"Pattern /cat/i · sample Cat cat · replacement dog",
-  "html-entity-encoder-decoder":"A & B < C",
-  "chmod-calculator":"755",
-  "json-path-tester":"Document {\"items\":[{\"name\":\"A\"}]} · path $.items[*].name",
-  "csv-tsv-converter":"name,city\\nA,Seoul",
-  "url-slug-generator":"Crème brûlée: A Guide",
-  "unicode-code-point-checker":"A😀",
-  "pdf-page-size-checker":"Select any PDF to list each page width and height.",
-};
 const examplePrefixes: Record<Locale,string> = {
   ko:"입력 예시:",en:"Example input:",ja:"入力例：",zh:"输入示例：",es:"Ejemplo de entrada:","pt-br":"Exemplo de entrada:",de:"Beispieleingabe:",fr:"Exemple de saisie :",vi:"Ví dụ đầu vào:",id:"Contoh masukan:",th:"ตัวอย่างข้อมูล:","zh-tw":"輸入範例：",it:"Esempio di input:",nl:"Voorbeeldinvoer:",hi:"इनपुट उदाहरण:",
 };
+const sampleSteps: Record<Locale, (value: string) => string> = {
+  ko: (value) => `입력 또는 설정을 선택합니다. 처음에는 ${value} 예시를 시험해 볼 수 있습니다.`,
+  en: (value) => `Enter an input or choose settings; you can start with ${value}.`,
+  ja: (value) => `入力や設定を選びます。最初は ${value} を試せます。`,
+  zh: (value) => `输入内容或选择设置；可以先试用 ${value}。`,
+  es: (value) => `Introduce datos o elige ajustes; puedes empezar con ${value}.`,
+  "pt-br": (value) => `Insira dados ou escolha opções; você pode começar com ${value}.`,
+  de: (value) => `Gib Daten ein oder wähle Einstellungen; beginne beispielsweise mit ${value}.`,
+  fr: (value) => `Saisissez des données ou choisissez les réglages ; essayez d’abord ${value}.`,
+  vi: (value) => `Nhập dữ liệu hoặc chọn tùy chọn; bạn có thể bắt đầu với ${value}.`,
+  id: (value) => `Masukkan data atau pilih pengaturan; Anda bisa mulai dengan ${value}.`,
+  th: (value) => `ป้อนข้อมูลหรือเลือกการตั้งค่า โดยเริ่มลองจาก ${value} ได้`,
+  "zh-tw": (value) => `輸入資料或選擇設定；可以先試試 ${value}。`,
+  it: (value) => `Inserisci dati o scegli le impostazioni; puoi iniziare con ${value}.`,
+  nl: (value) => `Voer gegevens in of kies instellingen; begin bijvoorbeeld met ${value}.`,
+  hi: (value) => `इनपुट दर्ज करें या सेटिंग चुनें; शुरुआत में ${value} आज़मा सकते हैं।`,
+};
 
 export function getToolContent(slug:string,locale:Locale,localizedDescription?:string) {
-  if ((newToolSlugs as readonly string[]).includes(slug)) {
-    const guide = phaseGuides[locale];
-    const example = newToolExamples[slug];
-    return guide && example ? { overview:localizedDescription ?? guide.example, ...guide, example:`${examplePrefixes[locale]} ${example}`, headings:headings[locale] } : undefined;
-  }
-  if (countryToolSlugs.has(slug)) { const guide=japanCoreGuides[locale] ?? phaseGuides[locale]; if (!guide) return undefined; return { overview: localizedDescription ?? guide.example, ...guide, headings: headings[locale] }; }
-  if (japanToolSlugs.has(slug)) {
-    const guide = japanCoreGuides[locale] ?? phaseGuides[locale];
-    if (!guide) return undefined;
-    return { overview: localizedDescription ?? guide.example, ...guide, headings: headings[locale] };
-  }
-  if (phaseGuides[locale]) { const copy=phaseGuides[locale]; return { overview: localizedDescription ?? copy.example, ...copy, headings:headings[locale] }; }
-  const selected=(locale in headings ? locale : "en") as keyof typeof headings; const copy=content[slug]?.[selected]; return copy ? { ...copy, headings:headings[selected] } : undefined;
+  // Preserve the hand-written guide when it exists. Previously the generic
+  // phase guide intercepted every tool in the eleven newer locales.
+  const authored = content[slug]?.[locale];
+  if (authored) return { ...authored, headings: headings[locale] };
+
+  const guide = japanToolSlugs.has(slug)
+    ? japanCoreGuides[locale] ?? phaseGuides[locale]
+    : phaseGuides[locale] ?? coreGuides[locale];
+  const sample = toolExampleInputs[slug];
+  const riskNote = getToolRiskNote(slug, locale);
+  if (!guide || !sample?.trim()) return undefined;
+  return {
+    overview: localizedDescription?.trim() || `${headings[locale].overview}: ${sample}`,
+    ...guide,
+    steps: [sampleSteps[locale](sample.split("→")[0].trim()), ...guide.steps.slice(1)],
+    example: `${examplePrefixes[locale]} ${sample}`,
+    caution: riskNote ?? guide.caution,
+    headings: headings[locale],
+  };
 }

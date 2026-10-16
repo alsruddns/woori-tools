@@ -20,6 +20,8 @@ const countryTranslationModule = await importTs("../src/registry/country-tool-tr
 globalThis.__countryToolTranslations = countryTranslationModule.countryToolTranslations;
 globalThis.__countryToolKeywords = countryTranslationModule.countryToolKeywords;
 globalThis.__newToolTranslations = await importTs("../src/registry/new-tool-translations.ts");
+globalThis.__toolExampleInputs = (await importTs("../src/registry/tool-example-inputs.ts")).toolExampleInputs;
+globalThis.__getToolRiskNote = (await importTs("../src/registry/tool-risk-notes.ts")).getToolRiskNote;
 const { tools } = await importTs("../src/registry/tools.ts", [
   ['import { locales, type RouteLocale as Locale } from "../i18n/routing";', `const locales = ${JSON.stringify(locales)};`],
   ['import { COUNTRY_TOOL_SLUGS } from "../lib/country-tool-slugs";', `const COUNTRY_TOOL_SLUGS = globalThis.__countryToolSlugs;`],
@@ -39,11 +41,14 @@ const { localizeTool } = await importTs("../src/registry/tool-translations.ts", 
   'const countryToolTranslations = globalThis.__countryToolTranslations; const countryToolKeywords = globalThis.__countryToolKeywords;',
 ]]);
 const { getToolContent } = await importTs("../src/registry/tool-content.ts", [[
-  'import { newToolSlugs } from "@/registry/new-tool-translations";',
-  'const newToolSlugs = globalThis.__newToolTranslations.newToolSlugs;',
+  'import { toolExampleInputs } from "@/registry/tool-example-inputs";',
+  'const toolExampleInputs = globalThis.__toolExampleInputs;',
 ], [
   'import { COUNTRY_TOOL_SLUGS } from "@/lib/country-tool-slugs";',
   `const COUNTRY_TOOL_SLUGS = globalThis.__countryToolSlugs;`,
+], [
+  'import { getToolRiskNote } from "@/registry/tool-risk-notes";',
+  'const getToolRiskNote = globalThis.__getToolRiskNote;',
 ]]);
 const expandedModule = await importTs("../src/i18n/expanded-messages.ts");
 globalThis.__getExpandedMessages = expandedModule.getExpandedMessages;
