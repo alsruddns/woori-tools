@@ -3,6 +3,7 @@ import type { ToolDefinition } from "./tools";
 import { japanToolKeywords, japanToolTranslations } from "./japan-tool-translations";
 import { countryToolKeywords, countryToolTranslations } from "./country-tool-translations";
 import { getNewToolTranslation } from "./new-tool-translations";
+import { getLocalizedToolAction } from "./tool-content";
 
 type Translation = readonly [title: string, description: string];
 
@@ -398,7 +399,7 @@ function composedTranslation(tool: ToolDefinition, locale: string): Translation 
   const description = localizedToolDescriptions[locale];
   if (!terms || !description) return undefined;
   const title = tool.slug.split("-").map((word) => terms[word] ?? word.toUpperCase()).join(" ");
-  return [title, `${description.open.replace("{name}", title)} ${description.local}`];
+  return [title, `${title} — ${getLocalizedToolAction(tool.slug, locale as Locale, tool.category)} ${description.local}`];
 }
 const phaseOneDescriptions: Record<string, { lotto: string; draw: string; fortune: string; random: string }> = {
   es: { lotto:"Genera combinaciones válidas según las reglas de {name}. Elige números incluidos o excluidos y el equilibrio par/impar; todo se procesa en tu navegador.", draw:"Elige al azar entre las opciones que introduzcas. Ajusta las opciones y genera uno o varios resultados directamente en tu navegador.", fortune:"Explora {name} como entretenimiento y reflexión personal. La lectura se genera en tu navegador y no se envían tus datos.", random:"Usa {name} para crear una selección aleatoria con tus opciones. La operación se realiza localmente en tu navegador." },
@@ -418,7 +419,7 @@ const fortuneSlugs = new Set(["tarot-card", "daily-fortune", "saju"]);
 const drawSlugs = new Set(["random-name-picker", "random-wheel", "draw-lots", "random-team-maker", "random-order"]);
 
 export function localizeTool<T extends ToolDefinition>(tool: T, locale: Locale): T {
-  const newToolCopy = getNewToolTranslation(tool.slug, locale);
+  const newToolCopy = getNewToolTranslation(tool.slug, locale, getLocalizedToolAction(tool.slug, locale, tool.category));
   if (newToolCopy) return { ...tool, title: newToolCopy.title, shortTitle: newToolCopy.title, description: newToolCopy.description, keywords: newToolCopy.keywords };
   const countryCopy = countryToolTranslations[locale]?.[tool.slug];
   if (countryCopy) return { ...tool, title: countryCopy[0], shortTitle: countryCopy[0], description: countryCopy[1], keywords: [tool.slug, countryCopy[0], ...(countryToolKeywords[tool.slug]?.[locale] ?? [])] };
@@ -430,8 +431,10 @@ export function localizeTool<T extends ToolDefinition>(tool: T, locale: Locale):
   if (phaseName) {
     const copy = phaseOneDescriptions[locale];
     const group = lotterySlugs.has(tool.slug) ? "lotto" : fortuneSlugs.has(tool.slug) ? "fortune" : drawSlugs.has(tool.slug) ? "draw" : "random";
-    const localizedDescription = copy[group].replaceAll("{name}", phaseName);
-    return { ...tool, title: phaseName, shortTitle: phaseName, description: group === "draw" ? `${phaseName}: ${localizedDescription}` : localizedDescription, keywords: [tool.slug, phaseName] };
+    const localizedDescription = lotterySlugs.has(tool.slug) || fortuneSlugs.has(tool.slug)
+      ? copy[group].replaceAll("{name}", phaseName)
+      : `${phaseName} — ${getLocalizedToolAction(tool.slug, locale, tool.category)}`;
+    return { ...tool, title: phaseName, shortTitle: phaseName, description: localizedDescription, keywords: [tool.slug, phaseName] };
   }
   const [title, description] = catalogs[locale]?.[tool.slug] ?? composedTranslation(tool, locale) ?? [];
   if (!title || !description) throw new Error(`Missing ${locale} translation for ${tool.slug}`);

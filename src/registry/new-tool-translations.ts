@@ -26,28 +26,10 @@ const names: Record<(typeof newToolSlugs)[number], string[]> = {
   "pdf-page-size-checker":["PDF 페이지 크기 확인기","PDF Page Size Checker","PDFページサイズ確認","PDF 页面尺寸检查器","Comprobador del tamaño de página PDF","Verificador do tamanho das páginas PDF","PDF-Seitengrößenprüfung","Vérificateur du format des pages PDF","Trình kiểm tra kích thước trang PDF","Pemeriksa ukuran halaman PDF","เครื่องมือตรวจสอบขนาดหน้า PDF","PDF 頁面尺寸檢查器","Verificatore formato pagine PDF","PDF-paginagroottecontrole","PDF पृष्ठ आकार जाँचकर्ता"],
 };
 
-const descriptionTemplates: Record<RouteLocale, (name: string) => string> = {
-  ko:(name)=>`${name}를 브라우저에서 사용하세요. 입력값은 기기에서 처리되며 서버로 전송되지 않습니다.`,
-  en:(name)=>`Use ${name} in your browser. Inputs are processed on your device and are not sent to a server.`,
-  ja:(name)=>`${name}をブラウザーで利用できます。入力内容は端末内で処理され、サーバーへ送信されません。`,
-  zh:(name)=>`在浏览器中使用${name}。输入内容在本机处理，不会发送到服务器。`,
-  es:(name)=>`Usa ${name} en el navegador. Los datos se procesan en tu dispositivo y no se envían a un servidor.`,
-  "pt-br":(name)=>`Use ${name} no navegador. Os dados são processados no dispositivo e não são enviados a um servidor.`,
-  de:(name)=>`Verwende ${name} im Browser. Eingaben werden auf deinem Gerät verarbeitet und nicht an einen Server gesendet.`,
-  fr:(name)=>`Utilisez ${name} dans votre navigateur. Les données sont traitées sur votre appareil et ne sont pas envoyées à un serveur.`,
-  vi:(name)=>`Sử dụng ${name} trong trình duyệt. Dữ liệu được xử lý trên thiết bị và không gửi đến máy chủ.`,
-  id:(name)=>`Gunakan ${name} di browser. Masukan diproses di perangkat dan tidak dikirim ke server.`,
-  th:(name)=>`ใช้${name}ในเบราว์เซอร์ ข้อมูลจะประมวลผลบนอุปกรณ์และไม่ส่งไปยังเซิร์ฟเวอร์`,
-  "zh-tw":(name)=>`在瀏覽器中使用${name}。輸入內容會在裝置上處理，不會傳送至伺服器。`,
-  it:(name)=>`Usa ${name} nel browser. I dati vengono elaborati sul dispositivo e non inviati a un server.`,
-  nl:(name)=>`Gebruik ${name} in je browser. Invoer wordt op je apparaat verwerkt en niet naar een server verzonden.`,
-  hi:(name)=>`अपने ब्राउज़र में ${name} का उपयोग करें। इनपुट आपके डिवाइस पर संसाधित होता है और सर्वर पर नहीं भेजा जाता।`,
-};
-
-export function getNewToolTranslation(slug: string, locale: RouteLocale) {
+export function getNewToolTranslation(slug: string, locale: RouteLocale, localizedAction?: string) {
   if (!newToolSlugs.includes(slug as (typeof newToolSlugs)[number])) return undefined;
   const index = locales.indexOf(locale);
   const title = names[slug as (typeof newToolSlugs)[number]][index];
   if (!title?.trim()) return undefined;
-  return { title, description: descriptionTemplates[locale](title), keywords: [slug, title] };
+  return { title, description: localizedAction ? `${title} — ${localizedAction}` : title, keywords: [slug, title] };
 }

@@ -9,7 +9,7 @@ import { pageMetadata } from "@/lib/seo";
 import { findLocalizedCategory } from "@/registry/category-translations";
 import { localizeTool, localizeTools } from "@/registry/tool-translations";
 import { getTool, tools } from "@/registry/tools";
-import { getToolContent } from "@/registry/tool-content";
+import { getToolContent, getToolStorageNote } from "@/registry/tool-content";
 import { getFileGuidance } from "@/registry/file-guidance";
 import { getToolFaqQuestions } from "@/registry/tool-faq";
 
@@ -48,9 +48,10 @@ export default async function ToolPage({ params }: Props) {
   const category = findLocalizedCategory(tool.category, locale);
   if (!category) notFound();
   const messages = getMessages(locale);
-  const seoContent = getToolContent(slug, locale, tool.description);
+  const seoContent = getToolContent(slug, locale, tool.description, tool.title, tool.category);
   if (!seoContent) throw new Error(`Missing editorial content for ${locale}/${slug}`);
   const fileGuidance = getFileGuidance(tool, locale);
+  const storageNote = getToolStorageNote(slug, locale);
   const faqQuestions = getToolFaqQuestions(locale, tool.title);
   const related = (baseTool.relatedTools ?? []).map((id) => getTool(id)).filter((item): item is NonNullable<typeof item> => item !== undefined && item.supportedLocales.includes(locale));
   const localizedTools = localizeTools(related, locale);
@@ -95,10 +96,10 @@ export default async function ToolPage({ params }: Props) {
       }).replace(/</g, "\\u003c") }} />
 
       <section className="mt-12 space-y-8">
-        <article>
+        {seoContent.overview !== tool.description && <article>
           <h2 className="text-2xl font-bold">{seoContent.headings.overview}</h2>
           <p className="mt-3 leading-7 text-slate-700">{seoContent.overview}</p>
-        </article>
+        </article>}
         <article>
           <h2 className="text-2xl font-bold">{seoContent.headings.how}</h2>
           <ol className="mt-4 list-inside list-decimal space-y-2 text-slate-700">{seoContent.steps.map((step) => <li key={step}>{step}</li>)}</ol>
@@ -109,7 +110,7 @@ export default async function ToolPage({ params }: Props) {
             <li>{fileGuidance.types}</li><li>{fileGuidance.limit}</li><li>{fileGuidance.result}</li>
           </ul>}
         </article>
-        <article><h2 className="text-xl font-bold">{seoContent.headings.privacy}</h2><p className="mt-2 rounded-xl bg-emerald-50 p-4 text-sm leading-6 text-emerald-900">{seoContent.headings.privacyAnswer} <Link href={localizePath(locale, "/privacy")} className="font-semibold underline underline-offset-2">{messages.privacy}</Link></p></article>
+        <article><h2 className="text-xl font-bold">{seoContent.headings.privacy}</h2><p className="mt-2 rounded-xl bg-emerald-50 p-4 text-sm leading-6 text-emerald-900">{seoContent.headings.privacyAnswer} {storageNote && <span className="mt-2 block">{storageNote}</span>} <Link href={localizePath(locale, "/privacy")} className="font-semibold underline underline-offset-2">{messages.privacy}</Link></p></article>
         <article><h2 className="text-xl font-bold">{seoContent.headings.warning}</h2><p className="mt-2 leading-7 text-slate-700">{seoContent.caution}</p></article>
       </section>
 
