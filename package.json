@@ -9,7 +9,8 @@
     "lint": "eslint",
     "test": "node --test",
     "catalog:generate": "tsx scripts/generate-service-catalog.ts",
-    "check:service-catalog": "node --test tests/service-catalog.test.mjs"
+    "check:service-catalog": "node --test tests/service-catalog.test.mjs",
+    "check:content-quality": "tsx scripts/check-content-quality.ts"
   },
   "dependencies": {
     "cron-parser": "^5.10.1",

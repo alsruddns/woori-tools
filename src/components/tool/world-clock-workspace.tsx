@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import type { UiLocale } from "@/i18n/routing";
+import type { RouteLocale } from "@/i18n/routing";
 
 const fallbackZones = ["Asia/Seoul", "Asia/Tokyo", "Asia/Shanghai", "Asia/Singapore", "Europe/London", "Europe/Paris", "America/New_York", "America/Los_Angeles", "Australia/Sydney", "Pacific/Auckland"];
 const defaultZones = ["Asia/Seoul", "Asia/Tokyo", "America/New_York", "America/Los_Angeles", "Europe/London", "Europe/Paris", "Asia/Singapore", "Australia/Sydney"];
@@ -46,7 +46,7 @@ Object.assign(zoneNames, {
   hi:{"Asia/Seoul":"सियोल","Asia/Tokyo":"टोक्यो","Asia/Shanghai":"शंघाई","Asia/Singapore":"सिंगापुर","Europe/London":"लंदन","Europe/Paris":"पेरिस","America/New_York":"न्यूयॉर्क","America/Los_Angeles":"लॉस एंजिलिस","Australia/Sydney":"सिडनी","Pacific/Auckland":"ऑकलैंड"},
 });
 
-export function WorldClockWorkspace({ locale }: { locale:UiLocale }) {
+export function WorldClockWorkspace({ locale }: { locale:RouteLocale }) {
   const t = labels[locale];
   const zones = useMemo(() => {
     try { return typeof Intl.supportedValuesOf === "function" ? Intl.supportedValuesOf("timeZone") : fallbackZones; } catch { return fallbackZones; }

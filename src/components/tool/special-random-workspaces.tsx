@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import type { RouteLocale, UiLocale } from "@/i18n/routing";
+import type { RouteLocale } from "@/i18n/routing";
 import { randomInt, secureShuffle, pickUnique, pickUniqueRange } from "@/lib/random";
 import { generateLottoGames, generateSpecialBalls, lotteryHistoryStorageKey } from "@/lib/lotto.mjs";
 import { divideEvenly, normalizeWheelItems, rollDice } from "@/lib/random-tools.mjs";
@@ -126,7 +126,7 @@ export function LottoWorkspace({ locale, min = 1, max = 45, numberCount = 6, his
   </section>;
 }
 
-export function DiceWorkspace({ locale }: { locale:UiLocale }) {
+export function DiceWorkspace({ locale }: { locale:RouteLocale }) {
   const t = copy[locale];
   const [sides, setSides] = useState(6);
   const [count, setCount] = useState(1);

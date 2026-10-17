@@ -73,9 +73,12 @@ When adding a public tool:
 1. Register the tool in the central tool registry.
 2. Add translations for all supported locales: `ko`, `en`, `ja`, `zh`, `es`, `pt-br`, `de`, `fr`, `vi`, `id`, `th`, `zh-tw`, `it`, `nl`, and `hi`.
 3. Review localized SEO metadata and visible page content.
-4. Confirm automatic sitemap inclusion, canonical, hreflang, and x-default.
-5. Confirm the language selector preserves the current page meaning.
-6. Run `pnpm lint` and `pnpm build`.
+4. Add a concrete input/output example in `src/registry/tool-example-inputs.ts` and review the visible usage, privacy, limit, and FAQ copy in every locale. Run `pnpm check:content-quality`.
+5. Confirm automatic sitemap inclusion, canonical, hreflang, and x-default.
+6. Confirm the language selector preserves the current page meaning.
+7. Run `pnpm lint` and `pnpm build`.
+
+The content audit and current limitations are recorded in [`docs/adsense-content-audit.md`](docs/adsense-content-audit.md).
 
 ## Service Catalog
 

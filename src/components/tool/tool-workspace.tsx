@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import NextImage from "next/image";
 import type { ToolDefinition } from "@/registry/tools";
 import type { Dictionary } from "@/i18n/messages";
-import { getUiLocale, type UiLocale, type RouteLocale } from "@/i18n/routing";
+import type { RouteLocale } from "@/i18n/routing";
 import { processImage as processImageFile } from "@/lib/image/process-image";
 import { processPdf as processPdfFile } from "@/lib/pdf/process-pdf";
 import { processText as processTextTool } from "@/lib/text/process-text";
@@ -22,6 +22,7 @@ import { DailyFortuneWorkspace, TarotWorkspace } from "@/components/tool/fortune
 import { SajuWorkspace } from "@/components/tool/saju-workspace";
 import { JapanToolsWorkspace } from "@/components/tool/japan-tools-workspace";
 import { COUNTRY_TOOL_SLUGS } from "@/lib/country-tool-slugs";
+import { renameCopy, selectionCopy } from "@/registry/tool-option-copy";
 import { BrowserDeveloperToolsWorkspace } from "@/components/tool/browser-developer-tools-workspace";
 import { DiceWorkspace, LottoWorkspace, RandomNameWorkspace, RandomNumberWorkspace, RandomOrderWorkspace, RandomSeatWorkspace, RandomTeamWorkspace, RandomWheelWorkspace } from "@/components/tool/special-random-workspaces";
 
@@ -46,7 +47,7 @@ const selectionLimitMessages: Record<RouteLocale, { files: string; images: strin
   hi:{files:"अधिकतम 100 फ़ाइलें चुनें, जिनका कुल आकार 200 MB तक हो।",images:"अधिकतम 6 चित्र चुनें, जिनका कुल आकार 100 MB तक हो।"},
 };
 
-export function ToolWorkspace({ tool, locale, phaseLocale, messages }: { tool: ToolDefinition; locale:UiLocale; phaseLocale:RouteLocale; messages: Dictionary }) {
+export function ToolWorkspace({ tool, phaseLocale, messages }: { tool: ToolDefinition; phaseLocale:RouteLocale; messages: Dictionary }) {
   const isImage = tool.category === "image";
   const isPdf = tool.category === "pdf" || tool.slug === "images-to-pdf";
   const isFileTool = ["file-hash","mime-type-checker","file-extension-checker","file-size-checker","duplicate-file-checker","zip-files","bulk-file-renamer","filename-cleaner"].includes(tool.slug);
@@ -88,20 +89,20 @@ export function ToolWorkspace({ tool, locale, phaseLocale, messages }: { tool: T
   if (tool.slug === "japan-loto6-number-generator") return <LottoWorkspace locale={phaseLocale} min={1} max={43} numberCount={6} historyKey="lottery-history:japan-loto6-number-generator" />;
   if (tool.slug === "japan-loto7-number-generator") return <LottoWorkspace locale={phaseLocale} min={1} max={37} numberCount={7} historyKey="lottery-history:japan-loto7-number-generator" />;
   if (tool.slug === "japan-mini-loto-number-generator") return <LottoWorkspace locale={phaseLocale} min={1} max={31} numberCount={5} historyKey="lottery-history:japan-mini-loto-number-generator" />;
-  if (tool.slug === "dice-roller") return <DiceWorkspace locale={locale} />;
+  if (tool.slug === "dice-roller") return <DiceWorkspace locale={phaseLocale} />;
   if (tool.slug === "random-number") return <RandomNumberWorkspace locale={phaseLocale} />;
   if (tool.slug === "random-name-picker" || tool.slug === "draw-lots") return <RandomNameWorkspace slug={tool.slug} locale={phaseLocale} />;
   if (tool.slug === "random-team-maker") return <RandomTeamWorkspace locale={phaseLocale} />;
   if (tool.slug === "random-order") return <RandomOrderWorkspace locale={phaseLocale} />;
   if (tool.slug === "random-seat") return <RandomSeatWorkspace locale={phaseLocale} />;
   if (["password-generator","random-string-generator"].includes(tool.slug)) return <RandomStringWorkspace slug={tool.slug} locale={phaseLocale} />;
-  if (tool.slug === "ladder-game") return <LadderWorkspace locale={locale} />;
+  if (tool.slug === "ladder-game") return <LadderWorkspace locale={phaseLocale} />;
   if (tool.slug === "markdown-preview") return <MarkdownWorkspace locale={phaseLocale} />;
   if (tool.slug === "barcode-generator") return <BarcodeWorkspace locale={phaseLocale} />;
   if (["wifi-qr","contact-qr","phone-qr","email-qr"].includes(tool.slug)) return <QrWorkspace slug={tool.slug} locale={phaseLocale} />;
   if (tool.slug === "random-wheel") return <RandomWheelWorkspace locale={phaseLocale} />;
   if (tool.slug === "timer" || tool.slug === "pomodoro-timer") return <CountdownWorkspace slug={tool.slug} locale={phaseLocale} />;
-  if (tool.slug === "world-clock") return <WorldClockWorkspace locale={locale} />;
+  if (tool.slug === "world-clock") return <WorldClockWorkspace locale={phaseLocale} />;
   if (tool.category === "date-time") return <DateTimeTool slug={tool.slug} locale={phaseLocale} />;
 
   function selectFiles(list: FileList | null) {
@@ -135,19 +136,19 @@ export function ToolWorkspace({ tool, locale, phaseLocale, messages }: { tool: T
   async function processImage() {
     if(tool.slug==="image-collage"){await processCollage();return;}
     const file=files[0]; if(!file) throw new Error(messages.errors.noImage);
-    const processed=await processImageFile(tool.slug,file,{quality,width,height,keepRatio,amount,option,text},locale);
+    const processed=await processImageFile(tool.slug,file,{quality,width,height,keepRatio,amount,option,text},phaseLocale);
     if(processed.blob) setOutputUrl(URL.createObjectURL(processed.blob));
     setResult(processed.result);
   }
 
   async function processPdf() {
-    const processed=await processPdfFile(tool.slug,files,option,text,locale);
+    const processed=await processPdfFile(tool.slug,files,option,text,phaseLocale);
     if(processed.blob) setOutputUrl(URL.createObjectURL(processed.blob));
     setResult(processed.result);
   }
 
   async function processText() {
-    const processed=await processTextTool(tool.slug,text,secondText,option,amount,locale);
+    const processed=await processTextTool(tool.slug,text,secondText,option,amount,phaseLocale);
     if(processed.download) setOutputUrl(URL.createObjectURL(processed.download));
     setResult(processed.result);
   }
@@ -175,7 +176,7 @@ export function ToolWorkspace({ tool, locale, phaseLocale, messages }: { tool: T
 }
 
 function BulkRenameOptions({locale,files,value,onChange}:{locale:RouteLocale;files:File[];value:string;onChange:(value:string)=>void}) {
-  const t={ko:{prefix:"접두사",suffix:"접미사",find:"찾을 문자열",replace:"바꿀 문자열",start:"시작 번호",padding:"번호 자릿수",before:"변경 전",after:"변경 후",empty:"파일을 선택하면 이름 미리보기가 표시됩니다."},en:{prefix:"Prefix",suffix:"Suffix",find:"Find",replace:"Replace",start:"Start number",padding:"Number padding",before:"Before",after:"After",empty:"Select files to preview their new names."},ja:{prefix:"接頭辞",suffix:"接尾辞",find:"検索文字列",replace:"置換文字列",start:"開始番号",padding:"番号の桁数",before:"変更前",after:"変更後",empty:"ファイルを選択すると新しい名前を表示します。"},zh:{prefix:"前缀",suffix:"后缀",find:"查找文本",replace:"替换文本",start:"起始编号",padding:"编号位数",before:"原文件名",after:"新文件名",empty:"选择文件后即可预览新名称。"}}[getUiLocale(locale)];
+  const t=renameCopy[locale];
   const options=parseRenameOptions(value); const fields:[keyof ReturnType<typeof parseRenameOptions>,string][]=[["prefix",t.prefix],["suffix",t.suffix],["find",t.find],["replace",t.replace],["startNumber",t.start],["padding",t.padding]];
   function update(key:keyof ReturnType<typeof parseRenameOptions>,next:string){onChange(fields.map(([field])=>field===key?next:options[field]??"").join("\n"));}
   const renamed=renameFileNames(files.map((file)=>file.name),options);
@@ -212,7 +213,7 @@ function ToolOptions({tool,locale,messages,files,quality,setQuality,width,setWid
 function SelectOption({label,value,onChange,options}:{label:string;value:string;onChange:(v:string)=>void;options:[string,string][]}){return <label className="mt-4 block text-sm">{label}<select value={value} onChange={(e)=>onChange(e.target.value)} className="mt-1 block w-full rounded-lg border border-slate-300 bg-white p-3">{options.map(([v,l])=><option key={v} value={v}>{l}</option>)}</select></label>;}
 function defaultOption(slug:string){return slug==="image-rotate"||slug==="pdf-rotate-pages"?"90":slug==="image-flip"?"horizontal":slug==="image-crop"?"1":slug==="sort-lines"?"asc":slug==="text-case-converter"?"lower":slug==="json-formatter"?"format":slug==="base64"||slug==="url-encode-decode"?"encode":slug==="timestamp-converter"?"seconds":slug==="remove-spaces"?"all":["random-number","random-name-picker","random-wheel","draw-lots"].includes(slug)?"unique":"";}
 function localeLabel(locale:RouteLocale,key:string){const labels:Record<string,Record<string,string>>={ko:{noRepeat:"중복 없이",repeat:"중복 허용",digits:"숫자",latin:"영문",hangul:"한글",special:"특수문자",custom:"사용자 지정",square:"Instagram 정사각형",portraitPreset:"Instagram 세로",story:"Instagram 스토리",youtube:"YouTube 썸네일",xpost:"X 게시물",facebook:"Facebook 게시물",grid3:"3개 (3 × 1)",grid6:"6개 (3 × 2)",grid9:"9개 (3 × 3)",collage4:"4장 (2 × 2)",collage6:"6장 (3 × 2)",renameRules:"줄마다 접두사, 접미사, 찾을 글자, 바꿀 글자를 입력",renameHint:"생략한 줄은 무시합니다. 변경본은 ZIP으로 받습니다."},en:{noRepeat:"Without repeats",repeat:"Allow repeats",digits:"Digits",latin:"Latin letters",hangul:"Korean characters",special:"Special characters",custom:"Custom string",square:"Instagram square",portraitPreset:"Instagram portrait",story:"Instagram story",youtube:"YouTube thumbnail",xpost:"X post",facebook:"Facebook post",grid3:"3 tiles (3 × 1)",grid6:"6 tiles (3 × 2)",grid9:"9 tiles (3 × 3)",collage4:"4 photos (2 × 2)",collage6:"6 photos (3 × 2)",renameRules:"Enter prefix, suffix, find, and replace on separate lines",renameHint:"Leave a line empty to skip that rule. Renamed copies are downloaded as a ZIP."},ja:{noRepeat:"重複なし",repeat:"重複あり",digits:"数字",latin:"英字",hangul:"ハングル",special:"記号",custom:"指定文字列",square:"Instagram正方形",portraitPreset:"Instagram縦長",story:"Instagramストーリー",youtube:"YouTubeサムネイル",xpost:"X投稿",facebook:"Facebook投稿",grid3:"3枚 (3 × 1)",grid6:"6枚 (3 × 2)",grid9:"9枚 (3 × 3)",collage4:"4枚 (2 × 2)",collage6:"6枚 (3 × 2)",renameRules:"接頭辞、接尾辞、検索文字、置換文字を各行に入力",renameHint:"空欄の規則は無視します。変更後のファイルはZIPで保存します。"},zh:{noRepeat:"不重复",repeat:"允许重复",digits:"数字",latin:"英文字母",hangul:"韩文",special:"特殊字符",custom:"自定义字符",square:"Instagram方形",portraitPreset:"Instagram竖版",story:"Instagram限时动态",youtube:"YouTube缩略图",xpost:"X帖子",facebook:"Facebook帖子",grid3:"3张（3 × 1）",grid6:"6张（3 × 2）",grid9:"9张（3 × 3）",collage4:"4张（2 × 2）",collage6:"6张（3 × 2）",renameRules:"每行输入前缀、后缀、查找内容和替换内容",renameHint:"留空的规则将跳过。重命名后的副本将打包为ZIP下载."}};
-const localized:Record<string,Record<string,string>>={es:{square:"Instagram cuadrado",portraitPreset:"Instagram vertical",story:"Historia de Instagram",youtube:"Miniatura de YouTube",xpost:"Publicación de X",facebook:"Publicación de Facebook",grid3:"3 mosaicos (3 × 1)",grid6:"6 mosaicos (3 × 2)",grid9:"9 mosaicos (3 × 3)",collage4:"4 fotos (2 × 2)",collage6:"6 fotos (3 × 2)"},"pt-br":{square:"Instagram quadrado",portraitPreset:"Instagram vertical",story:"Story do Instagram",youtube:"Miniatura do YouTube",xpost:"Publicação no X",facebook:"Publicação no Facebook",grid3:"3 peças (3 × 1)",grid6:"6 peças (3 × 2)",grid9:"9 peças (3 × 3)",collage4:"4 fotos (2 × 2)",collage6:"6 fotos (3 × 2)"},de:{square:"Instagram quadratisch",portraitPreset:"Instagram Hochformat",story:"Instagram-Story",youtube:"YouTube-Thumbnail",xpost:"X-Beitrag",facebook:"Facebook-Beitrag",grid3:"3 Kacheln (3 × 1)",grid6:"6 Kacheln (3 × 2)",grid9:"9 Kacheln (3 × 3)",collage4:"4 Fotos (2 × 2)",collage6:"6 Fotos (3 × 2)"},fr:{square:"Carré Instagram",portraitPreset:"Portrait Instagram",story:"Story Instagram",youtube:"Miniature YouTube",xpost:"Publication X",facebook:"Publication Facebook",grid3:"3 vignettes (3 × 1)",grid6:"6 vignettes (3 × 2)",grid9:"9 vignettes (3 × 3)",collage4:"4 photos (2 × 2)",collage6:"6 photos (3 × 2)"},vi:{square:"Instagram vuông",portraitPreset:"Instagram dọc",story:"Tin Instagram",youtube:"Ảnh thu nhỏ YouTube",xpost:"Bài đăng X",facebook:"Bài đăng Facebook",grid3:"3 ô (3 × 1)",grid6:"6 ô (3 × 2)",grid9:"9 ô (3 × 3)",collage4:"4 ảnh (2 × 2)",collage6:"6 ảnh (3 × 2)"},id:{square:"Instagram persegi",portraitPreset:"Instagram potret",story:"Instagram Story",youtube:"Thumbnail YouTube",xpost:"Postingan X",facebook:"Postingan Facebook",grid3:"3 ubin (3 × 1)",grid6:"6 ubin (3 × 2)",grid9:"9 ubin (3 × 3)",collage4:"4 foto (2 × 2)",collage6:"6 foto (3 × 2)"},th:{square:"Instagram สี่เหลี่ยม",portraitPreset:"Instagram แนวตั้ง",story:"สตอรี่ Instagram",youtube:"ภาพปก YouTube",xpost:"โพสต์ X",facebook:"โพสต์ Facebook",grid3:"3 ช่อง (3 × 1)",grid6:"6 ช่อง (3 × 2)",grid9:"9 ช่อง (3 × 3)",collage4:"4 ภาพ (2 × 2)",collage6:"6 ภาพ (3 × 2)"},"zh-tw":{square:"Instagram 正方形",portraitPreset:"Instagram 直式",story:"Instagram 限時動態",youtube:"YouTube 縮圖",xpost:"X 貼文",facebook:"Facebook 貼文",grid3:"3 張拼圖 (3 × 1)",grid6:"6 張拼圖 (3 × 2)",grid9:"9 張拼圖 (3 × 3)",collage4:"4 張照片 (2 × 2)",collage6:"6 張照片 (3 × 2)"},it:{square:"Instagram quadrato",portraitPreset:"Instagram verticale",story:"Storia Instagram",youtube:"Miniatura YouTube",xpost:"Post su X",facebook:"Post Facebook",grid3:"3 riquadri (3 × 1)",grid6:"6 riquadri (3 × 2)",grid9:"9 riquadri (3 × 3)",collage4:"4 foto (2 × 2)",collage6:"6 foto (3 × 2)"},nl:{square:"Instagram vierkant",portraitPreset:"Instagram staand",story:"Instagram-verhaal",youtube:"YouTube-miniatuur",xpost:"X-bericht",facebook:"Facebook-bericht",grid3:"3 tegels (3 × 1)",grid6:"6 tegels (3 × 2)",grid9:"9 tegels (3 × 3)",collage4:"4 foto's (2 × 2)",collage6:"6 foto's (3 × 2)"},hi:{square:"Instagram वर्ग",portraitPreset:"Instagram पोर्ट्रेट",story:"Instagram स्टोरी",youtube:"YouTube थंबनेल",xpost:"X पोस्ट",facebook:"Facebook पोस्ट",grid3:"3 टाइल (3 × 1)",grid6:"6 टाइल (3 × 2)",grid9:"9 टाइल (3 × 3)",collage4:"4 तस्वीरें (2 × 2)",collage6:"6 तस्वीरें (3 × 2)"}};return localized[locale]?.[key]??labels[locale]?.[key]??key;}
+const localized:Record<string,Record<string,string>>={es:{square:"Instagram cuadrado",portraitPreset:"Instagram vertical",story:"Historia de Instagram",youtube:"Miniatura de YouTube",xpost:"Publicación de X",facebook:"Publicación de Facebook",grid3:"3 mosaicos (3 × 1)",grid6:"6 mosaicos (3 × 2)",grid9:"9 mosaicos (3 × 3)",collage4:"4 fotos (2 × 2)",collage6:"6 fotos (3 × 2)"},"pt-br":{square:"Instagram quadrado",portraitPreset:"Instagram vertical",story:"Story do Instagram",youtube:"Miniatura do YouTube",xpost:"Publicação no X",facebook:"Publicação no Facebook",grid3:"3 peças (3 × 1)",grid6:"6 peças (3 × 2)",grid9:"9 peças (3 × 3)",collage4:"4 fotos (2 × 2)",collage6:"6 fotos (3 × 2)"},de:{square:"Instagram quadratisch",portraitPreset:"Instagram Hochformat",story:"Instagram-Story",youtube:"YouTube-Thumbnail",xpost:"X-Beitrag",facebook:"Facebook-Beitrag",grid3:"3 Kacheln (3 × 1)",grid6:"6 Kacheln (3 × 2)",grid9:"9 Kacheln (3 × 3)",collage4:"4 Fotos (2 × 2)",collage6:"6 Fotos (3 × 2)"},fr:{square:"Carré Instagram",portraitPreset:"Portrait Instagram",story:"Story Instagram",youtube:"Miniature YouTube",xpost:"Publication X",facebook:"Publication Facebook",grid3:"3 vignettes (3 × 1)",grid6:"6 vignettes (3 × 2)",grid9:"9 vignettes (3 × 3)",collage4:"4 photos (2 × 2)",collage6:"6 photos (3 × 2)"},vi:{square:"Instagram vuông",portraitPreset:"Instagram dọc",story:"Tin Instagram",youtube:"Ảnh thu nhỏ YouTube",xpost:"Bài đăng X",facebook:"Bài đăng Facebook",grid3:"3 ô (3 × 1)",grid6:"6 ô (3 × 2)",grid9:"9 ô (3 × 3)",collage4:"4 ảnh (2 × 2)",collage6:"6 ảnh (3 × 2)"},id:{square:"Instagram persegi",portraitPreset:"Instagram potret",story:"Instagram Story",youtube:"Thumbnail YouTube",xpost:"Postingan X",facebook:"Postingan Facebook",grid3:"3 ubin (3 × 1)",grid6:"6 ubin (3 × 2)",grid9:"9 ubin (3 × 3)",collage4:"4 foto (2 × 2)",collage6:"6 foto (3 × 2)"},th:{square:"Instagram สี่เหลี่ยม",portraitPreset:"Instagram แนวตั้ง",story:"สตอรี่ Instagram",youtube:"ภาพปก YouTube",xpost:"โพสต์ X",facebook:"โพสต์ Facebook",grid3:"3 ช่อง (3 × 1)",grid6:"6 ช่อง (3 × 2)",grid9:"9 ช่อง (3 × 3)",collage4:"4 ภาพ (2 × 2)",collage6:"6 ภาพ (3 × 2)"},"zh-tw":{square:"Instagram 正方形",portraitPreset:"Instagram 直式",story:"Instagram 限時動態",youtube:"YouTube 縮圖",xpost:"X 貼文",facebook:"Facebook 貼文",grid3:"3 張拼圖 (3 × 1)",grid6:"6 張拼圖 (3 × 2)",grid9:"9 張拼圖 (3 × 3)",collage4:"4 張照片 (2 × 2)",collage6:"6 張照片 (3 × 2)"},it:{square:"Instagram quadrato",portraitPreset:"Instagram verticale",story:"Storia Instagram",youtube:"Miniatura YouTube",xpost:"Post su X",facebook:"Post Facebook",grid3:"3 riquadri (3 × 1)",grid6:"6 riquadri (3 × 2)",grid9:"9 riquadri (3 × 3)",collage4:"4 foto (2 × 2)",collage6:"6 foto (3 × 2)"},nl:{square:"Instagram vierkant",portraitPreset:"Instagram staand",story:"Instagram-verhaal",youtube:"YouTube-miniatuur",xpost:"X-bericht",facebook:"Facebook-bericht",grid3:"3 tegels (3 × 1)",grid6:"6 tegels (3 × 2)",grid9:"9 tegels (3 × 3)",collage4:"4 foto's (2 × 2)",collage6:"6 foto's (3 × 2)"},hi:{square:"Instagram वर्ग",portraitPreset:"Instagram पोर्ट्रेट",story:"Instagram स्टोरी",youtube:"YouTube थंबनेल",xpost:"X पोस्ट",facebook:"Facebook पोस्ट",grid3:"3 टाइल (3 × 1)",grid6:"6 टाइल (3 × 2)",grid9:"9 टाइल (3 × 3)",collage4:"4 तस्वीरें (2 × 2)",collage6:"6 तस्वीरें (3 × 2)"}};return selectionCopy[locale][key as keyof typeof selectionCopy[typeof locale]]??localized[locale]?.[key]??labels[locale]?.[key]??key;}
 function downloadName(slug:string,stem:string){if(slug==="images-to-pdf"||slug.startsWith("pdf-"))return`${stem}-${slug==="pdf-merge"?"merged":"processed"}.pdf`;if(slug==="text-to-file")return `${stem}.txt`;if(["zip-files","bulk-file-renamer","filename-cleaner","instagram-grid-split"].includes(slug))return `${slug}.zip`;const extension=slug.includes("png")||slug==="favicon-generator"?"png":slug.includes("webp")?"webp":"jpg";return`${stem}-${slug}.${extension}`;}
 function safeArchiveName(value:string){return value.replace(/^[. ]+|[. ]+$/g,"").replace(/[<>:"/\\|?*\u0000-\u001f]/g,"_")||"file";}
 function uniqueName(name:string,entries:Record<string,Uint8Array>){if(!entries[name])return name;const dot=name.lastIndexOf("."),stem=dot>0?name.slice(0,dot):name,ext=dot>0?name.slice(dot):"";let n=2;while(entries[`${stem} (${n})${ext}`])n++;return `${stem} (${n})${ext}`;}
