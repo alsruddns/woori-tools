@@ -234,11 +234,122 @@ const sampleSteps: Record<Locale, (value: string) => string> = {
   hi: (value) => `इनपुट दर्ज करें या सेटिंग चुनें; शुरुआत में ${value} आज़मा सकते हैं।`,
 };
 
-export function getToolContent(slug:string,locale:Locale,localizedDescription?:string) {
+const categoryActions: Record<Locale, Record<string, string>> = {
+  ko:{random:"추첨 범위·대상·개수를 화면에 표시된 조건에 맞게 정합니다.","date-time":"날짜·시간·기간 도구라면 입력한 시간대와 단위를 확인하고 계산을 실행합니다.",fortune:"안내된 읽기 방식이나 날짜 조건을 고른 뒤 결과가 어떤 기준으로 나왔는지 확인합니다.",image:"이미지를 선택하고 크기·비율·효과 등 이 도구에 표시된 조정 항목을 설정합니다.",pdf:"PDF를 선택하고 페이지 범위나 순서처럼 필요한 문서 작업 조건을 입력합니다.",text:"텍스트를 붙여 넣고 변환 방식, 구분자 또는 처리 범위를 선택합니다.",developer:"코드나 구조화된 값을 입력하고 형식·패턴·변환 방향을 지정합니다.",utility:"화면에 표시된 입력 형식에 맞춰 값을 넣고 필요한 검사·생성 옵션을 선택합니다."},
+  en:{random:"Set the draw range, participants, or quantity using the controls shown for this tool.","date-time":"For a date, time, or duration task, check the time zone and units before calculating.",fortune:"Choose the reading mode or date requested, then note the basis used for the result.",image:"Choose an image and adjust the dimensions, ratio, or effect controls available here.",pdf:"Choose the PDF and enter document options such as page ranges or page order.",text:"Paste text, then choose the transformation, separator, or portion to process.",developer:"Enter code or structured data, then set the format, pattern, or conversion direction.",utility:"Enter a value in the format shown and select the relevant check or generation options."},
+  ja:{random:"画面の項目に沿って、抽選範囲・対象・個数を設定します。","date-time":"日付・時刻・期間を扱う場合は、タイムゾーンと単位を確認して計算します。",fortune:"案内されている占い方や日付を選び、結果の前提を確認します。",image:"画像を選び、サイズ・比率・効果など表示された項目を調整します。",pdf:"PDFを選び、ページ範囲や並び順など必要な条件を指定します。",text:"テキストを貼り付け、変換方法や区切り、処理範囲を選びます。",developer:"コードや構造化データを入力し、形式・パターン・変換方向を指定します。",utility:"画面に示された形式で入力し、必要な検査または生成の設定を選びます。"},
+  zh:{random:"按页面提供的条件设置抽取范围、参与者或数量。","date-time":"处理日期、时间或时长时，先确认时区和单位再计算。",fortune:"选择页面提供的解读方式或日期，并留意结果采用的依据。",image:"选择图片，并调整此工具提供的尺寸、比例或效果选项。",pdf:"选择PDF文件，并填写页码范围或页面顺序等文档条件。",text:"粘贴文本，再选择转换方式、分隔符或处理范围。",developer:"输入代码或结构化数据，再指定格式、匹配模式或转换方向。",utility:"按页面标注的格式输入内容，并选择所需的检查或生成选项。"},
+  es:{random:"Define el rango, los participantes o la cantidad según las opciones de esta herramienta.","date-time":"Si trabajas con fechas, horas o duraciones, comprueba la zona horaria y las unidades antes de calcular.",fortune:"Elige el tipo de lectura o la fecha solicitada y ten en cuenta el criterio del resultado.",image:"Selecciona una imagen y ajusta las dimensiones, la proporción o los efectos disponibles.",pdf:"Selecciona el PDF e indica opciones como el intervalo o el orden de las páginas.",text:"Pega el texto y elige la transformación, el separador o el fragmento que quieres procesar.",developer:"Introduce código o datos estructurados y define el formato, el patrón o la dirección de conversión.",utility:"Introduce el valor en el formato indicado y selecciona las opciones de comprobación o creación necesarias."},
+  "pt-br":{random:"Defina o intervalo, os participantes ou a quantidade conforme as opções desta ferramenta.","date-time":"Para datas, horários ou durações, confira o fuso horário e as unidades antes de calcular.",fortune:"Escolha o tipo de leitura ou a data solicitada e observe o critério usado no resultado.",image:"Selecione uma imagem e ajuste as dimensões, a proporção ou os efeitos disponíveis.",pdf:"Selecione o PDF e informe opções como intervalo ou ordem das páginas.",text:"Cole o texto e escolha a transformação, o separador ou o trecho a processar.",developer:"Insira código ou dados estruturados e defina o formato, o padrão ou a direção da conversão.",utility:"Informe o valor no formato indicado e selecione as opções de verificação ou geração necessárias."},
+  de:{random:"Lege den Zahlenbereich, die Teilnehmenden oder die Anzahl mit den verfügbaren Optionen fest.","date-time":"Prüfe bei Datum, Uhrzeit oder Dauer zuerst Zeitzone und Einheiten.",fortune:"Wähle die angebotene Deutung oder das erforderliche Datum und beachte die Grundlage des Ergebnisses.",image:"Wähle ein Bild und passe verfügbare Maße, Seitenverhältnis oder Effekte an.",pdf:"Wähle die PDF-Datei und gib Seitenbereich oder Seitenreihenfolge an.",text:"Füge Text ein und wähle Umwandlung, Trennzeichen oder den zu bearbeitenden Abschnitt.",developer:"Gib Code oder strukturierte Daten ein und lege Format, Muster oder Umwandlungsrichtung fest.",utility:"Gib einen Wert im angegebenen Format ein und wähle die benötigte Prüfung oder Erzeugung."},
+  fr:{random:"Définissez la plage, les participants ou le nombre à l’aide des options proposées.","date-time":"Pour une date, une heure ou une durée, vérifiez le fuseau horaire et les unités avant le calcul.",fortune:"Choisissez le type de tirage ou la date demandée, puis tenez compte de la base utilisée pour le résultat.",image:"Choisissez une image et réglez les dimensions, le ratio ou les effets disponibles.",pdf:"Choisissez le PDF et indiquez les pages ou leur ordre selon l’opération souhaitée.",text:"Collez le texte, puis choisissez la transformation, le séparateur ou la partie à traiter.",developer:"Saisissez du code ou des données structurées, puis indiquez le format, le motif ou le sens de conversion.",utility:"Saisissez une valeur au format indiqué et choisissez le contrôle ou la génération souhaités."},
+  vi:{random:"Đặt phạm vi, người tham gia hoặc số lượng theo các tùy chọn của công cụ.","date-time":"Với ngày, giờ hoặc khoảng thời gian, hãy kiểm tra múi giờ và đơn vị trước khi tính.",fortune:"Chọn cách xem hoặc ngày được yêu cầu, đồng thời lưu ý cơ sở tạo ra kết quả.",image:"Chọn ảnh rồi điều chỉnh kích thước, tỷ lệ hoặc hiệu ứng mà công cụ cung cấp.",pdf:"Chọn PDF và nhập điều kiện như phạm vi trang hoặc thứ tự trang.",text:"Dán văn bản, sau đó chọn cách chuyển đổi, dấu phân cách hoặc phần cần xử lý.",developer:"Nhập mã hoặc dữ liệu có cấu trúc, rồi chọn định dạng, mẫu hoặc chiều chuyển đổi.",utility:"Nhập giá trị theo định dạng được hướng dẫn và chọn tùy chọn kiểm tra hoặc tạo phù hợp."},
+  id:{random:"Atur rentang, peserta, atau jumlah melalui opsi yang tersedia di alat ini.","date-time":"Untuk tanggal, waktu, atau durasi, periksa zona waktu dan satuan sebelum menghitung.",fortune:"Pilih jenis bacaan atau tanggal yang diminta, lalu perhatikan dasar hasilnya.",image:"Pilih gambar, lalu sesuaikan dimensi, rasio, atau efek yang tersedia.",pdf:"Pilih PDF dan masukkan ketentuan seperti rentang atau urutan halaman.",text:"Tempel teks, lalu pilih transformasi, pemisah, atau bagian yang akan diproses.",developer:"Masukkan kode atau data terstruktur, lalu tentukan format, pola, atau arah konversi.",utility:"Masukkan nilai sesuai format yang ditampilkan dan pilih pemeriksaan atau pembuatan yang diperlukan."},
+  th:{random:"กำหนดช่วง ผู้เข้าร่วม หรือจำนวนตามตัวเลือกของเครื่องมือนี้","date-time":"หากใช้วันที่ เวลา หรือระยะเวลา ให้ตรวจเขตเวลาและหน่วยก่อนคำนวณ",fortune:"เลือกวิธีอ่านหรือวันที่ตามที่ระบุ แล้วพิจารณาหลักที่ใช้สร้างผลลัพธ์",image:"เลือกรูปภาพ แล้วปรับขนาด สัดส่วน หรือเอฟเฟกต์ที่มีให้",pdf:"เลือกไฟล์ PDF แล้วระบุเงื่อนไข เช่น ช่วงหน้าหรือลำดับหน้า",text:"วางข้อความ แล้วเลือกวิธีแปลง ตัวคั่น หรือส่วนที่ต้องการประมวลผล",developer:"ป้อนโค้ดหรือข้อมูลแบบมีโครงสร้าง แล้วกำหนดรูปแบบ แพตเทิร์น หรือทิศทางการแปลง",utility:"ป้อนค่าตามรูปแบบที่แสดง แล้วเลือกตัวเลือกตรวจสอบหรือสร้างที่ต้องการ"},
+  "zh-tw":{random:"依照此工具提供的選項設定抽取範圍、參與者或數量。","date-time":"處理日期、時間或時長時，先確認時區與單位再計算。",fortune:"選擇頁面提供的解讀方式或日期，並留意結果採用的依據。",image:"選擇圖片，調整此工具提供的尺寸、比例或效果。",pdf:"選擇 PDF 檔案，設定頁碼範圍或頁面順序等條件。",text:"貼上文字，再選擇轉換方式、分隔符號或處理範圍。",developer:"輸入程式碼或結構化資料，再指定格式、模式或轉換方向。",utility:"依照畫面標示的格式輸入資料，並選擇所需的檢查或產生選項。"},
+  it:{random:"Imposta l’intervallo, i partecipanti o la quantità usando le opzioni disponibili.","date-time":"Per date, orari o durate, controlla il fuso orario e le unità prima del calcolo.",fortune:"Scegli il tipo di lettura o la data richiesta e considera il criterio alla base del risultato.",image:"Seleziona un’immagine e regola dimensioni, proporzioni o effetti disponibili.",pdf:"Seleziona il PDF e indica l’intervallo o l’ordine delle pagine necessario.",text:"Incolla il testo e scegli la trasformazione, il separatore o la parte da elaborare.",developer:"Inserisci codice o dati strutturati e imposta formato, schema o direzione della conversione.",utility:"Inserisci un valore nel formato indicato e scegli il controllo o la generazione necessari."},
+  nl:{random:"Stel het bereik, de deelnemers of het aantal in met de opties van deze tool.","date-time":"Controleer bij datums, tijden of tijdsduren eerst de tijdzone en eenheden.",fortune:"Kies de aangeboden lezing of gevraagde datum en let op de grondslag van de uitkomst.",image:"Kies een afbeelding en pas de beschikbare afmetingen, verhouding of effecten aan.",pdf:"Kies het PDF-bestand en geef bijvoorbeeld paginabereik of paginavolgorde op.",text:"Plak tekst en kies de omzetting, scheidingstekens of het te verwerken deel.",developer:"Voer code of gestructureerde gegevens in en kies de indeling, het patroon of de conversierichting.",utility:"Voer een waarde in het aangegeven formaat in en kies de gewenste controle of generatie."},
+  hi:{random:"इस टूल के विकल्पों से सीमा, प्रतिभागियों या संख्या को तय करें।","date-time":"तारीख, समय या अवधि के लिए गणना से पहले समय क्षेत्र और इकाइयाँ जाँचें।",fortune:"दिया गया पठन प्रकार या तारीख चुनें और परिणाम के आधार को ध्यान में रखें।",image:"छवि चुनें और उपलब्ध आकार, अनुपात या प्रभाव समायोजित करें।",pdf:"PDF चुनें और पृष्ठ सीमा या क्रम जैसी आवश्यक शर्तें दर्ज करें।",text:"टेक्स्ट चिपकाएँ, फिर रूपांतरण, विभाजक या संसाधित किया जाने वाला भाग चुनें।",developer:"कोड या संरचित डेटा दर्ज करें और प्रारूप, पैटर्न या रूपांतरण दिशा तय करें।",utility:"दिखाए गए प्रारूप में मान दर्ज करें और आवश्यक जाँच या निर्माण विकल्प चुनें।"},
+};
+
+const storageNotes: Record<Locale, string> = {
+  ko:"이 도구는 설정이나 최근 결과를 이 브라우저의 localStorage에 저장할 수 있습니다. 브라우저 데이터를 지우면 함께 삭제됩니다.",
+  en:"This tool may save settings or recent results in this browser's localStorage. Clearing browser data removes them.",
+  ja:"設定や最近の結果を、このブラウザーのlocalStorageに保存する場合があります。ブラウザーのデータを消去すると削除されます。",
+  zh:"此工具可能会将设置或最近结果保存在当前浏览器的 localStorage 中；清除浏览器数据后会一并删除。",
+  es:"Esta herramienta puede guardar ajustes o resultados recientes en el almacenamiento local del navegador. Se eliminan al borrar sus datos.",
+  "pt-br":"Esta ferramenta pode salvar configurações ou resultados recentes no armazenamento local do navegador. Eles são removidos ao limpar os dados do navegador.",
+  de:"Diese Funktion kann Einstellungen oder letzte Ergebnisse im localStorage dieses Browsers speichern. Beim Löschen der Browserdaten werden sie entfernt.",
+  fr:"Cet outil peut enregistrer des réglages ou des résultats récents dans le stockage local du navigateur. Ils disparaissent lorsque ses données sont effacées.",
+  vi:"Công cụ có thể lưu cài đặt hoặc kết quả gần đây trong bộ nhớ cục bộ của trình duyệt này. Dữ liệu sẽ bị xóa khi bạn xóa dữ liệu trình duyệt.",
+  id:"Alat ini dapat menyimpan pengaturan atau hasil terbaru di penyimpanan lokal browser. Data tersebut akan terhapus saat data browser dibersihkan.",
+  th:"เครื่องมือนี้อาจบันทึกการตั้งค่าหรือผลล่าสุดไว้ใน localStorage ของเบราว์เซอร์ เมื่อล้างข้อมูลเบราว์เซอร์ ข้อมูลนี้จะถูกลบด้วย",
+  "zh-tw":"此工具可能會將設定或最近結果儲存在目前瀏覽器的 localStorage；清除瀏覽器資料時也會一併刪除。",
+  it:"Questo strumento può salvare impostazioni o risultati recenti nella memoria locale del browser. Verranno eliminati cancellando i dati del browser.",
+  nl:"Deze tool kan instellingen of recente resultaten opslaan in de lokale browseropslag. Ze worden verwijderd wanneer je browsergegevens wist.",
+  hi:"यह टूल सेटिंग या हाल के परिणाम इस ब्राउज़र के localStorage में रख सकता है। ब्राउज़र डेटा साफ़ करने पर वे भी हट जाते हैं।",
+};
+
+const storageSlugs = new Set([
+  "lotto-number-generator", "powerball-number-generator", "mega-millions-number-generator",
+  "japan-loto6-number-generator", "japan-loto7-number-generator", "japan-mini-loto-number-generator",
+  "wareki-converter", "hiragana-katakana-converter", "fullwidth-halfwidth-converter",
+  "japanese-romaji-converter", "japanese-number-kanji-converter", "yakudoshi-calculator",
+  "japanese-zodiac-calculator", "numbers3-number-generator", "numbers4-number-generator",
+  "bingo5-number-generator", "pomodoro-timer", "world-clock",
+]);
+
+const categoryKey = (slug:string, category?:string) => {
+  if (slug.includes("loto") || slug.includes("lotto") || slug.includes("powerball") || slug.includes("mega-millions") || slug.includes("numbers3") || slug.includes("numbers4") || slug.includes("bingo5")) return "random";
+  return category ?? "utility";
+};
+
+function generatedSteps(slug:string, locale:Locale, sample:string, category?:string, title?:string) {
+  const [input, output] = sample.split("→").map((part) => part.trim());
+  const name = title?.trim() || slug;
+  const action = categoryActions[locale][categoryKey(slug, category)] ?? categoryActions[locale].utility;
+  const review:Record<Locale,(tool:string, sample:string)=>string> = {
+    ko:(tool,s)=>`${tool}를 실행한 뒤 결과를 확인하고, 예시 ${s}와 입력 형식·출력 모양을 비교합니다.`,
+    en:(tool,s)=>`Run ${tool}, then compare the result with the example ${s} before copying or downloading it.`,
+    ja:(tool,s)=>`${tool}を実行し、コピーや保存の前に結果を例 ${s} と照らし合わせます。`,
+    zh:(tool,s)=>`运行${tool}后，将结果与示例 ${s} 对照，再决定是否复制或下载。`,
+    es:(tool,s)=>`Ejecuta ${tool} y compara el resultado con el ejemplo ${s} antes de copiarlo o descargarlo.`,
+    "pt-br":(tool,s)=>`Execute ${tool} e compare o resultado com o exemplo ${s} antes de copiar ou baixar.`,
+    de:(tool,s)=>`Führe ${tool} aus und vergleiche das Ergebnis vor dem Kopieren oder Herunterladen mit ${s}.`,
+    fr:(tool,s)=>`Lancez ${tool}, puis comparez le résultat à l’exemple ${s} avant de le copier ou de le télécharger.`,
+    vi:(tool,s)=>`Chạy ${tool}, rồi đối chiếu kết quả với ví dụ ${s} trước khi sao chép hoặc tải xuống.`,
+    id:(tool,s)=>`Jalankan ${tool}, lalu bandingkan hasilnya dengan contoh ${s} sebelum menyalin atau mengunduh.`,
+    th:(tool,s)=>`เรียกใช้${tool} แล้วเปรียบเทียบผลกับตัวอย่าง ${s} ก่อนคัดลอกหรือดาวน์โหลด`,
+    "zh-tw":(tool,s)=>`執行${tool}後，先將結果與範例 ${s} 比對，再複製或下載。`,
+    it:(tool,s)=>`Avvia ${tool} e confronta il risultato con l’esempio ${s} prima di copiarlo o scaricarlo.`,
+    nl:(tool,s)=>`Voer ${tool} uit en vergelijk het resultaat met voorbeeld ${s} voordat je het kopieert of downloadt.`,
+    hi:(tool,s)=>`${tool} चलाएँ और कॉपी या डाउनलोड करने से पहले परिणाम की तुलना ${s} उदाहरण से करें।`,
+  };
+  return [sampleSteps[locale](input || sample), action, review[locale](name, output || input || sample)];
+}
+
+export function getLocalizedToolAction(slug:string, locale:Locale, category?:string) {
+  return categoryActions[locale][categoryKey(slug, category)] ?? categoryActions[locale].utility;
+}
+
+const japanLotterySteps:Record<string,Partial<Record<Locale,string[]>>> = {
+  "powerball-number-generator":{
+    ko:["한 게임 또는 다섯 게임을 고릅니다.","흰 공 5개와 Powerball 1개의 추첨 결과를 확인합니다.","흰 공과 Powerball을 함께 복사하거나 새 조합을 추첨합니다."],
+    en:["Choose one or five games.","Review the five white balls and the separately drawn Powerball.","Copy the white-ball and Powerball picks together, or draw a fresh game."],
+    ja:["1口または5口を選びます。","白いボール5個と別枠のPowerballを確認します。","白いボールとPowerballをまとめてコピーするか、新しく抽選します。"],
+    zh:["选择抽取一注或五注。","查看5个白球及单独抽取的Powerball。","复制白球和Powerball组合，或重新抽取一注。"],
+  },
+  "mega-millions-number-generator":{
+    ko:["한 게임 또는 다섯 게임을 고릅니다.","메인 번호 5개와 별도로 추첨된 Mega Ball을 확인합니다.","메인 번호와 Mega Ball 조합을 복사하거나 새 게임을 추첨합니다."],
+    en:["Choose one or five games.","Review the five main numbers and the separately drawn Mega Ball.","Copy the main-number and Mega Ball pick together, or draw a fresh game."],
+    ja:["1口または5口を選びます。","メイン数字5個と別枠のMega Ballを確認します。","メイン数字とMega Ballをまとめてコピーするか、新しく抽選します。"],
+    zh:["选择抽取一注或五注。","查看5个主号码及单独抽取的Mega Ball。","复制主号码和Mega Ball组合，或重新抽取一注。"],
+  },
+  "japan-loto6-number-generator":{
+    ko:["한 게임 또는 다섯 게임을 고르고, 각 게임에서 1~43 중 서로 다른 6개를 추첨합니다.","추첨된 여섯 번호와 오름차순 정렬을 확인합니다.","필요한 6개 번호 조합을 복사하거나 다시 추첨합니다."],
+    en:["Choose one or five games; each game draws six distinct numbers from 1 to 43.","Check the six-number result and its ascending order.","Copy the 6-number combination you need or draw another set."],
+    ja:["1口または5口を選び、各口で1～43から異なる6個を抽選します。","抽選された6個の数字と昇順表示を確認します。","必要な6個の組み合わせをコピーするか、もう一度抽選します。"],
+    zh:["选择一注或五注，每注从1至43中抽取6个不同号码。","查看抽出的6个号码及其升序排列。","复制需要的6个号码组合，或再次抽取。"],
+  },
+  "japan-loto7-number-generator":{
+    ko:["한 게임 또는 다섯 게임을 고르고, 각 게임에서 1~37 중 서로 다른 7개를 추첨합니다.","추첨된 일곱 번호와 오름차순 정렬을 확인합니다.","필요한 7개 번호 조합을 복사하거나 다시 추첨합니다."],
+    en:["Choose one or five games; each game draws seven distinct numbers from 1 to 37.","Check the seven-number result and its ascending order.","Copy the 7-number combination you need or draw another set."],
+    ja:["1口または5口を選び、各口で1～37から異なる7個を抽選します。","抽選された7個の数字と昇順表示を確認します。","必要な7個の組み合わせをコピーするか、もう一度抽選します。"],
+    zh:["选择一注或五注，每注从1至37中抽取7个不同号码。","查看抽出的7个号码及其升序排列。","复制需要的7个号码组合，或再次抽取。"],
+  },
+  "japan-mini-loto-number-generator":{
+    ko:["한 게임 또는 다섯 게임을 고르고, 각 게임에서 1~31 중 서로 다른 5개를 추첨합니다.","추첨된 다섯 번호와 오름차순 정렬을 확인합니다.","필요한 5개 번호 조합을 복사하거나 다시 추첨합니다."],
+    en:["Choose one or five games; each game draws five distinct numbers from 1 to 31.","Check the five-number result and its ascending order.","Copy the 5-number combination you need or draw another set."],
+    ja:["1口または5口を選び、各口で1～31から異なる5個を抽選します。","抽選された5個の数字と昇順表示を確認します。","必要な5個の組み合わせをコピーするか、もう一度抽選します。"],
+    zh:["选择一注或五注，每注从1至31中抽取5个不同号码。","查看抽出的5个号码及其升序排列。","复制需要的5个号码组合，或再次抽取。"],
+  },
+};
+
+export function getToolContent(slug:string,locale:Locale,localizedDescription?:string,localizedTitle?:string,category?:string) {
   // Preserve the hand-written guide when it exists. Previously the generic
   // phase guide intercepted every tool in the eleven newer locales.
   const authored = content[slug]?.[locale];
-  if (authored) return { ...authored, headings: headings[locale] };
+  if (authored) return { ...authored, steps:japanLotterySteps[slug]?.[locale] ?? authored.steps, headings: headings[locale] };
 
   const guide = japanToolSlugs.has(slug)
     ? japanCoreGuides[locale] ?? phaseGuides[locale]
@@ -249,9 +360,13 @@ export function getToolContent(slug:string,locale:Locale,localizedDescription?:s
   return {
     overview: localizedDescription?.trim() || `${headings[locale].overview}: ${sample}`,
     ...guide,
-    steps: [sampleSteps[locale](sample.split("→")[0].trim()), ...guide.steps.slice(1)],
+    steps: generatedSteps(slug, locale, sample, category, localizedTitle),
     example: `${examplePrefixes[locale]} ${sample}`,
     caution: riskNote ?? guide.caution,
     headings: headings[locale],
   };
+}
+
+export function getToolStorageNote(slug:string,locale:Locale) {
+  return storageSlugs.has(slug) ? storageNotes[locale] : undefined;
 }

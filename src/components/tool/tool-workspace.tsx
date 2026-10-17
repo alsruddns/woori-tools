@@ -113,11 +113,11 @@ export function ToolWorkspace({ tool, phaseLocale, messages }: { tool: ToolDefin
     if (bad) { setError(messages.errors.tooLarge.replace("{size}", String(isImage ? 30 : 50))); return; }
     if(isFileTool&&(incoming.length>100||incoming.reduce((sum,file)=>sum+file.size,0)>200*1024*1024)){setError(selectionLimitMessages[phaseLocale].files);return;}
     if(tool.slug==="image-collage"&&(incoming.length>6||incoming.reduce((sum,file)=>sum+file.size,0)>100*1024*1024)){setError(selectionLimitMessages[phaseLocale].images);return;}
-    const valid = incoming.filter((file) => isImage ? (/^image\//.test(file.type) || /\.heic$/i.test(file.name)) : isPdf ? (file.type === "application/pdf" || /\.pdf$/i.test(file.name)) : true);
+    const valid = incoming.filter((file) => isImage ? (/^image\//.test(file.type) || /\.heic$/i.test(file.name) || /\.heif$/i.test(file.name)) : isPdf ? (file.type === "application/pdf" || /\.pdf$/i.test(file.name)) : true);
     if (valid.length !== incoming.length) { setError(isImage ? messages.errors.imageOnly : messages.errors.pdfOnly); return; }
     const selected = tool.slug==="image-collage" || isFileTool || (isPdf && tool.slug !== "pdf-split" && tool.slug !== "pdf-delete-pages" && tool.slug !== "pdf-rotate-pages" && tool.slug !== "pdf-add-page-numbers" && tool.slug !== "pdf-watermark" && tool.slug !== "pdf-metadata-viewer" && tool.slug !== "pdf-remove-metadata") ? valid : valid.slice(0, 1);
     setFiles(selected);
-    setPreviewUrl(selected[0] && isImage && !/\.heic$/i.test(selected[0].name) ? URL.createObjectURL(selected[0]) : "");
+    setPreviewUrl(selected[0] && isImage && !/\.(heic|heif)$/i.test(selected[0].name) ? URL.createObjectURL(selected[0]) : "");
     setError(""); setResult(""); setOutputUrl("");
   }
 

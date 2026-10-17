@@ -30,6 +30,17 @@ const { tools } = await importTs("../src/registry/tools.ts", [
 const japanTranslationModule = await importTs("../src/registry/japan-tool-translations.ts");
 globalThis.__japanToolTranslations = japanTranslationModule.japanToolTranslations;
 globalThis.__japanToolKeywords = japanTranslationModule.japanToolKeywords;
+const toolContentModule = await importTs("../src/registry/tool-content.ts", [[
+  'import { toolExampleInputs } from "@/registry/tool-example-inputs";',
+  "const toolExampleInputs = globalThis.__toolExampleInputs;",
+], [
+  'import { COUNTRY_TOOL_SLUGS } from "@/lib/country-tool-slugs";',
+  `const COUNTRY_TOOL_SLUGS = globalThis.__countryToolSlugs;`,
+], [
+  'import { getToolRiskNote } from "@/registry/tool-risk-notes";',
+  "const getToolRiskNote = globalThis.__getToolRiskNote;",
+]]);
+globalThis.__getLocalizedToolAction = toolContentModule.getLocalizedToolAction;
 const { localizeTool } = await importTs("../src/registry/tool-translations.ts", [[
   'import { getNewToolTranslation } from "./new-tool-translations";',
   'const { getNewToolTranslation } = globalThis.__newToolTranslations;',
@@ -39,6 +50,9 @@ const { localizeTool } = await importTs("../src/registry/tool-translations.ts", 
 ], [
   'import { countryToolKeywords, countryToolTranslations } from "./country-tool-translations";',
   'const countryToolTranslations = globalThis.__countryToolTranslations; const countryToolKeywords = globalThis.__countryToolKeywords;',
+], [
+  'import { getLocalizedToolAction } from "./tool-content";',
+  "const getLocalizedToolAction = globalThis.__getLocalizedToolAction;",
 ]]);
 const { getToolContent } = await importTs("../src/registry/tool-content.ts", [[
   'import { toolExampleInputs } from "@/registry/tool-example-inputs";',

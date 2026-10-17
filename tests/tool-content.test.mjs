@@ -19,7 +19,10 @@ const { outputText } = ts.transpileModule(source, {
   compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
 });
 const { getToolContent } = await import("data:text/javascript;base64," + Buffer.from(outputText).toString("base64"));
-const slugs = [...source.matchAll(/^  (?:"([^"]+)"|([\w-]+)):\s*\{/gm)]
+const contentStart = source.indexOf("const content:");
+const headingsStart = source.indexOf("const headings:");
+const contentSource = source.slice(contentStart, headingsStart);
+const slugs = [...contentSource.matchAll(/^  (?:"([^"]+)"|([\w-]+)):\s*\{/gm)]
   .map((match) => match[1] ?? match[2])
   .filter((slug) => !["ko", "en", "ja", "zh"].includes(slug))
   .concat(countrySlugs);

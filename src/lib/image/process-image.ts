@@ -9,7 +9,7 @@ export async function processImage(slug:string,file:File,options:ImageOptions,lo
   const messages=getMessages(locale);
   if(file.size>30*1024*1024)throw new Error(messages.errors.tooLarge.replace("{size}","30"));
   let source:Blob=file;
-  if(/\.heic$/i.test(file.name)||file.type==="image/heic"||file.type==="image/heif"){
+  if(/\.(heic|heif)$/i.test(file.name)||file.type==="image/heic"||file.type==="image/heif"){
     const heic2any=(await import("heic2any")).default;
     const converted=await heic2any({blob:file,toType:"image/jpeg",quality:options.quality});
     source=Array.isArray(converted)?converted[0]:converted;
