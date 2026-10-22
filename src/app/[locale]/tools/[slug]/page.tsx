@@ -23,6 +23,7 @@ import { RussianImageColorPickerWorkspace } from "@/components/tool/russian-imag
 import { RussianPdfWorkspace, type RussianPdfSlug } from "@/components/tool/russian-pdf-workspace";
 import { RussianTextCompareWorkspace } from "@/components/tool/russian-text-compare-workspace";
 import { RussianStructuredDataWorkspace, type RussianDataSlug } from "@/components/tool/russian-structured-data-workspace";
+import { RussianEncodingWorkspace, type RussianEncodingSlug } from "@/components/tool/russian-encoding-workspace";
 import { RussianMarkdownWorkspace } from "@/components/tool/russian-markdown-workspace";
 import { CountdownWorkspace } from "@/components/tool/countdown-workspace";
 import { RandomStringWorkspace } from "@/components/tool/random-string-workspace";
@@ -199,6 +200,12 @@ function isRussianDataSlug(slug: string): slug is RussianDataSlug {
   return russianDataSlugs.includes(slug);
 }
 
+const russianEncodingSlugs: readonly string[] = ["base64", "url-encode-decode", "timestamp-converter", "uuid-generator", "uuid-v7-generator", "ulid-generator", "base32-encoder-decoder"];
+
+function isRussianEncodingSlug(slug: string): slug is RussianEncodingSlug {
+  return russianEncodingSlugs.includes(slug);
+}
+
 function RussianPublishedToolPage({ slug }: { slug: string }) {
   const baseTool = getTool(slug);
   const translation = getTargetRussianToolTranslation(slug);
@@ -266,6 +273,8 @@ function RussianPublishedToolPage({ slug }: { slug: string }) {
                                                 ? <RussianPdfWorkspace slug={slug} />
                                               : isRussianDataSlug(slug)
                                                 ? <RussianStructuredDataWorkspace slug={slug} />
+                                              : isRussianEncodingSlug(slug)
+                                                ? <RussianEncodingWorkspace slug={slug} />
                                               : slug === "text-compare"
                                                 ? <RussianTextCompareWorkspace />
     : slug === "regex-tester"
