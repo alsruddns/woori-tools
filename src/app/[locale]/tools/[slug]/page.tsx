@@ -303,6 +303,10 @@ function RussianPublishedToolPage({ slug }: { slug: string }) {
                                     ? <RussianImageEffectsWorkspace slug="image-blur" />
                                     : slug === "image-pixelate"
                                       ? <RussianImageEffectsWorkspace slug="image-pixelate" />
+                                      : slug === "social-image-resize"
+                                        ? <RussianImageEffectsWorkspace slug="social-image-resize" />
+                                        : slug === "add-text-to-image"
+                                          ? <RussianImageEffectsWorkspace slug="add-text-to-image" />
                                       : slug === "remove-image-metadata"
                                         ? <RussianImageUtilityWorkspace slug="remove-image-metadata" />
                                         : slug === "image-info"
