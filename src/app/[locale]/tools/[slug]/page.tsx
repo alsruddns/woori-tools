@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ToolWorkspace } from "@/components/tool/tool-workspace";
 import { BarcodeWorkspace } from "@/components/tool/barcode-workspace";
+import { RussianMarkdownWorkspace } from "@/components/tool/russian-markdown-workspace";
 import { ToolDetailLayout } from "@/components/tool/tool-detail-layout";
 import { getMessages } from "@/i18n/messages";
 import { isLocale, localizePath, type Locale } from "@/i18n/routing";
@@ -165,13 +166,15 @@ function RussianPublishedToolPage({ slug }: { slug: string }) {
   const seoVerified = targetLocalePublication.ru.seoVerifiedToolSlugs.includes(slug);
   const published = targetLocalePublication.ru.publishedToolSlugs.includes(slug);
   if (!baseTool || !baseTool.supportedLocales.includes("ru") || !translation || !uiVerified || !seoVerified || !published) notFound();
+  const workspace = slug === "barcode-generator" ? <BarcodeWorkspace locale="ru" /> : slug === "markdown-preview" ? <RussianMarkdownWorkspace /> : null;
+  if (!workspace) notFound();
   const tool = localizePublishedTool(baseTool, "ru");
   const messages = getMessages("ru");
   const url = `https://www.woori.today/ru/tools/${slug}`;
   return <main className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
     <nav aria-label={messages.breadcrumb} className="mb-6 text-sm text-slate-500"><Link href="/ru/tools" className="hover:text-indigo-700">{messages.tools}</Link><span aria-hidden="true"> / </span><span aria-current="page" className="text-slate-700">{tool.title}</span></nav>
     <header className="mb-7"><p className="mb-2 text-sm font-semibold text-indigo-700">{translation.category}</p><h1 className="text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">{tool.title}</h1><p className="mt-3 max-w-3xl text-lg leading-8 text-slate-600">{tool.description}</p></header>
-    <BarcodeWorkspace locale="ru" />
+    {workspace}
     <section className="mt-12 space-y-8">
       <article><h2 className="text-2xl font-bold">Об этом инструменте</h2><p className="mt-3 leading-7 text-slate-700">{translation.description}</p></article>
       <article><h2 className="text-xl font-bold">Как пользоваться</h2><ol className="mt-4 list-inside list-decimal space-y-2 text-slate-700">{translation.steps.map((step) => <li key={step}>{step}</li>)}</ol></article>

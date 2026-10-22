@@ -137,7 +137,7 @@ assert.equal(toolSitemapEntries.length, expectedToolUrls, "sitemap must contain 
 assert.equal(new Set(toolSitemapEntries.map((entry) => entry.url)).size, expectedToolUrls, "duplicate tool sitemap URL");
 assert.ok(toolSitemapEntries.every((entry) => entry.url.startsWith(`${SITE_ORIGIN}/`)), "sitemap URL has wrong origin");
 assert.ok(toolSitemapEntries.every((entry) => entry.alternates.languages["x-default"]), "tool sitemap URL missing x-default alternate");
-assert.ok(toolSitemapEntries.every((entry) => Object.keys(entry.alternates.languages).length === (entry.url.endsWith("/barcode-generator") ? 17 : 16)), "tool sitemap alternate must match each tool's published locales and x-default");
+assert.ok(toolSitemapEntries.every((entry) => Object.keys(entry.alternates.languages).length === (entry.url.endsWith("/barcode-generator") || entry.url.endsWith("/markdown-preview") ? 17 : 16)), "tool sitemap alternate must match each tool's published locales and x-default");
 
 async function sourceFiles(directory: string): Promise<string[]> {
   const result: string[] = [];

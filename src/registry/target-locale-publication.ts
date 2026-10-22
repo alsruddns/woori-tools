@@ -8,9 +8,9 @@ type LocalePublication = {
 
 export const targetLocalePublication = {
   ru: {
-    uiVerifiedToolSlugs: ["barcode-generator"],
-    seoVerifiedToolSlugs: ["barcode-generator"],
-    publishedToolSlugs: ["barcode-generator"],
+    uiVerifiedToolSlugs: ["barcode-generator", "markdown-preview"],
+    seoVerifiedToolSlugs: ["barcode-generator", "markdown-preview"],
+    publishedToolSlugs: ["barcode-generator", "markdown-preview"],
   },
   tr: { uiVerifiedToolSlugs: [], seoVerifiedToolSlugs: [], publishedToolSlugs: [] },
   pl: { uiVerifiedToolSlugs: [], seoVerifiedToolSlugs: [], publishedToolSlugs: [] },
