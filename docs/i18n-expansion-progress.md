@@ -31,8 +31,14 @@ Routable locales: 16 (ko, en, ja, zh, es, pt-br, de, fr, vi, id, th, zh-tw, it, 
 - Russian shared site, search, workspace, error, privacy, and terms messages are wired for the published route; non-Russian target UI messages remain unpublished.
 - Only tool-locale URLs listed in the registry are included in the sitemap and hreflang sets.
 
-## Remaining Russian tools
+## Remaining Russian translation data
 
+
+## Remaining Russian implementation work
+
+- Authoring is complete for all 176 Russian tool editorial bundles, but only barcode-generator has passed UI and SEO verification and is publicly routable.
+- Next: connect the other tool workspaces and their localized control, input, result, status, and error copy; verify each tool before adding it to the UI, SEO, and published sets.
+- Do not start the next locale until Russian UI integration and publication checks are complete.
 
 ## Last verified checkpoint
 
@@ -41,4 +47,4 @@ Routable locales: 16 (ko, en, ja, zh, es, pt-br, de, fr, vi, id, th, zh-tw, it, 
 - Russian canonical, hreflang, x-default, Open Graph, route rendering, and sitemap membership passed source and build checks for barcode-generator.
 - The verified route set is intentionally limited to published tool slugs; the remaining Russian tools are not routable or indexed.
 - Current branch is `develop`.
-- Next Russian translation-data tool: `none`.
+- Next Russian translation-data tool: `none`; next implementation step: Russian workspace UI integration.
