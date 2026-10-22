@@ -6,6 +6,7 @@ const lotteryTools = {
   "mega-millions-number-generator": { count: 5, range: "1–70", kind: "mega" },
   "japan-loto6-number-generator": { count: 6, range: "1–43", kind: "japan6" },
   "japan-loto7-number-generator": { count: 7, range: "1–37", kind: "japan7" },
+  "japan-mini-loto-number-generator": { count: 5, range: "1–31", kind: "japan6" },
 } as const;
 
 type LotterySlug = keyof typeof lotteryTools;
@@ -26,7 +27,7 @@ type LotteryCopy = {
 
 const copy = {
   ru: {
-    titles: { "lotto-number-generator": "Генератор чисел лотереи", "powerball-number-generator": "Генератор чисел Powerball", "mega-millions-number-generator": "Генератор чисел Mega Millions", "japan-loto6-number-generator": "Генератор чисел японской LOTO 6", "japan-loto7-number-generator": "Генератор чисел японской LOTO 7" },
+    titles: { "lotto-number-generator": "Генератор чисел лотереи", "powerball-number-generator": "Генератор чисел Powerball", "mega-millions-number-generator": "Генератор чисел Mega Millions", "japan-loto6-number-generator": "Генератор чисел японской LOTO 6", "japan-loto7-number-generator": "Генератор чисел японской LOTO 7", "japan-mini-loto-number-generator": "Генератор чисел японской Mini Loto" },
     standardDescription: (title, count, range) => `${title}: случайно выберите ${count} неповторяющихся чисел от ${range}. Можно настроить включённые и исключённые числа, соотношение чётных и нечётных чисел и создать один или пять наборов.`,
     powerballDescription: "Случайно выберите пять белых шаров от 1 до 69 и один красный Powerball от 1 до 26. Настройте включённые и исключённые числа, баланс чётных и нечётных чисел и создайте один или пять наборов.",
     megaDescription: "Случайно выберите пять основных чисел от 1 до 70 и один Mega Ball от 1 до 24. Настройте включённые и исключённые числа, баланс чётных и нечётных чисел и создайте один или пять наборов.",
@@ -38,7 +39,7 @@ const copy = {
     faqExample: (title) => `Какой результат можно получить в инструменте «${title}»?`, faqCaution: (title) => `Может ли результат «${title}» предсказать выигрыш?`, keywords: ["лотерея", "случайные числа", "генератор чисел"],
   },
   tr: {
-    titles: { "lotto-number-generator": "Loto Numarası Oluşturucu", "powerball-number-generator": "Powerball Numarası Oluşturucu", "mega-millions-number-generator": "Mega Millions Numarası Oluşturucu", "japan-loto6-number-generator": "Japonya LOTO 6 Numarası Oluşturucu", "japan-loto7-number-generator": "Japonya LOTO 7 Numarası Oluşturucu" },
+    titles: { "lotto-number-generator": "Loto Numarası Oluşturucu", "powerball-number-generator": "Powerball Numarası Oluşturucu", "mega-millions-number-generator": "Mega Millions Numarası Oluşturucu", "japan-loto6-number-generator": "Japonya LOTO 6 Numarası Oluşturucu", "japan-loto7-number-generator": "Japonya LOTO 7 Numarası Oluşturucu", "japan-mini-loto-number-generator": "Japonya Mini Loto Numarası Oluşturucu" },
     standardDescription: (title, count, range) => `${title}: ${range} aralığından birbirinden farklı ${count} sayı seçin. Dahil edilecek veya hariç tutulacak sayıları ve tek/çift dengesini belirleyip bir ya da beş kolon oluşturun.`,
     powerballDescription: "1–69 arasından beş farklı beyaz top ve 1–26 arasından bir kırmızı Powerball seçin. Dahil edilecek veya hariç tutulacak sayıları ve tek/çift dengesini belirleyip bir ya da beş kolon oluşturun.",
     megaDescription: "1–70 arasından beş farklı ana sayı ve 1–24 arasından bir Mega Ball seçin. Dahil edilecek veya hariç tutulacak sayıları ve tek/çift dengesini belirleyip bir ya da beş kolon oluşturun.",
@@ -50,7 +51,7 @@ const copy = {
     faqExample: (title) => `${title} nasıl bir sonuç oluşturur?`, faqCaution: (title) => `${title} kazanacak sayıları tahmin edebilir mi?`, keywords: ["piyango", "rastgele sayılar", "sayı oluşturucu"],
   },
   pl: {
-    titles: { "lotto-number-generator": "Generator liczb lotto", "powerball-number-generator": "Generator liczb Powerball", "mega-millions-number-generator": "Generator liczb Mega Millions", "japan-loto6-number-generator": "Generator liczb japońskiej LOTO 6", "japan-loto7-number-generator": "Generator liczb japońskiej LOTO 7" },
+    titles: { "lotto-number-generator": "Generator liczb lotto", "powerball-number-generator": "Generator liczb Powerball", "mega-millions-number-generator": "Generator liczb Mega Millions", "japan-loto6-number-generator": "Generator liczb japońskiej LOTO 6", "japan-loto7-number-generator": "Generator liczb japońskiej LOTO 7", "japan-mini-loto-number-generator": "Generator liczb japońskiego Mini Loto" },
     standardDescription: (title, count, range) => `${title}: wylosuj ${count} różnych liczb z zakresu ${range}. Ustaw liczby uwzględniane i wykluczane oraz proporcję liczb parzystych do nieparzystych. Wygeneruj jeden lub pięć zestawów.`,
     powerballDescription: "Wylosuj pięć różnych białych kul od 1 do 69 oraz jedną czerwoną kulę Powerball od 1 do 26. Ustaw liczby uwzględniane i wykluczane, proporcję parzystych do nieparzystych i wygeneruj jeden lub pięć zestawów.",
     megaDescription: "Wylosuj pięć różnych liczb głównych od 1 do 70 oraz jedną Mega Ball od 1 do 24. Ustaw liczby uwzględniane i wykluczane, proporcję parzystych do nieparzystych i wygeneruj jeden lub pięć zestawów.",
@@ -62,7 +63,7 @@ const copy = {
     faqExample: (title) => `Jakie wyniki tworzy narzędzie „${title}”?`, faqCaution: (title) => `Czy „${title}” przewiduje zwycięskie liczby?`, keywords: ["lotto", "losowe liczby", "generator liczb"],
   },
   fil: {
-    titles: { "lotto-number-generator": "Tagabuo ng Numero sa Lotto", "powerball-number-generator": "Tagabuo ng Numero sa Powerball", "mega-millions-number-generator": "Tagabuo ng Numero sa Mega Millions", "japan-loto6-number-generator": "Tagabuo ng Numero sa Japan LOTO 6", "japan-loto7-number-generator": "Tagabuo ng Numero sa Japan LOTO 7" },
+    titles: { "lotto-number-generator": "Tagabuo ng Numero sa Lotto", "powerball-number-generator": "Tagabuo ng Numero sa Powerball", "mega-millions-number-generator": "Tagabuo ng Numero sa Mega Millions", "japan-loto6-number-generator": "Tagabuo ng Numero sa Japan LOTO 6", "japan-loto7-number-generator": "Tagabuo ng Numero sa Japan LOTO 7", "japan-mini-loto-number-generator": "Tagabuo ng Numero sa Japan Mini Loto" },
     standardDescription: (title, count, range) => `${title}: pumili nang random ng ${count} magkakaibang numero mula ${range}. Itakda ang mga numerong isasama o ibubukod at ang balanse ng odd at even, pagkatapos gumawa ng isa o limang laro.`,
     powerballDescription: "Pumili nang random ng limang magkakaibang puting bola mula 1 hanggang 69 at isang pulang Powerball mula 1 hanggang 26. Itakda ang mga numerong isasama o ibubukod, ang balanse ng odd at even, at gumawa ng isa o limang laro.",
     megaDescription: "Pumili nang random ng limang magkakaibang pangunahing numero mula 1 hanggang 70 at isang Mega Ball mula 1 hanggang 24. Itakda ang mga numerong isasama o ibubukod, ang balanse ng odd at even, at gumawa ng isa o limang laro.",
@@ -74,7 +75,7 @@ const copy = {
     faqExample: (title) => `Anong resulta ang ginagawa ng ${title}?`, faqCaution: (title) => `Nahuhulaan ba ng ${title} ang mga numerong mananalo?`, keywords: ["lotto", "random na numero", "tagabuo ng numero"],
   },
   bn: {
-    titles: { "lotto-number-generator": "লটারি নম্বর জেনারেটর", "powerball-number-generator": "পাওয়ারবল নম্বর জেনারেটর", "mega-millions-number-generator": "মেগা মিলিয়নস নম্বর জেনারেটর", "japan-loto6-number-generator": "জাপান LOTO 6 নম্বর জেনারেটর", "japan-loto7-number-generator": "জাপান LOTO 7 নম্বর জেনারেটর" },
+    titles: { "lotto-number-generator": "লটারি নম্বর জেনারেটর", "powerball-number-generator": "পাওয়ারবল নম্বর জেনারেটর", "mega-millions-number-generator": "মেগা মিলিয়নস নম্বর জেনারেটর", "japan-loto6-number-generator": "জাপান LOTO 6 নম্বর জেনারেটর", "japan-loto7-number-generator": "জাপান LOTO 7 নম্বর জেনারেটর", "japan-mini-loto-number-generator": "জাপান মিনি লোটো নম্বর জেনারেটর" },
     standardDescription: (title, count, range) => `${title}: ${range} সীমার মধ্যে থেকে এলোমেলোভাবে ${count}টি আলাদা সংখ্যা বেছে নিন। অন্তর্ভুক্ত বা বাদ দেওয়ার সংখ্যা এবং জোড়-বিজোড়ের অনুপাত ঠিক করে এক বা পাঁচটি সেট তৈরি করুন।`,
     powerballDescription: "১–৬৯ থেকে পাঁচটি আলাদা সাদা বল এবং ১–২৬ থেকে একটি লাল Powerball বেছে নিন। অন্তর্ভুক্ত বা বাদ দেওয়ার সংখ্যা ও জোড়-বিজোড়ের অনুপাত ঠিক করে এক বা পাঁচটি সেট তৈরি করুন।",
     megaDescription: "১–৭০ থেকে পাঁচটি আলাদা মূল সংখ্যা এবং ১–২৪ থেকে একটি Mega Ball বেছে নিন। অন্তর্ভুক্ত বা বাদ দেওয়ার সংখ্যা ও জোড়-বিজোড়ের অনুপাত ঠিক করে এক বা পাঁচটি সেট তৈরি করুন।",
@@ -86,7 +87,7 @@ const copy = {
     faqExample: (title) => `${title} কী ধরনের ফল তৈরি করে?`, faqCaution: (title) => `${title} কি বিজয়ী সংখ্যা অনুমান করতে পারে?`, keywords: ["লটারি", "এলোমেলো সংখ্যা", "নম্বর জেনারেটর"],
   },
   uk: {
-    titles: { "lotto-number-generator": "Генератор чисел лотереї", "powerball-number-generator": "Генератор чисел Powerball", "mega-millions-number-generator": "Генератор чисел Mega Millions", "japan-loto6-number-generator": "Генератор чисел японської LOTO 6", "japan-loto7-number-generator": "Генератор чисел японської LOTO 7" },
+    titles: { "lotto-number-generator": "Генератор чисел лотереї", "powerball-number-generator": "Генератор чисел Powerball", "mega-millions-number-generator": "Генератор чисел Mega Millions", "japan-loto6-number-generator": "Генератор чисел японської LOTO 6", "japan-loto7-number-generator": "Генератор чисел японської LOTO 7", "japan-mini-loto-number-generator": "Генератор чисел японської Mini Loto" },
     standardDescription: (title, count, range) => `${title}: випадково виберіть ${count} різних чисел у діапазоні ${range}. Задайте числа для включення чи виключення та співвідношення парних і непарних чисел, а потім створіть один або п’ять наборів.`,
     powerballDescription: "Випадково виберіть п’ять різних білих куль від 1 до 69 і одну червону кулю Powerball від 1 до 26. Налаштуйте числа для включення чи виключення, баланс парних і непарних чисел і створіть один або п’ять наборів.",
     megaDescription: "Випадково виберіть п’ять різних основних чисел від 1 до 70 і одну Mega Ball від 1 до 24. Налаштуйте числа для включення чи виключення, баланс парних і непарних чисел і створіть один або п’ять наборів.",
@@ -98,7 +99,7 @@ const copy = {
     faqExample: (title) => `Який результат створює інструмент «${title}»?`, faqCaution: (title) => `Чи може «${title}» передбачити виграшні числа?`, keywords: ["лотерея", "випадкові числа", "генератор чисел"],
   },
   ms: {
-    titles: { "lotto-number-generator": "Penjana Nombor Loteri", "powerball-number-generator": "Penjana Nombor Powerball", "mega-millions-number-generator": "Penjana Nombor Mega Millions", "japan-loto6-number-generator": "Penjana Nombor Jepun LOTO 6", "japan-loto7-number-generator": "Penjana Nombor Jepun LOTO 7" },
+    titles: { "lotto-number-generator": "Penjana Nombor Loteri", "powerball-number-generator": "Penjana Nombor Powerball", "mega-millions-number-generator": "Penjana Nombor Mega Millions", "japan-loto6-number-generator": "Penjana Nombor Jepun LOTO 6", "japan-loto7-number-generator": "Penjana Nombor Jepun LOTO 7", "japan-mini-loto-number-generator": "Penjana Nombor Jepun Mini Loto" },
     standardDescription: (title, count, range) => `${title}: pilih ${count} nombor berlainan secara rawak daripada julat ${range}. Tetapkan nombor yang disertakan atau dikecualikan serta imbangan genap/ganjil, kemudian jana satu atau lima set.`,
     powerballDescription: "Pilih lima bola putih berlainan daripada 1 hingga 69 dan satu Powerball merah daripada 1 hingga 26 secara rawak. Tetapkan nombor yang disertakan atau dikecualikan, imbangan genap/ganjil, dan jana satu atau lima set.",
     megaDescription: "Pilih lima nombor utama berlainan daripada 1 hingga 70 dan satu Mega Ball daripada 1 hingga 24 secara rawak. Tetapkan nombor yang disertakan atau dikecualikan, imbangan genap/ganjil, dan jana satu atau lima set.",
@@ -110,7 +111,7 @@ const copy = {
     faqExample: (title) => `Apakah hasil yang dijana oleh ${title}?`, faqCaution: (title) => `Bolehkah ${title} meramalkan nombor yang menang?`, keywords: ["loteri", "nombor rawak", "penjana nombor"],
   },
   sv: {
-    titles: { "lotto-number-generator": "Slumptalsgenerator för lotto", "powerball-number-generator": "Slumptalsgenerator för Powerball", "mega-millions-number-generator": "Slumptalsgenerator för Mega Millions", "japan-loto6-number-generator": "Slumptalsgenerator för japanska LOTO 6", "japan-loto7-number-generator": "Slumptalsgenerator för japanska LOTO 7" },
+    titles: { "lotto-number-generator": "Slumptalsgenerator för lotto", "powerball-number-generator": "Slumptalsgenerator för Powerball", "mega-millions-number-generator": "Slumptalsgenerator för Mega Millions", "japan-loto6-number-generator": "Slumptalsgenerator för japanska LOTO 6", "japan-loto7-number-generator": "Slumptalsgenerator för japanska LOTO 7", "japan-mini-loto-number-generator": "Slumptalsgenerator för japanska Mini Loto" },
     standardDescription: (title, count, range) => `${title}: dra ${count} unika tal slumpmässigt från intervallet ${range}. Välj tal som ska ingå eller uteslutas och ange fördelningen mellan jämna och udda tal. Skapa en eller fem rader.`,
     powerballDescription: "Dra fem unika vita bollar mellan 1 och 69 och en röd Powerball mellan 1 och 26. Välj tal som ska ingå eller uteslutas, ställ in jämn/udda-fördelningen och skapa en eller fem rader.",
     megaDescription: "Dra fem unika huvudtal mellan 1 och 70 och en Mega Ball mellan 1 och 24. Välj tal som ska ingå eller uteslutas, ställ in jämn/udda-fördelningen och skapa en eller fem rader.",
@@ -122,7 +123,7 @@ const copy = {
     faqExample: (title) => `Vilket resultat skapar ${title}?`, faqCaution: (title) => `Kan ${title} förutsäga vinnande tal?`, keywords: ["lotteri", "slumptal", "slumptalsgenerator"],
   },
   cs: {
-    titles: { "lotto-number-generator": "Generátor čísel loterie", "powerball-number-generator": "Generátor čísel Powerball", "mega-millions-number-generator": "Generátor čísel Mega Millions", "japan-loto6-number-generator": "Generátor čísel japonské LOTO 6", "japan-loto7-number-generator": "Generátor čísel japonské LOTO 7" },
+    titles: { "lotto-number-generator": "Generátor čísel loterie", "powerball-number-generator": "Generátor čísel Powerball", "mega-millions-number-generator": "Generátor čísel Mega Millions", "japan-loto6-number-generator": "Generátor čísel japonské LOTO 6", "japan-loto7-number-generator": "Generátor čísel japonské LOTO 7", "japan-mini-loto-number-generator": "Generátor čísel japonské Mini Loto" },
     standardDescription: (title, count, range) => `${title}: náhodně vyberte ${count} různých čísel z rozsahu ${range}. Zvolte zahrnutá či vyloučená čísla a poměr sudých a lichých čísel a vytvořte jeden nebo pět sloupců.`,
     powerballDescription: "Náhodně vyberte pět různých bílých koulí od 1 do 69 a jednu červenou Powerball od 1 do 26. Zvolte zahrnutá či vyloučená čísla, poměr sudých a lichých čísel a vytvořte jeden nebo pět sloupců.",
     megaDescription: "Náhodně vyberte pět různých hlavních čísel od 1 do 70 a jednu Mega Ball od 1 do 24. Zvolte zahrnutá či vyloučená čísla, poměr sudých a lichých čísel a vytvořte jeden nebo pět sloupců.",
@@ -134,7 +135,7 @@ const copy = {
     faqExample: (title) => `Jaký výsledek nástroj ${title} vytvoří?`, faqCaution: (title) => `Dokáže ${title} předpovědět výherní čísla?`, keywords: ["loterie", "náhodná čísla", "generátor čísel"],
   },
   ro: {
-    titles: { "lotto-number-generator": "Generator de numere loto", "powerball-number-generator": "Generator de numere Powerball", "mega-millions-number-generator": "Generator de numere Mega Millions", "japan-loto6-number-generator": "Generator de numere Japonia LOTO 6", "japan-loto7-number-generator": "Generator de numere Japonia LOTO 7" },
+    titles: { "lotto-number-generator": "Generator de numere loto", "powerball-number-generator": "Generator de numere Powerball", "mega-millions-number-generator": "Generator de numere Mega Millions", "japan-loto6-number-generator": "Generator de numere Japonia LOTO 6", "japan-loto7-number-generator": "Generator de numere Japonia LOTO 7", "japan-mini-loto-number-generator": "Generator de numere Japonia Mini Loto" },
     standardDescription: (title, count, range) => `${title}: alege aleatoriu ${count} numere diferite din intervalul ${range}. Setează numerele incluse sau excluse și raportul par/impar, apoi generează una sau cinci variante.`,
     powerballDescription: "Alege aleatoriu cinci bile albe diferite între 1 și 69 și o bilă roșie Powerball între 1 și 26. Setează numerele incluse sau excluse, raportul par/impar și generează una sau cinci variante.",
     megaDescription: "Alege aleatoriu cinci numere principale diferite între 1 și 70 și o bilă Mega Ball între 1 și 24. Setează numerele incluse sau excluse, raportul par/impar și generează una sau cinci variante.",
@@ -146,7 +147,7 @@ const copy = {
     faqExample: (title) => `Ce rezultat generează ${title}?`, faqCaution: (title) => `Poate ${title} să prevadă numerele câștigătoare?`, keywords: ["loterie", "numere aleatorii", "generator de numere"],
   },
   el: {
-    titles: { "lotto-number-generator": "Γεννήτρια αριθμών ΛΟΤΤΟ", "powerball-number-generator": "Γεννήτρια αριθμών Powerball", "mega-millions-number-generator": "Γεννήτρια αριθμών Mega Millions", "japan-loto6-number-generator": "Γεννήτρια αριθμών Japan LOTO 6", "japan-loto7-number-generator": "Γεννήτρια αριθμών Japan LOTO 7" },
+    titles: { "lotto-number-generator": "Γεννήτρια αριθμών ΛΟΤΤΟ", "powerball-number-generator": "Γεννήτρια αριθμών Powerball", "mega-millions-number-generator": "Γεννήτρια αριθμών Mega Millions", "japan-loto6-number-generator": "Γεννήτρια αριθμών Japan LOTO 6", "japan-loto7-number-generator": "Γεννήτρια αριθμών Japan LOTO 7", "japan-mini-loto-number-generator": "Γεννήτρια αριθμών Japan Mini Loto" },
     standardDescription: (title, count, range) => `${title}: επιλέξτε τυχαία ${count} διαφορετικούς αριθμούς από το εύρος ${range}. Ορίστε αριθμούς προς συμπερίληψη ή εξαίρεση και την αναλογία ζυγών/μονών και δημιουργήστε μία ή πέντε σειρές.`,
     powerballDescription: "Επιλέξτε τυχαία πέντε διαφορετικές λευκές μπάλες από το 1 έως το 69 και μία κόκκινη Powerball από το 1 έως το 26. Ορίστε αριθμούς προς συμπερίληψη ή εξαίρεση, την αναλογία ζυγών/μονών και δημιουργήστε μία ή πέντε σειρές.",
     megaDescription: "Επιλέξτε τυχαία πέντε διαφορετικούς βασικούς αριθμούς από το 1 έως το 70 και μία Mega Ball από το 1 έως το 24. Ορίστε αριθμούς προς συμπερίληψη ή εξαίρεση, την αναλογία ζυγών/μονών και δημιουργήστε μία ή πέντε σειρές.",

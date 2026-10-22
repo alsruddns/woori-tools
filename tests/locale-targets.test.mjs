@@ -18,6 +18,11 @@ const { outputText: lotteryOutput } = ts.transpileModule(lotterySource, {
   compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
 });
 const lotteryTranslations = await import(`data:text/javascript;base64,${Buffer.from(lotteryOutput).toString("base64")}`);
+const russianSource = await readFile(new URL("../src/registry/target-ru-translations.ts", import.meta.url), "utf8");
+const { outputText: russianOutput } = ts.transpileModule(russianSource, {
+  compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
+});
+const russianTranslations = await import(`data:text/javascript;base64,${Buffer.from(russianOutput).toString("base64")}`);
 
 test("target locales are distinct from published locales until translations are complete", () => {
   const expected = ["ru", "tr", "pl", "fil", "bn", "uk", "ms", "sv", "cs", "ro", "el"];
@@ -49,11 +54,11 @@ test("each planned locale has the complete translated core UI message set", () =
   }
 });
 
-test("the first five lottery tools have complete authored copy in every planned locale", () => {
+test("the six lottery tools have complete authored copy in every planned locale", () => {
   const fields = ["title", "description", "seoTitle", "seoDescription", "keywords", "steps", "example", "options", "caution", "faq"];
   const slugs = [
     "lotto-number-generator", "powerball-number-generator", "mega-millions-number-generator",
-    "japan-loto6-number-generator", "japan-loto7-number-generator",
+    "japan-loto6-number-generator", "japan-loto7-number-generator", "japan-mini-loto-number-generator",
   ];
   assert.deepEqual(lotteryTranslations.targetLotterySlugs, slugs);
   for (const locale of routing.plannedLocaleConfig.map(({ routeLocale }) => routeLocale)) {
@@ -67,4 +72,18 @@ test("the first five lottery tools have complete authored copy in every planned 
     }
   }
   assert.equal(lotteryTranslations.getTargetLotteryTranslation("ru", "unknown-tool"), undefined);
+});
+
+test("Russian has complete page metadata and editorial copy for the next five tools", () => {
+  const expected = ["tarot-card", "daily-fortune", "saju", "random-number", "random-name-picker"];
+  const fields = ["title", "description", "seoTitle", "seoDescription", "category", "keywords", "steps", "example", "options", "caution", "faq"];
+  assert.deepEqual(russianTranslations.targetRussianToolSlugs, expected);
+  for (const slug of expected) {
+    const content = russianTranslations.getTargetRussianToolTranslation(slug);
+    assert.ok(content, `${slug} translation exists`);
+    for (const field of fields) assert.ok(content[field], `ru/${slug}.${field} is present`);
+    assert.equal(content.steps.length, 3, `ru/${slug} has three usage steps`);
+    assert.equal(content.faq.example.length > 0, true);
+    assert.equal(content.faq.caution.length > 0, true);
+  }
 });
