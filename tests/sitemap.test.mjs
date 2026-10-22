@@ -72,7 +72,7 @@ const tarotLocalizationSource = await readFile(new URL("../src/lib/fortune/tarot
 const sajuWorkspaceSource = await readFile(new URL("../src/components/tool/saju-workspace.tsx", import.meta.url), "utf8");
 const nextConfig = await readFile(new URL("../next.config.ts", import.meta.url), "utf8");
 const siteOrigin = "https://www.woori.today";
-const turkishPublishedSlugs = ["lotto-number-generator", "powerball-number-generator", "mega-millions-number-generator", "japan-loto6-number-generator", "japan-loto7-number-generator", "japan-mini-loto-number-generator", "random-number", "random-name-picker", "random-wheel", "draw-lots", "random-team-maker", "random-order", "random-seat", "timer", "pomodoro-timer", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr", "dice-roller", "coin-flip", "stopwatch", "world-clock", "tarot-card", "daily-fortune", "saju", "duty-picker", "barcode-checker"];
+const turkishPublishedSlugs = ["lotto-number-generator", "powerball-number-generator", "mega-millions-number-generator", "japan-loto6-number-generator", "japan-loto7-number-generator", "japan-mini-loto-number-generator", "random-number", "random-name-picker", "random-wheel", "draw-lots", "random-team-maker", "random-order", "random-seat", "timer", "pomodoro-timer", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr", "dice-roller", "coin-flip", "stopwatch", "world-clock", "tarot-card", "daily-fortune", "saju", "duty-picker", "barcode-checker", "barcode-generator"];
 const sitemapTools = publicTools.map((tool) => turkishPublishedSlugs.includes(tool.slug)
   ? { ...tool, supportedLocales: [...tool.supportedLocales, "tr"] }
   : tool);
@@ -152,7 +152,7 @@ test("sitemap and SEO use the same language alternate helper", () => {
   assert.match(sitemapSource, /import \{[^}]*languageAlternates[^}]*\} from "@\/lib\/seo"/);
   assert.match(seoSource, /"x-default": localizedUrl\("ko", path\)/);
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/lotto-number-generator")).alternates.languages).length, 18);
-  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/barcode-generator")).alternates.languages).length, 17);
+  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/barcode-generator")).alternates.languages).length, 18);
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/barcode-checker")).alternates.languages).length, 18);
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/instagram-grid-split")).alternates.languages).length, 17);
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/image-collage")).alternates.languages).length, 17);
@@ -511,7 +511,7 @@ test("Turkish verified tool workspaces publish only their approved routes", () =
     assert.equal(entry.alternates.languages.tr, `${siteOrigin}/tr/tools/${slug}`);
     assert.equal(entry.alternates.languages["x-default"], `${siteOrigin}/ko/tools/${slug}`);
   }
-  assert.equal(turkishPublishedSlugs.length, 30);
+  assert.equal(turkishPublishedSlugs.length, 31);
   assert.match(localeLayoutSource, /rawLocale === "tr"/);
   assert.match(toolPageSource, /rawLocale === "tr"\) return <TurkishPublishedToolPage/);
   assert.match(toolPageSource, /pageMetadata\(\{ locale: "tr"/);
@@ -528,6 +528,7 @@ test("Turkish verified tool workspaces publish only their approved routes", () =
   assert.match(toolPageSource, /SajuWorkspace locale="tr"/);
   assert.match(toolPageSource, /RussianDutyPickerWorkspace locale="tr"/);
   assert.match(toolPageSource, /RussianBarcodeCheckerWorkspace locale="tr"/);
+  assert.match(toolPageSource, /BarcodeWorkspace locale="tr"/);
   assert.match(toolWorkspaceSource, /translated\.tr=\[/);
   assert.match(worldClockWorkspaceSource, /tr: \{ title: "Dünya saati", add: "Şehir ekle"/);
   assert.match(fortuneWorkspaceSource, /tarotNames\.tr = \["Deli","Büyücü"/);

@@ -289,6 +289,7 @@ function TurkishPublishedToolPage({ slug }: { slug: string }) {
     : slug === "saju" ? <SajuWorkspace locale="tr" />
     : slug === "duty-picker" ? <RussianDutyPickerWorkspace locale="tr" />
     : slug === "barcode-checker" ? <RussianBarcodeCheckerWorkspace locale="tr" />
+    : slug === "barcode-generator" ? <BarcodeWorkspace locale="tr" />
     : null;
   if (!workspace) notFound();
 
