@@ -22,6 +22,7 @@ import { RussianImageUtilityWorkspace } from "@/components/tool/russian-image-ut
 import { RussianImageColorPickerWorkspace } from "@/components/tool/russian-image-color-picker-workspace";
 import { RussianPdfWorkspace, type RussianPdfSlug } from "@/components/tool/russian-pdf-workspace";
 import { RussianTextCompareWorkspace } from "@/components/tool/russian-text-compare-workspace";
+import { RussianStructuredDataWorkspace, type RussianDataSlug } from "@/components/tool/russian-structured-data-workspace";
 import { RussianMarkdownWorkspace } from "@/components/tool/russian-markdown-workspace";
 import { CountdownWorkspace } from "@/components/tool/countdown-workspace";
 import { RandomStringWorkspace } from "@/components/tool/random-string-workspace";
@@ -192,6 +193,12 @@ function isRussianPdfSlug(slug: string): slug is RussianPdfSlug {
   return russianPdfSlugs.includes(slug);
 }
 
+const russianDataSlugs: readonly string[] = ["json-formatter", "json-validator", "json-to-yaml", "yaml-to-json", "csv-to-json", "json-to-csv"];
+
+function isRussianDataSlug(slug: string): slug is RussianDataSlug {
+  return russianDataSlugs.includes(slug);
+}
+
 function RussianPublishedToolPage({ slug }: { slug: string }) {
   const baseTool = getTool(slug);
   const translation = getTargetRussianToolTranslation(slug);
@@ -257,6 +264,8 @@ function RussianPublishedToolPage({ slug }: { slug: string }) {
                                               ? <RussianImageColorPickerWorkspace />
                                               : isRussianPdfSlug(slug)
                                                 ? <RussianPdfWorkspace slug={slug} />
+                                              : isRussianDataSlug(slug)
+                                                ? <RussianStructuredDataWorkspace slug={slug} />
                                               : slug === "text-compare"
                                                 ? <RussianTextCompareWorkspace />
     : slug === "regex-tester"
