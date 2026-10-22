@@ -19,7 +19,7 @@ const countrySlugs = [...countrySlugSource.matchAll(/"([a-z0-9-]+)"/g)].map((mat
 const { tools: publicTools, filterPublicTools } = await importTypeScript("../src/registry/tools.ts", [
   ['import { locales, type PublishedTargetLocale } from "../i18n/routing";', `const locales = ${JSON.stringify(locales)};`],
   ['import { COUNTRY_TOOL_SLUGS } from "../lib/country-tool-slugs";', `const COUNTRY_TOOL_SLUGS = ${JSON.stringify(countrySlugs)};`],
-  ['import { targetLocalePublication } from "./target-locale-publication";', 'const targetLocalePublication = { ru: { publishedToolSlugs: ["barcode-generator", "markdown-preview", "timer", "pomodoro-timer", "password-generator", "random-string-generator"] } };'],
+  ['import { targetLocalePublication } from "./target-locale-publication";', 'const targetLocalePublication = { ru: { publishedToolSlugs: ["barcode-generator", "markdown-preview", "timer", "pomodoro-timer", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr"] } };'],
 ]);
 const seoSource = await readFile(new URL("../src/lib/seo.ts", import.meta.url), "utf8");
 const { languageAlternates } = await importTypeScript("../src/lib/seo.ts", [[
@@ -32,6 +32,7 @@ const toolPageSource = await readFile(new URL("../src/app/[locale]/tools/[slug]/
 const markdownWorkspaceSource = await readFile(new URL("../src/components/tool/russian-markdown-workspace.tsx", import.meta.url), "utf8");
 const countdownWorkspaceSource = await readFile(new URL("../src/components/tool/countdown-workspace.tsx", import.meta.url), "utf8");
 const randomStringWorkspaceSource = await readFile(new URL("../src/components/tool/random-string-workspace.tsx", import.meta.url), "utf8");
+const qrWorkspaceSource = await readFile(new URL("../src/components/tool/qr-workspace.tsx", import.meta.url), "utf8");
 const nextConfig = await readFile(new URL("../next.config.ts", import.meta.url), "utf8");
 const siteOrigin = "https://www.woori.today";
 const entries = createSitemapEntries({
@@ -116,12 +117,14 @@ test("sitemap and SEO use the same language alternate helper", () => {
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/pomodoro-timer")).alternates.languages).length, 17);
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/password-generator")).alternates.languages).length, 17);
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/random-string-generator")).alternates.languages).length, 17);
+  for (const slug of ["wifi-qr", "contact-qr", "phone-qr", "email-qr"]) assert.equal(Object.keys(entries.find(({ url }) => url.endsWith(`/tools/${slug}`)).alternates.languages).length, 17);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/barcode-generator")), true);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/markdown-preview")), true);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/timer")), true);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/pomodoro-timer")), true);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/password-generator")), true);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/random-string-generator")), true);
+  for (const slug of ["wifi-qr", "contact-qr", "phone-qr", "email-qr"]) assert.equal(entries.some(({ url }) => url.endsWith(`/ru/tools/${slug}`)), true);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/image-compress")), false);
   assert.equal(localeConfig.find(({ routeLocale }) => routeLocale === "pt-br").hreflang, "pt-BR");
   assert.equal(localeConfig.find(({ routeLocale }) => routeLocale === "zh-tw").hreflang, "zh-TW");
@@ -147,6 +150,15 @@ test("Russian password and random-string generators expose localized controls", 
   assert.match(toolPageSource, /slug === "password-generator" \|\| slug === "random-string-generator"/);
   assert.match(randomStringWorkspaceSource, /ru:\s*\{[\s\S]*?length:\s*"Длина"[\s\S]*?generate:\s*"Создать"/);
   for (const slug of ["password-generator", "random-string-generator"]) {
+    assert.equal(publicTools.find((tool) => tool.slug === slug).supportedLocales.includes("ru"), true);
+    assert.equal(entries.some(({ url }) => url === `${siteOrigin}/ru/tools/${slug}`), true);
+  }
+});
+
+test("Russian QR tools localize fields, errors, and the local-processing notice", () => {
+  assert.match(toolPageSource, /\["wifi-qr", "contact-qr", "phone-qr", "email-qr"\]\.includes\(slug\)/);
+  assert.match(qrWorkspaceSource, /ru:\{ssid:"Имя сети Wi-Fi \(SSID\)"[\s\S]*?privacy:"Введённые данные преобразуются в QR-код/);
+  for (const slug of ["wifi-qr", "contact-qr", "phone-qr", "email-qr"]) {
     assert.equal(publicTools.find((tool) => tool.slug === slug).supportedLocales.includes("ru"), true);
     assert.equal(entries.some(({ url }) => url === `${siteOrigin}/ru/tools/${slug}`), true);
   }

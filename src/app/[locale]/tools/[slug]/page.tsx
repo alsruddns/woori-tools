@@ -6,6 +6,7 @@ import { BarcodeWorkspace } from "@/components/tool/barcode-workspace";
 import { RussianMarkdownWorkspace } from "@/components/tool/russian-markdown-workspace";
 import { CountdownWorkspace } from "@/components/tool/countdown-workspace";
 import { RandomStringWorkspace } from "@/components/tool/random-string-workspace";
+import { QrWorkspace } from "@/components/tool/qr-workspace";
 import { ToolDetailLayout } from "@/components/tool/tool-detail-layout";
 import { getMessages } from "@/i18n/messages";
 import { isLocale, localizePath, type Locale } from "@/i18n/routing";
@@ -176,6 +177,8 @@ function RussianPublishedToolPage({ slug }: { slug: string }) {
         ? <CountdownWorkspace slug={slug} locale="ru" />
         : slug === "password-generator" || slug === "random-string-generator"
           ? <RandomStringWorkspace slug={slug} locale="ru" />
+          : ["wifi-qr", "contact-qr", "phone-qr", "email-qr"].includes(slug)
+            ? <QrWorkspace slug={slug} locale="ru" />
         : null;
   if (!workspace) notFound();
   const tool = localizePublishedTool(baseTool, "ru");
