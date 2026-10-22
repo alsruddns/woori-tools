@@ -6,6 +6,7 @@ import { BarcodeWorkspace } from "@/components/tool/barcode-workspace";
 import { RussianBarcodeCheckerWorkspace } from "@/components/tool/russian-barcode-checker-workspace";
 import { RussianInstagramGridWorkspace } from "@/components/tool/russian-instagram-grid-workspace";
 import { RussianImageCollageWorkspace } from "@/components/tool/russian-image-collage-workspace";
+import { RussianFileInfoWorkspace } from "@/components/tool/russian-file-info-workspace";
 import { RussianMarkdownWorkspace } from "@/components/tool/russian-markdown-workspace";
 import { CountdownWorkspace } from "@/components/tool/countdown-workspace";
 import { RandomStringWorkspace } from "@/components/tool/random-string-workspace";
@@ -177,7 +178,15 @@ function RussianPublishedToolPage({ slug }: { slug: string }) {
   const seoVerified = targetLocalePublication.ru.seoVerifiedToolSlugs.includes(slug);
   const published = targetLocalePublication.ru.publishedToolSlugs.includes(slug);
   if (!baseTool || !baseTool.supportedLocales.includes("ru") || !translation || !uiVerified || !seoVerified || !published) notFound();
-  const workspace = slug === "barcode-generator"
+  const workspace = slug === "file-hash"
+    ? <RussianFileInfoWorkspace slug="file-hash" title={translation.title} />
+    : slug === "mime-type-checker"
+      ? <RussianFileInfoWorkspace slug="mime-type-checker" title={translation.title} />
+      : slug === "file-extension-checker"
+        ? <RussianFileInfoWorkspace slug="file-extension-checker" title={translation.title} />
+        : slug === "file-size-checker"
+          ? <RussianFileInfoWorkspace slug="file-size-checker" title={translation.title} />
+    : slug === "barcode-generator"
     ? <BarcodeWorkspace locale="ru" />
     : slug === "instagram-grid-split"
       ? <RussianInstagramGridWorkspace />
