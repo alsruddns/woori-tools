@@ -163,6 +163,25 @@ export function RandomNumberWorkspace({ locale }: { locale:RouteLocale | "ru" })
   return <section className="rounded-3xl border bg-white p-5 shadow-sm sm:p-7"><div className="grid gap-4 sm:grid-cols-3">{[[t.minimum, min, setMin], [t.maximum, max, setMax], [t.drawCount, count, setCount]].map(([label, value, setter]) => <label key={String(label)} className="text-sm font-medium">{String(label)}<input type="number" min={label === t.drawCount ? 1 : undefined} max={label === t.drawCount ? 100 : undefined} value={Number(value)} onChange={(event) => (setter as (value: number) => void)(Number(event.target.value))} className="mt-2 block w-full rounded-xl border p-3" /></label>)}</div><div className="mt-4 flex flex-wrap gap-5 text-sm"><label className="flex items-center gap-2"><input type="checkbox" checked={unique} onChange={(event) => setUnique(event.target.checked)} />{t.unique}</label><label className="flex items-center gap-2"><input type="checkbox" checked={sorted} onChange={(event) => setSorted(event.target.checked)} />{t.sorted}</label></div><button type="button" onClick={draw} className="mt-5 min-h-12 rounded-xl bg-indigo-600 px-5 font-semibold text-white">{result.length ? t.again : t.generate}</button><button type="button" onClick={() => { setMin(1); setMax(45); setCount(1); setResult([]); setError(""); }} className="ml-2 min-h-12 rounded-xl border px-5">{t.reset}</button>{error && <p role="alert" className="mt-3 text-sm text-rose-700">{error}</p>}{result.length > 0 && <section className="mt-5 rounded-2xl bg-slate-50 p-4"><div className="flex flex-wrap items-center justify-between gap-3"><h3 className="font-semibold">{t.result}</h3><button type="button" onClick={() => void copyResult()} className="rounded-lg border bg-white px-3 py-2 text-sm">{t.copy}</button></div><div className="mt-3 flex flex-wrap gap-2">{result.map((number, index) => <span key={`${number}-${index}`} className="grid min-h-12 min-w-12 place-items-center rounded-xl bg-indigo-100 px-3 font-bold text-indigo-900">{number}</span>)}</div></section>}</section>;
 }
 
+export function CoinFlipWorkspace() {
+  const [count, setCount] = useState(1);
+  const [flips, setFlips] = useState<number[]>([]);
+  const [error, setError] = useState("");
+  function flip() {
+    if (!Number.isSafeInteger(count) || count < 1 || count > 1000) { setError("Укажите от 1 до 1000 бросков."); return; }
+    setFlips(Array.from({ length: count }, () => randomInt(0, 1)));
+    setError("");
+  }
+  const heads = flips.filter((side) => side === 0).length;
+  const tails = flips.length - heads;
+  return <section className="rounded-3xl border bg-white p-5 shadow-sm sm:p-7">
+    <label className="block text-sm font-semibold">Количество бросков<input type="number" min="1" max="1000" value={count} onChange={(event) => setCount(Number(event.target.value))} className="mt-2 block w-full rounded-xl border p-3 sm:max-w-xs" /></label>
+    <button type="button" onClick={flip} className="mt-5 min-h-12 rounded-xl bg-indigo-600 px-5 font-semibold text-white">{flips.length ? "Бросить ещё раз" : "Бросить монету"}</button>
+    {error && <p role="alert" className="mt-3 text-sm text-rose-700">{error}</p>}
+    {flips.length > 0 && <section className="mt-5 rounded-2xl bg-slate-50 p-4"><h3 className="font-semibold">Результат</h3><dl className="mt-3 grid grid-cols-2 gap-3"><div className="rounded-xl bg-white p-3"><dt className="text-sm text-slate-500">Орёл</dt><dd className="mt-1 text-xl font-bold">{heads}</dd></div><div className="rounded-xl bg-white p-3"><dt className="text-sm text-slate-500">Решка</dt><dd className="mt-1 text-xl font-bold">{tails}</dd></div></dl><p className="mt-3 break-words text-sm text-slate-600">{flips.map((side) => side === 0 ? "Орёл" : "Решка").join(" · ")}</p></section>}
+  </section>;
+}
+
 export function RandomNameWorkspace({ locale, slug: _slug }: { locale:RouteLocale; slug: "random-name-picker" | "draw-lots" }) {
   void _slug;
   const t = copy[locale];
