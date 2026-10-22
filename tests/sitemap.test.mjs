@@ -19,7 +19,7 @@ const countrySlugs = [...countrySlugSource.matchAll(/"([a-z0-9-]+)"/g)].map((mat
 const { tools: publicTools, filterPublicTools } = await importTypeScript("../src/registry/tools.ts", [
   ['import { locales, type PublishedTargetLocale } from "../i18n/routing";', `const locales = ${JSON.stringify(locales)};`],
   ['import { COUNTRY_TOOL_SLUGS } from "../lib/country-tool-slugs";', `const COUNTRY_TOOL_SLUGS = ${JSON.stringify(countrySlugs)};`],
-  ['import { targetLocalePublication } from "./target-locale-publication";', 'const targetLocalePublication = { ru: { publishedToolSlugs: ["barcode-generator", "markdown-preview", "timer", "pomodoro-timer", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr", "world-clock", "dice-roller", "random-number", "stopwatch", "coin-flip", "random-name-picker", "draw-lots", "random-team-maker", "random-order", "random-seat", "duty-picker", "random-wheel"] } };'],
+  ['import { targetLocalePublication } from "./target-locale-publication";', 'const targetLocalePublication = { ru: { publishedToolSlugs: ["barcode-generator", "markdown-preview", "timer", "pomodoro-timer", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr", "world-clock", "dice-roller", "random-number", "stopwatch", "coin-flip", "random-name-picker", "draw-lots", "random-team-maker", "random-order", "random-seat", "duty-picker", "random-wheel", "tarot-card"] } };'],
 ]);
 const seoSource = await readFile(new URL("../src/lib/seo.ts", import.meta.url), "utf8");
 const { languageAlternates } = await importTypeScript("../src/lib/seo.ts", [[
@@ -36,6 +36,8 @@ const qrWorkspaceSource = await readFile(new URL("../src/components/tool/qr-work
 const worldClockWorkspaceSource = await readFile(new URL("../src/components/tool/world-clock-workspace.tsx", import.meta.url), "utf8");
 const specialRandomWorkspaceSource = await readFile(new URL("../src/components/tool/special-random-workspaces.tsx", import.meta.url), "utf8");
 const toolWorkspaceSource = await readFile(new URL("../src/components/tool/tool-workspace.tsx", import.meta.url), "utf8");
+const fortuneWorkspaceSource = await readFile(new URL("../src/components/tool/fortune-workspace.tsx", import.meta.url), "utf8");
+const tarotLocalizationSource = await readFile(new URL("../src/lib/fortune/tarot-localization.ts", import.meta.url), "utf8");
 const nextConfig = await readFile(new URL("../next.config.ts", import.meta.url), "utf8");
 const siteOrigin = "https://www.woori.today";
 const entries = createSitemapEntries({
@@ -129,6 +131,7 @@ test("sitemap and SEO use the same language alternate helper", () => {
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/random-seat")).alternates.languages).length, 17);
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/duty-picker")).alternates.languages).length, 17);
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/random-wheel")).alternates.languages).length, 17);
+  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/tarot-card")).alternates.languages).length, 17);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/barcode-generator")), true);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/markdown-preview")), true);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/timer")), true);
@@ -144,6 +147,7 @@ test("sitemap and SEO use the same language alternate helper", () => {
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/random-seat")), true);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/duty-picker")), true);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/random-wheel")), true);
+  assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/tarot-card")), true);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/image-compress")), false);
   assert.equal(localeConfig.find(({ routeLocale }) => routeLocale === "pt-br").hreflang, "pt-BR");
   assert.equal(localeConfig.find(({ routeLocale }) => routeLocale === "zh-tw").hreflang, "zh-TW");
@@ -251,4 +255,13 @@ test("Russian random wheel localizes entry editing and spin states", () => {
   assert.match(specialRandomWorkspaceSource, /ru: \{ label: "Введите один вариант в строке"[\s\S]*?spinning: "Колесо вращается/);
   assert.equal(publicTools.find((tool) => tool.slug === "random-wheel").supportedLocales.includes("ru"), true);
   assert.equal(entries.some(({ url }) => url === `${siteOrigin}/ru/tools/random-wheel`), true);
+});
+
+test("Russian tarot page localizes controls, names, and card interpretations", () => {
+  assert.match(toolPageSource, /slug === "tarot-card"/);
+  assert.match(fortuneWorkspaceSource, /ru: \{ question: "Вопрос \(необязательно\)"[\s\S]*?note: "Таро предназначено/);
+  assert.match(fortuneWorkspaceSource, /tarotNames\.ru = \["Шут"[\s\S]*?"Мир"\]/);
+  assert.match(tarotLocalizationSource, /const russianThemes: readonly Theme\[\] = \[[\s\S]*?const russianSentence/);
+  assert.equal(publicTools.find((tool) => tool.slug === "tarot-card").supportedLocales.includes("ru"), true);
+  assert.equal(entries.some(({ url }) => url === `${siteOrigin}/ru/tools/tarot-card`), true);
 });
