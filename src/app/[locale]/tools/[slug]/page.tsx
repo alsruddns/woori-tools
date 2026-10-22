@@ -11,6 +11,7 @@ import { WorldClockWorkspace } from "@/components/tool/world-clock-workspace";
 import { CoinFlipWorkspace, DiceWorkspace, RandomNameWorkspace, RandomNumberWorkspace, RandomOrderWorkspace, RandomSeatWorkspace, RandomTeamWorkspace, RandomWheelWorkspace, RussianDutyPickerWorkspace } from "@/components/tool/special-random-workspaces";
 import { RussianStopwatchWorkspace } from "@/components/tool/tool-workspace";
 import { DailyFortuneWorkspace, TarotWorkspace } from "@/components/tool/fortune-workspace";
+import { SajuWorkspace } from "@/components/tool/saju-workspace";
 import { ToolDetailLayout } from "@/components/tool/tool-detail-layout";
 import { getMessages } from "@/i18n/messages";
 import { isLocale, localizePath, type Locale } from "@/i18n/routing";
@@ -209,6 +210,8 @@ function RussianPublishedToolPage({ slug }: { slug: string }) {
                                   ? <TarotWorkspace locale="ru" />
                                   : slug === "daily-fortune"
                                     ? <DailyFortuneWorkspace locale="ru" />
+                                    : slug === "saju"
+                                      ? <SajuWorkspace locale="ru" />
         : null;
   if (!workspace) notFound();
   const tool = localizePublishedTool(baseTool, "ru");

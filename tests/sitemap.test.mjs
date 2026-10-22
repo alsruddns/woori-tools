@@ -19,7 +19,7 @@ const countrySlugs = [...countrySlugSource.matchAll(/"([a-z0-9-]+)"/g)].map((mat
 const { tools: publicTools, filterPublicTools } = await importTypeScript("../src/registry/tools.ts", [
   ['import { locales, type PublishedTargetLocale } from "../i18n/routing";', `const locales = ${JSON.stringify(locales)};`],
   ['import { COUNTRY_TOOL_SLUGS } from "../lib/country-tool-slugs";', `const COUNTRY_TOOL_SLUGS = ${JSON.stringify(countrySlugs)};`],
-  ['import { targetLocalePublication } from "./target-locale-publication";', 'const targetLocalePublication = { ru: { publishedToolSlugs: ["barcode-generator", "markdown-preview", "timer", "pomodoro-timer", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr", "world-clock", "dice-roller", "random-number", "stopwatch", "coin-flip", "random-name-picker", "draw-lots", "random-team-maker", "random-order", "random-seat", "duty-picker", "random-wheel", "tarot-card", "daily-fortune"] } };'],
+  ['import { targetLocalePublication } from "./target-locale-publication";', 'const targetLocalePublication = { ru: { publishedToolSlugs: ["barcode-generator", "markdown-preview", "timer", "pomodoro-timer", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr", "world-clock", "dice-roller", "random-number", "stopwatch", "coin-flip", "random-name-picker", "draw-lots", "random-team-maker", "random-order", "random-seat", "duty-picker", "random-wheel", "tarot-card", "daily-fortune", "saju"] } };'],
 ]);
 const seoSource = await readFile(new URL("../src/lib/seo.ts", import.meta.url), "utf8");
 const { languageAlternates } = await importTypeScript("../src/lib/seo.ts", [[
@@ -38,6 +38,7 @@ const specialRandomWorkspaceSource = await readFile(new URL("../src/components/t
 const toolWorkspaceSource = await readFile(new URL("../src/components/tool/tool-workspace.tsx", import.meta.url), "utf8");
 const fortuneWorkspaceSource = await readFile(new URL("../src/components/tool/fortune-workspace.tsx", import.meta.url), "utf8");
 const tarotLocalizationSource = await readFile(new URL("../src/lib/fortune/tarot-localization.ts", import.meta.url), "utf8");
+const sajuWorkspaceSource = await readFile(new URL("../src/components/tool/saju-workspace.tsx", import.meta.url), "utf8");
 const nextConfig = await readFile(new URL("../next.config.ts", import.meta.url), "utf8");
 const siteOrigin = "https://www.woori.today";
 const entries = createSitemapEntries({
@@ -133,6 +134,7 @@ test("sitemap and SEO use the same language alternate helper", () => {
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/random-wheel")).alternates.languages).length, 17);
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/tarot-card")).alternates.languages).length, 17);
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/daily-fortune")).alternates.languages).length, 17);
+  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/saju")).alternates.languages).length, 17);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/barcode-generator")), true);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/markdown-preview")), true);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/timer")), true);
@@ -150,6 +152,7 @@ test("sitemap and SEO use the same language alternate helper", () => {
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/random-wheel")), true);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/tarot-card")), true);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/daily-fortune")), true);
+  assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/saju")), true);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/image-compress")), false);
   assert.equal(localeConfig.find(({ routeLocale }) => routeLocale === "pt-br").hreflang, "pt-BR");
   assert.equal(localeConfig.find(({ routeLocale }) => routeLocale === "zh-tw").hreflang, "zh-TW");
@@ -274,4 +277,12 @@ test("Russian daily fortune localizes date input, result groups, pools, and priv
   assert.match(fortuneWorkspaceSource, /Object\.assign\(dailyPools, \{ ru: \{[\s\S]*?total: \[[\s\S]*?colors: \[/);
   assert.equal(publicTools.find((tool) => tool.slug === "daily-fortune").supportedLocales.includes("ru"), true);
   assert.equal(entries.some(({ url }) => url === `${siteOrigin}/ru/tools/daily-fortune`), true);
+});
+
+test("Russian saju localizes calendar inputs, five elements, methodology, and privacy", () => {
+  assert.match(toolPageSource, /slug === "saju"/);
+  assert.match(sajuWorkspaceSource, /ru: \{ birth: "Дата рождения"[\s\S]*?wood: "Дерево"[\s\S]*?basis: "Расчёт использует/);
+  assert.match(sajuWorkspaceSource, /"hi","ru"/);
+  assert.equal(publicTools.find((tool) => tool.slug === "saju").supportedLocales.includes("ru"), true);
+  assert.equal(entries.some(({ url }) => url === `${siteOrigin}/ru/tools/saju`), true);
 });
