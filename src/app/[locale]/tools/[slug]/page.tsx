@@ -15,6 +15,7 @@ import { RussianLoremWorkspace } from "@/components/tool/russian-lorem-workspace
 import { RussianRegexWorkspace } from "@/components/tool/russian-regex-workspace";
 import { RussianColorConverterWorkspace } from "@/components/tool/russian-color-converter-workspace";
 import { RussianCronWorkspace } from "@/components/tool/russian-cron-workspace";
+import { RussianCodeFormatterWorkspace } from "@/components/tool/russian-code-formatter-workspace";
 import { RussianMarkdownWorkspace } from "@/components/tool/russian-markdown-workspace";
 import { CountdownWorkspace } from "@/components/tool/countdown-workspace";
 import { RandomStringWorkspace } from "@/components/tool/random-string-workspace";
@@ -192,6 +193,14 @@ function RussianPublishedToolPage({ slug }: { slug: string }) {
       ? <RussianColorConverterWorkspace />
     : slug === "cron-parser"
       ? <RussianCronWorkspace />
+    : slug === "sql-formatter"
+      ? <RussianCodeFormatterWorkspace slug="sql-formatter" />
+      : slug === "html-formatter"
+        ? <RussianCodeFormatterWorkspace slug="html-formatter" />
+        : slug === "css-formatter"
+          ? <RussianCodeFormatterWorkspace slug="css-formatter" />
+          : slug === "javascript-formatter"
+            ? <RussianCodeFormatterWorkspace slug="javascript-formatter" />
     : slug === "regex-tester"
       ? <RussianRegexWorkspace />
     : slug === "lorem-ipsum"
