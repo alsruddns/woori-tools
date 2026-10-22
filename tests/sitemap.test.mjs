@@ -501,8 +501,8 @@ test("Turkish lottery workspace is translated and stays unpublished until its fu
     assert.equal(entries.some(({ url }) => url === `${siteOrigin}/tr/tools/${slug}`), false);
   }
 });
-test("Turkish editorial batches contain complete localized SEO and help content for eighteen tools", () => {
-  const expected = ["tarot-card", "daily-fortune", "saju", "random-number", "random-name-picker", "random-wheel", "draw-lots", "random-team-maker", "random-order", "random-seat", "duty-picker", "dice-roller", "stopwatch", "timer", "pomodoro-timer", "world-clock", "password-generator", "random-string-generator"];
+test("Turkish editorial batches contain complete localized SEO and help content for thirty-one tools", () => {
+  const expected = ["tarot-card", "daily-fortune", "saju", "random-number", "random-name-picker", "random-wheel", "draw-lots", "random-team-maker", "random-order", "random-seat", "duty-picker", "dice-roller", "stopwatch", "timer", "pomodoro-timer", "world-clock", "password-generator", "random-string-generator", "coin-flip", "wifi-qr", "contact-qr", "phone-qr", "email-qr", "barcode-checker", "barcode-generator", "instagram-grid-split", "image-collage", "file-hash", "mime-type-checker", "file-extension-checker", "file-size-checker"];
   assert.deepEqual(targetTurkishToolSlugs, expected);
   for (const slug of expected) {
     const translation = getTargetTurkishToolTranslation(slug);
