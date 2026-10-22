@@ -25,6 +25,10 @@ const copy: Record<string, Record<string, string>> = {
   hi: { generate:"नंबर बनाएँ",again:"फिर से बनाएँ",copy:"कॉपी करें",copyAll:"सभी कॉपी करें",reset:"शर्तें रीसेट करें",games:"गेम",one:"1 गेम",five:"5 गेम",include:"शामिल नंबर",exclude:"हटाए जाने वाले नंबर",selection:"नंबर चुनें",included:"शामिल करें",excluded:"हटाएँ",clear:"चयन मिटाएँ",oddEven:"सम/विषम अनुपात",auto:"स्वचालित",odd:"विषम",even:"सम",sorted:"आरोही क्रम",unique:"दोहराव नहीं",history:"हाल की पीढ़ियाँ",clearHistory:"इतिहास मिटाएँ",reuse:"फिर उपयोग करें",count:"आइटम",draw:"पासा फेंकें",die:"-पक्षीय पासा",diceCount:"पासों की संख्या",total:"कुल",minimum:"न्यूनतम",maximum:"अधिकतम",average:"औसत",explanation:"D का अर्थ पासा है; बाद की संख्या उसके पक्ष बताती है। D6 में छह और D20 में बीस पक्ष होते हैं।",participants:"प्रतिभागी (हर पंक्ति में एक)",participantCount:"प्रतिभागी",drawCount:"विजेता",repeats:"दोबारा विजेता होने दें",removeWinner:"विजेताओं को सूची से हटाएँ",shuffle:"सूची मिलाएँ",teams:"टीम सेटिंग",teamCount:"टीमों की संख्या",teamSize:"प्रति टीम लोग",byTeams:"टीम संख्या के अनुसार",bySize:"टीम आकार के अनुसार",teamNames:"टीम नाम (वैकल्पिक, हर पंक्ति में एक)",result:"नतीजा",participantsRequired:"कम से कम एक प्रतिभागी दर्ज करें।",invalidCount:"विजेताओं की संख्या जाँचें।",includeMax:"अधिकतम छह शामिल नंबर चुनें।",selectMode:"चयन विधि",copyFailed:"कॉपी नहीं हो सका।"},
 } as const;
 
+Object.assign(copy, { ru: {
+  generate: "Создать числа", again: "Создать ещё раз", copy: "Копировать", reset: "Сбросить параметры", selection: "Количество граней", draw: "Бросить кубики", die: "-гранный кубик", diceCount: "Количество кубиков", total: "Сумма", minimum: "Минимум", maximum: "Максимум", average: "Среднее", explanation: "Буква D обозначает кубик, а число после неё — количество граней. Например, D6 — шестигранный кубик, а D20 — двадцатигранный.", history: "Недавние броски", drawCount: "Количество чисел", unique: "Без повторов", sorted: "Сортировать по возрастанию", result: "Результат", invalidCount: "Проверьте количество и диапазон чисел.",
+} });
+
 type LottoHistory = { createdAt: string; games: number[][]; specials?: number[]; settings: { count: 1 | 5; included: number[]; excluded: number[]; oddCount: number | null; sorted: boolean; specialMode?: "auto" | "include" | "exclude"; specialNumber?: number | null } };
 
 type LottoWorkspaceProps = { locale:RouteLocale; min?: number; max?: number; numberCount?: number; historyKey?: string; specialBall?: { label: Record<string, string>; min: number; max: number } };
@@ -126,7 +130,7 @@ export function LottoWorkspace({ locale, min = 1, max = 45, numberCount = 6, his
   </section>;
 }
 
-export function DiceWorkspace({ locale }: { locale:RouteLocale }) {
+export function DiceWorkspace({ locale }: { locale:RouteLocale | "ru" }) {
   const t = copy[locale];
   const [sides, setSides] = useState(6);
   const [count, setCount] = useState(1);
@@ -145,7 +149,7 @@ export function DiceWorkspace({ locale }: { locale:RouteLocale }) {
   </section>;
 }
 
-export function RandomNumberWorkspace({ locale }: { locale:RouteLocale }) {
+export function RandomNumberWorkspace({ locale }: { locale:RouteLocale | "ru" }) {
   const t = copy[locale];
   const [min, setMin] = useState(1), [max, setMax] = useState(45), [count, setCount] = useState(1), [unique, setUnique] = useState(true), [sorted, setSorted] = useState(true);
   const [result, setResult] = useState<number[]>([]), [error, setError] = useState("");

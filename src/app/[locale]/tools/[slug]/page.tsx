@@ -8,6 +8,7 @@ import { CountdownWorkspace } from "@/components/tool/countdown-workspace";
 import { RandomStringWorkspace } from "@/components/tool/random-string-workspace";
 import { QrWorkspace } from "@/components/tool/qr-workspace";
 import { WorldClockWorkspace } from "@/components/tool/world-clock-workspace";
+import { DiceWorkspace, RandomNumberWorkspace } from "@/components/tool/special-random-workspaces";
 import { ToolDetailLayout } from "@/components/tool/tool-detail-layout";
 import { getMessages } from "@/i18n/messages";
 import { isLocale, localizePath, type Locale } from "@/i18n/routing";
@@ -182,6 +183,10 @@ function RussianPublishedToolPage({ slug }: { slug: string }) {
             ? <QrWorkspace slug={slug} locale="ru" />
             : slug === "world-clock"
               ? <WorldClockWorkspace locale="ru" />
+              : slug === "dice-roller"
+                ? <DiceWorkspace locale="ru" />
+                : slug === "random-number"
+                  ? <RandomNumberWorkspace locale="ru" />
         : null;
   if (!workspace) notFound();
   const tool = localizePublishedTool(baseTool, "ru");
