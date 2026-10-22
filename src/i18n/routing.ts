@@ -16,12 +16,32 @@ export const localeConfig = [
   { locale: "hi", routeLocale: "hi", hreflang: "hi", nativeName: "हिन्दी", intlLocale: "hi-IN" },
 ] as const;
 
+// These locales are part of the expansion target, but are intentionally not
+// routable or indexable until their complete translation set is published.
+export const plannedLocaleConfig = [
+  { locale: "ru", routeLocale: "ru", hreflang: "ru", nativeName: "Русский", intlLocale: "ru-RU" },
+  { locale: "tr", routeLocale: "tr", hreflang: "tr", nativeName: "Türkçe", intlLocale: "tr-TR" },
+  { locale: "pl", routeLocale: "pl", hreflang: "pl", nativeName: "Polski", intlLocale: "pl-PL" },
+  { locale: "fil", routeLocale: "fil", hreflang: "fil", nativeName: "Filipino", intlLocale: "fil-PH" },
+  { locale: "bn", routeLocale: "bn", hreflang: "bn", nativeName: "বাংলা", intlLocale: "bn-BD" },
+  { locale: "uk", routeLocale: "uk", hreflang: "uk", nativeName: "Українська", intlLocale: "uk-UA" },
+  { locale: "ms", routeLocale: "ms", hreflang: "ms", nativeName: "Bahasa Melayu", intlLocale: "ms-MY" },
+  { locale: "sv", routeLocale: "sv", hreflang: "sv", nativeName: "Svenska", intlLocale: "sv-SE" },
+  { locale: "cs", routeLocale: "cs", hreflang: "cs", nativeName: "Čeština", intlLocale: "cs-CZ" },
+  { locale: "ro", routeLocale: "ro", hreflang: "ro", nativeName: "Română", intlLocale: "ro-RO" },
+  { locale: "el", routeLocale: "el", hreflang: "el", nativeName: "Ελληνικά", intlLocale: "el-GR" },
+] as const;
+
+export const targetLocaleConfig = [...localeConfig, ...plannedLocaleConfig] as const;
 export type RouteLocale = (typeof localeConfig)[number]["routeLocale"];
 export type Locale = RouteLocale;
+export type TargetLocale = (typeof targetLocaleConfig)[number]["routeLocale"];
 export type UiLocale = "ko" | "en" | "ja" | "zh";
 export type LocaleConfig = (typeof localeConfig)[number];
 export const locales = localeConfig.map(({ routeLocale }) => routeLocale) as [RouteLocale, ...RouteLocale[]];
+export const targetLocales = targetLocaleConfig.map(({ routeLocale }) => routeLocale) as [TargetLocale, ...TargetLocale[]];
 export const localeLabels = Object.fromEntries(localeConfig.map(({ routeLocale, nativeName }) => [routeLocale, nativeName])) as Record<RouteLocale, string>;
+export const targetLocaleLabels = Object.fromEntries(targetLocaleConfig.map(({ routeLocale, nativeName }) => [routeLocale, nativeName])) as Record<TargetLocale, string>;
 export const intlLocales = Object.fromEntries(localeConfig.map(({ routeLocale, intlLocale }) => [routeLocale, intlLocale])) as Record<RouteLocale, string>;
 export const hreflangs = Object.fromEntries(localeConfig.map(({ routeLocale, hreflang }) => [routeLocale, hreflang])) as Record<RouteLocale, string>;
 
@@ -31,6 +51,10 @@ export function getLocaleConfig(routeLocale: string): LocaleConfig | undefined {
 
 export function isLocale(value: string): value is RouteLocale {
   return getLocaleConfig(value) !== undefined;
+}
+
+export function isTargetLocale(value: string): value is TargetLocale {
+  return targetLocaleConfig.some((item) => item.routeLocale === value);
 }
 
 export function getUiLocale(locale: RouteLocale): UiLocale {
