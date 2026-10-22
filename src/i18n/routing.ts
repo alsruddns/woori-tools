@@ -35,6 +35,7 @@ export const plannedLocaleConfig = [
 export const targetLocaleConfig = [...localeConfig, ...plannedLocaleConfig] as const;
 export type RouteLocale = (typeof localeConfig)[number]["routeLocale"];
 export type Locale = RouteLocale;
+export type PlannedLocale = (typeof plannedLocaleConfig)[number]["routeLocale"];
 export type TargetLocale = (typeof targetLocaleConfig)[number]["routeLocale"];
 export type UiLocale = "ko" | "en" | "ja" | "zh";
 export type LocaleConfig = (typeof localeConfig)[number];
