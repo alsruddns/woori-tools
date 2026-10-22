@@ -75,7 +75,7 @@ test("the six lottery tools have complete authored copy in every planned locale"
 });
 
 test("Russian has complete page metadata and editorial copy for its translated tool batch", () => {
-  const expected = ["tarot-card", "daily-fortune", "saju", "random-number", "random-name-picker", "random-wheel", "draw-lots", "random-team-maker", "random-order", "random-seat", "duty-picker", "dice-roller", "coin-flip", "stopwatch", "timer", "pomodoro-timer", "world-clock"];
+  const expected = ["tarot-card", "daily-fortune", "saju", "random-number", "random-name-picker", "random-wheel", "draw-lots", "random-team-maker", "random-order", "random-seat", "duty-picker", "dice-roller", "coin-flip", "stopwatch", "timer", "pomodoro-timer", "world-clock", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr"];
   const fields = ["title", "description", "seoTitle", "seoDescription", "category", "keywords", "steps", "example", "options", "caution", "faq"];
   assert.deepEqual(russianTranslations.targetRussianToolSlugs, expected);
   for (const slug of expected) {
