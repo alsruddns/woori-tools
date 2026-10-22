@@ -7,7 +7,7 @@ Routable locales: 16 (ko, en, ja, zh, es, pt-br, de, fr, vi, id, th, zh-tw, it, 
 
 | Locale | Translation data | UI verified | SEO verified | Public tools | Pending data | Next tool |
 | --- | ---: | ---: | ---: | ---: | ---: | --- |
-| ru | 53/176 | 1 | 1 | 1 | 123 | cron-parser |
+| ru | 63/176 | 1 | 1 | 1 | 113 | jpg-to-webp |
 | tr | 6/176 | 0 | 0 | 0 | 170 | tarot-card |
 | pl | 6/176 | 0 | 0 | 0 | 170 | tarot-card |
 | fil | 6/176 | 0 | 0 | 0 | 170 | tarot-card |
@@ -22,27 +22,17 @@ Routable locales: 16 (ko, en, ja, zh, es, pt-br, de, fr, vi, id, th, zh-tw, it, 
 ## Translation coverage
 
 - Existing authored lottery bundle slugs: lotto-number-generator, powerball-number-generator, mega-millions-number-generator, japan-loto6-number-generator, japan-loto7-number-generator, japan-mini-loto-number-generator
-- Additional Russian bundle slugs: tarot-card, daily-fortune, saju, random-number, random-name-picker, random-wheel, draw-lots, random-team-maker, random-order, random-seat, duty-picker, dice-roller, coin-flip, stopwatch, timer, pomodoro-timer, world-clock, password-generator, random-string-generator, wifi-qr, contact-qr, phone-qr, email-qr, barcode-checker, barcode-generator, instagram-grid-split, image-collage, file-hash, mime-type-checker, file-extension-checker, file-size-checker, duplicate-file-checker, zip-files, bulk-file-renamer, filename-cleaner, shuffle-lines, add-line-numbers, remove-line-numbers, remove-empty-lines, remove-characters, text-repeater, text-to-file, lorem-ipsum, regex-tester, color-converter, social-image-resize, add-text-to-image
-- Russian completed tool bundles: 53/176
+- Additional Russian bundle slugs: tarot-card, daily-fortune, saju, random-number, random-name-picker, random-wheel, draw-lots, random-team-maker, random-order, random-seat, duty-picker, dice-roller, coin-flip, stopwatch, timer, pomodoro-timer, world-clock, password-generator, random-string-generator, wifi-qr, contact-qr, phone-qr, email-qr, barcode-checker, barcode-generator, instagram-grid-split, image-collage, file-hash, mime-type-checker, file-extension-checker, file-size-checker, duplicate-file-checker, zip-files, bulk-file-renamer, filename-cleaner, shuffle-lines, add-line-numbers, remove-line-numbers, remove-empty-lines, remove-characters, text-repeater, text-to-file, lorem-ipsum, regex-tester, color-converter, cron-parser, sql-formatter, html-formatter, css-formatter, javascript-formatter, markdown-preview, jpg-to-png, png-to-jpg, webp-to-jpg, webp-to-png, social-image-resize, add-text-to-image
+- Russian completed tool bundles: 63/176
 - Russian tools with UI verified: barcode-generator
 - Russian tools with SEO verified: barcode-generator
 - Russian tool URLs published: barcode-generator
-- Russian next tool: cron-parser
+- Russian next tool: jpg-to-webp
 - Russian shared site, search, workspace, error, privacy, and terms messages are wired for the published route; non-Russian target UI messages remain unpublished.
 - Only tool-locale URLs listed in the registry are included in the sitemap and hreflang sets.
 
 ## Remaining Russian tools
 
-- cron-parser
-- sql-formatter
-- html-formatter
-- css-formatter
-- javascript-formatter
-- markdown-preview
-- jpg-to-png
-- png-to-jpg
-- webp-to-jpg
-- webp-to-png
 - jpg-to-webp
 - png-to-webp
 - heic-to-jpg
@@ -164,4 +154,4 @@ Routable locales: 16 (ko, en, ja, zh, es, pt-br, de, fr, vi, id, th, zh-tw, it, 
 - Russian canonical, hreflang, x-default, Open Graph, route rendering, and sitemap membership passed source and build checks for barcode-generator.
 - The verified route set is intentionally limited to published tool slugs; the remaining Russian tools are not routable or indexed.
 - Current branch is `develop`.
-- Next Russian translation-data tool: `cron-parser`.
+- Next Russian translation-data tool: `jpg-to-webp`.
