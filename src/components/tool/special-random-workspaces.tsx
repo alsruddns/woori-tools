@@ -255,9 +255,12 @@ const wheelCopy: Record<string, Record<string, string>> = {
   hi: {label:"हर पंक्ति में एक विकल्प लिखें",entries:"मौजूदा विकल्प",add:"विकल्प जोड़ें",delete:"हटाएँ",clear:"सभी मिटाएँ",dedupe:"दोहराए विकल्प हटाएँ",empty:"खाली पंक्तियाँ हटाएँ",shuffle:"विकल्प मिलाएँ",duplicates:"दोहराए विकल्पों की अनुमति दें",removeWinner:"फिर घुमाने से पहले विजेता हटाएँ",speed:"घुमाने की अवधि",fast:"तेज़",normal:"सामान्य",slow:"धीमा",spin:"पहिया घुमाएँ",spinning:"घूम रहा है…",winner:"चुना गया विकल्प",minimum:"कम से कम दो विकल्प लिखें।",maximum:"पहिए में अधिकतम 50 विकल्प हो सकते हैं।",option:"दोपहर का भोजन\nपिज़्ज़ा\nनूडल्स"},
 };
 
-export function RandomWheelWorkspace({ locale }: { locale:RouteLocale }) {
+Object.assign(wheelCopy, { ru: { label: "Введите один вариант в строке", entries: "Вариантов", add: "Добавить вариант", delete: "Удалить", clear: "Очистить всё", dedupe: "Убрать повторы", empty: "Удалить пустые строки", shuffle: "Перемешать варианты", duplicates: "Разрешить повторы", removeWinner: "Удалять выбранный вариант перед следующим вращением", speed: "Длительность вращения", fast: "Быстро", normal: "Обычно", slow: "Медленно", spin: "Крутить колесо", spinning: "Колесо вращается…", winner: "Выбранный вариант", minimum: "Добавьте не менее двух вариантов.", maximum: "На колесе может быть не более 50 вариантов.", option: "Обед\nПицца\nПаста" } });
+
+export function RandomWheelWorkspace({ locale }: { locale:RouteLocale | "ru" }) {
   const t = wheelCopy[locale];
   const starterByLocale:Record<string,string[]>={ko:["피자","치킨","햄버거","초밥"],en:["Pizza","Chicken","Burger","Sushi"],ja:["ピザ","チキン","ハンバーガー","寿司"],zh:["披萨","鸡肉","汉堡","寿司"],es:["Pizza","Pollo","Hamburguesa","Sushi"],"pt-br":["Pizza","Frango","Hambúrguer","Sushi"],de:["Pizza","Hähnchen","Burger","Sushi"],fr:["Pizza","Poulet","Burger","Sushi"],vi:["Pizza","Gà","Hamburger","Sushi"],id:["Pizza","Ayam","Burger","Sushi"],th:["พิซซ่า","ไก่","เบอร์เกอร์","ซูชิ"],"zh-tw":["披薩","雞肉","漢堡","壽司"],it:["Pizza","Pollo","Hamburger","Sushi"],nl:["Pizza","Kip","Hamburger","Sushi"],hi:["पिज़्ज़ा","चिकन","बर्गर","सुशी"]};
+  starterByLocale.ru = ["Пицца", "Курица", "Бургер", "Суши"];
   const starter = starterByLocale[locale];
   const [text, setText] = useState(starter.join("\n"));
   const [allowDuplicates, setAllowDuplicates] = useState(false);
@@ -284,7 +287,7 @@ export function RandomWheelWorkspace({ locale }: { locale:RouteLocale }) {
     setSpinning(false);
     if (removeWinner && winner) setText((old) => { const lines = old.split(/\r?\n/); const index = lines.findIndex((line) => line.trim() === winner); if (index >= 0) lines.splice(index, 1); return lines.join("\n"); });
   }
-  function addItem() { if (items.length >= 50) return; const next=({ko:"새 항목",en:"New entry",ja:"新しい項目",zh:"新选项",es:"Nueva opción","pt-br":"Nova opção",de:"Neuer Eintrag",fr:"Nouvelle option",vi:"Mục mới",id:"Entri baru",th:"รายการใหม่","zh-tw":"新增選項",it:"Nuova voce",nl:"Nieuw item",hi:"नया विकल्प"} as Record<string,string>)[locale]; setText((old) => `${old}${old.trimEnd() ? "\n" : ""}${next}`); }
+  function addItem() { if (items.length >= 50) return; const next=({ko:"새 항목",en:"New entry",ja:"新しい項目",zh:"新选项",es:"Nueva opción","pt-br":"Nova opção",de:"Neuer Eintrag",fr:"Nouvelle option",vi:"Mục mới",id:"Entri baru",th:"รายการใหม่","zh-tw":"新增選項",it:"Nuova voce",nl:"Nieuw item",hi:"नया विकल्प"} as Record<string,string>)[locale] ?? "Новый вариант"; setText((old) => `${old}${old.trimEnd() ? "\n" : ""}${next}`); }
   function removeItem(index: number) { const next = [...items]; next.splice(index, 1); setText(next.join("\n")); setWinner(""); }
   function sectorPath(index: number) {
     const start = index * segment, end = (index + 1) * segment;

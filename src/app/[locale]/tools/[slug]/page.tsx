@@ -8,7 +8,7 @@ import { CountdownWorkspace } from "@/components/tool/countdown-workspace";
 import { RandomStringWorkspace } from "@/components/tool/random-string-workspace";
 import { QrWorkspace } from "@/components/tool/qr-workspace";
 import { WorldClockWorkspace } from "@/components/tool/world-clock-workspace";
-import { CoinFlipWorkspace, DiceWorkspace, RandomNameWorkspace, RandomNumberWorkspace, RandomOrderWorkspace, RandomSeatWorkspace, RandomTeamWorkspace, RussianDutyPickerWorkspace } from "@/components/tool/special-random-workspaces";
+import { CoinFlipWorkspace, DiceWorkspace, RandomNameWorkspace, RandomNumberWorkspace, RandomOrderWorkspace, RandomSeatWorkspace, RandomTeamWorkspace, RandomWheelWorkspace, RussianDutyPickerWorkspace } from "@/components/tool/special-random-workspaces";
 import { RussianStopwatchWorkspace } from "@/components/tool/tool-workspace";
 import { ToolDetailLayout } from "@/components/tool/tool-detail-layout";
 import { getMessages } from "@/i18n/messages";
@@ -202,6 +202,8 @@ function RussianPublishedToolPage({ slug }: { slug: string }) {
                             ? <RandomSeatWorkspace locale="ru" />
                             : slug === "duty-picker"
                               ? <RussianDutyPickerWorkspace />
+                              : slug === "random-wheel"
+                                ? <RandomWheelWorkspace locale="ru" />
         : null;
   if (!workspace) notFound();
   const tool = localizePublishedTool(baseTool, "ru");
