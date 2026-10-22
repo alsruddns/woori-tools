@@ -35,7 +35,7 @@ import { CountdownWorkspace } from "@/components/tool/countdown-workspace";
 import { RandomStringWorkspace } from "@/components/tool/random-string-workspace";
 import { QrWorkspace } from "@/components/tool/qr-workspace";
 import { WorldClockWorkspace } from "@/components/tool/world-clock-workspace";
-import { CoinFlipWorkspace, DiceWorkspace, RandomNameWorkspace, RandomNumberWorkspace, RandomOrderWorkspace, RandomSeatWorkspace, RandomTeamWorkspace, RandomWheelWorkspace, RussianDutyPickerWorkspace } from "@/components/tool/special-random-workspaces";
+import { CoinFlipWorkspace, DiceWorkspace, LottoWorkspace, RandomNameWorkspace, RandomNumberWorkspace, RandomOrderWorkspace, RandomSeatWorkspace, RandomTeamWorkspace, RandomWheelWorkspace, RussianDutyPickerWorkspace } from "@/components/tool/special-random-workspaces";
 import { RussianStopwatchWorkspace } from "@/components/tool/tool-workspace";
 import { DailyFortuneWorkspace, TarotWorkspace } from "@/components/tool/fortune-workspace";
 import { SajuWorkspace } from "@/components/tool/saju-workspace";
@@ -51,6 +51,7 @@ import { getFileGuidance } from "@/registry/file-guidance";
 import { getToolFaqQuestions } from "@/registry/tool-faq";
 import { localizePublishedTool } from "@/registry/published-tool-translations";
 import { getTargetRussianToolTranslation } from "@/registry/target-ru-translations";
+import { getTargetLotteryTranslation } from "@/registry/target-lottery-translations";
 import { targetLocalePublication } from "@/registry/target-locale-publication";
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
@@ -66,7 +67,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale: rawLocale, slug } = await params;
   if (rawLocale === "ru") {
     const tool = getTool(slug);
-    const translation = getTargetRussianToolTranslation(slug);
+    const translation = getTargetRussianToolTranslation(slug) ?? getTargetLotteryTranslation("ru", slug);
     if (!tool || !tool.supportedLocales.includes("ru") || !translation) return {};
     return pageMetadata({ locale: "ru", path: `/tools/${slug}`, title: translation.seoTitle, description: translation.seoDescription, keywords: translation.keywords, supportedLocales: tool.supportedLocales });
   }
@@ -250,12 +251,15 @@ function isRussianInternationalSlug(slug: string): slug is RussianInternationalS
 
 function RussianPublishedToolPage({ slug }: { slug: string }) {
   const baseTool = getTool(slug);
-  const translation = getTargetRussianToolTranslation(slug);
+  const translation = getTargetRussianToolTranslation(slug) ?? getTargetLotteryTranslation("ru", slug);
   const uiVerified = targetLocalePublication.ru.uiVerifiedToolSlugs.includes(slug);
   const seoVerified = targetLocalePublication.ru.seoVerifiedToolSlugs.includes(slug);
   const published = targetLocalePublication.ru.publishedToolSlugs.includes(slug);
   if (!baseTool || !baseTool.supportedLocales.includes("ru") || !translation || !uiVerified || !seoVerified || !published) notFound();
-  const workspace = slug === "zip-files"
+  const lotteryWorkspace = slug === "lotto-number-generator" || slug === "powerball-number-generator" || slug === "mega-millions-number-generator" || slug === "japan-loto6-number-generator" || slug === "japan-loto7-number-generator" || slug === "japan-mini-loto-number-generator"
+    ? <LottoWorkspace locale="ru" min={slug === "powerball-number-generator" ? 1 : 1} max={slug === "powerball-number-generator" ? 69 : slug === "mega-millions-number-generator" ? 70 : slug === "japan-loto6-number-generator" ? 43 : slug === "japan-loto7-number-generator" ? 37 : slug === "japan-mini-loto-number-generator" ? 31 : 45} numberCount={slug === "powerball-number-generator" || slug === "mega-millions-number-generator" ? 5 : slug === "japan-loto7-number-generator" ? 7 : slug === "japan-mini-loto-number-generator" ? 5 : 6} historyKey={`lottery-history:${slug}`} specialBall={slug === "powerball-number-generator" ? { label: { ru: "Powerball" }, min: 1, max: 26 } : slug === "mega-millions-number-generator" ? { label: { ru: "Mega Ball" }, min: 1, max: 24 } : undefined} />
+    : null;
+  const workspace = lotteryWorkspace ?? (slug === "zip-files"
     ? <RussianZipWorkspace />
     : slug === "color-converter"
       ? <RussianColorConverterWorkspace />
@@ -427,14 +431,16 @@ function RussianPublishedToolPage({ slug }: { slug: string }) {
                                     ? <DailyFortuneWorkspace locale="ru" />
                                     : slug === "saju"
                                       ? <SajuWorkspace locale="ru" />
-        : null;
+        : null);
   if (!workspace) notFound();
-  const tool = localizePublishedTool(baseTool, "ru");
+  const localizedTool = localizePublishedTool(baseTool, "ru");
+  const tool = { ...localizedTool, title: translation.title, description: translation.description };
   const messages = getMessages("ru");
+  const category = "category" in translation && typeof translation.category === "string" ? translation.category : "Лотереи";
   const url = `https://www.woori.today/ru/tools/${slug}`;
   return <main className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
     <nav aria-label={messages.breadcrumb} className="mb-6 text-sm text-slate-500"><Link href="/ru/tools" className="hover:text-indigo-700">{messages.tools}</Link><span aria-hidden="true"> / </span><span aria-current="page" className="text-slate-700">{tool.title}</span></nav>
-    <header className="mb-7"><p className="mb-2 text-sm font-semibold text-indigo-700">{translation.category}</p><h1 className="text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">{tool.title}</h1><p className="mt-3 max-w-3xl text-lg leading-8 text-slate-600">{tool.description}</p></header>
+    <header className="mb-7"><p className="mb-2 text-sm font-semibold text-indigo-700">{category}</p><h1 className="text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">{tool.title}</h1><p className="mt-3 max-w-3xl text-lg leading-8 text-slate-600">{tool.description}</p></header>
     {workspace}
     <section className="mt-12 space-y-8">
       <article><h2 className="text-2xl font-bold">Об этом инструменте</h2><p className="mt-3 leading-7 text-slate-700">{translation.description}</p></article>
