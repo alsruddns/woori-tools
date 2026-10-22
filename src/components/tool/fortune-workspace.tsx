@@ -93,6 +93,17 @@ Object.assign(dailyPools, { ru: {
   colors: ["Бирюзовый", "Тёмно-синий", "Светло-зелёный", "Оранжевый", "Фиолетовый", "Серый"],
 } });
 
+Object.assign(dailyText, { tr: { birth:"Doğum tarihi",run:"Bugünün yorumunu gör",again:"Yorumu yenile",date:"Tarih",total:"Genel görünüm",money:"Para",love:"İlişkiler",work:"İş · Eğitim",condition:"İyi oluş",number:"Şanslı sayı",color:"Şanslı renk",line:"Günün notu",privacy:"Doğum tarihiniz yalnızca bugünkü yorumu hesaplamak için bu tarayıcıda kullanılır; kaydedilmez veya sunucuya gönderilmez.",note:"Bu yorum eğlence ve kişisel değerlendirme içindir; geleceği öngörmez ve önemli finans, sağlık veya hukuk kararlarının yerini tutmaz.",invalid:"Bugünden ileri olmayan geçerli bir doğum tarihi girin." } });
+Object.assign(dailyPools, { tr: {
+  total:["Önceliklerinizi sadeleştirmek günün akışını kolaylaştırabilir.","Küçük bir ilerleme, büyük bir planın önünü açabilir.","Bugün esnek kalmak beklenmedik bir fırsatı görmenize yardım edebilir.","Bir işi tamamlamak için sakin ve düzenli bir tempo seçin.","Dikkatinizi gerçekten önemli olana yöneltin.","Günün sonunda kısa bir değerlendirme yararlı olabilir."],
+  money:["Bir harcamadan önce ihtiyacınızı ve bütçenizi karşılaştırın.","Küçük bir birikim hedefi belirlemek iyi bir başlangıç olabilir.","Alışveriş kararlarında acele etmeyip seçenekleri gözden geçirin.","Düzenli giderlerinizi kontrol etmek size daha net bir tablo sunabilir.","Bir teklifin koşullarını anlamadan karar vermeyin.","Bugün mali konularda temkinli ve ölçülü davranın."],
+  love:["Karşınızdakini dikkatle dinlemek yakınlığı artırabilir.","Duygularınızı açık ve nazik bir dille paylaşın.","Küçük bir düşünceli davranış güzel bir iz bırakabilir.","Bir anlaşmazlıkta önce ortak noktayı bulmaya çalışın.","Kendinize ayırdığınız zaman ilişkilerinize de iyi gelebilir.","Beklentilerinizi varsaymak yerine konuşarak netleştirin."],
+  work:["En önemli görevi seçip ona kesintisiz zaman ayırın.","Bir ekip arkadaşından geri bildirim almak bakış açınızı genişletebilir.","Büyük bir işi küçük ve tamamlanabilir adımlara bölün.","Takviminizi gözden geçirip önceliklerinizi güncelleyin.","Yeni bir fikri kısa bir notla kaydedip sonra değerlendirin.","Kısa bir mola dikkatinizi tazelemeye yardımcı olabilir."],
+  condition:["Su içmeyi ve düzenli mola vermeyi hatırlayın.","Kısa bir yürüyüş zihninizi toparlamanıza yardımcı olabilir.","Bugün kendinize uygun, sürdürülebilir bir tempo belirleyin.","Ekrandan uzak kısa bir ara gözlerinizi dinlendirebilir.","Rahatlatıcı birkaç nefesle yoğunluğu azaltmayı deneyin.","Dinlenmeye zaman ayırmak günün kalanını kolaylaştırabilir."],
+  line:["Bugün tek bir küçük adım atmanız yeterli olabilir.","Kendi hızınızı koruyun ve ilerlemenizi başkalarıyla kıyaslamayın.","İyi bir soru, daha net bir kararın başlangıcı olabilir.","Bir planı değiştirmek gerektiğinde bunu sakinlikle yapın.","Dikkatinizi şu anda etkileyebileceğiniz konulara verin.","Kendinize gösterdiğiniz özen de ilerlemenin bir parçasıdır."],
+  colors:["Lacivert","Turkuaz","Yeşil","Mercan","Menekşe","Gümüş"],
+} });
+
 export function TarotWorkspace({ locale }: { locale:RouteLocale | "ru" | "tr" }) {
   const t = tarotText[locale];
   const [question, setQuestion] = useState("");
@@ -111,7 +122,7 @@ export function TarotWorkspace({ locale }: { locale:RouteLocale | "ru" | "tr" })
   </section>;
 }
 
-export function DailyFortuneWorkspace({ locale }: { locale:RouteLocale | "ru" }) {
+export function DailyFortuneWorkspace({ locale }: { locale:RouteLocale | "ru" | "tr" }) {
   const t = dailyText[locale]; const p = dailyPools[locale];
   const [today,setToday]=useState("");
   useEffect(()=>{const d=new Date();const value=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;const id=window.setTimeout(()=>setToday(value),0);return()=>window.clearTimeout(id);},[]);

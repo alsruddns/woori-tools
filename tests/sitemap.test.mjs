@@ -72,7 +72,7 @@ const tarotLocalizationSource = await readFile(new URL("../src/lib/fortune/tarot
 const sajuWorkspaceSource = await readFile(new URL("../src/components/tool/saju-workspace.tsx", import.meta.url), "utf8");
 const nextConfig = await readFile(new URL("../next.config.ts", import.meta.url), "utf8");
 const siteOrigin = "https://www.woori.today";
-const turkishPublishedSlugs = ["lotto-number-generator", "powerball-number-generator", "mega-millions-number-generator", "japan-loto6-number-generator", "japan-loto7-number-generator", "japan-mini-loto-number-generator", "random-number", "random-name-picker", "random-wheel", "draw-lots", "random-team-maker", "random-order", "random-seat", "timer", "pomodoro-timer", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr", "dice-roller", "coin-flip", "stopwatch", "world-clock", "tarot-card"];
+const turkishPublishedSlugs = ["lotto-number-generator", "powerball-number-generator", "mega-millions-number-generator", "japan-loto6-number-generator", "japan-loto7-number-generator", "japan-mini-loto-number-generator", "random-number", "random-name-picker", "random-wheel", "draw-lots", "random-team-maker", "random-order", "random-seat", "timer", "pomodoro-timer", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr", "dice-roller", "coin-flip", "stopwatch", "world-clock", "tarot-card", "daily-fortune"];
 const sitemapTools = publicTools.map((tool) => turkishPublishedSlugs.includes(tool.slug)
   ? { ...tool, supportedLocales: [...tool.supportedLocales, "tr"] }
   : tool);
@@ -175,7 +175,7 @@ test("sitemap and SEO use the same language alternate helper", () => {
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/duty-picker")).alternates.languages).length, 17);
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/random-wheel")).alternates.languages).length, 18);
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/tarot-card")).alternates.languages).length, 18);
-  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/daily-fortune")).alternates.languages).length, 17);
+  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/daily-fortune")).alternates.languages).length, 18);
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/saju")).alternates.languages).length, 17);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/barcode-generator")), true);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/barcode-checker")), true);
@@ -511,7 +511,7 @@ test("Turkish verified tool workspaces publish only their approved routes", () =
     assert.equal(entry.alternates.languages.tr, `${siteOrigin}/tr/tools/${slug}`);
     assert.equal(entry.alternates.languages["x-default"], `${siteOrigin}/ko/tools/${slug}`);
   }
-  assert.equal(turkishPublishedSlugs.length, 26);
+  assert.equal(turkishPublishedSlugs.length, 27);
   assert.match(localeLayoutSource, /rawLocale === "tr"/);
   assert.match(toolPageSource, /rawLocale === "tr"\) return <TurkishPublishedToolPage/);
   assert.match(toolPageSource, /pageMetadata\(\{ locale: "tr"/);
@@ -524,10 +524,12 @@ test("Turkish verified tool workspaces publish only their approved routes", () =
   assert.match(toolPageSource, /TurkishStopwatchWorkspace/);
   assert.match(toolPageSource, /WorldClockWorkspace locale="tr"/);
   assert.match(toolPageSource, /TarotWorkspace locale="tr"/);
+  assert.match(toolPageSource, /DailyFortuneWorkspace locale="tr"/);
   assert.match(toolWorkspaceSource, /translated\.tr=\[/);
   assert.match(worldClockWorkspaceSource, /tr: \{ title: "Dünya saati", add: "Şehir ekle"/);
   assert.match(fortuneWorkspaceSource, /tarotNames\.tr = \["Deli","Büyücü"/);
   assert.match(tarotLocalizationSource, /tr:\{upright:"Kartın vurgusu: \{theme\}\."/);
+  assert.match(fortuneWorkspaceSource, /tr: \{ birth:"Doğum tarihi",run:"Bugünün yorumunu gör"/);
   assert.match(specialRandomWorkspaceSource, /locale === "tr"/);
   assert.match(targetLocalePublicationSource, /"timer", "pomodoro-timer", "password-generator", "random-string-generator", "wifi-qr"/);
 });
