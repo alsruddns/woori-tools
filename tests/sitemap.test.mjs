@@ -19,7 +19,7 @@ const countrySlugs = [...countrySlugSource.matchAll(/"([a-z0-9-]+)"/g)].map((mat
 const { tools: publicTools, filterPublicTools } = await importTypeScript("../src/registry/tools.ts", [
   ['import { locales, type PublishedTargetLocale } from "../i18n/routing";', `const locales = ${JSON.stringify(locales)};`],
   ['import { COUNTRY_TOOL_SLUGS } from "../lib/country-tool-slugs";', `const COUNTRY_TOOL_SLUGS = ${JSON.stringify(countrySlugs)};`],
-  ['import { targetLocalePublication } from "./target-locale-publication";', 'const targetLocalePublication = { ru: { publishedToolSlugs: ["barcode-generator", "markdown-preview"] } };'],
+  ['import { targetLocalePublication } from "./target-locale-publication";', 'const targetLocalePublication = { ru: { publishedToolSlugs: ["barcode-generator", "markdown-preview", "timer", "pomodoro-timer"] } };'],
 ]);
 const seoSource = await readFile(new URL("../src/lib/seo.ts", import.meta.url), "utf8");
 const { languageAlternates } = await importTypeScript("../src/lib/seo.ts", [[
@@ -30,6 +30,7 @@ const sitemapSource = await readFile(new URL("../src/app/sitemap.ts", import.met
 const localeLayoutSource = await readFile(new URL("../src/app/[locale]/layout.tsx", import.meta.url), "utf8");
 const toolPageSource = await readFile(new URL("../src/app/[locale]/tools/[slug]/page.tsx", import.meta.url), "utf8");
 const markdownWorkspaceSource = await readFile(new URL("../src/components/tool/russian-markdown-workspace.tsx", import.meta.url), "utf8");
+const countdownWorkspaceSource = await readFile(new URL("../src/components/tool/countdown-workspace.tsx", import.meta.url), "utf8");
 const nextConfig = await readFile(new URL("../next.config.ts", import.meta.url), "utf8");
 const siteOrigin = "https://www.woori.today";
 const entries = createSitemapEntries({
@@ -110,16 +111,29 @@ test("sitemap and SEO use the same language alternate helper", () => {
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/lotto-number-generator")).alternates.languages).length, 16);
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/barcode-generator")).alternates.languages).length, 17);
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/markdown-preview")).alternates.languages).length, 17);
+  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/timer")).alternates.languages).length, 17);
+  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/pomodoro-timer")).alternates.languages).length, 17);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/barcode-generator")), true);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/markdown-preview")), true);
+  assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/timer")), true);
+  assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/pomodoro-timer")), true);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/image-compress")), false);
   assert.equal(localeConfig.find(({ routeLocale }) => routeLocale === "pt-br").hreflang, "pt-BR");
   assert.equal(localeConfig.find(({ routeLocale }) => routeLocale === "zh-tw").hreflang, "zh-TW");
 });
 
 test("Russian markdown preview is only published with its localized workspace", () => {
-  assert.match(toolPageSource, /slug === "markdown-preview" \? <RussianMarkdownWorkspace \/>/);
+  assert.match(toolPageSource, /slug === "markdown-preview"\s*\? <RussianMarkdownWorkspace \/>/);
   assert.match(markdownWorkspaceSource, /placeholder=\{\s*"# Заголовок\\n\\nВведите пример \*\*Markdown\*\*\."/);
   assert.equal(publicTools.find(({ slug }) => slug === "markdown-preview").supportedLocales.includes("ru"), true);
   assert.equal(entries.some(({ url }) => url === `${siteOrigin}/ru/tools/markdown-preview`), true);
+});
+
+test("Russian timer and Pomodoro use localized controls before publication", () => {
+  assert.match(toolPageSource, /slug === "timer" \|\| slug === "pomodoro-timer"/);
+  assert.match(countdownWorkspaceSource, /ru:\s*\{[\s\S]*?hours:\s*"Часы"[\s\S]*?complete:\s*"Время вышло\."/);
+  for (const slug of ["timer", "pomodoro-timer"]) {
+    assert.equal(publicTools.find((tool) => tool.slug === slug).supportedLocales.includes("ru"), true);
+    assert.equal(entries.some(({ url }) => url === `${siteOrigin}/ru/tools/${slug}`), true);
+  }
 });

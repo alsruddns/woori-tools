@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import type { RouteLocale } from "@/i18n/routing";
+import type { PublishedTargetLocale } from "@/i18n/routing";
 
 const labels: Record<string, Record<string, string>> = {
   ko: { hours: "시", minutes: "분", seconds: "초", start: "시작", pause: "일시정지", resume: "계속", reset: "초기화", focus: "집중", short: "짧은 휴식", long: "긴 휴식", cycles: "긴 휴식까지 세션 수", session: "세션", presets: "빠른 설정", complete: "시간이 끝났습니다.", next: "다음 세션 시작", cyclesDone: "완료한 집중 세션", phaseFocus: "집중 시간", phaseShort: "짧은 휴식", phaseLong: "긴 휴식" },
@@ -28,7 +28,17 @@ Object.assign(presetLabels, {es:["1 min","3 min","5 min","10 min","30 min","1 h"
 type Phase = "focus" | "short" | "long";
 type Settings = { focus: number; short: number; long: number; cycleLength: number };
 
-export function CountdownWorkspace({ slug, locale }: { slug: "timer" | "pomodoro-timer"; locale:RouteLocale }) {
+Object.assign(labels, {
+  ru: {
+    hours: "Часы", minutes: "Минуты", seconds: "Секунды", start: "Запустить", pause: "Пауза", resume: "Продолжить", reset: "Сбросить",
+    focus: "Работа", short: "Короткий перерыв", long: "Длинный перерыв", cycles: "Рабочих сессий до длинного перерыва", session: "Сессия",
+    presets: "Быстрые интервалы", complete: "Время вышло.", next: "Начать следующую сессию", cyclesDone: "Завершено рабочих сессий",
+    phaseFocus: "Время работы", phaseShort: "Короткий перерыв", phaseLong: "Длинный перерыв",
+  },
+});
+Object.assign(presetLabels, { ru: ["1 мин", "3 мин", "5 мин", "10 мин", "30 мин", "1 ч"] });
+
+export function CountdownWorkspace({ slug, locale }: { slug: "timer" | "pomodoro-timer"; locale:PublishedTargetLocale }) {
   const t = labels[locale];
   const [settings, setSettings] = useState<Settings>({ focus: 25, short: 5, long: 15, cycleLength: 4 });
   const [settingsLoaded, setSettingsLoaded] = useState(false);

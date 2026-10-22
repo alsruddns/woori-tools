@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { ToolWorkspace } from "@/components/tool/tool-workspace";
 import { BarcodeWorkspace } from "@/components/tool/barcode-workspace";
 import { RussianMarkdownWorkspace } from "@/components/tool/russian-markdown-workspace";
+import { CountdownWorkspace } from "@/components/tool/countdown-workspace";
 import { ToolDetailLayout } from "@/components/tool/tool-detail-layout";
 import { getMessages } from "@/i18n/messages";
 import { isLocale, localizePath, type Locale } from "@/i18n/routing";
@@ -166,7 +167,13 @@ function RussianPublishedToolPage({ slug }: { slug: string }) {
   const seoVerified = targetLocalePublication.ru.seoVerifiedToolSlugs.includes(slug);
   const published = targetLocalePublication.ru.publishedToolSlugs.includes(slug);
   if (!baseTool || !baseTool.supportedLocales.includes("ru") || !translation || !uiVerified || !seoVerified || !published) notFound();
-  const workspace = slug === "barcode-generator" ? <BarcodeWorkspace locale="ru" /> : slug === "markdown-preview" ? <RussianMarkdownWorkspace /> : null;
+  const workspace = slug === "barcode-generator"
+    ? <BarcodeWorkspace locale="ru" />
+    : slug === "markdown-preview"
+      ? <RussianMarkdownWorkspace />
+      : slug === "timer" || slug === "pomodoro-timer"
+        ? <CountdownWorkspace slug={slug} locale="ru" />
+        : null;
   if (!workspace) notFound();
   const tool = localizePublishedTool(baseTool, "ru");
   const messages = getMessages("ru");
