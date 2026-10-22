@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import type { RouteLocale } from "@/i18n/routing";
+import type { PublishedTargetLocale } from "@/i18n/routing";
 
 const fallbackZones = ["Asia/Seoul", "Asia/Tokyo", "Asia/Shanghai", "Asia/Singapore", "Europe/London", "Europe/Paris", "America/New_York", "America/Los_Angeles", "Australia/Sydney", "Pacific/Auckland"];
 const defaultZones = ["Asia/Seoul", "Asia/Tokyo", "America/New_York", "America/Los_Angeles", "Europe/London", "Europe/Paris", "Asia/Singapore", "Australia/Sydney"];
@@ -46,7 +46,10 @@ Object.assign(zoneNames, {
   hi:{"Asia/Seoul":"सियोल","Asia/Tokyo":"टोक्यो","Asia/Shanghai":"शंघाई","Asia/Singapore":"सिंगापुर","Europe/London":"लंदन","Europe/Paris":"पेरिस","America/New_York":"न्यूयॉर्क","America/Los_Angeles":"लॉस एंजिलिस","Australia/Sydney":"सिडनी","Pacific/Auckland":"ऑकलैंड"},
 });
 
-export function WorldClockWorkspace({ locale }: { locale:RouteLocale }) {
+Object.assign(labels, { ru: { title: "Мировые часы", add: "Добавить город", remove: "Удалить", search: "Поиск часовых поясов", none: "Нет городов для отображения." } });
+Object.assign(zoneNames, { ru: { "Asia/Seoul": "Сеул", "Asia/Tokyo": "Токио", "Asia/Shanghai": "Шанхай", "Asia/Singapore": "Сингапур", "Europe/London": "Лондон", "Europe/Paris": "Париж", "America/New_York": "Нью-Йорк", "America/Los_Angeles": "Лос-Анджелес", "Australia/Sydney": "Сидней", "Pacific/Auckland": "Окленд" } });
+
+export function WorldClockWorkspace({ locale }: { locale:PublishedTargetLocale }) {
   const t = labels[locale];
   const zones = useMemo(() => {
     try { return typeof Intl.supportedValuesOf === "function" ? Intl.supportedValuesOf("timeZone") : fallbackZones; } catch { return fallbackZones; }
