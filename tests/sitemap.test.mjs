@@ -19,7 +19,7 @@ const countrySlugs = [...countrySlugSource.matchAll(/"([a-z0-9-]+)"/g)].map((mat
 const { tools: publicTools, filterPublicTools } = await importTypeScript("../src/registry/tools.ts", [
   ['import { locales, type PublishedTargetLocale } from "../i18n/routing";', `const locales = ${JSON.stringify(locales)};`],
   ['import { COUNTRY_TOOL_SLUGS } from "../lib/country-tool-slugs";', `const COUNTRY_TOOL_SLUGS = ${JSON.stringify(countrySlugs)};`],
-  ['import { targetLocalePublication } from "./target-locale-publication";', 'const targetLocalePublication = { ru: { publishedToolSlugs: ["barcode-generator", "markdown-preview", "timer", "pomodoro-timer", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr", "world-clock", "dice-roller", "random-number", "stopwatch", "coin-flip", "random-name-picker", "draw-lots", "random-team-maker", "random-order", "random-seat", "duty-picker", "random-wheel", "tarot-card"] } };'],
+  ['import { targetLocalePublication } from "./target-locale-publication";', 'const targetLocalePublication = { ru: { publishedToolSlugs: ["barcode-generator", "markdown-preview", "timer", "pomodoro-timer", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr", "world-clock", "dice-roller", "random-number", "stopwatch", "coin-flip", "random-name-picker", "draw-lots", "random-team-maker", "random-order", "random-seat", "duty-picker", "random-wheel", "tarot-card", "daily-fortune"] } };'],
 ]);
 const seoSource = await readFile(new URL("../src/lib/seo.ts", import.meta.url), "utf8");
 const { languageAlternates } = await importTypeScript("../src/lib/seo.ts", [[
@@ -132,6 +132,7 @@ test("sitemap and SEO use the same language alternate helper", () => {
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/duty-picker")).alternates.languages).length, 17);
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/random-wheel")).alternates.languages).length, 17);
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/tarot-card")).alternates.languages).length, 17);
+  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/daily-fortune")).alternates.languages).length, 17);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/barcode-generator")), true);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/markdown-preview")), true);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/timer")), true);
@@ -148,6 +149,7 @@ test("sitemap and SEO use the same language alternate helper", () => {
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/duty-picker")), true);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/random-wheel")), true);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/tarot-card")), true);
+  assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/daily-fortune")), true);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/image-compress")), false);
   assert.equal(localeConfig.find(({ routeLocale }) => routeLocale === "pt-br").hreflang, "pt-BR");
   assert.equal(localeConfig.find(({ routeLocale }) => routeLocale === "zh-tw").hreflang, "zh-TW");
@@ -264,4 +266,12 @@ test("Russian tarot page localizes controls, names, and card interpretations", (
   assert.match(tarotLocalizationSource, /const russianThemes: readonly Theme\[\] = \[[\s\S]*?const russianSentence/);
   assert.equal(publicTools.find((tool) => tool.slug === "tarot-card").supportedLocales.includes("ru"), true);
   assert.equal(entries.some(({ url }) => url === `${siteOrigin}/ru/tools/tarot-card`), true);
+});
+
+test("Russian daily fortune localizes date input, result groups, pools, and privacy copy", () => {
+  assert.match(toolPageSource, /slug === "daily-fortune"/);
+  assert.match(fortuneWorkspaceSource, /ru: \{ birth: "Дата рождения"[\s\S]*?privacy: "Дата рождения используется/);
+  assert.match(fortuneWorkspaceSource, /Object\.assign\(dailyPools, \{ ru: \{[\s\S]*?total: \[[\s\S]*?colors: \[/);
+  assert.equal(publicTools.find((tool) => tool.slug === "daily-fortune").supportedLocales.includes("ru"), true);
+  assert.equal(entries.some(({ url }) => url === `${siteOrigin}/ru/tools/daily-fortune`), true);
 });
