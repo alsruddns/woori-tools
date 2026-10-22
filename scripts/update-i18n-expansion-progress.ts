@@ -59,12 +59,12 @@ const lines = [
   "",
   "## Last verified checkpoint",
   "",
-  "- Validation: TypeScript passed; lint passed; all 107 tests passed; content-quality checks passed; production build passed.",
-  `- Production build prerendered 2,846 static pages; the tool sitemap contains 2,666 localized tool URLs, including ${targetLocalePublication.ru.publishedToolSlugs.length} verified Russian tool pages.`,
-  `- Russian canonical, hreflang, x-default, Open Graph, route rendering, and sitemap membership passed source checks for all ${targetLocalePublication.ru.publishedToolSlugs.length} pages; production rendering checks passed for barcode-checker, barcode-generator, and markdown-preview.`,
+  "- Validation: TypeScript passed; lint passed; all 108 tests passed; content-quality checks passed; production build passed.",
+  `- Production build prerendered 2,847 static pages; the tool sitemap contains 2,667 localized tool URLs, including ${targetLocalePublication.ru.publishedToolSlugs.length} verified Russian tool pages.`,
+  `- Russian canonical, hreflang, x-default, Open Graph, route rendering, and sitemap membership passed source checks for all ${targetLocalePublication.ru.publishedToolSlugs.length} pages; production rendering checks passed for instagram-grid-split, barcode-checker, barcode-generator, and markdown-preview.`,
   "- The verified route set is intentionally limited to published tool slugs; the remaining Russian tools are not routable or indexed.",
   "- Current branch is `develop`.",
-  `- Next Russian translation-data tool: \`${currentPending[0] ?? "none"}\`; next Russian workspace UI tool: \`instagram-grid-split\`.`,
+  `- Next Russian translation-data tool: \`${currentPending[0] ?? "none"}\`; next Russian workspace UI tool: \`image-collage\`.`,
   "",
 ];
 

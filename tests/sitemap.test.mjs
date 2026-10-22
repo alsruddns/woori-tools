@@ -19,7 +19,7 @@ const countrySlugs = [...countrySlugSource.matchAll(/"([a-z0-9-]+)"/g)].map((mat
 const { tools: publicTools, filterPublicTools } = await importTypeScript("../src/registry/tools.ts", [
   ['import { locales, type PublishedTargetLocale } from "../i18n/routing";', `const locales = ${JSON.stringify(locales)};`],
   ['import { COUNTRY_TOOL_SLUGS } from "../lib/country-tool-slugs";', `const COUNTRY_TOOL_SLUGS = ${JSON.stringify(countrySlugs)};`],
-  ['import { targetLocalePublication } from "./target-locale-publication";', 'const targetLocalePublication = { ru: { publishedToolSlugs: ["barcode-generator", "barcode-checker", "markdown-preview", "timer", "pomodoro-timer", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr", "world-clock", "dice-roller", "random-number", "stopwatch", "coin-flip", "random-name-picker", "draw-lots", "random-team-maker", "random-order", "random-seat", "duty-picker", "random-wheel", "tarot-card", "daily-fortune", "saju"] } };'],
+  ['import { targetLocalePublication } from "./target-locale-publication";', 'const targetLocalePublication = { ru: { publishedToolSlugs: ["barcode-generator", "barcode-checker", "instagram-grid-split", "markdown-preview", "timer", "pomodoro-timer", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr", "world-clock", "dice-roller", "random-number", "stopwatch", "coin-flip", "random-name-picker", "draw-lots", "random-team-maker", "random-order", "random-seat", "duty-picker", "random-wheel", "tarot-card", "daily-fortune", "saju"] } };'],
 ]);
 const seoSource = await readFile(new URL("../src/lib/seo.ts", import.meta.url), "utf8");
 const { languageAlternates } = await importTypeScript("../src/lib/seo.ts", [[
@@ -31,6 +31,8 @@ const localeLayoutSource = await readFile(new URL("../src/app/[locale]/layout.ts
 const toolPageSource = await readFile(new URL("../src/app/[locale]/tools/[slug]/page.tsx", import.meta.url), "utf8");
 const markdownWorkspaceSource = await readFile(new URL("../src/components/tool/russian-markdown-workspace.tsx", import.meta.url), "utf8");
 const russianBarcodeCheckerSource = await readFile(new URL("../src/components/tool/russian-barcode-checker-workspace.tsx", import.meta.url), "utf8");
+const russianInstagramGridSource = await readFile(new URL("../src/components/tool/russian-instagram-grid-workspace.tsx", import.meta.url), "utf8");
+const imageProcessorSource = await readFile(new URL("../src/lib/image/process-image.ts", import.meta.url), "utf8");
 const countdownWorkspaceSource = await readFile(new URL("../src/components/tool/countdown-workspace.tsx", import.meta.url), "utf8");
 const randomStringWorkspaceSource = await readFile(new URL("../src/components/tool/random-string-workspace.tsx", import.meta.url), "utf8");
 const qrWorkspaceSource = await readFile(new URL("../src/components/tool/qr-workspace.tsx", import.meta.url), "utf8");
@@ -120,6 +122,7 @@ test("sitemap and SEO use the same language alternate helper", () => {
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/lotto-number-generator")).alternates.languages).length, 16);
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/barcode-generator")).alternates.languages).length, 17);
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/barcode-checker")).alternates.languages).length, 17);
+  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/instagram-grid-split")).alternates.languages).length, 17);
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/markdown-preview")).alternates.languages).length, 17);
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/timer")).alternates.languages).length, 17);
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/pomodoro-timer")).alternates.languages).length, 17);
@@ -139,6 +142,7 @@ test("sitemap and SEO use the same language alternate helper", () => {
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/saju")).alternates.languages).length, 17);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/barcode-generator")), true);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/barcode-checker")), true);
+  assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/instagram-grid-split")), true);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/markdown-preview")), true);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/timer")), true);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/pomodoro-timer")), true);
@@ -176,6 +180,17 @@ test("Russian barcode checker publishes a localized checksum workspace", () => {
   assert.match(russianBarcodeCheckerSource, /Ожидаемая контрольная цифра/);
   assert.match(russianBarcodeCheckerSource, /\(body\.length - index\) % 2 === 1 \? 3 : 1/);
   assert.ok(entries.some(({ url }) => url.endsWith("/ru/tools/barcode-checker")));
+});
+
+test("Russian Instagram grid workspace localizes image controls and processing results", () => {
+  assert.match(toolPageSource, /slug === "instagram-grid-split"\s*\? <RussianInstagramGridWorkspace \/>/);
+  assert.match(russianInstagramGridSource, /Выберите изображение или перетащите его сюда/);
+  assert.match(russianInstagramGridSource, /Количество квадратных фрагментов/);
+  assert.match(russianInstagramGridSource, /Скачать ZIP-архив/);
+  assert.match(russianInstagramGridSource, /URL\.revokeObjectURL/);
+  assert.match(imageProcessorSource, /splitImageGrid\(bitmap,Number\(options\.option\)\|\|9,locale\)/);
+  assert.match(imageProcessorSource, /Размер созданных фрагментов превышает лимит браузера 80 МБ/);
+  assert.ok(entries.some(({ url }) => url.endsWith("/ru/tools/instagram-grid-split")));
 });
 
 test("Russian timer and Pomodoro use localized controls before publication", () => {
