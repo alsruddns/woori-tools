@@ -38,6 +38,8 @@ Object.assign(labels, {
 });
 Object.assign(presetLabels, { ru: ["1 мин", "3 мин", "5 мин", "10 мин", "30 мин", "1 ч"] });
 
+Object.assign(labels,{tr:{hours:"Saat",minutes:"Dakika",seconds:"Saniye",start:"Başlat",pause:"Duraklat",resume:"Sürdür",reset:"Sıfırla",focus:"Odaklanma",short:"Kısa mola",long:"Uzun mola",cycles:"Uzun molaya kadar odaklanma oturumu",session:"Oturum",presets:"Hızlı süreler",complete:"Süre doldu.",next:"Sonraki oturumu başlat",cyclesDone:"Tamamlanan odaklanma oturumu",phaseFocus:"Odaklanma süresi",phaseShort:"Kısa mola",phaseLong:"Uzun mola"}});
+Object.assign(presetLabels,{tr:["1 dk","3 dk","5 dk","10 dk","30 dk","1 sa"]});
 export function CountdownWorkspace({ slug, locale }: { slug: "timer" | "pomodoro-timer"; locale:PublishedTargetLocale }) {
   const t = labels[locale];
   const [settings, setSettings] = useState<Settings>({ focus: 25, short: 5, long: 15, cycleLength: 4 });

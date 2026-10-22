@@ -30,6 +30,7 @@ const { languageAlternates } = await importTypeScript("../src/lib/seo.ts", [[
 const sitemapSource = await readFile(new URL("../src/app/sitemap.ts", import.meta.url), "utf8");
 const localeLayoutSource = await readFile(new URL("../src/app/[locale]/layout.tsx", import.meta.url), "utf8");
 const toolPageSource = await readFile(new URL("../src/app/[locale]/tools/[slug]/page.tsx", import.meta.url), "utf8");
+const targetLocalePublicationSource = await readFile(new URL("../src/registry/target-locale-publication.ts", import.meta.url), "utf8");
 const markdownWorkspaceSource = await readFile(new URL("../src/components/tool/russian-markdown-workspace.tsx", import.meta.url), "utf8");
 const russianBarcodeCheckerSource = await readFile(new URL("../src/components/tool/russian-barcode-checker-workspace.tsx", import.meta.url), "utf8");
 const russianInstagramGridSource = await readFile(new URL("../src/components/tool/russian-instagram-grid-workspace.tsx", import.meta.url), "utf8");
@@ -71,7 +72,7 @@ const tarotLocalizationSource = await readFile(new URL("../src/lib/fortune/tarot
 const sajuWorkspaceSource = await readFile(new URL("../src/components/tool/saju-workspace.tsx", import.meta.url), "utf8");
 const nextConfig = await readFile(new URL("../next.config.ts", import.meta.url), "utf8");
 const siteOrigin = "https://www.woori.today";
-const turkishPublishedSlugs = ["lotto-number-generator", "powerball-number-generator", "mega-millions-number-generator", "japan-loto6-number-generator", "japan-loto7-number-generator", "japan-mini-loto-number-generator", "random-number", "random-name-picker", "random-wheel", "draw-lots", "random-team-maker", "random-order", "random-seat"];
+const turkishPublishedSlugs = ["lotto-number-generator", "powerball-number-generator", "mega-millions-number-generator", "japan-loto6-number-generator", "japan-loto7-number-generator", "japan-mini-loto-number-generator", "random-number", "random-name-picker", "random-wheel", "draw-lots", "random-team-maker", "random-order", "random-seat", "timer", "pomodoro-timer", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr"];
 const sitemapTools = publicTools.map((tool) => turkishPublishedSlugs.includes(tool.slug)
   ? { ...tool, supportedLocales: [...tool.supportedLocales, "tr"] }
   : tool);
@@ -157,12 +158,12 @@ test("sitemap and SEO use the same language alternate helper", () => {
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/image-collage")).alternates.languages).length, 17);
   for (const slug of ["color-converter", "cron-parser", "sql-formatter", "html-formatter", "css-formatter", "javascript-formatter", "jpg-to-png", "png-to-jpg", "webp-to-jpg", "webp-to-png", "jpg-to-webp", "png-to-webp", "heic-to-jpg", "image-compress", "image-resize", "image-crop", "image-rotate", "image-flip", "image-grayscale", "image-brightness", "image-contrast", "image-blur", "image-pixelate", "remove-image-metadata", "image-info", "favicon-generator", "image-color-picker", "images-to-pdf", "pdf-merge", "pdf-split", "pdf-delete-pages", "pdf-reorder-pages", "pdf-rotate-pages", "pdf-add-page-numbers", "pdf-watermark", "pdf-metadata-viewer", "pdf-remove-metadata", "pdf-page-size-checker", "text-compare", "regex-tester", "json-formatter", "json-validator", "json-to-yaml", "yaml-to-json", "csv-to-json", "json-to-csv", "base64", "url-encode-decode", "timestamp-converter", "uuid-generator", "uuid-v7-generator", "ulid-generator", "base32-encoder-decoder", "wareki-converter", "hiragana-katakana-converter", "fullwidth-halfwidth-converter", "japanese-romaji-converter", "japanese-number-kanji-converter", "yakudoshi-calculator", "japanese-zodiac-calculator", "numbers3-number-generator", "numbers4-number-generator", "bingo5-number-generator", "us-phone-number-formatter", "us-zip-code-formatter", "canada-postal-code-formatter", "uk-postcode-formatter", "jwt-decoder", "url-query-parameter-parser", "user-agent-parser", "ip-cidr-calculator", "hash-compare", "regex-replace", "html-entity-encoder-decoder", "chmod-calculator", "json-path-tester", "csv-tsv-converter", "url-slug-generator", "unicode-code-point-checker", "simplified-traditional-chinese-converter", "chinese-number-kanji-converter", "rmb-uppercase-converter", "chinese-zodiac-calculator", "chinese-sexagenary-cycle-calculator", "chinese-phone-number-formatter", "taiwan-phone-number-formatter", "indian-number-format-converter", "lakh-crore-converter", "pan-format-validator", "gstin-format-validator", "india-phone-number-formatter", "germany-iban-validator", "german-number-format-converter", "german-date-format-converter", "spain-dni-validator", "spain-nie-validator", "spanish-number-format-converter", "spanish-date-format-converter", "france-phone-number-formatter", "french-number-format-converter", "french-date-format-converter", "brazil-cpf-validator", "brazil-cnpj-validator", "brazil-phone-number-formatter", "brazil-cep-formatter", "netherlands-iban-validator", "dutch-number-format-converter", "dutch-date-format-converter", "vietnam-phone-number-formatter", "vietnam-number-format-converter", "italy-fiscal-code-format-validator", "italy-vat-number-validator", "italy-number-format-converter", "italian-date-format-converter", "australia-postcode-formatter", "english-date-format-converter", "social-image-resize", "add-text-to-image", "lorem-ipsum", "text-to-file", "remove-characters", "text-repeater", "remove-spaces", "remove-line-breaks", "text-case-converter", "reverse-text", "remove-duplicate-words", "character-count", "shuffle-lines", "add-line-numbers", "remove-line-numbers", "remove-empty-lines", "remove-duplicate-lines", "sort-lines", "bulk-file-renamer", "filename-cleaner", "zip-files", "file-hash", "mime-type-checker", "file-extension-checker", "file-size-checker", "duplicate-file-checker"]) assert.equal(Object.keys(entries.find(({ url }) => url.endsWith(`/tools/${slug}`)).alternates.languages).length, 17);
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/markdown-preview")).alternates.languages).length, 17);
-  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/timer")).alternates.languages).length, 17);
+   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/timer")).alternates.languages).length, 18);
   for (const slug of turkishPublishedSlugs) assert.equal(Object.keys(entries.find(({ url }) => url.endsWith(`/tr/tools/${slug}`)).alternates.languages).length, 18);
-  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/pomodoro-timer")).alternates.languages).length, 17);
-  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/password-generator")).alternates.languages).length, 17);
-  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/random-string-generator")).alternates.languages).length, 17);
-  for (const slug of ["wifi-qr", "contact-qr", "phone-qr", "email-qr"]) assert.equal(Object.keys(entries.find(({ url }) => url.endsWith(`/tools/${slug}`)).alternates.languages).length, 17);
+   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/pomodoro-timer")).alternates.languages).length, 18);
+   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/password-generator")).alternates.languages).length, 18);
+   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/random-string-generator")).alternates.languages).length, 18);
+   for (const slug of ["wifi-qr", "contact-qr", "phone-qr", "email-qr"]) assert.equal(Object.keys(entries.find(({ url }) => url.endsWith(`/tools/${slug}`)).alternates.languages).length, 18);
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/world-clock")).alternates.languages).length, 17);
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/dice-roller")).alternates.languages).length, 17);
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/random-number")).alternates.languages).length, 18);
@@ -499,7 +500,7 @@ test("Turkish verified tool workspaces publish only their approved routes", () =
   assert.match(specialRandomWorkspaceSource, /Object\.assign\(copy, \{ tr: \{[\s\S]*?generate: "Sayı üret"[\s\S]*?copyFailed: "Kopyalanamadı\."[\s\S]*?makeTeamsAgain: "Takımları yeniden oluştur"/);
   assert.match(specialRandomWorkspaceSource, /tr: \{ generate: "Sayıları oluştur"/);
   assert.match(specialRandomWorkspaceSource, /tr: \{ "Choose at most six included numbers\."[\s\S]*?"Could not find enough distinct valid games\./);
-  const uiSlugs = [...slugs, "random-number", "random-name-picker", "random-wheel", "draw-lots", "random-team-maker", "random-order", "random-seat"];
+  const uiSlugs = [...slugs, "random-number", "random-name-picker", "random-wheel", "draw-lots", "random-team-maker", "random-order", "random-seat", "timer", "pomodoro-timer", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr"];
   assert.match(specialRandomWorkspaceSource, /tr: \{ label: "Katılımcılar \(her satıra bir kişi\)"[\s\S]*?reveal: "Sonrakini göster"/);
   assert.match(specialRandomWorkspaceSource, /tr:\{people:"Katılımcılar \(her satıra bir kişi\)"[\s\S]*?arrange:"Koltukları dağıt"/);
   assert.match(specialRandomWorkspaceSource, /Object\.assign\(wheelCopy, \{ tr: \{ label: "Her satıra bir seçenek yazın"/);
@@ -509,11 +510,15 @@ test("Turkish verified tool workspaces publish only their approved routes", () =
     assert.equal(entry.alternates.languages.tr, `${siteOrigin}/tr/tools/${slug}`);
     assert.equal(entry.alternates.languages["x-default"], `${siteOrigin}/ko/tools/${slug}`);
   }
-  assert.equal(turkishPublishedSlugs.length, 13);
+  assert.equal(turkishPublishedSlugs.length, 21);
   assert.match(localeLayoutSource, /rawLocale === "tr"/);
   assert.match(toolPageSource, /rawLocale === "tr"\) return <TurkishPublishedToolPage/);
   assert.match(toolPageSource, /pageMetadata\(\{ locale: "tr"/);
   assert.match(toolPageSource, /inLanguage: "tr-TR"/);
+  assert.match(toolPageSource, /CountdownWorkspace slug=\{slug\} locale="tr"/);
+  assert.match(toolPageSource, /RandomStringWorkspace slug=\{slug\} locale="tr"/);
+  assert.match(toolPageSource, /QrWorkspace slug=\{slug\} locale="tr"/);
+  assert.match(targetLocalePublicationSource, /"timer", "pomodoro-timer", "password-generator", "random-string-generator", "wifi-qr"/);
 });
 test("Turkish editorial batches contain complete localized SEO and help content for 170 tools", () => {
   const expected = targetTurkishToolSlugs;

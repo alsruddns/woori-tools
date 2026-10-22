@@ -25,6 +25,7 @@ const text:Record<string,Record<string,string>>={
 };
 
 Object.assign(text,{ru:{ssid:"Имя сети Wi-Fi (SSID)",password:"Пароль",security:"Тип защиты",hidden:"Скрытая сеть",name:"Имя",phone:"Телефон",email:"Электронная почта",company:"Организация",url:"Сайт",to:"Получатель",subject:"Тема",body:"Сообщение",generate:"Создать QR-код",download:"Скачать PNG",privacy:"Введённые данные преобразуются в QR-код в этом браузере и не отправляются на сервер.",required:"Заполните обязательные поля.",none:"Без защиты",wpa:"WPA/WPA2",wep:"WEP"}});
+Object.assign(text,{tr:{ssid:"Wi-Fi ağ adı (SSID)",password:"Parola",security:"Güvenlik",hidden:"Gizli ağ",name:"Ad",phone:"Telefon",email:"E-posta",company:"Şirket",url:"Web sitesi",to:"Alıcı",subject:"Konu",body:"İleti",generate:"QR kodu oluştur",download:"PNG indir",privacy:"Bilgileriniz bu tarayıcıda QR koduna dönüştürülür ve sunucuya gönderilmez.",required:"Zorunlu alanları doldurun.",none:"Yok",wpa:"WPA/WPA2",wep:"WEP"}});
 export function QrWorkspace({slug,locale}:Props){
   const t=text[locale] ?? text.en;const [form,setForm]=useState<Form>({security:"WPA",hidden:false});const [payload,setPayload]=useState("");const [error,setError]=useState("");const [downloadUrl,setDownloadUrl]=useState("");const [busy,setBusy]=useState(false);
   useEffect(()=>()=>{if(downloadUrl)URL.revokeObjectURL(downloadUrl)},[downloadUrl]);
