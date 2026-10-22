@@ -19,7 +19,7 @@ const countrySlugs = [...countrySlugSource.matchAll(/"([a-z0-9-]+)"/g)].map((mat
 const { tools: publicTools, filterPublicTools } = await importTypeScript("../src/registry/tools.ts", [
   ['import { locales, type PublishedTargetLocale } from "../i18n/routing";', `const locales = ${JSON.stringify(locales)};`],
   ['import { COUNTRY_TOOL_SLUGS } from "../lib/country-tool-slugs";', `const COUNTRY_TOOL_SLUGS = ${JSON.stringify(countrySlugs)};`],
-  ['import { targetLocalePublication } from "./target-locale-publication";', 'const targetLocalePublication = { ru: { publishedToolSlugs: ["barcode-generator", "markdown-preview", "timer", "pomodoro-timer", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr", "world-clock", "dice-roller", "random-number", "stopwatch", "coin-flip"] } };'],
+  ['import { targetLocalePublication } from "./target-locale-publication";', 'const targetLocalePublication = { ru: { publishedToolSlugs: ["barcode-generator", "markdown-preview", "timer", "pomodoro-timer", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr", "world-clock", "dice-roller", "random-number", "stopwatch", "coin-flip", "random-name-picker", "draw-lots", "random-team-maker"] } };'],
 ]);
 const seoSource = await readFile(new URL("../src/lib/seo.ts", import.meta.url), "utf8");
 const { languageAlternates } = await importTypeScript("../src/lib/seo.ts", [[
@@ -124,6 +124,7 @@ test("sitemap and SEO use the same language alternate helper", () => {
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/world-clock")).alternates.languages).length, 17);
   for (const slug of ["dice-roller", "random-number"]) assert.equal(Object.keys(entries.find(({ url }) => url.endsWith(`/tools/${slug}`)).alternates.languages).length, 17);
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/stopwatch")).alternates.languages).length, 17);
+  for (const slug of ["random-name-picker", "draw-lots", "random-team-maker"]) assert.equal(Object.keys(entries.find(({ url }) => url.endsWith(`/tools/${slug}`)).alternates.languages).length, 17);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/barcode-generator")), true);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/markdown-preview")), true);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/timer")), true);
@@ -134,6 +135,7 @@ test("sitemap and SEO use the same language alternate helper", () => {
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/world-clock")), true);
   for (const slug of ["dice-roller", "random-number"]) assert.equal(entries.some(({ url }) => url.endsWith(`/ru/tools/${slug}`)), true);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/stopwatch")), true);
+  for (const slug of ["random-name-picker", "draw-lots", "random-team-maker"]) assert.equal(entries.some(({ url }) => url.endsWith(`/ru/tools/${slug}`)), true);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/image-compress")), false);
   assert.equal(localeConfig.find(({ routeLocale }) => routeLocale === "pt-br").hreflang, "pt-BR");
   assert.equal(localeConfig.find(({ routeLocale }) => routeLocale === "zh-tw").hreflang, "zh-TW");
@@ -203,4 +205,14 @@ test("Russian coin flip validates the count and publishes one localized workspac
   assert.match(specialRandomWorkspaceSource, /function CoinFlipWorkspace\(\)[\s\S]*?Укажите от 1 до 1000 бросков\.[\s\S]*?Орёл[\s\S]*?Решка/);
   assert.equal(publicTools.find((tool) => tool.slug === "coin-flip").supportedLocales.includes("ru"), true);
   assert.equal(entries.some(({ url }) => url === `${siteOrigin}/ru/tools/coin-flip`), true);
+});
+
+test("Russian name drawing and team workspaces localize controls and validation", () => {
+  assert.match(toolPageSource, /slug === "random-name-picker" \|\| slug === "draw-lots"/);
+  assert.match(toolPageSource, /slug === "random-team-maker"/);
+  assert.match(specialRandomWorkspaceSource, /participants: "Имена участников \(по одному в строке\)"[\s\S]*?teams: "Настройки команд"[\s\S]*?teamNames: "Названия команд/);
+  for (const slug of ["random-name-picker", "draw-lots", "random-team-maker"]) {
+    assert.equal(publicTools.find((tool) => tool.slug === slug).supportedLocales.includes("ru"), true);
+    assert.equal(entries.some(({ url }) => url === `${siteOrigin}/ru/tools/${slug}`), true);
+  }
 });
