@@ -137,7 +137,7 @@ assert.equal(toolSitemapEntries.length, expectedToolUrls, "sitemap must contain 
 assert.equal(new Set(toolSitemapEntries.map((entry) => entry.url)).size, expectedToolUrls, "duplicate tool sitemap URL");
 assert.ok(toolSitemapEntries.every((entry) => entry.url.startsWith(`${SITE_ORIGIN}/`)), "sitemap URL has wrong origin");
 assert.ok(toolSitemapEntries.every((entry) => entry.alternates.languages["x-default"]), "tool sitemap URL missing x-default alternate");
-assert.ok(toolSitemapEntries.every((entry) => Object.keys(entry.alternates.languages).length === (["/barcode-generator", "/markdown-preview", "/timer", "/pomodoro-timer", "/password-generator", "/random-string-generator", "/wifi-qr", "/contact-qr", "/phone-qr", "/email-qr", "/world-clock", "/dice-roller", "/random-number"].some((suffix) => entry.url.endsWith(suffix)) ? 17 : 16)), "tool sitemap alternate must match each tool's published locales and x-default");
+assert.ok(toolSitemapEntries.every((entry) => Object.keys(entry.alternates.languages).length === (["/barcode-generator", "/markdown-preview", "/timer", "/pomodoro-timer", "/password-generator", "/random-string-generator", "/wifi-qr", "/contact-qr", "/phone-qr", "/email-qr", "/world-clock", "/dice-roller", "/random-number", "/stopwatch"].some((suffix) => entry.url.endsWith(suffix)) ? 17 : 16)), "tool sitemap alternate must match each tool's published locales and x-default");
 
 async function sourceFiles(directory: string): Promise<string[]> {
   const result: string[] = [];
