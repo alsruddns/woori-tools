@@ -27,6 +27,7 @@ import { RussianEncodingWorkspace, type RussianEncodingSlug } from "@/components
 import { RussianJapanToolsWorkspace, type RussianJapanSlug } from "@/components/tool/russian-japan-tools-workspace";
 import { RussianAddressWorkspace, type RussianAddressSlug } from "@/components/tool/russian-address-workspace";
 import { RussianDeveloperToolsWorkspace, type RussianDeveloperSlug } from "@/components/tool/russian-developer-tools-workspace";
+import { RussianChinaToolsWorkspace, type RussianChinaSlug } from "@/components/tool/russian-china-tools-workspace";
 import { RussianMarkdownWorkspace } from "@/components/tool/russian-markdown-workspace";
 import { CountdownWorkspace } from "@/components/tool/countdown-workspace";
 import { RandomStringWorkspace } from "@/components/tool/random-string-workspace";
@@ -227,6 +228,12 @@ function isRussianDeveloperSlug(slug: string): slug is RussianDeveloperSlug {
   return russianDeveloperSlugs.includes(slug);
 }
 
+const russianChinaSlugs: readonly string[] = ["simplified-traditional-chinese-converter", "chinese-number-kanji-converter", "rmb-uppercase-converter", "chinese-zodiac-calculator", "chinese-sexagenary-cycle-calculator", "chinese-phone-number-formatter", "taiwan-phone-number-formatter"];
+
+function isRussianChinaSlug(slug: string): slug is RussianChinaSlug {
+  return russianChinaSlugs.includes(slug);
+}
+
 function RussianPublishedToolPage({ slug }: { slug: string }) {
   const baseTool = getTool(slug);
   const translation = getTargetRussianToolTranslation(slug);
@@ -302,6 +309,8 @@ function RussianPublishedToolPage({ slug }: { slug: string }) {
                                                 ? <RussianAddressWorkspace slug={slug} />
                                               : isRussianDeveloperSlug(slug)
                                                 ? <RussianDeveloperToolsWorkspace slug={slug} />
+                                              : isRussianChinaSlug(slug)
+                                                ? <RussianChinaToolsWorkspace slug={slug} />
                                               : slug === "text-compare"
                                                 ? <RussianTextCompareWorkspace />
     : slug === "regex-tester"
