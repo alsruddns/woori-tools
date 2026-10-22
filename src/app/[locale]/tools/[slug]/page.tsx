@@ -281,6 +281,7 @@ function TurkishPublishedToolPage({ slug }: { slug: string }) {
     : slug === "password-generator" || slug === "random-string-generator" ? <RandomStringWorkspace slug={slug} locale="tr" />
     : ["wifi-qr", "contact-qr", "phone-qr", "email-qr"].includes(slug) ? <QrWorkspace slug={slug} locale="tr" />
     : slug === "dice-roller" ? <DiceWorkspace locale="tr" />
+    : slug === "coin-flip" ? <CoinFlipWorkspace locale="tr" />
     : null;
   if (!workspace) notFound();
 
