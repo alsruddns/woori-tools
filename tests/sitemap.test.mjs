@@ -487,6 +487,15 @@ test("Russian lottery tools use localized controls and publish all six verified 
   assert.match(specialRandomWorkspaceSource, /ru: \{ included: "Это число уже добавлено в список\./);
   assert.match(specialRandomWorkspaceSource, /Выберите дополнительный шар/);
 });
+test("Turkish lottery workspace is translated and stays unpublished until its full locale set is ready", () => {
+  const slugs = ["lotto-number-generator", "powerball-number-generator", "mega-millions-number-generator", "japan-loto6-number-generator", "japan-loto7-number-generator", "japan-mini-loto-number-generator"];
+  assert.match(specialRandomWorkspaceSource, /Object\.assign\(copy, \{ tr: \{[\s\S]*?generate: "Sayı üret"[\s\S]*?copyFailed: "Kopyalanamadı\."[\s\S]*?makeTeamsAgain: "Takımları yeniden oluştur"/);
+  assert.match(specialRandomWorkspaceSource, /tr: \{ generate: "Sayıları oluştur"/);
+  assert.match(specialRandomWorkspaceSource, /tr: \{ "Choose at most six included numbers\."[\s\S]*?"Could not find enough distinct valid games\./);
+  for (const slug of slugs) {
+    assert.equal(entries.some(({ url }) => url === `${siteOrigin}/tr/tools/${slug}`), false);
+  }
+});
 test("Russian timer and Pomodoro use localized controls before publication", () => {
   assert.match(toolPageSource, /slug === "timer" \|\| slug === "pomodoro-timer"/);
   assert.match(countdownWorkspaceSource, /ru:\s*\{[\s\S]*?hours:\s*"Часы"[\s\S]*?complete:\s*"Время вышло\."/);
