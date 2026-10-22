@@ -45,13 +45,14 @@ export async function processImage(slug:string,file:File,options:ImageOptions,lo
 
 async function splitImageGrid(bitmap:ImageBitmap,tileCount:number,locale:PublishedTargetLocale):Promise<ProcessedImage>{
   const russian=locale==="ru";
+  const turkish=locale==="tr";
   if(![3,6,9].includes(tileCount))throw new Error(russian?"Выберите 3, 6 или 9 фрагментов.":"Choose 3, 6, or 9 tiles.");
   const columns=3,rows=tileCount/columns,targetRatio=columns/rows,sourceRatio=bitmap.width/bitmap.height;
   const cropWidth=sourceRatio>targetRatio?bitmap.height*targetRatio:bitmap.width,cropHeight=sourceRatio>targetRatio?bitmap.height:bitmap.width/targetRatio;
   const left=(bitmap.width-cropWidth)/2,top=(bitmap.height-cropHeight)/2,tileWidth=cropWidth/columns,tileHeight=cropHeight/rows,size=Math.max(1,Math.floor(Math.min(tileWidth,tileHeight)));
   const {zip}=await import("fflate");const files:Record<string,Uint8Array>={};let total=0;
   for(let row=0;row<rows;row++)for(let column=0;column<columns;column++){const canvas=document.createElement("canvas");canvas.width=size;canvas.height=size;const ctx=canvas.getContext("2d");if(!ctx)throw new Error(russian?"Не удалось запустить обработку изображения.":"Could not start image processing.");ctx.drawImage(bitmap,left+column*tileWidth,top+row*tileHeight,tileWidth,tileHeight,0,0,size,size);const blob=await new Promise<Blob>((resolve,reject)=>canvas.toBlob(value=>value?resolve(value):reject(new Error(russian?"Не удалось сохранить фрагмент.":"Could not export a tile.")),"image/png"));canvas.width=0;canvas.height=0;total+=blob.size;if(total>80*1024*1024)throw new Error(russian?"Размер созданных фрагментов превышает лимит браузера 80 МБ.":"The generated tiles exceed the 80 MB browser limit.");files[`tile-${String(row*columns+column+1).padStart(2,"0")}.png`]=new Uint8Array(await blob.arrayBuffer());}
-  const data=await new Promise<Uint8Array>((resolve,reject)=>zip(files,{level:2},(error,result)=>error?reject(error):resolve(result)));const buffer=new ArrayBuffer(data.byteLength);new Uint8Array(buffer).set(data);return{blob:new Blob([buffer],{type:"application/zip"}),result:russian?`${tileCount} квадратных фрагментов PNG подготовлено · ${size} × ${size} пикс.`:`${tileCount} square PNG tiles · ${size} × ${size}px`};
+  const data=await new Promise<Uint8Array>((resolve,reject)=>zip(files,{level:2},(error,result)=>error?reject(error):resolve(result)));const buffer=new ArrayBuffer(data.byteLength);new Uint8Array(buffer).set(data);return{blob:new Blob([buffer],{type:"application/zip"}),result:russian?`${tileCount} квадратных фрагментов PNG подготовлено · ${size} × ${size} пикс.`:turkish?`${tileCount} kare PNG parçası hazır · ${size} × ${size} piksel`:`${tileCount} square PNG tiles · ${size} × ${size}px`};
 }
 
 function outputMime(slug:string){if(slug.includes("png")||slug==="favicon-generator")return"image/png";if(slug.includes("webp"))return"image/webp";return"image/jpeg";}

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { processImage } from "@/lib/image/process-image";
 
-const copy = {
+const russianCopy = {
   title: "Разделение изображения на сетку Instagram",
   choose: "Выберите изображение или перетащите его сюда",
   format: "Количество квадратных фрагментов",
@@ -16,13 +16,17 @@ const copy = {
   tooLarge: "Размер изображения не должен превышать 30 МБ.",
 } as const;
 
+const turkishCopy = { title:"Instagram i\u00E7in g\u00F6rseli karelere b\u00F6l",choose:"Bir g\u00F6rsel se\u00E7in veya buraya b\u0131rak\u0131n",format:"Kare par\u00E7a d\u00FCzeni",process:"G\u00F6rseli b\u00F6l",processing:"\u0130\u015Fleniyor?",download:"ZIP ar\u015Fivini indir",reset:"S\u0131f\u0131rla",imageOnly:"Bir g\u00F6rsel dosyas\u0131 se\u00E7in.",tooLarge:"G\u00F6rsel 30 MB boyut s\u0131n\u0131r\u0131n\u0131 a\u015Fmamal\u0131d\u0131r." } as const;
+
 const gridOptions = [
   { value: 3, label: "3 фрагмента · 3 × 1" },
   { value: 6, label: "6 фрагментов · 3 × 2" },
   { value: 9, label: "9 фрагментов · 3 × 3" },
 ] as const;
 
-export function RussianInstagramGridWorkspace() {
+export function RussianInstagramGridWorkspace({ locale = "ru" }: { locale?: "ru" | "tr" }) {
+  const copy = locale === "tr" ? turkishCopy : russianCopy;
+  const options = locale === "tr" ? [{value:3,label:"3 kare (3 × 1)"},{value:6,label:"6 kare (3 × 2)"},{value:9,label:"9 kare (3 × 3)"}] : gridOptions;
   const [file, setFile] = useState<File | null>(null);
   const [tileCount, setTileCount] = useState(9);
   const [busy, setBusy] = useState(false);
@@ -52,11 +56,12 @@ export function RussianInstagramGridWorkspace() {
       const processed = await processImage("instagram-grid-split", file, {
         quality: 0.82, width: 800, height: 600, keepRatio: true, amount: 25,
         option: String(tileCount),
-      }, "ru");
+      }, locale);
       if (!processed.blob) throw new Error("Не удалось создать ZIP-архив.");
       setDownloadUrl(URL.createObjectURL(processed.blob));
       setResult(processed.result);
     } catch (cause) {
+      if (locale === "tr") { setError("G\u00F6rsel i\u015Flenirken bir sorun olu\u015Ftu."); return; }
       setError(cause instanceof Error ? cause.message : "Не удалось обработать изображение.");
     } finally { setBusy(false); }
   }
@@ -69,17 +74,17 @@ export function RussianInstagramGridWorkspace() {
     <label htmlFor="instagram-grid-file" onDragOver={(event) => event.preventDefault()} onDrop={(event) => { event.preventDefault(); selectImage(event.dataTransfer.files[0]); }}
       className="flex min-h-36 cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 p-6 text-center hover:border-indigo-400">
       <span className="font-semibold text-slate-800">{copy.choose}</span>
-      <span className="mt-2 text-sm text-slate-500">JPEG, PNG, WebP или HEIC · до 30 МБ</span>
+      <span className="mt-2 text-sm text-slate-500">{locale === "tr" ? "JPEG, PNG, WebP veya HEIC ? en fazla 30 MB" : "JPEG, PNG, WebP ??? HEIC ? ?? 30 ??"}</span>
     </label>
     <input id="instagram-grid-file" type="file" accept="image/*,.heic,.heif" onChange={(event) => selectImage(event.target.files?.[0])} className="sr-only" />
     {file && <div className="mt-4 flex items-center justify-between gap-3 rounded-xl bg-slate-50 p-4 text-sm">
-      <span className="truncate">{file.name} · {(file.size / 1024 / 1024).toFixed(2)} МБ</span>
+      <span className="truncate">{file.name} ? {(file.size / 1024 / 1024).toFixed(2)} MB</span>
       <button type="button" onClick={reset} className="shrink-0 font-medium text-rose-700 underline">{copy.reset}</button>
     </div>}
-    {previewUrl && !/\.(heic|heif)$/i.test(file?.name ?? "") && <Image unoptimized src={previewUrl} alt="Предварительный просмотр исходного изображения" width={960} height={600} className="mt-4 max-h-72 max-w-full rounded-xl border border-slate-200 object-contain" />}
+    {previewUrl && !/\.(heic|heif)$/i.test(file?.name ?? "") && <Image unoptimized src={previewUrl} alt={locale === "tr" ? "Se\u00E7ilen g\u00F6rselin \u00F6nizlemesi" : "??????????????? ???????? ?????????? ???????????"} width={960} height={600} className="mt-4 max-h-72 max-w-full rounded-xl border border-slate-200 object-contain" />}
     <label htmlFor="instagram-grid-count" className="mt-5 block text-sm font-medium text-slate-800">{copy.format}
       <select id="instagram-grid-count" value={tileCount} onChange={(event) => setTileCount(Number(event.target.value))} className="mt-2 block min-h-12 w-full rounded-xl border border-slate-300 p-3 sm:max-w-md">
-        {gridOptions.map(({ value, label }) => <option key={value} value={value}>{label}</option>)}
+        {options.map(({ value, label }) => <option key={value} value={value}>{label}</option>)}
       </select>
     </label>
     <div className="mt-5 flex flex-wrap gap-3">
