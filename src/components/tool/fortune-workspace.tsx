@@ -27,6 +27,8 @@ const tarotText: Record<string, {question:string;questionHint:string;yourQuestio
 
 Object.assign(tarotText, { ru: { question: "Вопрос (необязательно)", questionHint: "Вопрос остаётся на этом устройстве и не сохраняется и не отправляется.", yourQuestion: "Ваш вопрос", spread: "Расклад", one: "Карта дня", three: "Прошлое · настоящее · будущее", topic: "Тема", general: "Общее", love: "Отношения", money: "Деньги", work: "Работа и учёба", draw: "Вытянуть карты", again: "Вытянуть снова", upright: "Прямое положение", reversed: "Перевёрнутое положение", positions: ["Прошлое", "Настоящее", "Будущее"], privacy: "Вопрос и расклад не отправляются на сервер. После ухода со страницы введённый текст не сохраняется.", note: "Таро предназначено для развлечения и самоанализа. Расклад не предсказывает будущее и не заменяет важные решения о здоровье, финансах или праве." } });
 
+Object.assign(tarotText, { tr: { question:"Soru (isteğe bağlı)",questionHint:"Sorunuz bu cihazda kalır; kaydedilmez veya gönderilmez.",yourQuestion:"Sorunuz",spread:"Açılım",one:"Bugün için tek kart",three:"Geçmiş · Şimdi · Gelecek",topic:"Odak",general:"Genel",love:"Aşk",money:"Para",work:"İş · Eğitim",draw:"Kartları çek",again:"Yeniden çek",upright:"Düz",reversed:"Ters",positions:["Geçmiş","Şimdi","Gelecek"],privacy:"Sorunuz ve yorumunuz sunucuya gönderilmez. Bu sayfadan ayrıldığınızda girişiniz saklanmaz.",note:"Tarot, eğlence ve öz değerlendirme içindir. Geleceği tahmin etmez ve önemli finans, sağlık veya hukuk kararlarının yerini tutmaz." } });
+
 const tarotIds = ["fool","magician","priestess","empress","emperor","hierophant","lovers","chariot","strength","hermit","wheel","justice","hanged-man","death","temperance","devil","tower","star","moon","sun","judgement","world"];
 const tarotNames: Record<string,string[]> = {
  es:["El Loco","El Mago","La Sacerdotisa","La Emperatriz","El Emperador","El Hierofante","Los Enamorados","El Carro","La Fuerza","El Ermitaño","La Rueda de la Fortuna","La Justicia","El Colgado","La Muerte","La Templanza","El Diablo","La Torre","La Estrella","La Luna","El Sol","El Juicio","El Mundo"],
@@ -42,6 +44,7 @@ const tarotNames: Record<string,string[]> = {
  hi:["मूर्ख","जादूगर","महायाजिका","महारानी","सम्राट","धर्मगुरु","प्रेमी","रथ","शक्ति","एकांतवासी","भाग्य का चक्र","न्याय","लटका हुआ व्यक्ति","मृत्यु","संयम","शैतान","मीनार","तारा","चंद्रमा","सूर्य","निर्णय","विश्व"]
 };
 tarotNames.ru = ["Шут","Маг","Верховная Жрица","Императрица","Император","Иерофант","Влюблённые","Колесница","Сила","Отшельник","Колесо Фортуны","Справедливость","Повешенный","Смерть","Умеренность","Дьявол","Башня","Звезда","Луна","Солнце","Суд","Мир"];
+tarotNames.tr = ["Deli","Büyücü","Başrahibe","İmparatoriçe","İmparator","Aziz","Âşıklar","Savaş Arabası","Güç","Ermiş","Kader Çarkı","Adalet","Asılan Adam","Ölüm","Denge","Şeytan","Kule","Yıldız","Ay","Güneş","Mahkeme","Dünya"];
 const dailyText: Record<string,{birth:string;run:string;again:string;date:string;total:string;money:string;love:string;work:string;condition:string;number:string;color:string;line:string;privacy:string;note:string;invalid:string}> = {
   ko:{birth:"생년월일",run:"오늘의 운세 보기",again:"다시 보기",date:"기준 날짜",total:"종합운",money:"금전운",love:"연애운",work:"직장 · 학업운",condition:"컨디션",number:"행운의 숫자",color:"행운의 색",line:"오늘의 한 줄",privacy:"생년월일은 오늘 날짜와 결과를 계산하는 동안 브라우저 안에서만 사용합니다. 입력값은 저장하거나 서버에 보내지 않습니다.",note:"운세는 오락과 자기성찰을 위한 참고 정보입니다. 중요한 재정·건강·법률 결정은 신뢰할 수 있는 전문 정보와 판단을 기준으로 하세요.",invalid:"생년월일을 입력해 주세요."},
   en:{birth:"Date of birth",run:"See today's fortune",again:"Refresh reading",date:"For",total:"Overall",money:"Money",love:"Relationships",work:"Work · Study",condition:"Well-being",number:"Lucky number",color:"Lucky color",line:"A note for today",privacy:"Your birth date is used only in this browser to calculate today's reading. It is not stored or sent to a server.",note:"This reading is for entertainment and reflection. Use reliable professional information for important financial, health, or legal decisions.",invalid:"Enter a valid date of birth."},
@@ -90,7 +93,7 @@ Object.assign(dailyPools, { ru: {
   colors: ["Бирюзовый", "Тёмно-синий", "Светло-зелёный", "Оранжевый", "Фиолетовый", "Серый"],
 } });
 
-export function TarotWorkspace({ locale }: { locale:RouteLocale | "ru" }) {
+export function TarotWorkspace({ locale }: { locale:RouteLocale | "ru" | "tr" }) {
   const t = tarotText[locale];
   const [question, setQuestion] = useState("");
   const [spread, setSpread] = useState<"one"|"three">("one");

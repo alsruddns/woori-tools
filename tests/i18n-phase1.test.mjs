@@ -258,7 +258,7 @@ test("Phase 1 keeps the locale route and hreflang spellings distinct", async () 
 test("all Major Arcana have locale-specific upright and reversed interpretations", () => {
   const ids = ["fool","magician","priestess","empress","emperor","hierophant","lovers","chariot","strength","hermit","wheel","justice","hanged-man","death","temperance","devil","tower","star","moon","sun","judgement","world"];
   const omissions = [];
-  for (const locale of locales.slice(4)) for (const id of ids) {
+  for (const locale of [...locales.slice(4), "ru", "tr"]) for (const id of ids) {
     const upright = getTarotInterpretation(locale, id, false);
     const reversed = getTarotInterpretation(locale, id, true);
     if (!upright || !reversed) omissions.push(`${locale}/${id}: missing interpretation`);
