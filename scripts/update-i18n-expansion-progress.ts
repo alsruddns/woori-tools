@@ -64,7 +64,7 @@ const lines = [
   "- Russian canonical, hreflang, x-default, Open Graph, route rendering, and sitemap membership passed source checks for all fifteen pages; production rendering checks passed for barcode-generator and markdown-preview.",
   "- The verified route set is intentionally limited to published tool slugs; the remaining Russian tools are not routable or indexed.",
   "- Current branch is `develop`.",
-  `- Next Russian translation-data tool: \`${currentPending[0] ?? "none"}\`; next implementation step: Russian workspace UI integration.`,
+  `- Next Russian translation-data tool: \`${currentPending[0] ?? "none"}\`; next Russian workspace UI tool: \`random-name-picker\`.`,
   "",
 ];
 

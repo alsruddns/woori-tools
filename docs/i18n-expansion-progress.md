@@ -47,4 +47,4 @@ Routable locales: 16 (ko, en, ja, zh, es, pt-br, de, fr, vi, id, th, zh-tw, it, 
 - Russian canonical, hreflang, x-default, Open Graph, route rendering, and sitemap membership passed source checks for all fifteen pages; production rendering checks passed for barcode-generator and markdown-preview.
 - The verified route set is intentionally limited to published tool slugs; the remaining Russian tools are not routable or indexed.
 - Current branch is `develop`.
-- Next Russian translation-data tool: `none`; next implementation step: Russian workspace UI integration.
+- Next Russian translation-data tool: `none`; next Russian workspace UI tool: `random-name-picker`.
