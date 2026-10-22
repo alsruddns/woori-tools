@@ -59,12 +59,12 @@ const lines = [
   "",
   "## Last verified checkpoint",
   "",
-  "- Validation: TypeScript passed; lint passed; all 120 tests passed; content-quality checks passed; production build passed.",
-  `- Production build prerendered 2,886 static pages; the tool sitemap contains 2,706 localized tool URLs, including ${targetLocalePublication.ru.publishedToolSlugs.length} verified Russian tool pages.`,
-  `- Russian canonical, hreflang, x-default, Open Graph, route rendering, and sitemap membership passed source checks for all ${targetLocalePublication.ru.publishedToolSlugs.length} pages; production rendering checks passed for color-converter, cron-parser, sql-formatter, html-formatter, css-formatter, javascript-formatter, jpg-to-png, png-to-jpg, webp-to-jpg, webp-to-png, jpg-to-webp, png-to-webp, heic-to-jpg, regex-tester, lorem-ipsum, text-to-file, remove-characters, text-repeater, remove-spaces, remove-line-breaks, text-case-converter, reverse-text, remove-duplicate-words, character-count, shuffle-lines, add-line-numbers, remove-line-numbers, remove-empty-lines, remove-duplicate-lines, sort-lines, bulk-file-renamer, filename-cleaner, zip-files, duplicate-file-checker, file-hash, mime-type-checker, file-extension-checker, file-size-checker, image-collage, instagram-grid-split, barcode-checker, barcode-generator, and markdown-preview.`,
+  "- Validation: TypeScript passed; lint passed; all 121 tests passed; content-quality checks passed; production build passed.",
+  `- Production build prerendered 2,896 static pages; the tool sitemap contains 2,716 localized tool URLs, including ${targetLocalePublication.ru.publishedToolSlugs.length} verified Russian tool pages.`,
+  `- Russian canonical, hreflang, x-default, Open Graph, route rendering, and sitemap membership passed source checks for all ${targetLocalePublication.ru.publishedToolSlugs.length} pages; production rendering checks passed for color-converter, cron-parser, sql-formatter, html-formatter, css-formatter, javascript-formatter, jpg-to-png, png-to-jpg, webp-to-jpg, webp-to-png, jpg-to-webp, png-to-webp, heic-to-jpg, image-compress, image-resize, image-crop, image-rotate, image-flip, image-grayscale, image-brightness, image-contrast, image-blur, image-pixelate, regex-tester, lorem-ipsum, text-to-file, remove-characters, text-repeater, remove-spaces, remove-line-breaks, text-case-converter, reverse-text, remove-duplicate-words, character-count, shuffle-lines, add-line-numbers, remove-line-numbers, remove-empty-lines, remove-duplicate-lines, sort-lines, bulk-file-renamer, filename-cleaner, zip-files, duplicate-file-checker, file-hash, mime-type-checker, file-extension-checker, file-size-checker, image-collage, instagram-grid-split, barcode-checker, barcode-generator, and markdown-preview.`,
   "- The verified route set is intentionally limited to published tool slugs; the remaining Russian tools are not routable or indexed.",
   "- Current branch is `develop`.",
-  `- Next Russian translation-data tool: \`${currentPending[0] ?? "none"}\`; next Russian workspace UI tool: \`image-compress\`.`,
+  `- Next Russian translation-data tool: \`${currentPending[0] ?? "none"}\`; next Russian workspace UI tool: \`remove-image-metadata\`.`,
   "",
 ];
 

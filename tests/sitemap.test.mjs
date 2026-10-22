@@ -19,7 +19,7 @@ const countrySlugs = [...countrySlugSource.matchAll(/"([a-z0-9-]+)"/g)].map((mat
 const { tools: publicTools, filterPublicTools } = await importTypeScript("../src/registry/tools.ts", [
   ['import { locales, type PublishedTargetLocale } from "../i18n/routing";', `const locales = ${JSON.stringify(locales)};`],
   ['import { COUNTRY_TOOL_SLUGS } from "../lib/country-tool-slugs";', `const COUNTRY_TOOL_SLUGS = ${JSON.stringify(countrySlugs)};`],
-  ['import { targetLocalePublication } from "./target-locale-publication";', 'const targetLocalePublication = { ru: { publishedToolSlugs: ["color-converter", "cron-parser", "sql-formatter", "html-formatter", "css-formatter", "javascript-formatter", "jpg-to-png", "png-to-jpg", "webp-to-jpg", "webp-to-png", "jpg-to-webp", "png-to-webp", "heic-to-jpg", "regex-tester", "lorem-ipsum", "text-to-file", "remove-characters", "text-repeater", "remove-spaces", "remove-line-breaks", "text-case-converter", "reverse-text", "remove-duplicate-words", "character-count", "shuffle-lines", "add-line-numbers", "remove-line-numbers", "remove-empty-lines", "remove-duplicate-lines", "sort-lines", "bulk-file-renamer", "filename-cleaner", "zip-files", "file-hash", "mime-type-checker", "file-extension-checker", "file-size-checker", "duplicate-file-checker", "barcode-generator", "barcode-checker", "instagram-grid-split", "image-collage", "markdown-preview", "timer", "pomodoro-timer", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr", "world-clock", "dice-roller", "random-number", "stopwatch", "coin-flip", "random-name-picker", "draw-lots", "random-team-maker", "random-order", "random-seat", "duty-picker", "random-wheel", "tarot-card", "daily-fortune", "saju"] } };'],
+  ['import { targetLocalePublication } from "./target-locale-publication";', 'const targetLocalePublication = { ru: { publishedToolSlugs: ["color-converter", "cron-parser", "sql-formatter", "html-formatter", "css-formatter", "javascript-formatter", "jpg-to-png", "png-to-jpg", "webp-to-jpg", "webp-to-png", "jpg-to-webp", "png-to-webp", "heic-to-jpg", "image-compress", "image-resize", "image-crop", "image-rotate", "image-flip", "image-grayscale", "image-brightness", "image-contrast", "image-blur", "image-pixelate", "regex-tester", "lorem-ipsum", "text-to-file", "remove-characters", "text-repeater", "remove-spaces", "remove-line-breaks", "text-case-converter", "reverse-text", "remove-duplicate-words", "character-count", "shuffle-lines", "add-line-numbers", "remove-line-numbers", "remove-empty-lines", "remove-duplicate-lines", "sort-lines", "bulk-file-renamer", "filename-cleaner", "zip-files", "file-hash", "mime-type-checker", "file-extension-checker", "file-size-checker", "duplicate-file-checker", "barcode-generator", "barcode-checker", "instagram-grid-split", "image-collage", "markdown-preview", "timer", "pomodoro-timer", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr", "world-clock", "dice-roller", "random-number", "stopwatch", "coin-flip", "random-name-picker", "draw-lots", "random-team-maker", "random-order", "random-seat", "duty-picker", "random-wheel", "tarot-card", "daily-fortune", "saju"] } };'],
 ]);
 const seoSource = await readFile(new URL("../src/lib/seo.ts", import.meta.url), "utf8");
 const { languageAlternates } = await importTypeScript("../src/lib/seo.ts", [[
@@ -44,6 +44,7 @@ const russianColorSource = await readFile(new URL("../src/components/tool/russia
 const russianCronSource = await readFile(new URL("../src/components/tool/russian-cron-workspace.tsx", import.meta.url), "utf8");
 const russianFormatterSource = await readFile(new URL("../src/components/tool/russian-code-formatter-workspace.tsx", import.meta.url), "utf8");
 const russianImageConversionSource = await readFile(new URL("../src/components/tool/russian-image-conversion-workspace.tsx", import.meta.url), "utf8");
+const russianImageEffectsSource = await readFile(new URL("../src/components/tool/russian-image-effects-workspace.tsx", import.meta.url), "utf8");
 const imageProcessorSource = await readFile(new URL("../src/lib/image/process-image.ts", import.meta.url), "utf8");
 const textProcessorSource = await readFile(new URL("../src/lib/text/process-text.ts", import.meta.url), "utf8");
 const countdownWorkspaceSource = await readFile(new URL("../src/components/tool/countdown-workspace.tsx", import.meta.url), "utf8");
@@ -137,7 +138,7 @@ test("sitemap and SEO use the same language alternate helper", () => {
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/barcode-checker")).alternates.languages).length, 17);
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/instagram-grid-split")).alternates.languages).length, 17);
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/image-collage")).alternates.languages).length, 17);
-  for (const slug of ["color-converter", "cron-parser", "sql-formatter", "html-formatter", "css-formatter", "javascript-formatter", "jpg-to-png", "png-to-jpg", "webp-to-jpg", "webp-to-png", "jpg-to-webp", "png-to-webp", "heic-to-jpg", "regex-tester", "lorem-ipsum", "text-to-file", "remove-characters", "text-repeater", "remove-spaces", "remove-line-breaks", "text-case-converter", "reverse-text", "remove-duplicate-words", "character-count", "shuffle-lines", "add-line-numbers", "remove-line-numbers", "remove-empty-lines", "remove-duplicate-lines", "sort-lines", "bulk-file-renamer", "filename-cleaner", "zip-files", "file-hash", "mime-type-checker", "file-extension-checker", "file-size-checker", "duplicate-file-checker"]) assert.equal(Object.keys(entries.find(({ url }) => url.endsWith(`/tools/${slug}`)).alternates.languages).length, 17);
+  for (const slug of ["color-converter", "cron-parser", "sql-formatter", "html-formatter", "css-formatter", "javascript-formatter", "jpg-to-png", "png-to-jpg", "webp-to-jpg", "webp-to-png", "jpg-to-webp", "png-to-webp", "heic-to-jpg", "image-compress", "image-resize", "image-crop", "image-rotate", "image-flip", "image-grayscale", "image-brightness", "image-contrast", "image-blur", "image-pixelate", "regex-tester", "lorem-ipsum", "text-to-file", "remove-characters", "text-repeater", "remove-spaces", "remove-line-breaks", "text-case-converter", "reverse-text", "remove-duplicate-words", "character-count", "shuffle-lines", "add-line-numbers", "remove-line-numbers", "remove-empty-lines", "remove-duplicate-lines", "sort-lines", "bulk-file-renamer", "filename-cleaner", "zip-files", "file-hash", "mime-type-checker", "file-extension-checker", "file-size-checker", "duplicate-file-checker"]) assert.equal(Object.keys(entries.find(({ url }) => url.endsWith(`/tools/${slug}`)).alternates.languages).length, 17);
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/markdown-preview")).alternates.languages).length, 17);
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/timer")).alternates.languages).length, 17);
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/pomodoro-timer")).alternates.languages).length, 17);
@@ -159,7 +160,7 @@ test("sitemap and SEO use the same language alternate helper", () => {
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/barcode-checker")), true);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/instagram-grid-split")), true);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/image-collage")), true);
-  for (const slug of ["color-converter", "cron-parser", "sql-formatter", "html-formatter", "css-formatter", "javascript-formatter", "jpg-to-png", "png-to-jpg", "webp-to-jpg", "webp-to-png", "jpg-to-webp", "png-to-webp", "heic-to-jpg", "regex-tester", "lorem-ipsum", "text-to-file", "remove-characters", "text-repeater", "remove-spaces", "remove-line-breaks", "text-case-converter", "reverse-text", "remove-duplicate-words", "character-count", "shuffle-lines", "add-line-numbers", "remove-line-numbers", "remove-empty-lines", "remove-duplicate-lines", "sort-lines", "bulk-file-renamer", "filename-cleaner", "zip-files", "file-hash", "mime-type-checker", "file-extension-checker", "file-size-checker", "duplicate-file-checker"]) assert.equal(entries.some(({ url }) => url.endsWith(`/ru/tools/${slug}`)), true);
+  for (const slug of ["color-converter", "cron-parser", "sql-formatter", "html-formatter", "css-formatter", "javascript-formatter", "jpg-to-png", "png-to-jpg", "webp-to-jpg", "webp-to-png", "jpg-to-webp", "png-to-webp", "heic-to-jpg", "image-compress", "image-resize", "image-crop", "image-rotate", "image-flip", "image-grayscale", "image-brightness", "image-contrast", "image-blur", "image-pixelate", "regex-tester", "lorem-ipsum", "text-to-file", "remove-characters", "text-repeater", "remove-spaces", "remove-line-breaks", "text-case-converter", "reverse-text", "remove-duplicate-words", "character-count", "shuffle-lines", "add-line-numbers", "remove-line-numbers", "remove-empty-lines", "remove-duplicate-lines", "sort-lines", "bulk-file-renamer", "filename-cleaner", "zip-files", "file-hash", "mime-type-checker", "file-extension-checker", "file-size-checker", "duplicate-file-checker"]) assert.equal(entries.some(({ url }) => url.endsWith(`/ru/tools/${slug}`)), true);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/markdown-preview")), true);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/timer")), true);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/pomodoro-timer")), true);
@@ -177,7 +178,7 @@ test("sitemap and SEO use the same language alternate helper", () => {
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/tarot-card")), true);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/daily-fortune")), true);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/saju")), true);
-  assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/image-compress")), false);
+  assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/image-compress")), true);
   assert.equal(localeConfig.find(({ routeLocale }) => routeLocale === "pt-br").hreflang, "pt-BR");
   assert.equal(localeConfig.find(({ routeLocale }) => routeLocale === "zh-tw").hreflang, "zh-TW");
 });
@@ -330,6 +331,18 @@ test("Russian image conversion pages preserve local processing and file cleanup"
   assert.match(russianImageConversionSource, /URL\.revokeObjectURL\(outputUrl\)/);
   assert.match(russianImageConversionSource, /30 \* 1024 \* 1024/);
   assert.match(russianImageConversionSource, /Перетащите сюда изображение/);
+});
+
+test("Russian image effect pages localize options and release browser resources", () => {
+  for (const slug of ["image-compress", "image-resize", "image-crop", "image-rotate", "image-flip", "image-grayscale", "image-brightness", "image-contrast", "image-blur", "image-pixelate"]) {
+    assert.match(toolPageSource, new RegExp(`slug === "${slug}"\\s*\\? <RussianImageEffectsWorkspace slug="${slug}" \\/>`));
+    assert.ok(entries.some(({ url }) => url.endsWith(`/ru/tools/${slug}`)));
+  }
+  assert.match(russianImageEffectsSource, /processImage\(slug, file,[\s\S]*"ru"\)/);
+  assert.match(russianImageEffectsSource, /quality: quality \/ 100, width, height, keepRatio, amount, option/);
+  assert.match(russianImageEffectsSource, /URL\.createObjectURL\(processed\.blob\)/);
+  assert.match(russianImageEffectsSource, /URL\.revokeObjectURL\(outputUrl\)/);
+  assert.match(russianImageEffectsSource, /Сохранить пропорции/);
 });
 
 test("Russian timer and Pomodoro use localized controls before publication", () => {

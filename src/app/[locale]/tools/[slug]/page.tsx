@@ -17,6 +17,7 @@ import { RussianColorConverterWorkspace } from "@/components/tool/russian-color-
 import { RussianCronWorkspace } from "@/components/tool/russian-cron-workspace";
 import { RussianCodeFormatterWorkspace } from "@/components/tool/russian-code-formatter-workspace";
 import { RussianImageConversionWorkspace } from "@/components/tool/russian-image-conversion-workspace";
+import { RussianImageEffectsWorkspace } from "@/components/tool/russian-image-effects-workspace";
 import { RussianMarkdownWorkspace } from "@/components/tool/russian-markdown-workspace";
 import { CountdownWorkspace } from "@/components/tool/countdown-workspace";
 import { RandomStringWorkspace } from "@/components/tool/random-string-workspace";
@@ -216,6 +217,26 @@ function RussianPublishedToolPage({ slug }: { slug: string }) {
                 ? <RussianImageConversionWorkspace slug="png-to-webp" />
                 : slug === "heic-to-jpg"
                   ? <RussianImageConversionWorkspace slug="heic-to-jpg" />
+                  : slug === "image-compress"
+                    ? <RussianImageEffectsWorkspace slug="image-compress" />
+                    : slug === "image-resize"
+                      ? <RussianImageEffectsWorkspace slug="image-resize" />
+                      : slug === "image-crop"
+                        ? <RussianImageEffectsWorkspace slug="image-crop" />
+                        : slug === "image-rotate"
+                          ? <RussianImageEffectsWorkspace slug="image-rotate" />
+                          : slug === "image-flip"
+                            ? <RussianImageEffectsWorkspace slug="image-flip" />
+                            : slug === "image-grayscale"
+                              ? <RussianImageEffectsWorkspace slug="image-grayscale" />
+                              : slug === "image-brightness"
+                                ? <RussianImageEffectsWorkspace slug="image-brightness" />
+                                : slug === "image-contrast"
+                                  ? <RussianImageEffectsWorkspace slug="image-contrast" />
+                                  : slug === "image-blur"
+                                    ? <RussianImageEffectsWorkspace slug="image-blur" />
+                                    : slug === "image-pixelate"
+                                      ? <RussianImageEffectsWorkspace slug="image-pixelate" />
     : slug === "regex-tester"
       ? <RussianRegexWorkspace />
     : slug === "lorem-ipsum"
