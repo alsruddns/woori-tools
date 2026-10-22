@@ -29,6 +29,7 @@ import { RussianAddressWorkspace, type RussianAddressSlug } from "@/components/t
 import { RussianDeveloperToolsWorkspace, type RussianDeveloperSlug } from "@/components/tool/russian-developer-tools-workspace";
 import { RussianChinaToolsWorkspace, type RussianChinaSlug } from "@/components/tool/russian-china-tools-workspace";
 import { RussianIndiaToolsWorkspace, type RussianIndiaSlug } from "@/components/tool/russian-india-tools-workspace";
+import { RussianInternationalToolsWorkspace, type RussianInternationalSlug } from "@/components/tool/russian-international-tools-workspace";
 import { RussianMarkdownWorkspace } from "@/components/tool/russian-markdown-workspace";
 import { CountdownWorkspace } from "@/components/tool/countdown-workspace";
 import { RandomStringWorkspace } from "@/components/tool/random-string-workspace";
@@ -241,6 +242,12 @@ function isRussianIndiaSlug(slug: string): slug is RussianIndiaSlug {
   return russianIndiaSlugs.includes(slug);
 }
 
+const russianInternationalSlugs: readonly string[] = ["germany-iban-validator", "german-number-format-converter", "german-date-format-converter", "spain-dni-validator", "spain-nie-validator", "spanish-number-format-converter", "spanish-date-format-converter", "france-phone-number-formatter", "french-number-format-converter", "french-date-format-converter", "brazil-cpf-validator", "brazil-cnpj-validator", "brazil-phone-number-formatter", "brazil-cep-formatter", "netherlands-iban-validator", "dutch-number-format-converter", "dutch-date-format-converter", "vietnam-phone-number-formatter", "vietnam-number-format-converter", "italy-fiscal-code-format-validator", "italy-vat-number-validator", "italy-number-format-converter", "italian-date-format-converter", "australia-postcode-formatter", "english-date-format-converter"];
+
+function isRussianInternationalSlug(slug: string): slug is RussianInternationalSlug {
+  return russianInternationalSlugs.includes(slug);
+}
+
 function RussianPublishedToolPage({ slug }: { slug: string }) {
   const baseTool = getTool(slug);
   const translation = getTargetRussianToolTranslation(slug);
@@ -320,6 +327,8 @@ function RussianPublishedToolPage({ slug }: { slug: string }) {
                                                 ? <RussianChinaToolsWorkspace slug={slug} />
                                               : isRussianIndiaSlug(slug)
                                                 ? <RussianIndiaToolsWorkspace slug={slug} />
+                                              : isRussianInternationalSlug(slug)
+                                                ? <RussianInternationalToolsWorkspace slug={slug} />
                                               : slug === "text-compare"
                                                 ? <RussianTextCompareWorkspace />
     : slug === "regex-tester"
