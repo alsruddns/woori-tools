@@ -18,6 +18,8 @@ import { RussianCronWorkspace } from "@/components/tool/russian-cron-workspace";
 import { RussianCodeFormatterWorkspace } from "@/components/tool/russian-code-formatter-workspace";
 import { RussianImageConversionWorkspace } from "@/components/tool/russian-image-conversion-workspace";
 import { RussianImageEffectsWorkspace } from "@/components/tool/russian-image-effects-workspace";
+import { RussianImageUtilityWorkspace } from "@/components/tool/russian-image-utility-workspace";
+import { RussianImageColorPickerWorkspace } from "@/components/tool/russian-image-color-picker-workspace";
 import { RussianMarkdownWorkspace } from "@/components/tool/russian-markdown-workspace";
 import { CountdownWorkspace } from "@/components/tool/countdown-workspace";
 import { RandomStringWorkspace } from "@/components/tool/random-string-workspace";
@@ -237,6 +239,14 @@ function RussianPublishedToolPage({ slug }: { slug: string }) {
                                     ? <RussianImageEffectsWorkspace slug="image-blur" />
                                     : slug === "image-pixelate"
                                       ? <RussianImageEffectsWorkspace slug="image-pixelate" />
+                                      : slug === "remove-image-metadata"
+                                        ? <RussianImageUtilityWorkspace slug="remove-image-metadata" />
+                                        : slug === "image-info"
+                                          ? <RussianImageUtilityWorkspace slug="image-info" />
+                                          : slug === "favicon-generator"
+                                            ? <RussianImageUtilityWorkspace slug="favicon-generator" />
+                                            : slug === "image-color-picker"
+                                              ? <RussianImageColorPickerWorkspace />
     : slug === "regex-tester"
       ? <RussianRegexWorkspace />
     : slug === "lorem-ipsum"
