@@ -287,6 +287,7 @@ function TurkishPublishedToolPage({ slug }: { slug: string }) {
     : slug === "tarot-card" ? <TarotWorkspace locale="tr" />
     : slug === "daily-fortune" ? <DailyFortuneWorkspace locale="tr" />
     : slug === "saju" ? <SajuWorkspace locale="tr" />
+    : slug === "duty-picker" ? <RussianDutyPickerWorkspace locale="tr" />
     : null;
   if (!workspace) notFound();
 
