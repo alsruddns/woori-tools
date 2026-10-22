@@ -21,6 +21,7 @@ import { RussianImageEffectsWorkspace } from "@/components/tool/russian-image-ef
 import { RussianImageUtilityWorkspace } from "@/components/tool/russian-image-utility-workspace";
 import { RussianImageColorPickerWorkspace } from "@/components/tool/russian-image-color-picker-workspace";
 import { RussianPdfWorkspace, type RussianPdfSlug } from "@/components/tool/russian-pdf-workspace";
+import { RussianTextCompareWorkspace } from "@/components/tool/russian-text-compare-workspace";
 import { RussianMarkdownWorkspace } from "@/components/tool/russian-markdown-workspace";
 import { CountdownWorkspace } from "@/components/tool/countdown-workspace";
 import { RandomStringWorkspace } from "@/components/tool/random-string-workspace";
@@ -256,6 +257,8 @@ function RussianPublishedToolPage({ slug }: { slug: string }) {
                                               ? <RussianImageColorPickerWorkspace />
                                               : isRussianPdfSlug(slug)
                                                 ? <RussianPdfWorkspace slug={slug} />
+                                              : slug === "text-compare"
+                                                ? <RussianTextCompareWorkspace />
     : slug === "regex-tester"
       ? <RussianRegexWorkspace />
     : slug === "lorem-ipsum"
