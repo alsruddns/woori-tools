@@ -4,7 +4,7 @@ import { useState } from "react";
 import { copyText } from "@/lib/copy-to-clipboard";
 import { processText } from "@/lib/text/process-text";
 
-type LineToolSlug = "shuffle-lines" | "add-line-numbers" | "remove-line-numbers" | "remove-empty-lines" | "remove-characters" | "sort-lines";
+type LineToolSlug = "shuffle-lines" | "add-line-numbers" | "remove-line-numbers" | "remove-empty-lines" | "remove-characters" | "sort-lines" | "remove-duplicate-lines" | "remove-spaces" | "remove-line-breaks" | "reverse-text" | "text-repeater";
 
 const titles: Record<LineToolSlug, string> = {
   "shuffle-lines": "Satırları karıştır",
@@ -13,12 +13,18 @@ const titles: Record<LineToolSlug, string> = {
   "remove-empty-lines": "Boş satırları kaldır",
   "remove-characters": "Metinden karakter kaldır",
   "sort-lines": "Satırları sırala",
+  "remove-duplicate-lines": "Yinelenen satırları kaldır",
+  "remove-spaces": "Boşlukları kaldır",
+  "remove-line-breaks": "Satır sonlarını kaldır",
+  "reverse-text": "Metni ters çevir",
+  "text-repeater": "Metni tekrarla",
 };
 
 export function TurkishLineToolsWorkspace({ slug }: { slug: LineToolSlug }) {
   const [text, setText] = useState("");
   const [option, setOption] = useState(slug === "remove-characters" ? "digits" : "asc");
   const [customCharacters, setCustomCharacters] = useState("");
+  const [amount, setAmount] = useState("2");
   const [result, setResult] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
@@ -27,7 +33,7 @@ export function TurkishLineToolsWorkspace({ slug }: { slug: LineToolSlug }) {
     if (!text) { setError("İşlemek için metin girin."); setResult(""); return; }
     setBusy(true); setError(""); setResult("");
     try {
-      const processed = await processText(slug, text, customCharacters, option, 1, "tr");
+      const processed = await processText(slug, text, customCharacters, option, Number(amount), "tr");
       setResult(processed.result);
     } catch {
       setError("Metin işlenemedi. Girdinizi kontrol edip yeniden deneyin.");
@@ -47,6 +53,8 @@ export function TurkishLineToolsWorkspace({ slug }: { slug: LineToolSlug }) {
         <label htmlFor="turkish-character-option" className="mt-4 block text-sm font-medium">Kaldırılacak karakter türü<select id="turkish-character-option" value={option} onChange={(event) => setOption(event.target.value)} className="mt-2 block min-h-11 w-full rounded-xl border p-3 sm:max-w-sm"><option value="digits">Rakamlar</option><option value="latin">Latin harfleri</option><option value="special">Özel karakterler</option><option value="custom">Belirli karakterler</option></select></label>
         {option === "custom" && <label htmlFor="turkish-custom-chars" className="mt-4 block text-sm font-medium">Kaldırılacak karakterler<input id="turkish-custom-chars" value={customCharacters} onChange={(event) => setCustomCharacters(event.target.value)} className="mt-2 block min-h-11 w-full rounded-xl border p-3" /></label>}
       </>}
+      {slug === "remove-spaces" && <label htmlFor="turkish-space-option" className="mt-4 block text-sm font-medium">Boşlukları kaldırma şekli<select id="turkish-space-option" value={option} onChange={(event) => setOption(event.target.value)} className="mt-2 block min-h-11 w-full rounded-xl border p-3 sm:max-w-sm"><option value="repeated">Art arda gelen boşlukları birleştir</option><option value="all">Tüm boşlukları kaldır</option></select></label>}
+      {slug === "text-repeater" && <div className="mt-4 grid gap-3 sm:grid-cols-2"><label className="text-sm font-medium">Tekrar sayısı<input type="number" min={1} max={1000} value={amount} onChange={(event) => setAmount(event.target.value)} className="mt-2 block min-h-11 w-full rounded-xl border p-3" /></label><label className="text-sm font-medium">Tekrarlar arasındaki ayraç<input value={option} onChange={(event) => setOption(event.target.value)} className="mt-2 block min-h-11 w-full rounded-xl border p-3" /></label></div>}
       <div className="mt-5 flex flex-wrap gap-3"><button type="button" onClick={() => void run()} disabled={busy} className="min-h-12 rounded-xl bg-indigo-600 px-6 font-semibold text-white disabled:opacity-60">{busy ? "İşleniyor…" : titles[slug]}</button><button type="button" onClick={() => { setText(""); setResult(""); setError(""); }} className="min-h-12 rounded-xl border border-slate-300 px-5 font-medium">Temizle</button></div>
       {error && <p role="alert" className="mt-4 rounded-xl bg-rose-50 p-4 text-sm text-rose-800">{error}</p>}
       {result && <div className="mt-5"><div className="flex flex-wrap items-center justify-between gap-3"><h2 className="font-semibold">Sonuç</h2><button type="button" onClick={() => void copyText(result)} className="min-h-10 rounded-xl border border-slate-300 px-4 text-sm font-medium">Sonucu kopyala</button></div><pre role="status" aria-live="polite" className="mt-3 max-h-96 overflow-auto whitespace-pre-wrap break-words rounded-xl bg-slate-950 p-4 text-sm leading-6 text-slate-100">{result}</pre></div>}

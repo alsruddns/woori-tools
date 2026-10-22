@@ -300,7 +300,7 @@ function TurkishPublishedToolPage({ slug }: { slug: string }) {
     : ["file-hash", "mime-type-checker", "file-extension-checker", "file-size-checker", "duplicate-file-checker"].includes(slug) ? <TurkishFileInfoWorkspace slug={slug as "file-hash" | "mime-type-checker" | "file-extension-checker" | "file-size-checker" | "duplicate-file-checker"} title={tool.title} />
     : slug === "bulk-file-renamer" || slug === "filename-cleaner" ? <TurkishRenameWorkspace slug={slug} title={tool.title} />
     : slug === "zip-files" ? <TurkishZipWorkspace title={tool.title} />
-    : ["shuffle-lines", "add-line-numbers", "remove-line-numbers", "remove-empty-lines", "remove-characters", "sort-lines"].includes(slug) ? <TurkishLineToolsWorkspace slug={slug as "shuffle-lines" | "add-line-numbers" | "remove-line-numbers" | "remove-empty-lines" | "remove-characters" | "sort-lines"} />
+    : ["shuffle-lines", "add-line-numbers", "remove-line-numbers", "remove-empty-lines", "remove-characters", "sort-lines", "remove-duplicate-lines", "remove-spaces", "remove-line-breaks", "reverse-text", "text-repeater"].includes(slug) ? <TurkishLineToolsWorkspace slug={slug as "shuffle-lines" | "add-line-numbers" | "remove-line-numbers" | "remove-empty-lines" | "remove-characters" | "sort-lines" | "remove-duplicate-lines" | "remove-spaces" | "remove-line-breaks" | "reverse-text" | "text-repeater"} />
     : null;
   if (!workspace) notFound();
 
