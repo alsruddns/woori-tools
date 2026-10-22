@@ -49,6 +49,9 @@ Object.assign(zoneNames, {
 Object.assign(labels, { ru: { title: "Мировые часы", add: "Добавить город", remove: "Удалить", search: "Поиск часовых поясов", none: "Нет городов для отображения." } });
 Object.assign(zoneNames, { ru: { "Asia/Seoul": "Сеул", "Asia/Tokyo": "Токио", "Asia/Shanghai": "Шанхай", "Asia/Singapore": "Сингапур", "Europe/London": "Лондон", "Europe/Paris": "Париж", "America/New_York": "Нью-Йорк", "America/Los_Angeles": "Лос-Анджелес", "Australia/Sydney": "Сидней", "Pacific/Auckland": "Окленд" } });
 
+Object.assign(labels, { tr: { title: "Dünya saati", add: "Şehir ekle", remove: "Kaldır", search: "Saat dilimlerini ara", none: "Gösterilecek şehir yok." } });
+Object.assign(zoneNames, { tr: { "Asia/Seoul": "Seul", "Asia/Tokyo": "Tokyo", "Asia/Shanghai": "Şanghay", "Asia/Singapore": "Singapur", "Europe/London": "Londra", "Europe/Paris": "Paris", "America/New_York": "New York", "America/Los_Angeles": "Los Angeles", "Australia/Sydney": "Sidney", "Pacific/Auckland": "Auckland" } });
+
 export function WorldClockWorkspace({ locale }: { locale:PublishedTargetLocale }) {
   const t = labels[locale];
   const zones = useMemo(() => {

@@ -36,7 +36,7 @@ import { RandomStringWorkspace } from "@/components/tool/random-string-workspace
 import { QrWorkspace } from "@/components/tool/qr-workspace";
 import { WorldClockWorkspace } from "@/components/tool/world-clock-workspace";
 import { CoinFlipWorkspace, DiceWorkspace, LottoWorkspace, RandomNameWorkspace, RandomNumberWorkspace, RandomOrderWorkspace, RandomSeatWorkspace, RandomTeamWorkspace, RandomWheelWorkspace, RussianDutyPickerWorkspace } from "@/components/tool/special-random-workspaces";
-import { RussianStopwatchWorkspace } from "@/components/tool/tool-workspace";
+import { RussianStopwatchWorkspace, TurkishStopwatchWorkspace } from "@/components/tool/tool-workspace";
 import { DailyFortuneWorkspace, TarotWorkspace } from "@/components/tool/fortune-workspace";
 import { SajuWorkspace } from "@/components/tool/saju-workspace";
 import { ToolDetailLayout } from "@/components/tool/tool-detail-layout";
@@ -282,6 +282,8 @@ function TurkishPublishedToolPage({ slug }: { slug: string }) {
     : ["wifi-qr", "contact-qr", "phone-qr", "email-qr"].includes(slug) ? <QrWorkspace slug={slug} locale="tr" />
     : slug === "dice-roller" ? <DiceWorkspace locale="tr" />
     : slug === "coin-flip" ? <CoinFlipWorkspace locale="tr" />
+    : slug === "stopwatch" ? <TurkishStopwatchWorkspace />
+    : slug === "world-clock" ? <WorldClockWorkspace locale="tr" />
     : null;
   if (!workspace) notFound();
 
