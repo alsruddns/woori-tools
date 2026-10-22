@@ -11,6 +11,7 @@ import { RussianZipWorkspace } from "@/components/tool/russian-zip-workspace";
 import { RussianRenameWorkspace } from "@/components/tool/russian-rename-workspace";
 import { RussianLineToolsWorkspace } from "@/components/tool/russian-line-tools-workspace";
 import { RussianTextToolsWorkspace } from "@/components/tool/russian-text-tools-workspace";
+import { RussianLoremWorkspace } from "@/components/tool/russian-lorem-workspace";
 import { RussianMarkdownWorkspace } from "@/components/tool/russian-markdown-workspace";
 import { CountdownWorkspace } from "@/components/tool/countdown-workspace";
 import { RandomStringWorkspace } from "@/components/tool/random-string-workspace";
@@ -184,6 +185,8 @@ function RussianPublishedToolPage({ slug }: { slug: string }) {
   if (!baseTool || !baseTool.supportedLocales.includes("ru") || !translation || !uiVerified || !seoVerified || !published) notFound();
   const workspace = slug === "zip-files"
     ? <RussianZipWorkspace />
+    : slug === "lorem-ipsum"
+      ? <RussianLoremWorkspace />
     : slug === "text-to-file"
       ? <RussianTextToolsWorkspace slug="text-to-file" />
     : slug === "remove-characters"
