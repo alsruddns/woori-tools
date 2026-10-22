@@ -207,7 +207,7 @@ function isRussianEncodingSlug(slug: string): slug is RussianEncodingSlug {
   return russianEncodingSlugs.includes(slug);
 }
 
-const russianJapanSlugs: readonly string[] = ["wareki-converter", "hiragana-katakana-converter", "fullwidth-halfwidth-converter", "japanese-romaji-converter", "japanese-number-kanji-converter", "yakudoshi-calculator", "japanese-zodiac-calculator"];
+const russianJapanSlugs: readonly string[] = ["wareki-converter", "hiragana-katakana-converter", "fullwidth-halfwidth-converter", "japanese-romaji-converter", "japanese-number-kanji-converter", "yakudoshi-calculator", "japanese-zodiac-calculator", "numbers3-number-generator", "numbers4-number-generator", "bingo5-number-generator"];
 
 function isRussianJapanSlug(slug: string): slug is RussianJapanSlug {
   return russianJapanSlugs.includes(slug);
