@@ -19,7 +19,7 @@ const countrySlugs = [...countrySlugSource.matchAll(/"([a-z0-9-]+)"/g)].map((mat
 const { tools: publicTools, filterPublicTools } = await importTypeScript("../src/registry/tools.ts", [
   ['import { locales, type PublishedTargetLocale } from "../i18n/routing";', `const locales = ${JSON.stringify(locales)};`],
   ['import { COUNTRY_TOOL_SLUGS } from "../lib/country-tool-slugs";', `const COUNTRY_TOOL_SLUGS = ${JSON.stringify(countrySlugs)};`],
-  ['import { targetLocalePublication } from "./target-locale-publication";', 'const targetLocalePublication = { ru: { publishedToolSlugs: ["barcode-generator", "markdown-preview", "timer", "pomodoro-timer", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr", "world-clock", "dice-roller", "random-number", "stopwatch", "coin-flip", "random-name-picker", "draw-lots", "random-team-maker", "random-order", "random-seat", "duty-picker", "random-wheel", "tarot-card", "daily-fortune", "saju"] } };'],
+  ['import { targetLocalePublication } from "./target-locale-publication";', 'const targetLocalePublication = { ru: { publishedToolSlugs: ["barcode-generator", "barcode-checker", "markdown-preview", "timer", "pomodoro-timer", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr", "world-clock", "dice-roller", "random-number", "stopwatch", "coin-flip", "random-name-picker", "draw-lots", "random-team-maker", "random-order", "random-seat", "duty-picker", "random-wheel", "tarot-card", "daily-fortune", "saju"] } };'],
 ]);
 const seoSource = await readFile(new URL("../src/lib/seo.ts", import.meta.url), "utf8");
 const { languageAlternates } = await importTypeScript("../src/lib/seo.ts", [[
@@ -30,6 +30,7 @@ const sitemapSource = await readFile(new URL("../src/app/sitemap.ts", import.met
 const localeLayoutSource = await readFile(new URL("../src/app/[locale]/layout.tsx", import.meta.url), "utf8");
 const toolPageSource = await readFile(new URL("../src/app/[locale]/tools/[slug]/page.tsx", import.meta.url), "utf8");
 const markdownWorkspaceSource = await readFile(new URL("../src/components/tool/russian-markdown-workspace.tsx", import.meta.url), "utf8");
+const russianBarcodeCheckerSource = await readFile(new URL("../src/components/tool/russian-barcode-checker-workspace.tsx", import.meta.url), "utf8");
 const countdownWorkspaceSource = await readFile(new URL("../src/components/tool/countdown-workspace.tsx", import.meta.url), "utf8");
 const randomStringWorkspaceSource = await readFile(new URL("../src/components/tool/random-string-workspace.tsx", import.meta.url), "utf8");
 const qrWorkspaceSource = await readFile(new URL("../src/components/tool/qr-workspace.tsx", import.meta.url), "utf8");
@@ -118,6 +119,7 @@ test("sitemap and SEO use the same language alternate helper", () => {
   assert.match(seoSource, /"x-default": localizedUrl\("ko", path\)/);
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/lotto-number-generator")).alternates.languages).length, 16);
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/barcode-generator")).alternates.languages).length, 17);
+  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/barcode-checker")).alternates.languages).length, 17);
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/markdown-preview")).alternates.languages).length, 17);
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/timer")).alternates.languages).length, 17);
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/pomodoro-timer")).alternates.languages).length, 17);
@@ -136,6 +138,7 @@ test("sitemap and SEO use the same language alternate helper", () => {
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/daily-fortune")).alternates.languages).length, 17);
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/saju")).alternates.languages).length, 17);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/barcode-generator")), true);
+  assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/barcode-checker")), true);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/markdown-preview")), true);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/timer")), true);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/pomodoro-timer")), true);
@@ -163,6 +166,16 @@ test("Russian markdown preview is only published with its localized workspace", 
   assert.match(markdownWorkspaceSource, /placeholder=\{\s*"# Заголовок\\n\\nВведите пример \*\*Markdown\*\*\."/);
   assert.equal(publicTools.find(({ slug }) => slug === "markdown-preview").supportedLocales.includes("ru"), true);
   assert.equal(entries.some(({ url }) => url === `${siteOrigin}/ru/tools/markdown-preview`), true);
+});
+
+test("Russian barcode checker publishes a localized checksum workspace", () => {
+  assert.match(toolPageSource, /slug === "barcode-checker"\s*\? <RussianBarcodeCheckerWorkspace \/>/);
+  assert.match(toolPageSource, /import \{ RussianBarcodeCheckerWorkspace \} from "@\/components\/tool\/russian-barcode-checker-workspace"/);
+  assert.match(russianBarcodeCheckerSource, /Проверка контрольной цифры штрихкода/);
+  assert.match(russianBarcodeCheckerSource, /Введите номер штрихкода/);
+  assert.match(russianBarcodeCheckerSource, /Ожидаемая контрольная цифра/);
+  assert.match(russianBarcodeCheckerSource, /\(body\.length - index\) % 2 === 1 \? 3 : 1/);
+  assert.ok(entries.some(({ url }) => url.endsWith("/ru/tools/barcode-checker")));
 });
 
 test("Russian timer and Pomodoro use localized controls before publication", () => {
