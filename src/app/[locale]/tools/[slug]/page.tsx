@@ -52,6 +52,7 @@ import { getToolFaqQuestions } from "@/registry/tool-faq";
 import { localizePublishedTool } from "@/registry/published-tool-translations";
 import { getTargetRussianToolTranslation } from "@/registry/target-ru-translations";
 import { getTargetLotteryTranslation } from "@/registry/target-lottery-translations";
+import { getTargetTurkishToolTranslation } from "@/registry/target-tr-translations";
 import { targetLocalePublication } from "@/registry/target-locale-publication";
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
@@ -60,6 +61,7 @@ export const dynamicParams = false;
 
 export function generateStaticParams({ params }: { params: { locale: string } }) {
   if (params.locale === "ru") return targetLocalePublication.ru.publishedToolSlugs.map((slug) => ({ slug }));
+  if (params.locale === "tr") return targetLocalePublication.tr.publishedToolSlugs.map((slug) => ({ slug }));
   return tools.filter(({ supportedLocales }) => supportedLocales.includes(params.locale as Locale)).map(({ slug }) => ({ slug }));
 }
 
@@ -70,6 +72,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const translation = getTargetRussianToolTranslation(slug) ?? getTargetLotteryTranslation("ru", slug);
     if (!tool || !tool.supportedLocales.includes("ru") || !translation) return {};
     return pageMetadata({ locale: "ru", path: `/tools/${slug}`, title: translation.seoTitle, description: translation.seoDescription, keywords: translation.keywords, supportedLocales: tool.supportedLocales });
+  }
+  if (rawLocale === "tr") {
+    const tool = getTool(slug);
+    const translation = getTargetTurkishToolTranslation(slug) ?? getTargetLotteryTranslation("tr", slug);
+    if (!tool || !tool.supportedLocales.includes("tr") || !translation || !(targetLocalePublication.tr.publishedToolSlugs as readonly string[]).includes(slug)) return {};
+    return pageMetadata({ locale: "tr", path: `/tools/${slug}`, title: translation.seoTitle, description: translation.seoDescription, keywords: translation.keywords, supportedLocales: tool.supportedLocales });
   }
   if (!isLocale(rawLocale)) return {};
   const tool = getTool(slug);
@@ -88,6 +96,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function ToolPage({ params }: Props) {
   const { locale: rawLocale, slug } = await params;
   if (rawLocale === "ru") return <RussianPublishedToolPage slug={slug} />;
+  if (rawLocale === "tr") return <TurkishPublishedToolPage slug={slug} />;
   if (!isLocale(rawLocale)) notFound();
   const locale: Locale = rawLocale;
   const baseTool = getTool(slug);
@@ -247,6 +256,64 @@ const russianInternationalSlugs: readonly string[] = ["germany-iban-validator", 
 
 function isRussianInternationalSlug(slug: string): slug is RussianInternationalSlug {
   return russianInternationalSlugs.includes(slug);
+}
+
+function TurkishPublishedToolPage({ slug }: { slug: string }) {
+  const baseTool = getTool(slug);
+  const translation = getTargetTurkishToolTranslation(slug) ?? getTargetLotteryTranslation("tr", slug);
+  const uiVerified = (targetLocalePublication.tr.uiVerifiedToolSlugs as readonly string[]).includes(slug);
+  const seoVerified = (targetLocalePublication.tr.seoVerifiedToolSlugs as readonly string[]).includes(slug);
+  const published = (targetLocalePublication.tr.publishedToolSlugs as readonly string[]).includes(slug);
+  if (!baseTool || !baseTool.supportedLocales.includes("tr") || !translation || !uiVerified || !seoVerified || !published) notFound();
+
+  const tool = localizePublishedTool(baseTool, "tr");
+  const messages = getMessages("tr");
+  const lotterySlugs = ["lotto-number-generator", "powerball-number-generator", "mega-millions-number-generator", "japan-loto6-number-generator", "japan-loto7-number-generator", "japan-mini-loto-number-generator"];
+  const workspace = lotterySlugs.includes(slug)
+    ? <LottoWorkspace locale="tr" max={slug === "powerball-number-generator" ? 69 : slug === "mega-millions-number-generator" ? 70 : slug === "japan-loto6-number-generator" ? 43 : slug === "japan-loto7-number-generator" ? 37 : slug === "japan-mini-loto-number-generator" ? 31 : 45} numberCount={slug === "powerball-number-generator" || slug === "mega-millions-number-generator" ? 5 : slug === "japan-loto7-number-generator" ? 7 : slug === "japan-mini-loto-number-generator" ? 5 : 6} historyKey={`lottery-history:${slug}`} specialBall={slug === "powerball-number-generator" ? { label: { tr: "Powerball" }, min: 1, max: 26 } : slug === "mega-millions-number-generator" ? { label: { tr: "Mega Ball" }, min: 1, max: 24 } : undefined} />
+    : slug === "random-number" ? <RandomNumberWorkspace locale="tr" />
+    : slug === "random-name-picker" || slug === "draw-lots" ? <RandomNameWorkspace locale="tr" slug={slug} />
+    : slug === "random-wheel" ? <RandomWheelWorkspace locale="tr" />
+    : slug === "random-team-maker" ? <RandomTeamWorkspace locale="tr" />
+    : slug === "random-order" ? <RandomOrderWorkspace locale="tr" />
+    : slug === "random-seat" ? <RandomSeatWorkspace locale="tr" />
+    : null;
+  if (!workspace) notFound();
+
+  const related = (baseTool.relatedTools ?? [])
+    .filter((relatedSlug) => (targetLocalePublication.tr.publishedToolSlugs as readonly string[]).includes(relatedSlug))
+    .map((relatedSlug) => getTool(relatedSlug))
+    .filter((relatedTool): relatedTool is NonNullable<typeof relatedTool> => relatedTool !== undefined)
+    .map((relatedTool) => localizePublishedTool(relatedTool, "tr"));
+  const url = `https://www.woori.today/tr/tools/${slug}`;
+
+  return <main className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
+    <nav aria-label={messages.breadcrumb} className="mb-6 flex flex-wrap items-center gap-2 text-sm text-slate-500">
+      <Link href="/tr/tools" className="hover:text-indigo-700">{messages.tools}</Link><span aria-hidden="true">/</span>
+      <span aria-current="page" className="text-slate-700">{tool.shortTitle}</span>
+    </nav>
+    <header className="mb-7">
+      <p className="text-sm font-semibold text-indigo-700">{messages.categories}</p>
+      <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">{translation.title}</h1>
+      <p className="mt-3 max-w-3xl text-lg leading-8 text-slate-600">{translation.description}</p>
+    </header>
+    {workspace}
+    <section className="mt-10 space-y-8">
+      <article><h2 className="text-2xl font-bold">{messages.howTo}</h2><ol className="mt-4 list-inside list-decimal space-y-2 text-slate-700">{translation.steps.map((step) => <li key={step}>{step}</li>)}</ol></article>
+      <article><h2 className="text-xl font-bold">Örnek kullanım</h2><p className="mt-2 leading-7 text-slate-700">{translation.example}</p></article>
+      <article><h2 className="text-xl font-bold">Seçenekler ve sonuç</h2><p className="mt-2 leading-7 text-slate-700">{translation.options}</p></article>
+      <article><h2 className="text-xl font-bold">Gizlilik</h2><p className="mt-2 rounded-xl bg-emerald-50 p-4 text-sm leading-6 text-emerald-900">{messages.filePrivacy} <Link href="/tr/tools" className="font-semibold underline underline-offset-2">{messages.allTools}</Link></p></article>
+      <article><h2 className="text-xl font-bold">Dikkat</h2><p className="mt-2 leading-7 text-slate-700">{translation.caution}</p></article>
+    </section>
+    <section className="mt-10" aria-labelledby="tr-faq">
+      <h2 id="tr-faq" className="text-2xl font-bold">{messages.faq}</h2>
+      <div className="mt-4 divide-y divide-slate-200 rounded-2xl border border-slate-200">
+        {[[translation.faq.example, translation.example], [translation.faq.caution, translation.caution]].map(([question, answer], index) => <details key={question} className="group p-4" open={index === 0}><summary className="cursor-pointer font-medium">{question}</summary><p className="mt-3 text-sm leading-6 text-slate-600">{answer}</p></details>)}
+      </div>
+    </section>
+    {related.length > 0 && <section className="mt-10"><h2 className="text-2xl font-bold">{messages.relatedTools}</h2><div className="mt-4 grid gap-3 sm:grid-cols-2">{related.map((item) => <Link key={item.slug} href={`/tr/tools/${item.slug}`} className="rounded-xl border border-slate-200 p-4 hover:border-indigo-300"><span className="font-semibold">{item.title}</span><span className="mt-1 block text-sm text-slate-600">{item.description}</span></Link>)}</div></section>}
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@context": "https://schema.org", "@type": "WebApplication", name: translation.title, description: translation.description, url, inLanguage: "tr-TR", applicationCategory: "UtilitiesApplication", operatingSystem: "Any", offers: { "@type": "Offer", price: "0", priceCurrency: "KRW" } }).replace(/</g, "\\u003c") }} />
+  </main>;
 }
 
 function RussianPublishedToolPage({ slug }: { slug: string }) {

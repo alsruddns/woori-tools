@@ -6,6 +6,7 @@ import "../globals.css";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { RussianPublishedShell } from "@/components/layout/russian-published-shell";
+import { TurkishPublishedShell } from "@/components/layout/turkish-published-shell";
 import { CopyToast } from "@/components/copy-toast";
 import { GoogleAnalytics } from "@/components/analytics/google-analytics";
 import { getMessages } from "@/i18n/messages";
@@ -49,6 +50,11 @@ export default async function LocaleLayout({
     const config = getPublishedTargetLocaleConfig(rawLocale);
     if (!config) notFound();
     return <html lang={config.intlLocale} className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}><body className="min-h-full bg-slate-50 text-slate-900"><RussianPublishedShell>{children}</RussianPublishedShell><GoogleAnalytics /></body></html>;
+  }
+  if (rawLocale === "tr") {
+    const config = getPublishedTargetLocaleConfig("tr");
+    if (!config) notFound();
+    return <html lang={config.intlLocale} className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}><body className="min-h-full bg-slate-50 text-slate-900"><TurkishPublishedShell>{children}</TurkishPublishedShell><GoogleAnalytics /></body></html>;
   }
   if (!isLocale(rawLocale)) notFound();
   const locale: Locale = rawLocale;

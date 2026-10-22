@@ -153,7 +153,8 @@ const entries: Array<[string, ToolCategory, string, string, string[], boolean]> 
 
 const fileToolSlugs = new Set(["file-hash", "mime-type-checker", "file-extension-checker", "file-size-checker", "duplicate-file-checker", "zip-files", "bulk-file-renamer", "filename-cleaner"]);
 const russianPublishedToolSet = new Set<string>(targetLocalePublication.ru.publishedToolSlugs);
-export const registeredTools: ToolDefinition[] = entries.map(([slug, category, title, description, keywords, isPublic]) => ({ id: slug, slug, category, title, shortTitle: title, description, keywords, clientOnly: true, isPublic, supportedLocales: [...locales, ...(russianPublishedToolSet.has(slug) ? ["ru" as const] : [])], usesFileInput: category === "image" || category === "pdf" || fileToolSlugs.has(slug), acceptedTypes: category === "image" ? ["image/*"] : category === "pdf" ? ["application/pdf"] : undefined }));
+const turkishPublishedToolSet = new Set<string>(targetLocalePublication.tr?.publishedToolSlugs ?? []);
+export const registeredTools: ToolDefinition[] = entries.map(([slug, category, title, description, keywords, isPublic]) => ({ id: slug, slug, category, title, shortTitle: title, description, keywords, clientOnly: true, isPublic, supportedLocales: [...locales, ...(russianPublishedToolSet.has(slug) ? ["ru" as const] : []), ...(turkishPublishedToolSet.has(slug) ? ["tr" as const] : [])], usesFileInput: category === "image" || category === "pdf" || fileToolSlugs.has(slug), acceptedTypes: category === "image" ? ["image/*"] : category === "pdf" ? ["application/pdf"] : undefined }));
 const featuredSlugs = new Set([
   "lotto-number-generator", "random-number", "random-name-picker", "random-wheel",
   "random-team-maker", "stopwatch", "timer", "pomodoro-timer",
