@@ -7,7 +7,7 @@ Published locales: ko, en, ja, zh, es, pt-br, de, fr, vi, id, th, zh-tw, it, nl,
 
 | Locale | Authored tool bundles | Pending tools | Next tool | Published |
 | --- | ---: | ---: | --- | --- |
-| ru | 29/176 | 147 | barcode-checker | No |
+| ru | 33/176 | 143 | instagram-grid-split | No |
 | tr | 6/176 | 170 | tarot-card | No |
 | pl | 6/176 | 170 | tarot-card | No |
 | fil | 6/176 | 170 | tarot-card | No |
@@ -22,18 +22,14 @@ Published locales: ko, en, ja, zh, es, pt-br, de, fr, vi, id, th, zh-tw, it, nl,
 ## Translation coverage
 
 - Existing authored lottery bundle slugs: lotto-number-generator, powerball-number-generator, mega-millions-number-generator, japan-loto6-number-generator, japan-loto7-number-generator, japan-mini-loto-number-generator
-- Additional Russian bundle slugs: tarot-card, daily-fortune, saju, random-number, random-name-picker, random-wheel, draw-lots, random-team-maker, random-order, random-seat, duty-picker, dice-roller, coin-flip, stopwatch, timer, pomodoro-timer, world-clock, password-generator, random-string-generator, wifi-qr, contact-qr, phone-qr, email-qr
-- Russian completed tool bundles: 29/176
-- Russian next tool: barcode-checker
+- Additional Russian bundle slugs: tarot-card, daily-fortune, saju, random-number, random-name-picker, random-wheel, draw-lots, random-team-maker, random-order, random-seat, duty-picker, dice-roller, coin-flip, stopwatch, timer, pomodoro-timer, world-clock, password-generator, random-string-generator, wifi-qr, contact-qr, phone-qr, email-qr, barcode-checker, barcode-generator, social-image-resize, add-text-to-image
+- Russian completed tool bundles: 33/176
+- Russian next tool: instagram-grid-split
 - New-locale UI messages: 24 shared core keys per locale; remaining site and workspace strings are not complete.
 - New locales published or indexed: none.
 
 ## Remaining Russian tools
 
-- barcode-checker
-- barcode-generator
-- social-image-resize
-- add-text-to-image
 - instagram-grid-split
 - image-collage
 - file-hash
