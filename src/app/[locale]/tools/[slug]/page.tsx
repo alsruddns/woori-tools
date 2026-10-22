@@ -10,6 +10,7 @@ import { RussianFileInfoWorkspace } from "@/components/tool/russian-file-info-wo
 import { RussianZipWorkspace } from "@/components/tool/russian-zip-workspace";
 import { RussianRenameWorkspace } from "@/components/tool/russian-rename-workspace";
 import { RussianLineToolsWorkspace } from "@/components/tool/russian-line-tools-workspace";
+import { RussianTextToolsWorkspace } from "@/components/tool/russian-text-tools-workspace";
 import { RussianMarkdownWorkspace } from "@/components/tool/russian-markdown-workspace";
 import { CountdownWorkspace } from "@/components/tool/countdown-workspace";
 import { RandomStringWorkspace } from "@/components/tool/random-string-workspace";
@@ -183,6 +184,22 @@ function RussianPublishedToolPage({ slug }: { slug: string }) {
   if (!baseTool || !baseTool.supportedLocales.includes("ru") || !translation || !uiVerified || !seoVerified || !published) notFound();
   const workspace = slug === "zip-files"
     ? <RussianZipWorkspace />
+    : slug === "remove-characters"
+      ? <RussianTextToolsWorkspace slug="remove-characters" />
+      : slug === "text-repeater"
+        ? <RussianTextToolsWorkspace slug="text-repeater" />
+        : slug === "remove-spaces"
+          ? <RussianTextToolsWorkspace slug="remove-spaces" />
+          : slug === "remove-line-breaks"
+            ? <RussianTextToolsWorkspace slug="remove-line-breaks" />
+            : slug === "text-case-converter"
+              ? <RussianTextToolsWorkspace slug="text-case-converter" />
+              : slug === "reverse-text"
+                ? <RussianTextToolsWorkspace slug="reverse-text" />
+                : slug === "remove-duplicate-words"
+                  ? <RussianTextToolsWorkspace slug="remove-duplicate-words" />
+                  : slug === "character-count"
+                    ? <RussianTextToolsWorkspace slug="character-count" />
     : slug === "shuffle-lines"
       ? <RussianLineToolsWorkspace slug="shuffle-lines" />
       : slug === "add-line-numbers"
