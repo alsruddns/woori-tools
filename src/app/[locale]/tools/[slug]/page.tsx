@@ -291,6 +291,7 @@ function TurkishPublishedToolPage({ slug }: { slug: string }) {
     : slug === "barcode-checker" ? <RussianBarcodeCheckerWorkspace locale="tr" />
     : slug === "barcode-generator" ? <BarcodeWorkspace locale="tr" />
     : slug === "instagram-grid-split" ? <RussianInstagramGridWorkspace locale="tr" />
+    : slug === "image-collage" ? <RussianImageCollageWorkspace locale="tr" />
     : null;
   if (!workspace) notFound();
 
