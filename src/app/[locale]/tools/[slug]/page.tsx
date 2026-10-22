@@ -184,6 +184,8 @@ function RussianPublishedToolPage({ slug }: { slug: string }) {
   if (!baseTool || !baseTool.supportedLocales.includes("ru") || !translation || !uiVerified || !seoVerified || !published) notFound();
   const workspace = slug === "zip-files"
     ? <RussianZipWorkspace />
+    : slug === "text-to-file"
+      ? <RussianTextToolsWorkspace slug="text-to-file" />
     : slug === "remove-characters"
       ? <RussianTextToolsWorkspace slug="remove-characters" />
       : slug === "text-repeater"

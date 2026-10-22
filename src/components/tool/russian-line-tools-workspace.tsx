@@ -38,7 +38,7 @@ export function RussianLineToolsWorkspace({ slug }: { slug: LineToolSlug }) {
   const [busy, setBusy] = useState(false);
 
   async function run() {
-    if (!text.trim()) { setError(copy.empty); setResult(""); return; }
+    if (text.length === 0) { setError(copy.empty); setResult(""); return; }
     setBusy(true); setError(""); setResult("");
     try {
       const processed = await processText(slug, text, "", option, 1, "ru");
