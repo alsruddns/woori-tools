@@ -19,7 +19,7 @@ const countrySlugs = [...countrySlugSource.matchAll(/"([a-z0-9-]+)"/g)].map((mat
 const { tools: publicTools, filterPublicTools } = await importTypeScript("../src/registry/tools.ts", [
   ['import { locales, type PublishedTargetLocale } from "../i18n/routing";', `const locales = ${JSON.stringify(locales)};`],
   ['import { COUNTRY_TOOL_SLUGS } from "../lib/country-tool-slugs";', `const COUNTRY_TOOL_SLUGS = ${JSON.stringify(countrySlugs)};`],
-  ['import { targetLocalePublication } from "./target-locale-publication";', 'const targetLocalePublication = { ru: { publishedToolSlugs: ["file-hash", "mime-type-checker", "file-extension-checker", "file-size-checker", "barcode-generator", "barcode-checker", "instagram-grid-split", "image-collage", "markdown-preview", "timer", "pomodoro-timer", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr", "world-clock", "dice-roller", "random-number", "stopwatch", "coin-flip", "random-name-picker", "draw-lots", "random-team-maker", "random-order", "random-seat", "duty-picker", "random-wheel", "tarot-card", "daily-fortune", "saju"] } };'],
+  ['import { targetLocalePublication } from "./target-locale-publication";', 'const targetLocalePublication = { ru: { publishedToolSlugs: ["file-hash", "mime-type-checker", "file-extension-checker", "file-size-checker", "duplicate-file-checker", "barcode-generator", "barcode-checker", "instagram-grid-split", "image-collage", "markdown-preview", "timer", "pomodoro-timer", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr", "world-clock", "dice-roller", "random-number", "stopwatch", "coin-flip", "random-name-picker", "draw-lots", "random-team-maker", "random-order", "random-seat", "duty-picker", "random-wheel", "tarot-card", "daily-fortune", "saju"] } };'],
 ]);
 const seoSource = await readFile(new URL("../src/lib/seo.ts", import.meta.url), "utf8");
 const { languageAlternates } = await importTypeScript("../src/lib/seo.ts", [[
@@ -126,7 +126,7 @@ test("sitemap and SEO use the same language alternate helper", () => {
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/barcode-checker")).alternates.languages).length, 17);
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/instagram-grid-split")).alternates.languages).length, 17);
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/image-collage")).alternates.languages).length, 17);
-  for (const slug of ["file-hash", "mime-type-checker", "file-extension-checker", "file-size-checker"]) assert.equal(Object.keys(entries.find(({ url }) => url.endsWith(`/tools/${slug}`)).alternates.languages).length, 17);
+  for (const slug of ["file-hash", "mime-type-checker", "file-extension-checker", "file-size-checker", "duplicate-file-checker"]) assert.equal(Object.keys(entries.find(({ url }) => url.endsWith(`/tools/${slug}`)).alternates.languages).length, 17);
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/markdown-preview")).alternates.languages).length, 17);
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/timer")).alternates.languages).length, 17);
   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/pomodoro-timer")).alternates.languages).length, 17);
@@ -148,7 +148,7 @@ test("sitemap and SEO use the same language alternate helper", () => {
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/barcode-checker")), true);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/instagram-grid-split")), true);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/image-collage")), true);
-  for (const slug of ["file-hash", "mime-type-checker", "file-extension-checker", "file-size-checker"]) assert.equal(entries.some(({ url }) => url.endsWith(`/ru/tools/${slug}`)), true);
+  for (const slug of ["file-hash", "mime-type-checker", "file-extension-checker", "file-size-checker", "duplicate-file-checker"]) assert.equal(entries.some(({ url }) => url.endsWith(`/ru/tools/${slug}`)), true);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/markdown-preview")), true);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/timer")), true);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/pomodoro-timer")), true);
@@ -216,7 +216,9 @@ test("Russian file inspection tools localize limits and keep processing in the b
   assert.match(russianFileInfoSource, /crypto\.subtle\.digest\("SHA-256"/);
   assert.match(russianFileInfoSource, /Сигнатура не распознана/);
   assert.match(russianFileInfoSource, /Файлы анализируются только в вашем браузере и не отправляются на сервер/);
-  assert.ok(["file-hash", "mime-type-checker", "file-extension-checker", "file-size-checker"].every((slug) => entries.some(({ url }) => url.endsWith(`/ru/tools/${slug}`))));
+  assert.ok(["file-hash", "mime-type-checker", "file-extension-checker", "file-size-checker", "duplicate-file-checker"].every((slug) => entries.some(({ url }) => url.endsWith(`/ru/tools/${slug}`))));
+  assert.match(russianFileInfoSource, /crypto\.subtle\.digest\("SHA-256"/);
+  assert.match(russianFileInfoSource, /Файлы с одинаковым содержимым не найдены/);
 });
 
 test("Russian timer and Pomodoro use localized controls before publication", () => {

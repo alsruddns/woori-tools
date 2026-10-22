@@ -186,6 +186,8 @@ function RussianPublishedToolPage({ slug }: { slug: string }) {
         ? <RussianFileInfoWorkspace slug="file-extension-checker" title={translation.title} />
         : slug === "file-size-checker"
           ? <RussianFileInfoWorkspace slug="file-size-checker" title={translation.title} />
+          : slug === "duplicate-file-checker"
+            ? <RussianFileInfoWorkspace slug="duplicate-file-checker" title={translation.title} />
     : slug === "barcode-generator"
     ? <BarcodeWorkspace locale="ru" />
     : slug === "instagram-grid-split"

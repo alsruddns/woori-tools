@@ -60,11 +60,11 @@ const lines = [
   "## Last verified checkpoint",
   "",
   "- Validation: TypeScript passed; lint passed; all 110 tests passed; content-quality checks passed; production build passed.",
-  `- Production build prerendered 2,852 static pages; the tool sitemap contains 2,672 localized tool URLs, including ${targetLocalePublication.ru.publishedToolSlugs.length} verified Russian tool pages.`,
-  `- Russian canonical, hreflang, x-default, Open Graph, route rendering, and sitemap membership passed source checks for all ${targetLocalePublication.ru.publishedToolSlugs.length} pages; production rendering checks passed for file-hash, mime-type-checker, file-extension-checker, file-size-checker, image-collage, instagram-grid-split, barcode-checker, barcode-generator, and markdown-preview.`,
+  `- Production build prerendered 2,853 static pages; the tool sitemap contains 2,673 localized tool URLs, including ${targetLocalePublication.ru.publishedToolSlugs.length} verified Russian tool pages.`,
+  `- Russian canonical, hreflang, x-default, Open Graph, route rendering, and sitemap membership passed source checks for all ${targetLocalePublication.ru.publishedToolSlugs.length} pages; production rendering checks passed for duplicate-file-checker, file-hash, mime-type-checker, file-extension-checker, file-size-checker, image-collage, instagram-grid-split, barcode-checker, barcode-generator, and markdown-preview.`,
   "- The verified route set is intentionally limited to published tool slugs; the remaining Russian tools are not routable or indexed.",
   "- Current branch is `develop`.",
-  `- Next Russian translation-data tool: \`${currentPending[0] ?? "none"}\`; next Russian workspace UI tool: \`duplicate-file-checker\`.`,
+  `- Next Russian translation-data tool: \`${currentPending[0] ?? "none"}\`; next Russian workspace UI tool: \`zip-files\`.`,
   "",
 ];
 

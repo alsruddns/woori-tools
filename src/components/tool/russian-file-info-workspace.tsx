@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-type SupportedSlug = "file-hash" | "mime-type-checker" | "file-extension-checker" | "file-size-checker";
+type SupportedSlug = "file-hash" | "mime-type-checker" | "file-extension-checker" | "file-size-checker" | "duplicate-file-checker";
 
 const copy = {
   choose: "Выберите файлы или перетащите их сюда",
@@ -18,6 +18,8 @@ const copy = {
   unknownMime: "тип не определён браузером",
   unknownSignature: "Сигнатура не распознана",
   signature: { png: "PNG-сигнатура", jpeg: "JPEG-сигнатура", pdf: "PDF-сигнатура", gif: "GIF-сигнатура", zip: "ZIP-сигнатура" },
+  noDuplicates: "Файлы с одинаковым содержимым не найдены.",
+  duplicateGroup: (number: number) => `Группа ${number}:`,
 } as const;
 
 export function RussianFileInfoWorkspace({ slug, title }: { slug: SupportedSlug; title: string }) {
@@ -41,6 +43,10 @@ export function RussianFileInfoWorkspace({ slug, title }: { slug: SupportedSlug;
     setBusy(true); setError(""); setResult("");
     try {
       const lines = await Promise.all(files.map(async (file) => {
+        if (slug === "duplicate-file-checker") {
+          const digest = await crypto.subtle.digest("SHA-256", await file.arrayBuffer());
+          return { name: file.name, hash: Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("") };
+        }
         if (slug === "file-hash") {
           const digest = await crypto.subtle.digest("SHA-256", await file.arrayBuffer());
           return `${file.name}\tSHA-256\t${Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("")}`;
@@ -60,7 +66,12 @@ export function RussianFileInfoWorkspace({ slug, title }: { slug: SupportedSlug;
                 : prefix2 === "PK" ? copy.signature.zip : copy.unknownSignature;
         return `${file.name}\t${file.type || copy.unknownMime}\t${signature}`;
       }));
-      setResult(lines.join("\n"));
+      if (slug === "duplicate-file-checker") {
+        const groups = new Map<string, string[]>();
+        for (const item of lines) if (typeof item !== "string") groups.set(item.hash, [...(groups.get(item.hash) ?? []), item.name]);
+        const duplicates = [...groups.values()].filter((group) => group.length > 1);
+        setResult(duplicates.length ? duplicates.map((group, index) => `${copy.duplicateGroup(index + 1)}\n${group.join("\n")}`).join("\n\n") : copy.noDuplicates);
+      } else setResult(lines.join("\n"));
     } catch { setError("Не удалось обработать выбранные файлы в браузере."); }
     finally { setBusy(false); }
   }
