@@ -10,6 +10,7 @@ import { RussianFileInfoWorkspace } from "@/components/tool/russian-file-info-wo
 import { TurkishFileInfoWorkspace } from "@/components/tool/turkish-file-info-workspace";
 import { TurkishRenameWorkspace } from "@/components/tool/turkish-rename-workspace";
 import { TurkishZipWorkspace } from "@/components/tool/turkish-zip-workspace";
+import { TurkishLineToolsWorkspace } from "@/components/tool/turkish-line-tools-workspace";
 import { RussianZipWorkspace } from "@/components/tool/russian-zip-workspace";
 import { RussianRenameWorkspace } from "@/components/tool/russian-rename-workspace";
 import { RussianLineToolsWorkspace } from "@/components/tool/russian-line-tools-workspace";
@@ -299,6 +300,7 @@ function TurkishPublishedToolPage({ slug }: { slug: string }) {
     : ["file-hash", "mime-type-checker", "file-extension-checker", "file-size-checker", "duplicate-file-checker"].includes(slug) ? <TurkishFileInfoWorkspace slug={slug as "file-hash" | "mime-type-checker" | "file-extension-checker" | "file-size-checker" | "duplicate-file-checker"} title={tool.title} />
     : slug === "bulk-file-renamer" || slug === "filename-cleaner" ? <TurkishRenameWorkspace slug={slug} title={tool.title} />
     : slug === "zip-files" ? <TurkishZipWorkspace title={tool.title} />
+    : ["shuffle-lines", "add-line-numbers", "remove-line-numbers", "remove-empty-lines", "remove-characters", "sort-lines"].includes(slug) ? <TurkishLineToolsWorkspace slug={slug as "shuffle-lines" | "add-line-numbers" | "remove-line-numbers" | "remove-empty-lines" | "remove-characters" | "sort-lines"} />
     : null;
   if (!workspace) notFound();
 
