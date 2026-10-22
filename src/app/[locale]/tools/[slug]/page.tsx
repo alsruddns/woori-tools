@@ -14,6 +14,7 @@ import { RussianTextToolsWorkspace } from "@/components/tool/russian-text-tools-
 import { RussianLoremWorkspace } from "@/components/tool/russian-lorem-workspace";
 import { RussianRegexWorkspace } from "@/components/tool/russian-regex-workspace";
 import { RussianColorConverterWorkspace } from "@/components/tool/russian-color-converter-workspace";
+import { RussianCronWorkspace } from "@/components/tool/russian-cron-workspace";
 import { RussianMarkdownWorkspace } from "@/components/tool/russian-markdown-workspace";
 import { CountdownWorkspace } from "@/components/tool/countdown-workspace";
 import { RandomStringWorkspace } from "@/components/tool/random-string-workspace";
@@ -189,6 +190,8 @@ function RussianPublishedToolPage({ slug }: { slug: string }) {
     ? <RussianZipWorkspace />
     : slug === "color-converter"
       ? <RussianColorConverterWorkspace />
+    : slug === "cron-parser"
+      ? <RussianCronWorkspace />
     : slug === "regex-tester"
       ? <RussianRegexWorkspace />
     : slug === "lorem-ipsum"
