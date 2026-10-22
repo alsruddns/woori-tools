@@ -8,7 +8,7 @@ Routable locales: 17 (ko, en, ja, zh, es, pt-br, de, fr, vi, id, th, zh-tw, it, 
 | Locale | Translation data | UI verified | SEO verified | Public tools | Pending data | Next tool |
 | --- | ---: | ---: | ---: | ---: | ---: | --- |
 | ru | 176/176 | 176 | 176 | 176 | 0 | none |
-| tr | 176/176 | 27 | 27 | 27 | 0 | none |
+| tr | 176/176 | 28 | 28 | 28 | 0 | none |
 | pl | 6/176 | 0 | 0 | 0 | 170 | tarot-card |
 | fil | 6/176 | 0 | 0 | 0 | 170 | tarot-card |
 | bn | 6/176 | 0 | 0 | 0 | 170 | tarot-card |
@@ -38,14 +38,14 @@ Routable locales: 17 (ko, en, ja, zh, es, pt-br, de, fr, vi, id, th, zh-tw, it, 
 ## Next locale
 
 - Russian authoring, UI, and SEO verification is complete for all 176 tools.
-- Turkish translation data is complete for all 176 tools. Twenty-seven tools have verified UI and SEO routes; the other 149 Turkish tool pages remain unpublished.
-- Continue Turkish UI integration with `saju`. Complete shared Turkish UI messages beyond the 24 core keys before broad release.
+- Turkish translation data is complete for all 176 tools. Twenty-eight tools have verified UI and SEO routes; the other 148 Turkish tool pages remain unpublished.
+- Continue Turkish UI integration with `duty-picker`. Complete shared Turkish UI messages beyond the 24 core keys before broad release.
 
 ## Last verified checkpoint
 
 - Validation: TypeScript passed; lint passed; all 136 tests passed; content-quality checks passed; production build passed.
-- Production build prerendered 3,034 static pages; the tool sitemap contains 2,843 localized tool URLs: 2,816 Russian/base routes and 27 Turkish routes.
-- Turkish canonical, hreflang, x-default, Open Graph, and sitemap output were verified in the production build for the 27 approved tools; unverified Turkish tools including `saju` remain absent.
+- Production build prerendered 3,035 static pages; the tool sitemap contains 2,844 localized tool URLs: 2,816 Russian/base routes and 28 Turkish routes.
+- Turkish canonical, hreflang, x-default, Open Graph, and sitemap output were verified in the production build for the 28 approved tools; unverified Turkish tools including `duty-picker` remain absent.
 - Russian canonical, hreflang, x-default, Open Graph, route rendering, and sitemap membership passed source checks for all 176 pages; production HTML rendering was checked for lotto-number-generator, social-image-resize, add-text-to-image, germany-iban-validator, german-number-format-converter, german-date-format-converter, spain-dni-validator, spain-nie-validator, spanish-number-format-converter, spanish-date-format-converter, france-phone-number-formatter, french-number-format-converter, french-date-format-converter, brazil-cpf-validator, brazil-cnpj-validator, brazil-phone-number-formatter, brazil-cep-formatter, netherlands-iban-validator, dutch-number-format-converter, dutch-date-format-converter, vietnam-phone-number-formatter, vietnam-number-format-converter, italy-fiscal-code-format-validator, italy-vat-number-validator, italy-number-format-converter, italian-date-format-converter, australia-postcode-formatter, english-date-format-converter, indian-number-format-converter, lakh-crore-converter, pan-format-validator, gstin-format-validator, india-phone-number-formatter, simplified-traditional-chinese-converter, chinese-number-kanji-converter, rmb-uppercase-converter, chinese-zodiac-calculator, chinese-sexagenary-cycle-calculator, chinese-phone-number-formatter, taiwan-phone-number-formatter, jwt-decoder, url-query-parameter-parser, user-agent-parser, ip-cidr-calculator, hash-compare, regex-replace, html-entity-encoder-decoder, chmod-calculator, json-path-tester, csv-tsv-converter, url-slug-generator, unicode-code-point-checker, us-phone-number-formatter, us-zip-code-formatter, canada-postal-code-formatter, uk-postcode-formatter, numbers3-number-generator, numbers4-number-generator, bingo5-number-generator, wareki-converter, hiragana-katakana-converter, fullwidth-halfwidth-converter, japanese-romaji-converter, japanese-number-kanji-converter, yakudoshi-calculator, base64, url-encode-decode, timestamp-converter, uuid-generator, uuid-v7-generator, ulid-generator, base32-encoder-decoder, json-formatter, json-validator, json-to-yaml, yaml-to-json, csv-to-json, json-to-csv, color-converter, cron-parser, sql-formatter, html-formatter, css-formatter, javascript-formatter, jpg-to-png, png-to-jpg, webp-to-jpg, webp-to-png, jpg-to-webp, png-to-webp, heic-to-jpg, image-compress, image-resize, image-crop, image-rotate, image-flip, image-grayscale, image-brightness, image-contrast, image-blur, image-pixelate, remove-image-metadata, image-info, favicon-generator, image-color-picker, images-to-pdf, pdf-merge, pdf-split, pdf-delete-pages, pdf-reorder-pages, pdf-rotate-pages, pdf-add-page-numbers, pdf-watermark, pdf-metadata-viewer, pdf-remove-metadata, pdf-page-size-checker, text-compare, regex-tester, lorem-ipsum, text-to-file, remove-characters, text-repeater, remove-spaces, remove-line-breaks, text-case-converter, reverse-text, remove-duplicate-words, character-count, shuffle-lines, add-line-numbers, remove-line-numbers, remove-empty-lines, remove-duplicate-lines, sort-lines, bulk-file-renamer, filename-cleaner, zip-files, duplicate-file-checker, file-hash, mime-type-checker, file-extension-checker, file-size-checker, image-collage, instagram-grid-split, barcode-checker, barcode-generator, and markdown-preview.
 - Current branch is `develop`.
 - Next Russian translation-data tool: `none`; next Russian workspace UI tool: `none`.

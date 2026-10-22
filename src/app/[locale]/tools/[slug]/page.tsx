@@ -286,6 +286,7 @@ function TurkishPublishedToolPage({ slug }: { slug: string }) {
     : slug === "world-clock" ? <WorldClockWorkspace locale="tr" />
     : slug === "tarot-card" ? <TarotWorkspace locale="tr" />
     : slug === "daily-fortune" ? <DailyFortuneWorkspace locale="tr" />
+    : slug === "saju" ? <SajuWorkspace locale="tr" />
     : null;
   if (!workspace) notFound();
 
