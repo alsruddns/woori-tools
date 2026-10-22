@@ -49,7 +49,7 @@ const lines = [
   "",
   "## Last verified checkpoint",
   "",
-  "- TypeScript, lint, and all 90 tests passed after the six-lottery and five-Russian-tool data updates.",
+  "- TypeScript, lint, and all 90 tests passed after the latest authored translation data update.",
   "- Production build passed and generated 2,809 static pages; this count is unchanged because target locales remain unpublished.",
   "- Current work is on `develop`; publish only after full Russian tool, workspace, shared UI, and SEO coverage passes.",
   "- Next starting tool: `random-wheel`.",

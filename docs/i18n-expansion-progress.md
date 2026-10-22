@@ -7,7 +7,7 @@ Published locales: ko, en, ja, zh, es, pt-br, de, fr, vi, id, th, zh-tw, it, nl,
 
 | Locale | Authored tool bundles | Pending tools | Next tool | Published |
 | --- | ---: | ---: | --- | --- |
-| ru | 11/176 | 165 | random-wheel | No |
+| ru | 19/176 | 157 | stopwatch | No |
 | tr | 6/176 | 170 | tarot-card | No |
 | pl | 6/176 | 170 | tarot-card | No |
 | fil | 6/176 | 170 | tarot-card | No |
@@ -22,22 +22,14 @@ Published locales: ko, en, ja, zh, es, pt-br, de, fr, vi, id, th, zh-tw, it, nl,
 ## Translation coverage
 
 - Existing authored lottery bundle slugs: lotto-number-generator, powerball-number-generator, mega-millions-number-generator, japan-loto6-number-generator, japan-loto7-number-generator, japan-mini-loto-number-generator
-- Additional Russian bundle slugs: tarot-card, daily-fortune, saju, random-number, random-name-picker
-- Russian completed tool bundles: 11/176
-- Russian next tool: random-wheel
+- Additional Russian bundle slugs: tarot-card, daily-fortune, saju, random-number, random-name-picker, random-wheel, draw-lots, random-team-maker, random-order, random-seat, duty-picker, dice-roller, coin-flip
+- Russian completed tool bundles: 19/176
+- Russian next tool: stopwatch
 - New-locale UI messages: 24 shared core keys per locale; remaining site and workspace strings are not complete.
 - New locales published or indexed: none.
 
 ## Remaining Russian tools
 
-- random-wheel
-- draw-lots
-- random-team-maker
-- random-order
-- random-seat
-- duty-picker
-- dice-roller
-- coin-flip
 - stopwatch
 - timer
 - pomodoro-timer
@@ -198,7 +190,7 @@ Published locales: ko, en, ja, zh, es, pt-br, de, fr, vi, id, th, zh-tw, it, nl,
 
 ## Last verified checkpoint
 
-- TypeScript, lint, and all 90 tests passed after the six-lottery and five-Russian-tool data updates.
+- TypeScript, lint, and all 90 tests passed after the latest authored translation data update.
 - Production build passed and generated 2,809 static pages; this count is unchanged because target locales remain unpublished.
 - Current work is on `develop`; publish only after full Russian tool, workspace, shared UI, and SEO coverage passes.
 - Next starting tool: `random-wheel`.
