@@ -1,10 +1,10 @@
 import { getMessages } from "@/i18n/messages";
-import type { Locale } from "@/i18n/routing";
+import type { PublishedTargetLocale } from "@/i18n/routing";
 import { randomInt, secureShuffle, pickUnique, pickUniqueRange } from "@/lib/random";
 
 export type ProcessedText={result:string;download?:Blob};
 
-export async function processText(slug:string,text:string,secondText:string,option:string,amount:number,locale:Locale="ko"):Promise<ProcessedText>{
+export async function processText(slug:string,text:string,secondText:string,option:string,amount:number,locale:PublishedTargetLocale="ko"):Promise<ProcessedText>{
   const messages=getMessages(locale);
   const lines=text.split(/\r?\n/);let output=text;
   switch(slug){
