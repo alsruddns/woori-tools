@@ -16,6 +16,7 @@ import { RussianRegexWorkspace } from "@/components/tool/russian-regex-workspace
 import { RussianColorConverterWorkspace } from "@/components/tool/russian-color-converter-workspace";
 import { RussianCronWorkspace } from "@/components/tool/russian-cron-workspace";
 import { RussianCodeFormatterWorkspace } from "@/components/tool/russian-code-formatter-workspace";
+import { RussianImageConversionWorkspace } from "@/components/tool/russian-image-conversion-workspace";
 import { RussianMarkdownWorkspace } from "@/components/tool/russian-markdown-workspace";
 import { CountdownWorkspace } from "@/components/tool/countdown-workspace";
 import { RandomStringWorkspace } from "@/components/tool/random-string-workspace";
@@ -201,6 +202,20 @@ function RussianPublishedToolPage({ slug }: { slug: string }) {
           ? <RussianCodeFormatterWorkspace slug="css-formatter" />
           : slug === "javascript-formatter"
             ? <RussianCodeFormatterWorkspace slug="javascript-formatter" />
+    : slug === "jpg-to-png"
+      ? <RussianImageConversionWorkspace slug="jpg-to-png" />
+      : slug === "png-to-jpg"
+        ? <RussianImageConversionWorkspace slug="png-to-jpg" />
+        : slug === "webp-to-jpg"
+          ? <RussianImageConversionWorkspace slug="webp-to-jpg" />
+          : slug === "webp-to-png"
+            ? <RussianImageConversionWorkspace slug="webp-to-png" />
+            : slug === "jpg-to-webp"
+              ? <RussianImageConversionWorkspace slug="jpg-to-webp" />
+              : slug === "png-to-webp"
+                ? <RussianImageConversionWorkspace slug="png-to-webp" />
+                : slug === "heic-to-jpg"
+                  ? <RussianImageConversionWorkspace slug="heic-to-jpg" />
     : slug === "regex-tester"
       ? <RussianRegexWorkspace />
     : slug === "lorem-ipsum"
