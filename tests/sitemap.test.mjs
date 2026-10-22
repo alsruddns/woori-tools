@@ -14,6 +14,7 @@ async function importTypeScript(path, replacements = []) {
 }
 
 const { locales, publishedTargetLocales, localeConfig, publishedTargetHreflangs } = await importTypeScript("../src/i18n/routing.ts");
+const { getTargetTurkishToolTranslation, targetTurkishToolSlugs } = await importTypeScript("../src/registry/target-tr-translations.ts");
 const countrySlugSource = await readFile(new URL("../src/lib/country-tool-slugs.ts", import.meta.url), "utf8");
 const countrySlugs = [...countrySlugSource.matchAll(/"([a-z0-9-]+)"/g)].map((match) => match[1]);
 const { tools: publicTools, filterPublicTools } = await importTypeScript("../src/registry/tools.ts", [
@@ -492,7 +493,25 @@ test("Turkish lottery workspace is translated and stays unpublished until its fu
   assert.match(specialRandomWorkspaceSource, /Object\.assign\(copy, \{ tr: \{[\s\S]*?generate: "Sayı üret"[\s\S]*?copyFailed: "Kopyalanamadı\."[\s\S]*?makeTeamsAgain: "Takımları yeniden oluştur"/);
   assert.match(specialRandomWorkspaceSource, /tr: \{ generate: "Sayıları oluştur"/);
   assert.match(specialRandomWorkspaceSource, /tr: \{ "Choose at most six included numbers\."[\s\S]*?"Could not find enough distinct valid games\./);
-  for (const slug of slugs) {
+  const uiSlugs = [...slugs, "random-number", "random-name-picker", "random-wheel", "draw-lots", "random-team-maker", "random-order", "random-seat"];
+  assert.match(specialRandomWorkspaceSource, /tr: \{ label: "Katılımcılar \(her satıra bir kişi\)"[\s\S]*?reveal: "Sonrakini göster"/);
+  assert.match(specialRandomWorkspaceSource, /tr:\{people:"Katılımcılar \(her satıra bir kişi\)"[\s\S]*?arrange:"Koltukları dağıt"/);
+  assert.match(specialRandomWorkspaceSource, /Object\.assign\(wheelCopy, \{ tr: \{ label: "Her satıra bir seçenek yazın"/);
+  for (const slug of uiSlugs) {
+    assert.equal(entries.some(({ url }) => url === `${siteOrigin}/tr/tools/${slug}`), false);
+  }
+});
+test("Turkish editorial batches contain complete localized SEO and help content for eighteen tools", () => {
+  const expected = ["tarot-card", "daily-fortune", "saju", "random-number", "random-name-picker", "random-wheel", "draw-lots", "random-team-maker", "random-order", "random-seat", "duty-picker", "dice-roller", "stopwatch", "timer", "pomodoro-timer", "world-clock", "password-generator", "random-string-generator"];
+  assert.deepEqual(targetTurkishToolSlugs, expected);
+  for (const slug of expected) {
+    const translation = getTargetTurkishToolTranslation(slug);
+    assert.ok(translation);
+    assert.ok(translation.title.length > 0 && translation.seoTitle.length > 0 && translation.seoDescription.length > 0);
+    assert.equal(translation.steps.length, 3);
+    assert.ok(translation.keywords.length >= 3);
+    assert.ok(translation.example && translation.options && translation.caution);
+    assert.ok(translation.faq.example && translation.faq.caution);
     assert.equal(entries.some(({ url }) => url === `${siteOrigin}/tr/tools/${slug}`), false);
   }
 });
