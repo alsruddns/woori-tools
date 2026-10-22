@@ -1,11 +1,11 @@
 import type { PDFDocument as PdfDocumentType } from "pdf-lib";
 import { getMessages } from "@/i18n/messages";
-import type { Locale } from "@/i18n/routing";
+import type { PublishedTargetLocale } from "@/i18n/routing";
 
 const MAX_PDF=50*1024*1024;
 export type ProcessedPdf={result:string;blob?:Blob};
 
-export async function processPdf(slug:string,files:File[],option:string,text:string,locale:Locale="ko"):Promise<ProcessedPdf>{
+export async function processPdf(slug:string,files:File[],option:string,text:string,locale:PublishedTargetLocale="ko"):Promise<ProcessedPdf>{
   const messages=getMessages(locale);
   if(slug==="images-to-pdf")return imagesToPdf(files,locale);
   if(!files.length)throw new Error(messages.errors.noPdf);
@@ -37,7 +37,7 @@ export async function processPdf(slug:string,files:File[],option:string,text:str
   const bytes=await output.save();return{blob:new Blob([bytes as BlobPart],{type:"application/pdf"}),result:`${messages.completedStatus} ${output.getPageCount()} · ${messages.pageCount} PDF`};
 }
 
-async function imagesToPdf(files:File[],locale:Locale):Promise<ProcessedPdf>{
+async function imagesToPdf(files:File[],locale:PublishedTargetLocale):Promise<ProcessedPdf>{
   const messages=getMessages(locale);
   if(!files.length)throw new Error(messages.errors.noImages);
   if(files.reduce((sum,file)=>sum+file.size,0)>MAX_PDF)throw new Error(messages.errors.pdfTotal);

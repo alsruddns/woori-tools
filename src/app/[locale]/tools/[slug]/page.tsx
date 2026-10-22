@@ -20,6 +20,7 @@ import { RussianImageConversionWorkspace } from "@/components/tool/russian-image
 import { RussianImageEffectsWorkspace } from "@/components/tool/russian-image-effects-workspace";
 import { RussianImageUtilityWorkspace } from "@/components/tool/russian-image-utility-workspace";
 import { RussianImageColorPickerWorkspace } from "@/components/tool/russian-image-color-picker-workspace";
+import { RussianPdfWorkspace, type RussianPdfSlug } from "@/components/tool/russian-pdf-workspace";
 import { RussianMarkdownWorkspace } from "@/components/tool/russian-markdown-workspace";
 import { CountdownWorkspace } from "@/components/tool/countdown-workspace";
 import { RandomStringWorkspace } from "@/components/tool/random-string-workspace";
@@ -184,6 +185,12 @@ export default async function ToolPage({ params }: Props) {
   </ToolDetailLayout>;
 }
 
+const russianPdfSlugs: readonly string[] = ["images-to-pdf", "pdf-merge", "pdf-split", "pdf-delete-pages", "pdf-reorder-pages", "pdf-rotate-pages", "pdf-add-page-numbers", "pdf-watermark", "pdf-metadata-viewer", "pdf-remove-metadata", "pdf-page-size-checker"];
+
+function isRussianPdfSlug(slug: string): slug is RussianPdfSlug {
+  return russianPdfSlugs.includes(slug);
+}
+
 function RussianPublishedToolPage({ slug }: { slug: string }) {
   const baseTool = getTool(slug);
   const translation = getTargetRussianToolTranslation(slug);
@@ -247,6 +254,8 @@ function RussianPublishedToolPage({ slug }: { slug: string }) {
                                             ? <RussianImageUtilityWorkspace slug="favicon-generator" />
                                             : slug === "image-color-picker"
                                               ? <RussianImageColorPickerWorkspace />
+                                              : isRussianPdfSlug(slug)
+                                                ? <RussianPdfWorkspace slug={slug} />
     : slug === "regex-tester"
       ? <RussianRegexWorkspace />
     : slug === "lorem-ipsum"
