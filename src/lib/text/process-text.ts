@@ -34,7 +34,7 @@ export async function processText(slug:string,text:string,secondText:string,opti
     case "text-repeater": {const count=Math.max(1,Math.min(1000,Math.trunc(amount)||1));if(text.length*count>1_000_000)throw new Error("The generated text is limited to 1,000,000 characters.");output=Array(count).fill(text).join(option||"");break;}
     case "text-to-file": return {result:`${text.length} characters ready to download.`,download:new Blob([text],{type:"text/plain;charset=utf-8"})};
     case "lorem-ipsum": {const count=Math.max(1,Math.min(20,Math.trunc(amount)||3));output=Array.from({length:count},()=>"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.").join("\n\n");break;}
-    case "regex-tester": {const match=text.match(/^\/(.*)\/([dgimsuvy]*)$/);if(!match)throw new Error("Enter a pattern as /pattern/flags in the first line.");const [pattern,flags]=[match[1],match[2]];if(pattern.length>200||secondText.length>20000)throw new Error("Pattern or sample is too long.");if(/\([^)]*[+*][^)]*\)[+*{]|\\[1-9]/.test(pattern))throw new Error("Nested repetition and backreferences are disabled for safety.");const sample=secondText.slice(0,20000);output=await runRegexInWorker(pattern,flags,sample);break;}
+    case "regex-tester": {const match=text.match(/^\/(.*)\/([dgimsuvy]*)$/);if(!match)throw new Error(locale==="ru"?"Введите шаблон в формате /шаблон/флаги.":"Enter a pattern as /pattern/flags in the first line.");const [pattern,flags]=[match[1],match[2]];if(pattern.length>200||secondText.length>20000)throw new Error(locale==="ru"?"Шаблон ограничен 200 символами, пример — 20 000 символами.":"Pattern or sample is too long.");if(/\([^)]*[+*][^)]*\)[+*{]|\\[1-9]/.test(pattern))throw new Error(locale==="ru"?"Вложенные повторы и обратные ссылки отключены для безопасности.":"Nested repetition and backreferences are disabled for safety.");const sample=secondText.slice(0,20000);output=await runRegexInWorker(pattern,flags,sample,locale);break;}
     case "color-converter": {const {r,g,b}=parseColor(text);const [h,s,l]=rgbToHsl(r,g,b);output=`HEX: #${[r,g,b].map(v=>v.toString(16).padStart(2,"0")).join("").toUpperCase()}\nRGB: rgb(${r}, ${g}, ${b})\nHSL: hsl(${h}, ${s}%, ${l}%)`;break;}
     case "barcode-checker": {const code=text.trim();if(!/^\d+$/.test(code)||![12,13].includes(code.length))throw new Error("Enter a 12-digit UPC-A or 13-digit EAN-13 code.");const body=code.slice(0,-1);const sum=Array.from(body,(digit,i)=>Number(digit)*((body.length-i)%2===1?3:1)).reduce((a,b)=>a+b,0);const expected=(10-sum%10)%10;output=`${code.length===13?"EAN-13":"UPC-A"}: ${Number(code.at(-1))===expected?"Valid":"Invalid"}\nExpected check digit: ${expected}`;break;}
     case "sql-formatter": {const {format}=await import("sql-formatter");output=format(text,{language:"sql"});break;}
@@ -57,13 +57,15 @@ export async function processText(slug:string,text:string,secondText:string,opti
   return{result:output,download:new Blob([output],{type:"text/plain;charset=utf-8"})};
 }
 
-function runRegexInWorker(pattern:string,flags:string,sample:string):Promise<string>{
+function runRegexInWorker(pattern:string,flags:string,sample:string,locale:PublishedTargetLocale):Promise<string>{
   return new Promise((resolve,reject)=>{
-    const source=`onmessage=({data})=>{try{const [pattern,flags,sample]=data;const re=new RegExp(pattern,flags.includes('g')?flags:flags+'g');const matches=Array.from(sample.matchAll(re)).slice(0,100).map(m=>m[0]+' (index '+m.index+')');postMessage(matches.join('\\n')||'No matches')}catch{postMessage('Invalid regular expression.')}}`;
+    const noMatches=locale==="ru"?"Совпадений не найдено":"No matches";
+    const invalid=locale==="ru"?"Некорректное регулярное выражение.":"Invalid regular expression.";
+    const source=`onmessage=({data})=>{try{const [pattern,flags,sample]=data;const re=new RegExp(pattern,flags.includes('g')?flags:flags+'g');const matches=Array.from(sample.matchAll(re)).slice(0,100).map(m=>m[0]+' (index '+m.index+')');postMessage(matches.join('\\n')||${JSON.stringify(noMatches)})}catch{postMessage(${JSON.stringify(invalid)})}}`;
     const url=URL.createObjectURL(new Blob([source],{type:"text/javascript"}));const worker=new Worker(url);let settled=false;
-    const timeout=window.setTimeout(()=>{settled=true;worker.terminate();URL.revokeObjectURL(url);reject(new Error("Regular expression exceeded the 250 ms time limit."));},250);
+    const timeout=window.setTimeout(()=>{settled=true;worker.terminate();URL.revokeObjectURL(url);reject(new Error(locale==="ru"?"Регулярное выражение превысило лимит времени 250 мс.":"Regular expression exceeded the 250 ms time limit."));},250);
     worker.onmessage=({data}:{data:string})=>{if(settled)return;settled=true;window.clearTimeout(timeout);worker.terminate();URL.revokeObjectURL(url);resolve(data)};
-    worker.onerror=()=>{if(settled)return;settled=true;window.clearTimeout(timeout);worker.terminate();URL.revokeObjectURL(url);reject(new Error("Regular expression could not be processed."))};worker.postMessage([pattern,flags,sample]);
+    worker.onerror=()=>{if(settled)return;settled=true;window.clearTimeout(timeout);worker.terminate();URL.revokeObjectURL(url);reject(new Error(locale==="ru"?"Не удалось проверить регулярное выражение.":"Regular expression could not be processed."))};worker.postMessage([pattern,flags,sample]);
   });
 }
 
