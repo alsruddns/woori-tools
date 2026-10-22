@@ -19,9 +19,10 @@ const countryTranslations = await importTs("../src/registry/country-tool-transla
 ]]);
 globalThis.__catalogCountryTranslations = countryTranslations.countryToolTranslations;
 const { registeredTools } = await importTs("../src/registry/tools.ts", [
-  ['import { locales, type RouteLocale as Locale } from "../i18n/routing";', `const locales = ${JSON.stringify(locales)};`],
+  ['import { locales, type PublishedTargetLocale } from "../i18n/routing";', `const locales = ${JSON.stringify(locales)};`],
   ['import { COUNTRY_TOOL_SLUGS } from "../lib/country-tool-slugs";', "const COUNTRY_TOOL_SLUGS = globalThis.__catalogCountrySlugs;"],
   ['import { countryToolTranslations } from "./country-tool-translations";', "const countryToolTranslations = globalThis.__catalogCountryTranslations;"],
+  ['import { targetLocalePublication } from "./target-locale-publication";', 'const targetLocalePublication = { ru: { publishedToolSlugs: ["barcode-generator"] } };'],
 ]);
 
 test("service catalog contains every registry tool once with matching publication and locale data", async () => {

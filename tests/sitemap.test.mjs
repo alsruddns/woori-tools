@@ -13,17 +13,18 @@ async function importTypeScript(path, replacements = []) {
   return import(`data:text/javascript;base64,${Buffer.from(outputText).toString("base64")}`);
 }
 
-const { locales, localeConfig, hreflangs } = await importTypeScript("../src/i18n/routing.ts");
+const { locales, publishedTargetLocales, localeConfig, publishedTargetHreflangs } = await importTypeScript("../src/i18n/routing.ts");
 const countrySlugSource = await readFile(new URL("../src/lib/country-tool-slugs.ts", import.meta.url), "utf8");
 const countrySlugs = [...countrySlugSource.matchAll(/"([a-z0-9-]+)"/g)].map((match) => match[1]);
 const { tools: publicTools, filterPublicTools } = await importTypeScript("../src/registry/tools.ts", [
-  ['import { locales, type RouteLocale as Locale } from "../i18n/routing";', `const locales = ${JSON.stringify(locales)};`],
+  ['import { locales, type PublishedTargetLocale } from "../i18n/routing";', `const locales = ${JSON.stringify(locales)};`],
   ['import { COUNTRY_TOOL_SLUGS } from "../lib/country-tool-slugs";', `const COUNTRY_TOOL_SLUGS = ${JSON.stringify(countrySlugs)};`],
+  ['import { targetLocalePublication } from "./target-locale-publication";', 'const targetLocalePublication = { ru: { publishedToolSlugs: ["barcode-generator"] } };'],
 ]);
 const seoSource = await readFile(new URL("../src/lib/seo.ts", import.meta.url), "utf8");
 const { languageAlternates } = await importTypeScript("../src/lib/seo.ts", [[
-  'import { getLocaleConfig, hreflangs, locales, type Locale } from "@/i18n/routing";',
-  `const locales = ${JSON.stringify(locales)}; const hreflangs = ${JSON.stringify(hreflangs)};`,
+  'import { getPublishedTargetLocaleConfig, publishedTargetHreflangs, locales, type PublishedTargetLocale } from "@/i18n/routing";',
+  `const locales = ${JSON.stringify(publishedTargetLocales)}; const publishedTargetHreflangs = ${JSON.stringify(publishedTargetHreflangs)};`,
 ]]);
 const sitemapSource = await readFile(new URL("../src/app/sitemap.ts", import.meta.url), "utf8");
 const localeLayoutSource = await readFile(new URL("../src/app/[locale]/layout.tsx", import.meta.url), "utf8");
@@ -32,7 +33,7 @@ const nextConfig = await readFile(new URL("../next.config.ts", import.meta.url),
 const siteOrigin = "https://www.woori.today";
 const entries = createSitemapEntries({
   tools: publicTools,
-  locales,
+  locales: publishedTargetLocales,
   siteOrigin,
   languageAlternates,
   lastModified: new Date("2026-10-08T00:00:00.000Z"),
@@ -40,20 +41,21 @@ const entries = createSitemapEntries({
 
 test("sitemap is generated from the public registry and includes every locale", () => {
   assert.match(sitemapSource, /import \{ tools \} from "@\/registry\/tools"/);
-  assert.match(sitemapSource, /createSitemapEntries\(\{[\s\S]*?tools,[\s\S]*?locales,[\s\S]*?languageAlternates/);
+  assert.match(sitemapSource, /createSitemapEntries\(\{[\s\S]*?tools,[\s\S]*?locales: publishedTargetLocales,[\s\S]*?languageAlternates/);
   assert.ok(publicTools.length > 0);
   assert.ok(publicTools.every(({ isPublic }) => isPublic));
   assert.equal(publicTools.some(({ slug }) => slug === "ladder-game"), false);
-  assert.match(localeLayoutSource, /return locales\.map\(\(locale\) => \(\{ locale \}\)\)/);
+  assert.match(localeLayoutSource, /return publishedTargetLocales\.map\(\(locale\) => \(\{ locale \}\)\)/);
   assert.match(toolPageSource, /supportedLocales\.includes\(params\.locale as Locale\)/);
 
   const listingEntries = entries.filter(({ url }) => /\/tools$/.test(url));
   const detailEntries = entries.filter(({ url }) => /\/tools\/[^/]+$/.test(url));
   assert.equal(locales.length, 15);
-  assert.equal(listingEntries.length, 15);
+  assert.equal(publishedTargetLocales.length, 16);
+  assert.equal(listingEntries.length, 16);
   const expectedDetailCount = publicTools.reduce((sum, tool) => sum + tool.supportedLocales.length, 0);
   assert.equal(detailEntries.length, expectedDetailCount);
-  assert.equal(entries.length, expectedDetailCount + 15);
+  assert.equal(entries.length, expectedDetailCount + 16);
   assert.equal(new Set(entries.map(({ url }) => url)).size, entries.length);
 
   const publishedRouteMatrix = publicTools.flatMap(({ slug, supportedLocales }) => supportedLocales.map((locale) => `${siteOrigin}/${locale}/tools/${slug}`));
@@ -70,14 +72,14 @@ test("sitemap is generated from the public registry and includes every locale", 
 
   for (const entry of entries) {
     assert.ok(entry.url.startsWith(`${siteOrigin}/`));
-    assert.match(entry.url, /^https:\/\/www\.woori\.today\/(ko|en|ja|zh|es|pt-br|de|fr|vi|id|th|zh-tw|it|nl|hi)\/tools(?:\/[^/]+)?$/);
+    assert.match(entry.url, /^https:\/\/www\.woori\.today\/(ko|en|ja|zh|es|pt-br|de|fr|vi|id|th|zh-tw|it|nl|hi|ru)\/tools(?:\/[^/]+)?$/);
     assert.equal(entry.alternates.languages["x-default"], entry.alternates.languages.ko);
     const segments = new URL(entry.url).pathname.split("/").filter(Boolean);
     const slug = segments[2];
-    const alternates = slug ? publicTools.find((tool) => tool.slug === slug).supportedLocales : locales;
+    const alternates = slug ? publicTools.find((tool) => tool.slug === slug).supportedLocales : publishedTargetLocales;
     const localizedPath = new URL(entry.url).pathname.replace(/^\/[^/]+/, "");
-    for (const locale of locales) assert.equal(entry.alternates.languages[hreflangs[locale]], alternates.includes(locale) ? `${siteOrigin}/${locale}${localizedPath}` : undefined);
-    assert.deepEqual(Object.keys(entry.alternates.languages).sort(), [...new Set(["x-default", ...alternates.map((locale) => hreflangs[locale])])].sort());
+    for (const locale of publishedTargetLocales) assert.equal(entry.alternates.languages[publishedTargetHreflangs[locale]], alternates.includes(locale) ? `${siteOrigin}/${locale}${localizedPath}` : undefined);
+    assert.deepEqual(Object.keys(entry.alternates.languages).sort(), [...new Set(["x-default", ...alternates.map((locale) => publishedTargetHreflangs[locale])])].sort());
     const pathname = new URL(entry.url).pathname;
     assert.doesNotMatch(pathname, /^\/tools(?:\/|$)/);
     assert.doesNotMatch(pathname, /^\/_assets(?:\/|$)/);
@@ -91,7 +93,7 @@ test("private registry tools are excluded from sitemap entries", () => {
   const filteredTools = filterPublicTools([...publicTools, privateTool]);
   const filteredEntries = createSitemapEntries({
     tools: filteredTools,
-    locales,
+    locales: publishedTargetLocales,
     siteOrigin,
     languageAlternates,
   });
@@ -104,8 +106,10 @@ test("private registry tools are excluded from sitemap entries", () => {
 test("sitemap and SEO use the same language alternate helper", () => {
   assert.match(sitemapSource, /import \{[^}]*languageAlternates[^}]*\} from "@\/lib\/seo"/);
   assert.match(seoSource, /"x-default": localizedUrl\("ko", path\)/);
-  assert.equal(entries.find(({ url }) => url.endsWith("/tools/lotto-number-generator")).alternates.languages && Object.keys(entries.find(({ url }) => url.endsWith("/tools/lotto-number-generator")).alternates.languages).length, 16);
-  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/image-compress")).alternates.languages).length, 16);
+  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/lotto-number-generator")).alternates.languages).length, 16);
+  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/barcode-generator")).alternates.languages).length, 17);
+  assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/barcode-generator")), true);
+  assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/image-compress")), false);
   assert.equal(localeConfig.find(({ routeLocale }) => routeLocale === "pt-br").hreflang, "pt-BR");
   assert.equal(localeConfig.find(({ routeLocale }) => routeLocale === "zh-tw").hreflang, "zh-TW");
 });

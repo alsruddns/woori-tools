@@ -12,10 +12,11 @@ const projectRoot = fileURLToPath(new URL("../", import.meta.url));
 const registryPath = "src/registry/tools.ts";
 const previousRegistryFiles = [registryPath, "src/i18n/routing.ts", "src/lib/country-tool-slugs.ts"];
 
-const [{ tools }, { locales }] = await Promise.all([
+const [{ tools }, { publishedTargetLocales }] = await Promise.all([
   tsImport("../src/registry/tools.ts", import.meta.url),
   tsImport("../src/i18n/routing.ts", import.meta.url),
 ]);
+const locales = publishedTargetLocales;
 export { tools as registryTools, locales as LOCALES };
 
 export function getIndexNowKey() {

@@ -1,7 +1,10 @@
-import type { Locale } from "@/i18n/routing";
+import type { PublishedTargetLocale } from "@/i18n/routing";
 import { categories, type ToolCategory } from "./categories";
 
 const names: Record<string, Record<ToolCategory, { name: string; description: string }>> = {
+  ru: {
+    random: { name: "Случайный выбор", description: "Инструменты для случайного выбора и жеребьёвки" }, "date-time": { name: "Дата и время", description: "Инструменты для измерения времени и планирования" }, utility: { name: "Полезные инструменты", description: "Практичные инструменты для повседневных задач" }, fortune: { name: "Предсказания и досуг", description: "Лёгкие расклады для развлечения и самоанализа" }, image: { name: "Изображения", description: "Преобразование и редактирование изображений" }, pdf: { name: "PDF", description: "Инструменты для PDF в браузере" }, text: { name: "Текст", description: "Обработка и сравнение текста" }, developer: { name: "Для разработчиков", description: "Инструменты преобразования и генерации для разработки" }, qr: { name: "QR-коды и полезные инструменты", description: "QR-коды и повседневные инструменты" },
+  },
   es: {
     random: { name: "Sorteos y selección", description: "Herramientas para elegir y sortear al azar" }, "date-time": { name: "Fecha y hora", description: "Herramientas para medir y organizar el tiempo" }, utility: { name: "Utilidades", description: "Herramientas prácticas para el día a día" }, fortune: { name: "Fortuna y entretenimiento", description: "Lecturas ligeras para reflexionar y divertirse" }, image: { name: "Imagen", description: "Convierte y edita imágenes" }, pdf: { name: "PDF", description: "Herramientas PDF que funcionan en el navegador" }, text: { name: "Texto", description: "Organiza y compara textos" }, developer: { name: "Desarrollo", description: "Herramientas de conversión y generación para desarrollo" }, qr: { name: "QR y utilidades", description: "Códigos QR y utilidades cotidianas" },
   },
@@ -81,17 +84,17 @@ const names: Record<string, Record<ToolCategory, { name: string; description: st
   },
 };
 
-export function getLocalizedCategory(id: ToolCategory, locale: Locale) {
+export function getLocalizedCategory(id: ToolCategory, locale: PublishedTargetLocale) {
   const original = categories.find((category) => category.id === id);
   if (!original) return undefined;
   return { ...original, ...(names[locale] ?? names.en)[id] };
 }
 
-export function findLocalizedCategory(id: string, locale: Locale) {
+export function findLocalizedCategory(id: string, locale: PublishedTargetLocale) {
   const original = categories.find((category) => category.id === id);
   return original ? { ...original, ...(names[locale] ?? names.en)[original.id] } : undefined;
 }
 
-export function getLocalizedCategories(locale: Locale) {
+export function getLocalizedCategories(locale: PublishedTargetLocale) {
   return categories.map((category) => ({ ...category, ...(names[locale] ?? names.en)[category.id] }));
 }

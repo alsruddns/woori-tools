@@ -1,32 +1,35 @@
 # Woori Tools 26-language localization progress
 
 Updated from the translation source modules. Public tool count: 176. Target locales: 11.
-Published locales: ko, en, ja, zh, es, pt-br, de, fr, vi, id, th, zh-tw, it, nl, hi. Target locales remain unpublished until their full page and UI coverage is verified.
+Routable locales: 16 (ko, en, ja, zh, es, pt-br, de, fr, vi, id, th, zh-tw, it, nl, hi, ru). A target locale is listed as published only for tool pages that pass the UI and SEO checks.
 
 ## Per-locale status
 
-| Locale | Authored tool bundles | Pending tools | Next tool | Published |
-| --- | ---: | ---: | --- | --- |
-| ru | 33/176 | 143 | instagram-grid-split | No |
-| tr | 6/176 | 170 | tarot-card | No |
-| pl | 6/176 | 170 | tarot-card | No |
-| fil | 6/176 | 170 | tarot-card | No |
-| bn | 6/176 | 170 | tarot-card | No |
-| uk | 6/176 | 170 | tarot-card | No |
-| ms | 6/176 | 170 | tarot-card | No |
-| sv | 6/176 | 170 | tarot-card | No |
-| cs | 6/176 | 170 | tarot-card | No |
-| ro | 6/176 | 170 | tarot-card | No |
-| el | 6/176 | 170 | tarot-card | No |
+| Locale | Translation data | UI verified | SEO verified | Public tools | Pending data | Next tool |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| ru | 33/176 | 1 | 1 | 1 | 143 | instagram-grid-split |
+| tr | 6/176 | 0 | 0 | 0 | 170 | tarot-card |
+| pl | 6/176 | 0 | 0 | 0 | 170 | tarot-card |
+| fil | 6/176 | 0 | 0 | 0 | 170 | tarot-card |
+| bn | 6/176 | 0 | 0 | 0 | 170 | tarot-card |
+| uk | 6/176 | 0 | 0 | 0 | 170 | tarot-card |
+| ms | 6/176 | 0 | 0 | 0 | 170 | tarot-card |
+| sv | 6/176 | 0 | 0 | 0 | 170 | tarot-card |
+| cs | 6/176 | 0 | 0 | 0 | 170 | tarot-card |
+| ro | 6/176 | 0 | 0 | 0 | 170 | tarot-card |
+| el | 6/176 | 0 | 0 | 0 | 170 | tarot-card |
 
 ## Translation coverage
 
 - Existing authored lottery bundle slugs: lotto-number-generator, powerball-number-generator, mega-millions-number-generator, japan-loto6-number-generator, japan-loto7-number-generator, japan-mini-loto-number-generator
 - Additional Russian bundle slugs: tarot-card, daily-fortune, saju, random-number, random-name-picker, random-wheel, draw-lots, random-team-maker, random-order, random-seat, duty-picker, dice-roller, coin-flip, stopwatch, timer, pomodoro-timer, world-clock, password-generator, random-string-generator, wifi-qr, contact-qr, phone-qr, email-qr, barcode-checker, barcode-generator, social-image-resize, add-text-to-image
 - Russian completed tool bundles: 33/176
+- Russian tools with UI verified: barcode-generator
+- Russian tools with SEO verified: barcode-generator
+- Russian tool URLs published: barcode-generator
 - Russian next tool: instagram-grid-split
-- New-locale UI messages: 24 shared core keys per locale; remaining site and workspace strings are not complete.
-- New locales published or indexed: none.
+- Russian shared site, search, workspace, error, privacy, and terms messages are wired for the published route; non-Russian target UI messages remain unpublished.
+- Only tool-locale URLs listed in the registry are included in the sitemap and hreflang sets.
 
 ## Remaining Russian tools
 
@@ -176,7 +179,9 @@ Published locales: ko, en, ja, zh, es, pt-br, de, fr, vi, id, th, zh-tw, it, nl,
 
 ## Last verified checkpoint
 
-- TypeScript, lint, and all 90 tests passed after the latest authored translation data update.
-- Production build passed and generated 2,809 static pages; this count is unchanged because target locales remain unpublished.
-- Current work is on `develop`; publish only after full Russian tool, workspace, shared UI, and SEO coverage passes.
-- Next starting tool: `random-wheel`.
+- Validation: TypeScript passed; lint passed; all 90 tests passed; production build passed.
+- Production build prerendered 2,821 static pages; the tool sitemap contains 2,641 localized tool URLs, including only the verified Russian barcode-generator page.
+- Russian canonical, hreflang, x-default, Open Graph, route rendering, and sitemap membership passed source and build checks for barcode-generator.
+- The verified route set is intentionally limited to published tool slugs; the remaining Russian tools are not routable or indexed.
+- Current branch is `develop`.
+- Next Russian translation-data tool: `instagram-grid-split`.

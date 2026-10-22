@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ToolWorkspace } from "@/components/tool/tool-workspace";
+import { BarcodeWorkspace } from "@/components/tool/barcode-workspace";
 import { ToolDetailLayout } from "@/components/tool/tool-detail-layout";
 import { getMessages } from "@/i18n/messages";
 import { isLocale, localizePath, type Locale } from "@/i18n/routing";
@@ -12,17 +13,27 @@ import { getTool, tools } from "@/registry/tools";
 import { getToolContent, getToolStorageNote } from "@/registry/tool-content";
 import { getFileGuidance } from "@/registry/file-guidance";
 import { getToolFaqQuestions } from "@/registry/tool-faq";
+import { localizePublishedTool } from "@/registry/published-tool-translations";
+import { getTargetRussianToolTranslation } from "@/registry/target-ru-translations";
+import { targetLocalePublication } from "@/registry/target-locale-publication";
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
 
 export const dynamicParams = false;
 
 export function generateStaticParams({ params }: { params: { locale: string } }) {
+  if (params.locale === "ru") return targetLocalePublication.ru.publishedToolSlugs.map((slug) => ({ slug }));
   return tools.filter(({ supportedLocales }) => supportedLocales.includes(params.locale as Locale)).map(({ slug }) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale: rawLocale, slug } = await params;
+  if (rawLocale === "ru") {
+    const tool = getTool(slug);
+    const translation = getTargetRussianToolTranslation(slug);
+    if (!tool || !tool.supportedLocales.includes("ru") || !translation) return {};
+    return pageMetadata({ locale: "ru", path: `/tools/${slug}`, title: translation.seoTitle, description: translation.seoDescription, keywords: translation.keywords, supportedLocales: tool.supportedLocales });
+  }
   if (!isLocale(rawLocale)) return {};
   const tool = getTool(slug);
   if (!tool || !tool.supportedLocales.includes(rawLocale)) return {};
@@ -39,6 +50,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ToolPage({ params }: Props) {
   const { locale: rawLocale, slug } = await params;
+  if (rawLocale === "ru") return <RussianPublishedToolPage slug={slug} />;
   if (!isLocale(rawLocale)) notFound();
   const locale: Locale = rawLocale;
   const baseTool = getTool(slug);
@@ -144,4 +156,31 @@ export default async function ToolPage({ params }: Props) {
       )}
     </main>
   </ToolDetailLayout>;
+}
+
+function RussianPublishedToolPage({ slug }: { slug: string }) {
+  const baseTool = getTool(slug);
+  const translation = getTargetRussianToolTranslation(slug);
+  const uiVerified = targetLocalePublication.ru.uiVerifiedToolSlugs.includes(slug);
+  const seoVerified = targetLocalePublication.ru.seoVerifiedToolSlugs.includes(slug);
+  const published = targetLocalePublication.ru.publishedToolSlugs.includes(slug);
+  if (!baseTool || !baseTool.supportedLocales.includes("ru") || !translation || !uiVerified || !seoVerified || !published) notFound();
+  const tool = localizePublishedTool(baseTool, "ru");
+  const messages = getMessages("ru");
+  const url = `https://www.woori.today/ru/tools/${slug}`;
+  return <main className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
+    <nav aria-label={messages.breadcrumb} className="mb-6 text-sm text-slate-500"><Link href="/ru/tools" className="hover:text-indigo-700">{messages.tools}</Link><span aria-hidden="true"> / </span><span aria-current="page" className="text-slate-700">{tool.title}</span></nav>
+    <header className="mb-7"><p className="mb-2 text-sm font-semibold text-indigo-700">{translation.category}</p><h1 className="text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">{tool.title}</h1><p className="mt-3 max-w-3xl text-lg leading-8 text-slate-600">{tool.description}</p></header>
+    <BarcodeWorkspace locale="ru" />
+    <section className="mt-12 space-y-8">
+      <article><h2 className="text-2xl font-bold">Об этом инструменте</h2><p className="mt-3 leading-7 text-slate-700">{translation.description}</p></article>
+      <article><h2 className="text-xl font-bold">Как пользоваться</h2><ol className="mt-4 list-inside list-decimal space-y-2 text-slate-700">{translation.steps.map((step) => <li key={step}>{step}</li>)}</ol></article>
+      <article><h2 className="text-xl font-bold">Пример</h2><p className="mt-2 leading-7 text-slate-700">{translation.example}</p></article>
+      <article><h2 className="text-xl font-bold">Параметры</h2><p className="mt-2 leading-7 text-slate-700">{translation.options}</p></article>
+      <article><h2 className="text-xl font-bold">Конфиденциальность</h2><p className="mt-2 rounded-xl bg-emerald-50 p-4 text-sm leading-6 text-emerald-900">Данные обрабатываются в браузере и не отправляются на сервер.</p></article>
+      <article><h2 className="text-xl font-bold">Важно</h2><p className="mt-2 leading-7 text-slate-700">{translation.caution}</p></article>
+    </section>
+    <section className="mt-10"><h2 className="text-2xl font-bold">Частые вопросы</h2><div className="mt-4 divide-y divide-slate-200 rounded-2xl border border-slate-200">{[[translation.faq.example, translation.example], [translation.faq.caution, translation.caution]].map(([question, answer], index) => <details key={question} className="group p-4" open={index === 0}><summary className="cursor-pointer font-medium">{question}</summary><p className="mt-3 text-sm leading-6 text-slate-600">{answer}</p></details>)}</div></section>
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@context": "https://schema.org", "@type": "WebApplication", name: tool.title, description: tool.description, url, inLanguage: "ru", applicationCategory: "UtilitiesApplication", operatingSystem: "Any", offers: { "@type": "Offer", price: "0", priceCurrency: "KRW" } }).replace(/</g, "\\u003c") }} />
+  </main>;
 }

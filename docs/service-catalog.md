@@ -45,7 +45,7 @@ registry와 번역 source를 기준으로 생성한 전체 Tool 목록입니다.
 | 29 | 전화번호 QR 코드 생성기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi | phone-qr |
 | 30 | 이메일 QR 코드 생성기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi | email-qr |
 | 31 | 바코드 번호 검사 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi | barcode-checker |
-| 32 | 바코드 생성기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi | barcode-generator |
+| 32 | 바코드 생성기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru | barcode-generator |
 | 33 | SNS 이미지 크기 변경 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi | social-image-resize |
 | 34 | 이미지에 텍스트 추가 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi | add-text-to-image |
 | 35 | Instagram 사진 격자 분할 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi | instagram-grid-split |

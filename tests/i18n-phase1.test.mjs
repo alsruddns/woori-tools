@@ -11,6 +11,7 @@ async function importTs(path, replacements = []) {
 }
 
 const { locales } = await importTs("../src/i18n/routing.ts");
+globalThis.__targetCoreMessages = (await importTs("../src/i18n/target-locale-copy.ts")).targetCoreMessages;
 const { COUNTRY_TOOL_SLUGS } = await importTs("../src/lib/country-tool-slugs.ts");
 globalThis.__countryToolSlugs = COUNTRY_TOOL_SLUGS;
 const countryTranslationModule = await importTs("../src/registry/country-tool-translations.ts", [[
@@ -23,9 +24,10 @@ globalThis.__newToolTranslations = await importTs("../src/registry/new-tool-tran
 globalThis.__toolExampleInputs = (await importTs("../src/registry/tool-example-inputs.ts")).toolExampleInputs;
 globalThis.__getToolRiskNote = (await importTs("../src/registry/tool-risk-notes.ts")).getToolRiskNote;
 const { tools } = await importTs("../src/registry/tools.ts", [
-  ['import { locales, type RouteLocale as Locale } from "../i18n/routing";', `const locales = ${JSON.stringify(locales)};`],
+  ['import { locales, type PublishedTargetLocale } from "../i18n/routing";', `const locales = ${JSON.stringify(locales)};`],
   ['import { COUNTRY_TOOL_SLUGS } from "../lib/country-tool-slugs";', `const COUNTRY_TOOL_SLUGS = globalThis.__countryToolSlugs;`],
   ['import { countryToolTranslations } from "./country-tool-translations";', `const countryToolTranslations = globalThis.__countryToolTranslations;`],
+  ['import { targetLocalePublication } from "./target-locale-publication";', 'const targetLocalePublication = { ru: { publishedToolSlugs: ["barcode-generator"] } };'],
 ]);
 const japanTranslationModule = await importTs("../src/registry/japan-tool-translations.ts");
 globalThis.__japanToolTranslations = japanTranslationModule.japanToolTranslations;
@@ -69,17 +71,21 @@ globalThis.__getExpandedMessages = expandedModule.getExpandedMessages;
 const { getMessages } = await importTs("../src/i18n/messages.ts", [[
   'import { getExpandedMessages } from "./expanded-messages";',
   'const getExpandedMessages = globalThis.__getExpandedMessages;',
+], [
+  'import { targetCoreMessages } from "./target-locale-copy";',
+  'const targetCoreMessages = globalThis.__targetCoreMessages;',
 ]]);
 const { getTarotInterpretation } = await importTs("../src/lib/fortune/tarot-localization.ts");
 
-test("all published registry tools support all 15 route locales", () => {
+test("legacy registry tools retain all 15 route locales and RU is limited to verified publication", () => {
   assert.equal(locales.length, 15);
   assert.ok(tools.length >= 160);
   assert.equal(tools.some(({ slug }) => slug === "ladder-game"), false);
   const omissions = [];
   for (const tool of tools) {
-    if (JSON.stringify(tool.supportedLocales) !== JSON.stringify(locales)) omissions.push(`${tool.slug}: ${tool.supportedLocales.join(",")}`);
-    for (const locale of tool.supportedLocales) {
+    const expectedLocales = tool.slug === "barcode-generator" ? [...locales, "ru"] : locales;
+    if (JSON.stringify(tool.supportedLocales) !== JSON.stringify(expectedLocales)) omissions.push(`${tool.slug}: ${tool.supportedLocales.join(",")}`);
+    for (const locale of locales) {
       const localized = localizeTool(tool, locale);
       if (!localized.title?.trim()) omissions.push(`${tool.slug}/${locale}: missing name`);
       if (!localized.description?.trim()) omissions.push(`${tool.slug}/${locale}: missing description`);
@@ -91,6 +97,7 @@ test("all published registry tools support all 15 route locales", () => {
     }
   }
   assert.deepEqual(omissions, [], `Localization omissions:\n${omissions.join("\n")}`);
+  assert.deepEqual(tools.filter(({ supportedLocales }) => supportedLocales.includes("ru")).map(({ slug }) => slug), ["barcode-generator"]);
 });
 
 test("Japan-specific tools have translated metadata, complete page content, and related links", () => {

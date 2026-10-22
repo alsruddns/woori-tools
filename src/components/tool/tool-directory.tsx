@@ -3,11 +3,11 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { getMessages } from "@/i18n/messages";
-import { localizePath, type Locale } from "@/i18n/routing";
+import { localizePath, type PublishedTargetLocale } from "@/i18n/routing";
 import type { ToolDefinition } from "@/registry/tools";
 import { matchesToolSearch } from "@/lib/tool-navigation";
 
-export function ToolDirectory({ tools, locale }: { tools: ToolDefinition[]; locale: Locale }) {
+export function ToolDirectory({ tools, locale }: { tools: ToolDefinition[]; locale: PublishedTargetLocale }) {
   const [query, setQuery] = useState("");
   const messages = getMessages(locale);
   const filtered = useMemo(() => {

@@ -10,11 +10,17 @@ import { localizeTools } from "@/registry/tool-translations";
 import { tools } from "@/registry/tools";
 import { newToolSlugs } from "@/registry/new-tool-translations";
 import { homeContent } from "@/registry/home-content";
+import { localizePublishedTool } from "@/registry/published-tool-translations";
+import { publishedTargetLocales } from "@/i18n/routing";
 
 type Props = { params: Promise<{ locale: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale: rawLocale } = await params;
+  if (rawLocale === "ru") {
+    const messages = getMessages("ru");
+    return pageMetadata({ locale: "ru", path: "/tools", title: messages.homeEyebrow, description: messages.homeDescription, keywords: ["бесплатные инструменты", "инструменты в браузере"], supportedLocales: publishedTargetLocales });
+  }
   if (!isLocale(rawLocale)) return {};
   const messages = getMessages(rawLocale);
   return pageMetadata({ locale: rawLocale, path: "/tools", title: messages.homeEyebrow, description: messages.homeDescription, keywords: ["online tools", "image", "PDF", "text"] });
@@ -22,6 +28,25 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ToolsHomePage({ params }: Props) {
   const { locale: rawLocale } = await params;
+  if (rawLocale === "ru") {
+    const messages = getMessages("ru");
+    const russianTools = tools.filter((tool) => tool.supportedLocales.includes("ru")).map((tool) => localizePublishedTool(tool, "ru"));
+    return <main className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
+      <section className="rounded-3xl bg-gradient-to-br from-indigo-50 via-white to-cyan-50 px-6 py-10 sm:px-12 sm:py-14">
+        <p className="font-semibold text-indigo-700">{messages.homeEyebrow}</p>
+        <h1 className="mt-3 text-4xl font-bold tracking-tight text-slate-950 sm:text-5xl">{messages.homeTitle}</h1>
+        <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-600">{messages.homeDescription}</p>
+        <ToolDirectory tools={russianTools} locale="ru" />
+      </section>
+      <section className="py-9" aria-labelledby="all-tools">
+        <h2 id="all-tools" className="text-2xl font-bold">{messages.allTools} <span className="text-base font-normal text-slate-500">({russianTools.length})</span></h2>
+        <div className="mt-5 grid gap-3 sm:grid-cols-2">
+          {russianTools.map((tool) => <Link key={tool.slug} href={localizePath("ru", `/tools/${tool.slug}`)} className="block min-h-28 rounded-2xl border border-slate-200 bg-white p-5 hover:border-indigo-300 hover:shadow-sm"><span className="text-xs font-semibold text-indigo-700">{messages.categories}</span><h3 className="mt-1 font-semibold">{tool.title}</h3><p className="mt-2 text-sm leading-6 text-slate-600">{tool.description}</p></Link>)}
+        </div>
+      </section>
+      <section className="rounded-2xl bg-emerald-50 p-5 text-sm text-emerald-900"><h2 className="text-lg font-bold">{messages.introPrivacy}</h2><p className="mt-2 leading-7">{messages.privacyNotice}</p></section>
+    </main>;
+  }
   if (!isLocale(rawLocale)) notFound();
   const locale: Locale = rawLocale;
   const messages = getMessages(locale);

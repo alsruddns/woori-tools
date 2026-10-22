@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { access, readdir, readFile } from "node:fs/promises";
 import path from "node:path";
-import { locales, type Locale } from "../src/i18n/routing";
+import { locales, publishedTargetLocales, type PublishedTargetLocale } from "../src/i18n/routing";
 import { getLocalizedCategories } from "../src/registry/category-translations";
 import { getFileGuidance } from "../src/registry/file-guidance";
 import { homeContent } from "../src/registry/home-content";
@@ -130,14 +130,14 @@ for (const locale of locales) {
   }
 }
 
-const sitemapEntries = createSitemapEntries({ tools, locales, siteOrigin: SITE_ORIGIN, languageAlternates: (path: string, supported?: readonly string[]) => languageAlternates(path, supported as Locale[] | undefined) });
+const sitemapEntries = createSitemapEntries({ tools, locales: publishedTargetLocales, siteOrigin: SITE_ORIGIN, languageAlternates: (path: string, supported?: readonly string[]) => languageAlternates(path, supported as PublishedTargetLocale[] | undefined) });
 const expectedToolUrls = tools.reduce((sum, tool) => sum + tool.supportedLocales.length, 0);
 const toolSitemapEntries = sitemapEntries.filter((entry) => /\/tools\/[^/]+$/.test(entry.url));
 assert.equal(toolSitemapEntries.length, expectedToolUrls, "sitemap must contain every public tool and supported locale exactly once");
 assert.equal(new Set(toolSitemapEntries.map((entry) => entry.url)).size, expectedToolUrls, "duplicate tool sitemap URL");
 assert.ok(toolSitemapEntries.every((entry) => entry.url.startsWith(`${SITE_ORIGIN}/`)), "sitemap URL has wrong origin");
 assert.ok(toolSitemapEntries.every((entry) => entry.alternates.languages["x-default"]), "tool sitemap URL missing x-default alternate");
-assert.ok(toolSitemapEntries.every((entry) => Object.keys(entry.alternates.languages).length === 16), "tool sitemap alternate must include 15 locales and x-default");
+assert.ok(toolSitemapEntries.every((entry) => Object.keys(entry.alternates.languages).length === (entry.url.endsWith("/barcode-generator") ? 17 : 16)), "tool sitemap alternate must match each tool's published locales and x-default");
 
 async function sourceFiles(directory: string): Promise<string[]> {
   const result: string[] = [];
