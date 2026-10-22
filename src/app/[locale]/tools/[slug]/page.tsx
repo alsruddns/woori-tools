@@ -8,6 +8,7 @@ import { RussianInstagramGridWorkspace } from "@/components/tool/russian-instagr
 import { RussianImageCollageWorkspace } from "@/components/tool/russian-image-collage-workspace";
 import { RussianFileInfoWorkspace } from "@/components/tool/russian-file-info-workspace";
 import { TurkishFileInfoWorkspace } from "@/components/tool/turkish-file-info-workspace";
+import { TurkishRenameWorkspace } from "@/components/tool/turkish-rename-workspace";
 import { RussianZipWorkspace } from "@/components/tool/russian-zip-workspace";
 import { RussianRenameWorkspace } from "@/components/tool/russian-rename-workspace";
 import { RussianLineToolsWorkspace } from "@/components/tool/russian-line-tools-workspace";
@@ -295,6 +296,7 @@ function TurkishPublishedToolPage({ slug }: { slug: string }) {
     : slug === "image-collage" ? <RussianImageCollageWorkspace locale="tr" />
     : slug === "markdown-preview" ? <RussianMarkdownWorkspace locale="tr" />
     : ["file-hash", "mime-type-checker", "file-extension-checker", "file-size-checker", "duplicate-file-checker"].includes(slug) ? <TurkishFileInfoWorkspace slug={slug as "file-hash" | "mime-type-checker" | "file-extension-checker" | "file-size-checker" | "duplicate-file-checker"} title={tool.title} />
+    : slug === "bulk-file-renamer" || slug === "filename-cleaner" ? <TurkishRenameWorkspace slug={slug} title={tool.title} />
     : null;
   if (!workspace) notFound();
 
