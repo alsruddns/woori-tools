@@ -5,6 +5,7 @@ import { ToolWorkspace } from "@/components/tool/tool-workspace";
 import { BarcodeWorkspace } from "@/components/tool/barcode-workspace";
 import { RussianBarcodeCheckerWorkspace } from "@/components/tool/russian-barcode-checker-workspace";
 import { RussianInstagramGridWorkspace } from "@/components/tool/russian-instagram-grid-workspace";
+import { RussianImageCollageWorkspace } from "@/components/tool/russian-image-collage-workspace";
 import { RussianMarkdownWorkspace } from "@/components/tool/russian-markdown-workspace";
 import { CountdownWorkspace } from "@/components/tool/countdown-workspace";
 import { RandomStringWorkspace } from "@/components/tool/random-string-workspace";
@@ -180,6 +181,8 @@ function RussianPublishedToolPage({ slug }: { slug: string }) {
     ? <BarcodeWorkspace locale="ru" />
     : slug === "instagram-grid-split"
       ? <RussianInstagramGridWorkspace />
+    : slug === "image-collage"
+      ? <RussianImageCollageWorkspace />
     : slug === "barcode-checker"
       ? <RussianBarcodeCheckerWorkspace />
       : slug === "markdown-preview"
