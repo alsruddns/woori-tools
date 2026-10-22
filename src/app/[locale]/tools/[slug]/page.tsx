@@ -288,6 +288,7 @@ function TurkishPublishedToolPage({ slug }: { slug: string }) {
     : slug === "daily-fortune" ? <DailyFortuneWorkspace locale="tr" />
     : slug === "saju" ? <SajuWorkspace locale="tr" />
     : slug === "duty-picker" ? <RussianDutyPickerWorkspace locale="tr" />
+    : slug === "barcode-checker" ? <RussianBarcodeCheckerWorkspace locale="tr" />
     : null;
   if (!workspace) notFound();
 
