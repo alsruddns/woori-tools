@@ -7,7 +7,7 @@ Published locales: ko, en, ja, zh, es, pt-br, de, fr, vi, id, th, zh-tw, it, nl,
 
 | Locale | Authored tool bundles | Pending tools | Next tool | Published |
 | --- | ---: | ---: | --- | --- |
-| ru | 19/176 | 157 | stopwatch | No |
+| ru | 23/176 | 153 | password-generator | No |
 | tr | 6/176 | 170 | tarot-card | No |
 | pl | 6/176 | 170 | tarot-card | No |
 | fil | 6/176 | 170 | tarot-card | No |
@@ -22,18 +22,14 @@ Published locales: ko, en, ja, zh, es, pt-br, de, fr, vi, id, th, zh-tw, it, nl,
 ## Translation coverage
 
 - Existing authored lottery bundle slugs: lotto-number-generator, powerball-number-generator, mega-millions-number-generator, japan-loto6-number-generator, japan-loto7-number-generator, japan-mini-loto-number-generator
-- Additional Russian bundle slugs: tarot-card, daily-fortune, saju, random-number, random-name-picker, random-wheel, draw-lots, random-team-maker, random-order, random-seat, duty-picker, dice-roller, coin-flip
-- Russian completed tool bundles: 19/176
-- Russian next tool: stopwatch
+- Additional Russian bundle slugs: tarot-card, daily-fortune, saju, random-number, random-name-picker, random-wheel, draw-lots, random-team-maker, random-order, random-seat, duty-picker, dice-roller, coin-flip, stopwatch, timer, pomodoro-timer, world-clock
+- Russian completed tool bundles: 23/176
+- Russian next tool: password-generator
 - New-locale UI messages: 24 shared core keys per locale; remaining site and workspace strings are not complete.
 - New locales published or indexed: none.
 
 ## Remaining Russian tools
 
-- stopwatch
-- timer
-- pomodoro-timer
-- world-clock
 - password-generator
 - random-string-generator
 - wifi-qr
