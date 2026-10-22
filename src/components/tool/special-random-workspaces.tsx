@@ -156,7 +156,8 @@ export function LottoWorkspace({ locale, min = 1, max = 45, numberCount = 6, his
   </section>;
 }
 
-export function DiceWorkspace({ locale }: { locale:RouteLocale | "ru" }) {
+Object.assign(copy.tr,{selection:"Zar türü",diceCount:"Zar sayısı",die:"yüzlü zar",draw:"Zarları at",total:"Toplam",minimum:"En az",maximum:"En çok",average:"Ortalama",history:"Son atışlar",invalidCount:"Zar sayısını kontrol edin.",explanation:"D, zarı ifade eder; ardından gelen sayı zarın yüz sayısıdır. D6 altı, D20 ise yirmi yüzlü bir zardır."});
+export function DiceWorkspace({ locale }: { locale:RouteLocale | "ru" | "tr" }) {
   const t = copy[locale];
   const [sides, setSides] = useState(6);
   const [count, setCount] = useState(1);

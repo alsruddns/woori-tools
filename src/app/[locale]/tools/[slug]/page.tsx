@@ -280,6 +280,7 @@ function TurkishPublishedToolPage({ slug }: { slug: string }) {
     : slug === "timer" || slug === "pomodoro-timer" ? <CountdownWorkspace slug={slug} locale="tr" />
     : slug === "password-generator" || slug === "random-string-generator" ? <RandomStringWorkspace slug={slug} locale="tr" />
     : ["wifi-qr", "contact-qr", "phone-qr", "email-qr"].includes(slug) ? <QrWorkspace slug={slug} locale="tr" />
+    : slug === "dice-roller" ? <DiceWorkspace locale="tr" />
     : null;
   if (!workspace) notFound();
 
