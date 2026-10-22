@@ -8,7 +8,7 @@ Routable locales: 17 (ko, en, ja, zh, es, pt-br, de, fr, vi, id, th, zh-tw, it, 
 | Locale | Translation data | UI verified | SEO verified | Public tools | Pending data | Next tool |
 | --- | ---: | ---: | ---: | ---: | ---: | --- |
 | ru | 176/176 | 176 | 176 | 176 | 0 | none |
-| tr | 176/176 | 34 | 34 | 34 | 0 | none |
+| tr | 176/176 | 39 | 39 | 39 | 0 | none |
 | pl | 6/176 | 0 | 0 | 0 | 170 | tarot-card |
 | fil | 6/176 | 0 | 0 | 0 | 170 | tarot-card |
 | bn | 6/176 | 0 | 0 | 0 | 170 | tarot-card |
@@ -38,14 +38,15 @@ Routable locales: 17 (ko, en, ja, zh, es, pt-br, de, fr, vi, id, th, zh-tw, it, 
 ## Next locale
 
 - Russian translation data, workspace UI, SEO, routing, and public release are complete for 176 tools.
-- Turkish translation data is complete for 176 tools. Workspace UI, SEO, and public routes are verified for 34 tools.
+- Turkish translation data is complete for 176 tools. Workspace UI, SEO, and public routes are verified for 39 tools.
 - Turkish shared UI copy beyond the core dictionary is not fully translated. Add it before claiming broad Turkish UI completion.
-- Continue Turkish workspace integration at `file-hash`; do not expose any Turkish tool until its workspace and metadata pass verification.
+- Continue Turkish workspace integration at `bulk-file-renamer`; keep each page unpublished until workspace behavior and localized metadata pass verification.
 
 ## Last verified checkpoint
 
 - Validation: TypeScript passed; lint passed; all 136 tests passed; content-quality checks passed; production build passed.
-- Production build prerendered 3,041 static pages. The tool sitemap contains 2,850 localized tool URLs: 2,816 base and Russian URLs plus 34 Turkish URLs.
-- Turkish `markdown-preview` production HTML contains Turkish metadata and workspace labels, plus its canonical URL, Turkish hreflang, x-default, Open Graph locale, and sitemap route.
-- Turkish public tools are only the 34 slugs listed in `src/registry/target-locale-publication.ts`; other Turkish tools remain excluded.
-- Current branch is `develop`; latest completed change is ready for commit and push.
+- Production build prerendered 3,046 static pages. The tool sitemap contains 2,855 localized tool URLs: 2,816 base and Russian URLs plus 39 Turkish URLs.
+- Turkish `markdown-preview` production HTML contains localized metadata and workspace controls, with canonical, Turkish hreflang, x-default, Open Graph locale, and sitemap membership.
+- Turkish file-hash, MIME type, extension, size, and duplicate-file pages render their browser-local workspace and localized metadata. Canonical, hreflang, Open Graph locale, and sitemap entries are generated from the shared SEO helpers.
+- Turkish public tools are only the 39 slugs listed in `src/registry/target-locale-publication.ts`; all other Turkish tools remain excluded.
+- Current branch is `develop`; validated work is ready for commit and push.

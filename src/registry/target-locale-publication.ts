@@ -6,7 +6,7 @@ type LocalePublication = {
   publishedToolSlugs: readonly string[];
 };
 
-const turkishVerifiedToolSlugs = ["lotto-number-generator", "powerball-number-generator", "mega-millions-number-generator", "japan-loto6-number-generator", "japan-loto7-number-generator", "japan-mini-loto-number-generator", "random-number", "random-name-picker", "random-wheel", "draw-lots", "random-team-maker", "random-order", "random-seat", "timer", "pomodoro-timer", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr", "dice-roller", "coin-flip", "stopwatch", "world-clock", "tarot-card", "daily-fortune", "saju", "duty-picker", "barcode-checker", "barcode-generator", "instagram-grid-split", "image-collage", "markdown-preview"] as const;
+const turkishVerifiedToolSlugs = ["lotto-number-generator", "powerball-number-generator", "mega-millions-number-generator", "japan-loto6-number-generator", "japan-loto7-number-generator", "japan-mini-loto-number-generator", "random-number", "random-name-picker", "random-wheel", "draw-lots", "random-team-maker", "random-order", "random-seat", "timer", "pomodoro-timer", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr", "dice-roller", "coin-flip", "stopwatch", "world-clock", "tarot-card", "daily-fortune", "saju", "duty-picker", "barcode-checker", "barcode-generator", "instagram-grid-split", "image-collage", "markdown-preview", "file-hash", "mime-type-checker", "file-extension-checker", "file-size-checker", "duplicate-file-checker"] as const;
 
 export const targetLocalePublication = {
   ru: {
