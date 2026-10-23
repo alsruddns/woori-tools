@@ -86,6 +86,7 @@ const polishRegexWorkspaceSource = await readFile(new URL("../src/components/too
 const sharedMarkdownWorkspaceSource = await readFile(new URL("../src/components/tool/markdown-workspace.tsx", import.meta.url), "utf8");
 const japanToolsWorkspaceSource = await readFile(new URL("../src/components/tool/japan-tools-workspace.tsx", import.meta.url), "utf8");
 const browserDeveloperWorkspaceSource = await readFile(new URL("../src/components/tool/browser-developer-tools-workspace.tsx", import.meta.url), "utf8");
+const polishChinaWorkspaceSource = await readFile(new URL("../src/components/tool/polish-china-tools-workspace.tsx", import.meta.url), "utf8");
 const specialRandomWorkspaceSource = await readFile(new URL("../src/components/tool/special-random-workspaces.tsx", import.meta.url), "utf8");
 const toolWorkspaceSource = await readFile(new URL("../src/components/tool/tool-workspace.tsx", import.meta.url), "utf8");
 const instagramGridWorkspaceSource = await readFile(new URL("../src/components/tool/russian-instagram-grid-workspace.tsx", import.meta.url), "utf8");
@@ -1058,6 +1059,21 @@ test("Polish browser developer tools localize inputs, privacy, JWT status, and e
   assert.match(browserDeveloperWorkspaceSource, /const polishHelper = \{ jwt:/);
   assert.match(browserDeveloperWorkspaceSource, /const polishExpiry = \{ label:/);
   assert.match(browserDeveloperWorkspaceSource, /locale === "pl" \? polishHelper : helperText\[locale\]/);
+});
+
+test("Polish Chinese text, number, zodiac, and phone tools share the localized workspace", () => {
+  const slugs = ["simplified-traditional-chinese-converter", "chinese-number-kanji-converter", "rmb-uppercase-converter", "chinese-zodiac-calculator", "chinese-sexagenary-cycle-calculator", "chinese-phone-number-formatter", "taiwan-phone-number-formatter"];
+  for (const slug of slugs) {
+    assert.equal(targetLocalePublication.pl.uiVerifiedToolSlugs.includes(slug), true);
+    assert.equal(targetLocalePublication.pl.seoVerifiedToolSlugs.includes(slug), true);
+    assert.equal(targetLocalePublication.pl.publishedToolSlugs.includes(slug), true);
+    assert.equal(entries.some(({ url }) => url === `https://www.woori.today/pl/tools/${slug}`), true);
+  }
+  assert.match(toolWorkspaceSource, /if \(phaseLocale === "pl" && isPolishChinaSlug\(tool\.slug\)\) return <PolishChinaToolsWorkspace slug=\{tool\.slug\} \/>/);
+  assert.match(polishChinaWorkspaceSource, /const titles: Record<RussianChinaSlug/);
+  assert.match(polishChinaWorkspaceSource, /Kierunek konwersji/);
+  assert.match(polishChinaWorkspaceSource, /Wartości są przetwarzane lokalnie w przeglądarce/);
+  assert.match(polishChinaWorkspaceSource, /Nie udało się przetworzyć wartości/);
 });
 
 test("Russian tarot page localizes controls, names, and card interpretations", () => {
