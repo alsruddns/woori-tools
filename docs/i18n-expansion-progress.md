@@ -8,7 +8,7 @@ Routable locales: 17 (ko, en, ja, zh, es, pt-br, de, fr, vi, id, th, zh-tw, it, 
 | Locale | Translation data | UI verified | SEO verified | Public tools | Pending data | Next tool |
 | --- | ---: | ---: | ---: | ---: | ---: | --- |
 | ru | 176/176 | 176 | 176 | 176 | 0 | none |
-| tr | 176/176 | 56 | 56 | 56 | 0 | social-image-resize |
+| tr | 176/176 | 58 | 58 | 58 | 0 | text-case-converter |
 | pl | 6/176 | 0 | 0 | 0 | 170 | tarot-card |
 | fil | 6/176 | 0 | 0 | 0 | 170 | tarot-card |
 | bn | 6/176 | 0 | 0 | 0 | 170 | tarot-card |
@@ -38,12 +38,12 @@ Routable locales: 17 (ko, en, ja, zh, es, pt-br, de, fr, vi, id, th, zh-tw, it, 
 ## Next locale
 
 - Russian authoring, UI, and SEO verification remains complete for all 176 tools.
-- Turkish translation data is complete for 176/176 tools. UI, SEO, and publication are verified for 56 tools; the next tool to connect is social-image-resize.
+- Turkish translation data is complete for 176/176 tools. UI, SEO, and publication are verified for 58 tools; the next tool to connect is text-case-converter.
 - Turkish common site navigation and non-tool pages are still not fully localized. Unpublished Turkish tool pages remain blocked by the publication registry.
 
 ## Last verified checkpoint
 
 - Validation: TypeScript passed; lint passed; all 136 tests passed; content-quality check passed; production build passed.
-- Production build prerendered 3,063 static pages. The sitemap contains 2,872 localized tool URLs (2,640 legacy-locale pages, 176 Russian pages, and 56 Turkish pages).
-- Turkish canonical, hreflang alternates (including tr and x-default), Open Graph metadata, static rendering, and sitemap membership were verified in the production output for text-to-file and character-count.
-- Current branch is `develop`; last pushed commit is `2eb2353`. The current 56-page batch is ready to commit and push.
+- Production build prerendered 3,065 static pages. The sitemap contains 2,874 localized tool URLs (2,640 legacy-locale pages, 176 Russian pages, and 58 Turkish pages).
+- Turkish canonical, hreflang alternates (including tr and x-default), Open Graph metadata, static rendering, and sitemap membership were verified in the production output for text-to-file, character-count, social-image-resize, and add-text-to-image.
+- Current branch is `develop`; last pushed commit is `2eb2353`. The Turkish image-tool batch is verified and ready for commit and push.

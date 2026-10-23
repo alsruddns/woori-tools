@@ -12,6 +12,7 @@ import { TurkishRenameWorkspace } from "@/components/tool/turkish-rename-workspa
 import { TurkishZipWorkspace } from "@/components/tool/turkish-zip-workspace";
 import { TurkishLineToolsWorkspace } from "@/components/tool/turkish-line-tools-workspace";
 import { TurkishTextUtilityWorkspace } from "@/components/tool/turkish-text-utility-workspace";
+import { TurkishImageToolsWorkspace } from "@/components/tool/turkish-image-tools-workspace";
 import { TurkishLoremWorkspace } from "@/components/tool/turkish-lorem-workspace";
 import { RussianZipWorkspace } from "@/components/tool/russian-zip-workspace";
 import { RussianRenameWorkspace } from "@/components/tool/russian-rename-workspace";
@@ -304,6 +305,7 @@ function TurkishPublishedToolPage({ slug }: { slug: string }) {
     : slug === "zip-files" ? <TurkishZipWorkspace title={tool.title} />
     : ["shuffle-lines", "add-line-numbers", "remove-line-numbers", "remove-empty-lines", "remove-characters", "sort-lines", "remove-duplicate-lines", "remove-spaces", "remove-line-breaks", "reverse-text", "text-repeater"].includes(slug) ? <TurkishLineToolsWorkspace slug={slug as "shuffle-lines" | "add-line-numbers" | "remove-line-numbers" | "remove-empty-lines" | "remove-characters" | "sort-lines" | "remove-duplicate-lines" | "remove-spaces" | "remove-line-breaks" | "reverse-text" | "text-repeater"} />
     : slug === "text-to-file" || slug === "character-count" ? <TurkishTextUtilityWorkspace slug={slug} />
+    : slug === "social-image-resize" || slug === "add-text-to-image" ? <TurkishImageToolsWorkspace slug={slug} />
     : slug === "lorem-ipsum" ? <TurkishLoremWorkspace title={tool.title} />
     : null;
   if (!workspace) notFound();
