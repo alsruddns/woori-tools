@@ -16,6 +16,7 @@ async function importTypeScript(path, replacements = []) {
 const { locales, publishedTargetLocales, localeConfig, publishedTargetHreflangs } = await importTypeScript("../src/i18n/routing.ts");
 const { getTargetTurkishToolTranslation, targetTurkishToolSlugs } = await importTypeScript("../src/registry/target-tr-translations.ts");
 const { getTargetFilipinoToolTranslation, targetFilipinoToolSlugs } = await importTypeScript("../src/registry/target-fil-translations.ts");
+const { getTargetSevenToolTranslation, targetSevenToolSlugs } = await importTypeScript("../src/registry/target-seven-tools-translations.ts");
 const { targetLocalePublication } = await importTypeScript("../src/registry/target-locale-publication.ts", [
   ['import { targetPolishToolSlugs } from "./target-pl-translations";', "const targetPolishToolSlugs = [];"],
 ]);
@@ -1215,5 +1216,23 @@ test("Filipino authored tool translations include complete editorial and SEO fie
     assert.equal(translation.steps.length, 3);
     assert.ok(translation.faq.example.length > 0);
     assert.ok(translation.faq.caution.length > 0);
+  }
+});
+
+test("seven remaining locales have complete authored translations for the random-choice tool bundle", () => {
+  const locales = ["bn", "uk", "ms", "sv", "cs", "ro", "el"];
+  assert.deepEqual(targetSevenToolSlugs, ["tarot-card", "daily-fortune", "saju", "random-number", "random-name-picker", "random-wheel", "draw-lots", "random-team-maker", "random-order", "random-seat", "duty-picker", "dice-roller", "coin-flip", "stopwatch", "timer"]);
+  for (const locale of locales) {
+    for (const slug of targetSevenToolSlugs) {
+      const translation = getTargetSevenToolTranslation(locale, slug);
+      assert.ok(translation, `${locale}/${slug}`);
+      assert.ok(translation.title.length > 0);
+      assert.ok(translation.description.length > 40);
+      assert.ok(translation.seoTitle.length > 0);
+      assert.ok(translation.seoDescription.length > 40);
+      assert.equal(translation.steps.length, 3);
+      assert.ok(translation.faq.example.length > 0);
+      assert.ok(translation.faq.caution.length > 0);
+    }
   }
 });
