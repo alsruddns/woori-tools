@@ -24,6 +24,7 @@ import { TurkishDeveloperToolsWorkspace, type TurkishDeveloperSlug } from "@/com
 import { TurkishCultureToolsWorkspace, type TurkishCultureSlug } from "@/components/tool/turkish-culture-tools-workspace";
 import { TurkishIndiaToolsWorkspace, type TurkishIndiaSlug } from "@/components/tool/turkish-india-tools-workspace";
 import { TurkishEuropeToolsWorkspace, type TurkishEuropeSlug } from "@/components/tool/turkish-europe-tools-workspace";
+import { TurkishWorldFormatToolsWorkspace, type TurkishWorldFormatSlug } from "@/components/tool/turkish-world-format-tools-workspace";
 import { RussianZipWorkspace } from "@/components/tool/russian-zip-workspace";
 import { RussianRenameWorkspace } from "@/components/tool/russian-rename-workspace";
 import { RussianLineToolsWorkspace } from "@/components/tool/russian-line-tools-workspace";
@@ -326,6 +327,7 @@ function TurkishPublishedToolPage({ slug }: { slug: string }) {
     : ["simplified-traditional-chinese-converter", "chinese-number-kanji-converter", "rmb-uppercase-converter", "chinese-zodiac-calculator", "chinese-sexagenary-cycle-calculator", "chinese-phone-number-formatter", "taiwan-phone-number-formatter"].includes(slug) ? <TurkishCultureToolsWorkspace slug={slug as TurkishCultureSlug} />
     : ["indian-number-format-converter", "lakh-crore-converter", "pan-format-validator", "gstin-format-validator", "india-phone-number-formatter"].includes(slug) ? <TurkishIndiaToolsWorkspace slug={slug as TurkishIndiaSlug} />
     : ["germany-iban-validator", "german-number-format-converter", "german-date-format-converter", "spain-dni-validator", "spain-nie-validator", "spanish-number-format-converter", "spanish-date-format-converter", "france-phone-number-formatter", "french-number-format-converter", "french-date-format-converter", "netherlands-iban-validator", "dutch-number-format-converter"].includes(slug) ? <TurkishEuropeToolsWorkspace slug={slug as TurkishEuropeSlug} />
+    : ["dutch-date-format-converter", "brazil-cpf-validator", "brazil-cnpj-validator", "brazil-phone-number-formatter", "brazil-cep-formatter", "vietnam-phone-number-formatter", "vietnam-number-format-converter", "italy-fiscal-code-format-validator", "italy-vat-number-validator", "italy-number-format-converter", "italian-date-format-converter", "australia-postcode-formatter", "english-date-format-converter"].includes(slug) ? <TurkishWorldFormatToolsWorkspace slug={slug as TurkishWorldFormatSlug} />
     : slug === "lorem-ipsum" ? <TurkishLoremWorkspace title={tool.title} />
     : null;
   if (!workspace) notFound();
