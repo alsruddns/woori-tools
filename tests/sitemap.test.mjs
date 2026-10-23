@@ -842,6 +842,16 @@ test("Polish random wheel localizes editing, limits, speed, and spinning state",
   assert.match(toolWorkspaceSource, /tool\.slug === "random-wheel"\) return <RandomWheelWorkspace locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
 });
 
+test("Polish random team maker localizes team controls, validation, and generated labels", () => {
+  assert.equal(targetLocalePublication.pl.publishedToolSlugs.includes("random-team-maker"), true);
+  assert.equal(entries.some(({ url }) => url === "https://www.woori.today/pl/tools/random-team-maker"), true);
+  assert.match(specialRandomWorkspaceSource, /RandomTeamWorkspace\(\{ locale \}: \{ locale:RouteLocale \| "ru" \| "tr" \| "pl" \}\)/);
+  assert.match(specialRandomWorkspaceSource, /teamPrefix:Record<string,string>=\{pl:"Zespół"/);
+  assert.match(specialRandomWorkspaceSource, /drawWinners:"Losuj zwycięzców"/);
+  assert.match(specialRandomWorkspaceSource, /locale === "ru" \|\| locale === "pl" \? \(teams.length \? t.makeTeamsAgain : t.makeTeams\)/);
+  assert.match(toolWorkspaceSource, /tool\.slug === "random-team-maker"\) return <RandomTeamWorkspace locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
+});
+
 test("Russian tarot page localizes controls, names, and card interpretations", () => {
   assert.match(toolPageSource, /slug === "tarot-card"/);
   assert.match(fortuneWorkspaceSource, /ru: \{ question: "Вопрос \(необязательно\)"[\s\S]*?note: "Таро предназначено/);
