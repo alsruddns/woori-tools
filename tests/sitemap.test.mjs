@@ -233,6 +233,20 @@ test("Polish file utilities localize duplicate results and MIME fallbacks while 
   assert.match(toolWorkspaceSource, /await file\.arrayBuffer\(\)/);
 });
 
+test("Polish lottery workspaces localize controls, constraints, and eligibility notice", () => {
+  const lotterySlugs = ["lotto-number-generator", "powerball-number-generator", "mega-millions-number-generator", "japan-loto6-number-generator", "japan-loto7-number-generator", "japan-mini-loto-number-generator"];
+  for (const slug of lotterySlugs) {
+    assert.equal(targetLocalePublication.pl.publishedToolSlugs.includes(slug), true);
+    assert.equal(entries.some(({ url }) => url === `${siteOrigin}/pl/tools/${slug}`), true);
+  }
+  assert.match(specialRandomWorkspaceSource, /Object\.assign\(copy, \{ pl:/);
+  assert.match(specialRandomWorkspaceSource, /Narz\\u0119dzie losuje liczby wy\\u0142\\u0105cznie dla rozrywki/);
+  assert.ok(specialRandomWorkspaceSource.includes(String.raw`Mo\u017Cesz uwzgl\u0119dni\u0107 maksymalnie`));
+  assert.match(specialRandomWorkspaceSource, /Tej samej liczby nie mo\\u017Cna jednocze\\u015Bnie uwzgl\\u0119dni\\u0107 i wykluczy\\u0107/);
+  assert.match(specialRandomWorkspaceSource, /Sprawd\\u017A oficjalne informacje loterii/);
+  assert.match(toolWorkspaceSource, /locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
+});
+
 test("Russian and Turkish markdown previews use localized controls", () => {
   assert.match(toolPageSource, /slug === "markdown-preview"\s*\? <RussianMarkdownWorkspace locale="tr" \/>/);
   assert.match(markdownWorkspaceSource, /locale === "tr" \? "# Ba\\u015Fl\\u0131k\\n\\nBir \*\*Markdown\*\* \\u00F6rne\\u011Fi girin\."/);
