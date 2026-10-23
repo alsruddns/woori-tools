@@ -16,6 +16,7 @@ import { TurkishImageToolsWorkspace } from "@/components/tool/turkish-image-tool
 import { TurkishRegexWorkspace } from "@/components/tool/turkish-regex-workspace";
 import { TurkishCodeToolsWorkspace } from "@/components/tool/turkish-code-tools-workspace";
 import { TurkishLoremWorkspace } from "@/components/tool/turkish-lorem-workspace";
+import { TurkishPdfWorkspace, type TurkishPdfSlug } from "@/components/tool/turkish-pdf-workspace";
 import { RussianZipWorkspace } from "@/components/tool/russian-zip-workspace";
 import { RussianRenameWorkspace } from "@/components/tool/russian-rename-workspace";
 import { RussianLineToolsWorkspace } from "@/components/tool/russian-line-tools-workspace";
@@ -310,6 +311,7 @@ function TurkishPublishedToolPage({ slug }: { slug: string }) {
     : slug === "regex-tester" ? <TurkishRegexWorkspace />
     : ["color-converter", "cron-parser", "sql-formatter", "html-formatter", "css-formatter", "javascript-formatter", "json-formatter", "json-validator", "json-to-yaml", "yaml-to-json"].includes(slug) ? <TurkishCodeToolsWorkspace slug={slug as "color-converter" | "cron-parser" | "sql-formatter" | "html-formatter" | "css-formatter" | "javascript-formatter" | "json-formatter" | "json-validator" | "json-to-yaml" | "yaml-to-json"} />
     : ["social-image-resize", "add-text-to-image", "jpg-to-png", "png-to-jpg", "webp-to-jpg", "webp-to-png", "jpg-to-webp", "png-to-webp", "heic-to-jpg", "image-compress", "image-resize", "image-crop", "image-rotate", "image-flip", "image-grayscale", "image-brightness", "image-contrast", "image-blur", "image-pixelate", "remove-image-metadata", "image-info", "favicon-generator", "image-color-picker"].includes(slug) ? <TurkishImageToolsWorkspace slug={slug as "social-image-resize" | "add-text-to-image" | "jpg-to-png" | "png-to-jpg" | "webp-to-jpg" | "webp-to-png" | "jpg-to-webp" | "png-to-webp" | "heic-to-jpg" | "image-compress" | "image-resize" | "image-crop" | "image-rotate" | "image-flip" | "image-grayscale" | "image-brightness" | "image-contrast" | "image-blur" | "image-pixelate" | "remove-image-metadata" | "image-info" | "favicon-generator" | "image-color-picker"} />
+    : ["images-to-pdf", "pdf-merge", "pdf-split", "pdf-delete-pages", "pdf-reorder-pages", "pdf-rotate-pages", "pdf-add-page-numbers", "pdf-watermark", "pdf-metadata-viewer", "pdf-remove-metadata", "pdf-page-size-checker"].includes(slug) ? <TurkishPdfWorkspace slug={slug as TurkishPdfSlug} />
     : slug === "lorem-ipsum" ? <TurkishLoremWorkspace title={tool.title} />
     : null;
   if (!workspace) notFound();

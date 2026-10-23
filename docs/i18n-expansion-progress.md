@@ -8,7 +8,7 @@ Routable locales: 17 (ko, en, ja, zh, es, pt-br, de, fr, vi, id, th, zh-tw, it, 
 | Locale | Translation data | UI verified | SEO verified | Public tools | Pending data | Next tool |
 | --- | ---: | ---: | ---: | ---: | ---: | --- |
 | ru | 176/176 | 176 | 176 | 176 | 0 | none |
-| tr | 176/176 | 92 | 92 | 92 | 0 | images-to-pdf |
+| tr | 176/176 | 103 | 103 | 103 | 0 | character-count |
 | pl | 6/176 | 0 | 0 | 0 | 170 | tarot-card |
 | fil | 6/176 | 0 | 0 | 0 | 170 | tarot-card |
 | bn | 6/176 | 0 | 0 | 0 | 170 | tarot-card |
@@ -38,12 +38,12 @@ Routable locales: 17 (ko, en, ja, zh, es, pt-br, de, fr, vi, id, th, zh-tw, it, 
 ## Next locale
 
 - Russian authoring, UI, and SEO verification remains complete for all 176 tools.
-- Turkish translation data is complete for 176/176 tools. UI, SEO, and publication are verified for 92 tools; the next tool to connect is images-to-pdf.
+- Turkish translation data is complete for 176/176 tools. UI, SEO, and publication are verified for 103 tools; the next tool to connect is ladder-game.
 - Turkish common site navigation and non-tool pages are still not fully localized. Unpublished Turkish tool pages remain blocked by the publication registry.
 
 ## Last verified checkpoint
 
 - Validation: TypeScript passed; lint passed; all 136 tests passed; content-quality check passed; production build passed.
-- Production build prerendered 3,099 static pages. The sitemap contains 2,908 localized tool URLs (2,640 legacy-locale pages, 176 Russian pages, and 92 Turkish pages).
-- Turkish canonical, hreflang alternates (including tr and x-default), Open Graph metadata, static rendering, and sitemap membership were verified in the production output for text-to-file, character-count, social-image-resize, add-text-to-image, text-case-converter, remove-duplicate-words, regex-tester, color-converter, cron-parser, sql-formatter, html-formatter, css-formatter, javascript-formatter, json-formatter, json-validator, json-to-yaml, yaml-to-json, jpg-to-png, png-to-jpg, webp-to-jpg, webp-to-png, jpg-to-webp, png-to-webp, heic-to-jpg, image-compress, image-resize, image-crop, image-rotate, image-flip, image-grayscale, image-brightness, image-contrast, image-blur, image-pixelate, remove-image-metadata, image-info, favicon-generator, and image-color-picker.
-- Current branch is `develop`; last pushed commit is `aaf8326`. Turkish image-color-picker UI, route, metadata, hreflang, and sitemap are verified in the current uncommitted batch.
+- Production build prerendered 3,110 static pages. The sitemap contains 2,919 localized tool URLs (2,640 legacy-locale pages, 176 Russian pages, and 103 Turkish pages).
+- Turkish canonical, hreflang alternates (including tr and x-default), Open Graph metadata, static rendering, and sitemap membership were verified in the production output for text-to-file, character-count, social-image-resize, add-text-to-image, text-case-converter, remove-duplicate-words, regex-tester, color-converter, cron-parser, sql-formatter, html-formatter, css-formatter, javascript-formatter, json-formatter, json-validator, json-to-yaml, yaml-to-json, jpg-to-png, png-to-jpg, webp-to-jpg, webp-to-png, jpg-to-webp, png-to-webp, heic-to-jpg, image-compress, image-resize, image-crop, image-rotate, image-flip, image-grayscale, image-brightness, image-contrast, image-blur, image-pixelate, remove-image-metadata, image-info, favicon-generator, image-color-picker, and the 11 Turkish PDF tools.
+- Current branch is `develop`; last pushed commit is `1db6157`. All 11 Turkish PDF tools are connected to the existing browser-side processor and verified in the current batch.
