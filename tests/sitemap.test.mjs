@@ -930,6 +930,19 @@ test("Polish password and random string tools localize character settings and va
   assert.match(toolWorkspaceSource, /RandomStringWorkspace slug=\{tool\.slug\} locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
 });
 
+test("Polish QR tools localize privacy, input labels, QR errors, and downloads", () => {
+  for (const slug of ["wifi-qr", "contact-qr", "phone-qr", "email-qr"]) {
+    assert.equal(targetLocalePublication.pl.publishedToolSlugs.includes(slug), true);
+    assert.equal(entries.some(({ url }) => url === `https://www.woori.today/pl/tools/${slug}`), true);
+  }
+  assert.match(qrWorkspaceSource, /Object\.assign\(text,\{pl:\{ssid:"Nazwa sieci Wi-Fi \(SSID\)",password:"Has/);
+  assert.match(qrWorkspaceSource, /privacy:"Wprowadzone dane s/);
+  assert.match(qrWorkspaceSource, /setError\(locale==="pl"\?"Nie uda/);
+  assert.match(qrWorkspaceSource, /busy\?\(locale==="pl"\?t\.generating:/);
+  assert.match(qrWorkspaceSource, /pl:"Zobacz zakodowan/);
+  assert.match(toolWorkspaceSource, /QrWorkspace slug=\{tool\.slug\} locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
+});
+
 test("Russian tarot page localizes controls, names, and card interpretations", () => {
   assert.match(toolPageSource, /slug === "tarot-card"/);
   assert.match(fortuneWorkspaceSource, /ru: \{ question: "Вопрос \(необязательно\)"[\s\S]*?note: "Таро предназначено/);
