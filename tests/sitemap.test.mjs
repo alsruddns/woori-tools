@@ -84,6 +84,7 @@ const worldClockWorkspaceSource = await readFile(new URL("../src/components/tool
 const barcodeWorkspaceSource = await readFile(new URL("../src/components/tool/barcode-workspace.tsx", import.meta.url), "utf8");
 const polishRegexWorkspaceSource = await readFile(new URL("../src/components/tool/polish-regex-workspace.tsx", import.meta.url), "utf8");
 const sharedMarkdownWorkspaceSource = await readFile(new URL("../src/components/tool/markdown-workspace.tsx", import.meta.url), "utf8");
+const japanToolsWorkspaceSource = await readFile(new URL("../src/components/tool/japan-tools-workspace.tsx", import.meta.url), "utf8");
 const specialRandomWorkspaceSource = await readFile(new URL("../src/components/tool/special-random-workspaces.tsx", import.meta.url), "utf8");
 const toolWorkspaceSource = await readFile(new URL("../src/components/tool/tool-workspace.tsx", import.meta.url), "utf8");
 const instagramGridWorkspaceSource = await readFile(new URL("../src/components/tool/russian-instagram-grid-workspace.tsx", import.meta.url), "utf8");
@@ -1025,6 +1026,22 @@ test("Polish timestamp converter localizes format selection, input hints, and re
   assert.match(toolWorkspaceSource, /timestampHint/);
   assert.match(toolWorkspaceSource, /messages\.unixSeconds/);
   assert.match(toolWorkspaceSource, /messages\.unixMilliseconds/);
+});
+
+test("Polish Japanese tool workspaces translate conversions, date inputs, and lottery guidance", () => {
+  const slugs = ["wareki-converter", "hiragana-katakana-converter", "fullwidth-halfwidth-converter", "japanese-romaji-converter", "japanese-number-kanji-converter", "yakudoshi-calculator", "japanese-zodiac-calculator", "numbers3-number-generator", "numbers4-number-generator", "bingo5-number-generator"];
+  for (const slug of slugs) {
+    assert.equal(targetLocalePublication.pl.uiVerifiedToolSlugs.includes(slug), true);
+    assert.equal(targetLocalePublication.pl.seoVerifiedToolSlugs.includes(slug), true);
+    assert.equal(targetLocalePublication.pl.publishedToolSlugs.includes(slug), true);
+    assert.equal(entries.some(({ url }) => url === `https://www.woori.today/pl/tools/${slug}`), true);
+  }
+  assert.match(toolWorkspaceSource, /JapanToolsWorkspace slug=\{tool\.slug\} locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
+  assert.match(japanToolsWorkspaceSource, /const polishCopy: Copy/);
+  assert.match(japanToolsWorkspaceSource, /warekiForward:"Data gregoriańska/);
+  assert.match(japanToolsWorkspaceSource, /yakudoshiWarning:"Tradycje yakudoshi różnią się/);
+  assert.match(japanToolsWorkspaceSource, /numbers3Rules:"Wybierz 3 cyfry/);
+  assert.match(japanToolsWorkspaceSource, /locale === "pl" \? polishCopy : copy\[locale\]/);
 });
 
 test("Russian tarot page localizes controls, names, and card interpretations", () => {
