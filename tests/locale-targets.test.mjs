@@ -23,6 +23,11 @@ const { outputText: russianOutput } = ts.transpileModule(russianSource, {
   compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
 });
 const russianTranslations = await import(`data:text/javascript;base64,${Buffer.from(russianOutput).toString("base64")}`);
+const polishSource = await readFile(new URL("../src/registry/target-pl-translations.ts", import.meta.url), "utf8");
+const { outputText: polishOutput } = ts.transpileModule(polishSource, {
+  compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
+});
+const polishTranslations = await import(`data:text/javascript;base64,${Buffer.from(polishOutput).toString("base64")}`);
 
 test("target locales are distinct from published locales until translations are complete", () => {
   const expected = ["ru", "tr", "pl", "fil", "bn", "uk", "ms", "sv", "cs", "ro", "el"];
@@ -86,4 +91,18 @@ test("Russian has complete page metadata and editorial copy for its translated t
     assert.equal(content.faq.example.length > 0, true);
     assert.equal(content.faq.caution.length > 0, true);
   }
+});
+
+test("Polish editorial batch contains complete translated metadata and help copy", () => {
+  const expected = ["tarot-card", "daily-fortune", "saju", "random-number", "random-name-picker", "random-wheel", "draw-lots", "random-team-maker", "random-order", "random-seat"];
+  const fields = ["title", "description", "seoTitle", "seoDescription", "category", "keywords", "steps", "example", "options", "caution", "faq"];
+  assert.deepEqual(polishTranslations.targetPolishToolSlugs, expected);
+  for (const slug of expected) {
+    const content = polishTranslations.getTargetPolishToolTranslation(slug);
+    assert.ok(content, `pl/${slug} translation exists`);
+    for (const field of fields) assert.ok(content[field], `pl/${slug}.${field} is present`);
+    assert.equal(content.steps.length, 3);
+    assert.ok(content.faq.example && content.faq.caution);
+  }
+  assert.equal(polishTranslations.getTargetPolishToolTranslation("unknown-tool"), undefined);
 });
