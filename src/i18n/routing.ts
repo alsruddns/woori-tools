@@ -33,10 +33,12 @@ export const plannedLocaleConfig = [
 ] as const;
 
 export const targetLocaleConfig = [...localeConfig, ...plannedLocaleConfig] as const;
-export const publishedTargetLocaleConfig = [...localeConfig, plannedLocaleConfig[0], plannedLocaleConfig[1], plannedLocaleConfig[2]] as const;
+export const publishedTargetLocaleConfig = [...localeConfig, plannedLocaleConfig[0], plannedLocaleConfig[1]] as const;
 export type RouteLocale = (typeof localeConfig)[number]["routeLocale"];
 export type Locale = RouteLocale;
-export type PublishedTargetLocale = (typeof publishedTargetLocaleConfig)[number]["routeLocale"];
+// Include Polish in the translation-capable content type while it is withheld
+// from the runtime published locale list until workspace verification passes.
+export type PublishedTargetLocale = (typeof publishedTargetLocaleConfig)[number]["routeLocale"] | "pl";
 export type PlannedLocale = (typeof plannedLocaleConfig)[number]["routeLocale"];
 export type TargetLocale = (typeof targetLocaleConfig)[number]["routeLocale"];
 export type UiLocale = "ko" | "en" | "ja" | "zh";
@@ -63,7 +65,7 @@ export function isLocale(value: string): value is RouteLocale {
   return getLocaleConfig(value) !== undefined;
 }
 
-export function isPublishedTargetLocale(value: string): value is PublishedTargetLocale {
+export function isPublishedTargetLocale(value: string): value is Exclude<PublishedTargetLocale, "pl"> {
   return publishedTargetLocaleConfig.some((item) => item.routeLocale === value);
 }
 
