@@ -304,7 +304,7 @@ function TurkishPublishedToolPage({ slug }: { slug: string }) {
     : slug === "bulk-file-renamer" || slug === "filename-cleaner" ? <TurkishRenameWorkspace slug={slug} title={tool.title} />
     : slug === "zip-files" ? <TurkishZipWorkspace title={tool.title} />
     : ["shuffle-lines", "add-line-numbers", "remove-line-numbers", "remove-empty-lines", "remove-characters", "sort-lines", "remove-duplicate-lines", "remove-spaces", "remove-line-breaks", "reverse-text", "text-repeater"].includes(slug) ? <TurkishLineToolsWorkspace slug={slug as "shuffle-lines" | "add-line-numbers" | "remove-line-numbers" | "remove-empty-lines" | "remove-characters" | "sort-lines" | "remove-duplicate-lines" | "remove-spaces" | "remove-line-breaks" | "reverse-text" | "text-repeater"} />
-    : slug === "text-to-file" || slug === "character-count" ? <TurkishTextUtilityWorkspace slug={slug} />
+    : ["text-to-file", "character-count", "text-case-converter", "remove-duplicate-words"].includes(slug) ? <TurkishTextUtilityWorkspace slug={slug as "text-to-file" | "character-count" | "text-case-converter" | "remove-duplicate-words"} />
     : slug === "social-image-resize" || slug === "add-text-to-image" ? <TurkishImageToolsWorkspace slug={slug} />
     : slug === "lorem-ipsum" ? <TurkishLoremWorkspace title={tool.title} />
     : null;

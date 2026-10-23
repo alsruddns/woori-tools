@@ -23,10 +23,10 @@ export async function processText(slug:string,text:string,secondText:string,opti
     case "remove-line-breaks":output=text.replace(/\s*\r?\n\s*/g," ");break;
     case "remove-duplicate-lines":output=[...new Set(lines)].join("\n");break;
     case "sort-lines":output=lines.sort((a,b)=>a.localeCompare(b,locale,{numeric:true,sensitivity:"base"})*(option==="desc"?-1:1)).join("\n");break;
-    case "text-case-converter":output=option==="upper"?text.toLocaleUpperCase():option==="title"?text.toLocaleLowerCase().replace(/\b\p{L}/gu,(character)=>character.toLocaleUpperCase()):text.toLocaleLowerCase();break;
+    case "text-case-converter":output=option==="upper"?text.toLocaleUpperCase(locale):option==="title"?text.toLocaleLowerCase(locale).replace(/(^|[\s\p{P}])(\p{L})/gu,(_,separator:string,character:string)=>separator+character.toLocaleUpperCase(locale)):text.toLocaleLowerCase(locale);break;
     case "text-compare":{const a=lines,b=secondText.split(/\r?\n/);return{result:[...a.filter((line)=>!b.includes(line)).map((line)=>`− ${line}`),...b.filter((line)=>!a.includes(line)).map((line)=>`+ ${line}`)].join("\n")||messages.sameText};}
     case "reverse-text":output=Array.from(text).reverse().join("");break;
-    case "remove-duplicate-words":{const words=text.match(/\S+/g)||[];const seen=new Set<string>();output=words.filter((word)=>{const key=word.toLocaleLowerCase();if(seen.has(key))return false;seen.add(key);return true;}).join(" ");break;}
+    case "remove-duplicate-words":{const words=text.match(/\S+/g)||[];const seen=new Set<string>();output=words.filter((word)=>{const key=word.toLocaleLowerCase(locale);if(seen.has(key))return false;seen.add(key);return true;}).join(" ");break;}
     case "remove-empty-lines": output=lines.filter(line=>line.trim().length>0).join("\n");break;
     case "add-line-numbers": output=lines.map((line,i)=>`${i+1}. ${line}`).join("\n");break;
     case "remove-line-numbers": output=lines.map(line=>line.replace(/^\s*\d+[.)]?\s*/,"")).join("\n");break;
