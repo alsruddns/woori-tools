@@ -786,6 +786,17 @@ test("Russian random wheel localizes entry editing and spin states", () => {
   assert.equal(entries.some(({ url }) => url === `${siteOrigin}/ru/tools/random-wheel`), true);
 });
 
+test("Polish tarot workspace translates controls, all cards, and interpretations before publication", () => {
+  assert.equal(targetLocalePublication.pl.publishedToolSlugs.includes("tarot-card"), true);
+  assert.equal(entries.some(({ url }) => url === "https://www.woori.today/pl/tools/tarot-card"), true);
+  assert.match(fortuneWorkspaceSource, /Object\.assign\(tarotText, \{ pl:/);
+  assert.match(fortuneWorkspaceSource, /tarotNames\.pl = \["G\\u0142upiec","Mag"[\s\S]*?"\\u015Awiat"\]/);
+  assert.match(fortuneWorkspaceSource, /locale:RouteLocale \| "ru" \| "tr" \| "pl"/);
+  assert.match(tarotLocalizationSource, /const polishThemes: readonly Theme\[\] = \[[\s\S]*?const polishSentence/);
+  assert.match(tarotLocalizationSource, /locale === "pl"\) return polishSentence/);
+  assert.match(toolWorkspaceSource, /tool\.slug === "tarot-card"\) return <TarotWorkspace locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
+});
+
 test("Russian tarot page localizes controls, names, and card interpretations", () => {
   assert.match(toolPageSource, /slug === "tarot-card"/);
   assert.match(fortuneWorkspaceSource, /ru: \{ question: "Вопрос \(необязательно\)"[\s\S]*?note: "Таро предназначено/);

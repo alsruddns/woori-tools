@@ -27,6 +27,8 @@ const tarotText: Record<string, {question:string;questionHint:string;yourQuestio
 
 Object.assign(tarotText, { ru: { question: "Вопрос (необязательно)", questionHint: "Вопрос остаётся на этом устройстве и не сохраняется и не отправляется.", yourQuestion: "Ваш вопрос", spread: "Расклад", one: "Карта дня", three: "Прошлое · настоящее · будущее", topic: "Тема", general: "Общее", love: "Отношения", money: "Деньги", work: "Работа и учёба", draw: "Вытянуть карты", again: "Вытянуть снова", upright: "Прямое положение", reversed: "Перевёрнутое положение", positions: ["Прошлое", "Настоящее", "Будущее"], privacy: "Вопрос и расклад не отправляются на сервер. После ухода со страницы введённый текст не сохраняется.", note: "Таро предназначено для развлечения и самоанализа. Расклад не предсказывает будущее и не заменяет важные решения о здоровье, финансах или праве." } });
 
+Object.assign(tarotText, { pl: { question:"Pytanie (opcjonalne)",questionHint:"Pytanie pozostaje na tym urz\u0105dzeniu; nie jest zapisywane ani wysy\u0142ane.",yourQuestion:"Twoje pytanie",spread:"Uk\u0142ad kart",one:"Jedna karta na dzi\u015B",three:"Przesz\u0142o\u015B\u0107 \u00B7 Tera\u017Aniejszo\u015B\u0107 \u00B7 Przysz\u0142o\u015B\u0107",topic:"Temat",general:"Og\u00F3lnie",love:"Mi\u0142o\u015B\u0107",money:"Finanse",work:"Praca \u00B7 Nauka",draw:"Wylosuj karty",again:"Wylosuj ponownie",upright:"Pozycja prosta",reversed:"Pozycja odwr\u00F3cona",positions:["Przesz\u0142o\u015B\u0107","Tera\u017Aniejszo\u015B\u0107","Przysz\u0142o\u015B\u0107"],privacy:"Pytanie i interpretacja nie s\u0105 wysy\u0142ane na serwer. Po opuszczeniu strony wpisana tre\u015B\u0107 nie zostaje zachowana.",note:"Tarot s\u0142u\u017Cy rozrywce i autorefleksji. Nie przewiduje przysz\u0142o\u015Bci ani nie zast\u0119puje wa\u017Cnych decyzji finansowych, zdrowotnych czy prawnych."} });
+
 Object.assign(tarotText, { tr: { question:"Soru (isteğe bağlı)",questionHint:"Sorunuz bu cihazda kalır; kaydedilmez veya gönderilmez.",yourQuestion:"Sorunuz",spread:"Açılım",one:"Bugün için tek kart",three:"Geçmiş · Şimdi · Gelecek",topic:"Odak",general:"Genel",love:"Aşk",money:"Para",work:"İş · Eğitim",draw:"Kartları çek",again:"Yeniden çek",upright:"Düz",reversed:"Ters",positions:["Geçmiş","Şimdi","Gelecek"],privacy:"Sorunuz ve yorumunuz sunucuya gönderilmez. Bu sayfadan ayrıldığınızda girişiniz saklanmaz.",note:"Tarot, eğlence ve öz değerlendirme içindir. Geleceği tahmin etmez ve önemli finans, sağlık veya hukuk kararlarının yerini tutmaz." } });
 
 const tarotIds = ["fool","magician","priestess","empress","emperor","hierophant","lovers","chariot","strength","hermit","wheel","justice","hanged-man","death","temperance","devil","tower","star","moon","sun","judgement","world"];
@@ -44,6 +46,7 @@ const tarotNames: Record<string,string[]> = {
  hi:["मूर्ख","जादूगर","महायाजिका","महारानी","सम्राट","धर्मगुरु","प्रेमी","रथ","शक्ति","एकांतवासी","भाग्य का चक्र","न्याय","लटका हुआ व्यक्ति","मृत्यु","संयम","शैतान","मीनार","तारा","चंद्रमा","सूर्य","निर्णय","विश्व"]
 };
 tarotNames.ru = ["Шут","Маг","Верховная Жрица","Императрица","Император","Иерофант","Влюблённые","Колесница","Сила","Отшельник","Колесо Фортуны","Справедливость","Повешенный","Смерть","Умеренность","Дьявол","Башня","Звезда","Луна","Солнце","Суд","Мир"];
+tarotNames.pl = ["G\u0142upiec","Mag","Kap\u0142anka","Cesarzowa","Cesarz","Hierofant","Kochankowie","Rydwan","Si\u0142a","Pustelnik","Ko\u0142o Fortuny","Sprawiedliwo\u015B\u0107","Wisielec","\u015Amier\u0107","Umiarkowanie","Diabe\u0142","Wie\u017Ca","Gwiazda","Ksi\u0119\u017Cyc","S\u0142o\u0144ce","S\u0105d Ostateczny","\u015Awiat"] as string[];
 tarotNames.tr = ["Deli","Büyücü","Başrahibe","İmparatoriçe","İmparator","Aziz","Âşıklar","Savaş Arabası","Güç","Ermiş","Kader Çarkı","Adalet","Asılan Adam","Ölüm","Denge","Şeytan","Kule","Yıldız","Ay","Güneş","Mahkeme","Dünya"];
 const dailyText: Record<string,{birth:string;run:string;again:string;date:string;total:string;money:string;love:string;work:string;condition:string;number:string;color:string;line:string;privacy:string;note:string;invalid:string}> = {
   ko:{birth:"생년월일",run:"오늘의 운세 보기",again:"다시 보기",date:"기준 날짜",total:"종합운",money:"금전운",love:"연애운",work:"직장 · 학업운",condition:"컨디션",number:"행운의 숫자",color:"행운의 색",line:"오늘의 한 줄",privacy:"생년월일은 오늘 날짜와 결과를 계산하는 동안 브라우저 안에서만 사용합니다. 입력값은 저장하거나 서버에 보내지 않습니다.",note:"운세는 오락과 자기성찰을 위한 참고 정보입니다. 중요한 재정·건강·법률 결정은 신뢰할 수 있는 전문 정보와 판단을 기준으로 하세요.",invalid:"생년월일을 입력해 주세요."},
@@ -104,7 +107,7 @@ Object.assign(dailyPools, { tr: {
   colors:["Lacivert","Turkuaz","Yeşil","Mercan","Menekşe","Gümüş"],
 } });
 
-export function TarotWorkspace({ locale }: { locale:RouteLocale | "ru" | "tr" }) {
+export function TarotWorkspace({ locale }: { locale:RouteLocale | "ru" | "tr" | "pl" }) {
   const t = tarotText[locale];
   const [question, setQuestion] = useState("");
   const [spread, setSpread] = useState<"one"|"three">("one");
