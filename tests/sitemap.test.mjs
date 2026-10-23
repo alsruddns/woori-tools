@@ -869,6 +869,14 @@ test("Polish random seat localizes the seating grid and capacity error", () => {
   assert.match(toolWorkspaceSource, /tool\.slug === "random-seat"\) return <RandomSeatWorkspace locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
 });
 
+test("Polish duty picker localizes participant and duty assignment controls", () => {
+  assert.equal(targetLocalePublication.pl.publishedToolSlugs.includes("duty-picker"), true);
+  assert.equal(entries.some(({ url }) => url === "https://www.woori.today/pl/tools/duty-picker"), true);
+  assert.match(specialRandomWorkspaceSource, /RussianDutyPickerWorkspace\(\{ locale = "ru" \}: \{ locale\?: "ru" \| "tr" \| "pl" \}\)/);
+  assert.match(specialRandomWorkspaceSource, /locale==="pl"\?\{people:"Uczestnicy",duties:"Obowi\\u0105zki"/);
+  assert.match(toolWorkspaceSource, /tool\.slug === "duty-picker" && phaseLocale === "pl"\) return <RussianDutyPickerWorkspace locale="pl" \/>/);
+});
+
 test("Russian tarot page localizes controls, names, and card interpretations", () => {
   assert.match(toolPageSource, /slug === "tarot-card"/);
   assert.match(fortuneWorkspaceSource, /ru: \{ question: "Вопрос \(необязательно\)"[\s\S]*?note: "Таро предназначено/);

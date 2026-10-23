@@ -24,7 +24,7 @@ import { JapanToolsWorkspace } from "@/components/tool/japan-tools-workspace";
 import { COUNTRY_TOOL_SLUGS } from "@/lib/country-tool-slugs";
 import { renameCopy, selectionCopy, type ToolOptionLocale } from "@/registry/tool-option-copy";
 import { BrowserDeveloperToolsWorkspace } from "@/components/tool/browser-developer-tools-workspace";
-import { DiceWorkspace, LottoWorkspace, RandomNameWorkspace, RandomNumberWorkspace, RandomOrderWorkspace, RandomSeatWorkspace, RandomTeamWorkspace, RandomWheelWorkspace } from "@/components/tool/special-random-workspaces";
+import { DiceWorkspace, LottoWorkspace, RandomNameWorkspace, RandomNumberWorkspace, RandomOrderWorkspace, RandomSeatWorkspace, RandomTeamWorkspace, RandomWheelWorkspace, RussianDutyPickerWorkspace } from "@/components/tool/special-random-workspaces";
 
 const MAX_IMAGE = 30 * 1024 * 1024;
 const MAX_PDF = 50 * 1024 * 1024;
@@ -97,6 +97,7 @@ export function ToolWorkspace({ tool, phaseLocale, optionLocale = phaseLocale, m
   if (tool.slug === "random-team-maker") return <RandomTeamWorkspace locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;
   if (tool.slug === "random-order") return <RandomOrderWorkspace locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;
   if (tool.slug === "random-seat") return <RandomSeatWorkspace locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;
+  if (tool.slug === "duty-picker" && phaseLocale === "pl") return <RussianDutyPickerWorkspace locale="pl" />;
   if (["password-generator","random-string-generator"].includes(tool.slug)) return <RandomStringWorkspace slug={tool.slug} locale={specializedLocale} />;
   if (tool.slug === "ladder-game") return <LadderWorkspace locale={specializedLocale} />;
   if (tool.slug === "markdown-preview") return <MarkdownWorkspace locale={specializedLocale} />;
