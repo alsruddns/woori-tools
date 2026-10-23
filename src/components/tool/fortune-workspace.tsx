@@ -125,7 +125,21 @@ export function TarotWorkspace({ locale }: { locale:RouteLocale | "ru" | "tr" | 
   </section>;
 }
 
-export function DailyFortuneWorkspace({ locale }: { locale:RouteLocale | "ru" | "tr" }) {
+Object.assign(dailyText, { pl: {
+  birth:"Data urodzenia",run:"Sprawdź dzisiejszą wróżbę",again:"Odśwież wróżbę",date:"Data",total:"Ogólny obraz",money:"Finanse",love:"Relacje",work:"Praca · Nauka",condition:"Samopoczucie",number:"Szczęśliwa liczba",color:"Szczęśliwy kolor",line:"Myśl na dziś",
+  privacy:"Data urodzenia jest używana tylko w tej przeglądarce do obliczenia dzisiejszej wróżby. Nie jest zapisywana ani wysyłana na serwer.",note:"Ta wróżba służy rozrywce i autorefleksji. Nie przewiduje przyszłości ani nie zastępuje ważnych decyzji finansowych, zdrowotnych czy prawnych.",invalid:"Podaj prawidłową datę urodzenia, nie późniejszą niż dzisiejsza."
+} });
+Object.assign(dailyPools, { pl: {
+  total:["Uporządkowanie priorytetów może dziś ułatwić działanie.","Niewielki postęp może otworzyć drogę do większego planu.","Elastyczne podejście pomoże dostrzec nieoczekiwaną możliwość.","Spokojne tempo ułatwi doprowadzenie sprawy do końca.","Skup uwagę na tym, co naprawdę ważne.","Krótki przegląd dnia pomoże wyciągnąć przydatne wnioski."],
+  money:["Przed wydatkiem porównaj swoje potrzeby z budżetem.","Mały cel oszczędnościowy może być dobrym początkiem.","Nie spiesz się z zakupem i sprawdź dostępne możliwości.","Przegląd stałych kosztów pomoże lepiej ocenić sytuację.","Poznaj warunki oferty, zanim podejmiesz decyzję.","Zachowaj dziś ostrożność w sprawach finansowych."],
+  love:["Uważne słuchanie może wzmocnić bliskość.","Mów o uczuciach otwarcie i życzliwie.","Drobny, przemyślany gest może wiele znaczyć.","Podczas nieporozumienia poszukajcie wspólnego punktu.","Czas dla siebie może też służyć relacjom.","Zamiast zgadywać, spokojnie porozmawiaj o oczekiwaniach."],
+  work:["Wybierz najważniejsze zadanie i poświęć mu nieprzerwany czas.","Opinia współpracownika może pokazać nową perspektywę.","Podziel duże zadanie na małe, możliwe do ukończenia kroki.","Sprawdź plan dnia i zaktualizuj priorytety.","Zapisz nowy pomysł i wróć do niego później.","Krótka przerwa może pomóc odzyskać koncentrację."],
+  condition:["Pamiętaj o wodzie i regularnych przerwach.","Krótki spacer może pomóc uporządkować myśli.","Dostosuj tempo do swoich możliwości.","Odpoczynek od ekranu może przynieść ulgę oczom.","Kilka spokojnych oddechów może zmniejszyć napięcie.","Zaplanuj chwilę odpoczynku na dalszą część dnia."],
+  line:["Wystarczy dziś zrobić jeden mały krok.","Trzymaj własne tempo i nie porównuj postępów z innymi.","Dobre pytanie może pomóc podjąć jaśniejszą decyzję.","Jeśli trzeba zmienić plan, zrób to spokojnie.","Skup się na sprawach, na które masz teraz wpływ.","Dbanie o siebie także jest częścią postępu."],
+  colors:["Granatowy","Turkusowy","Zielony","Koralowy","Fioletowy","Srebrny"],
+} });
+
+export function DailyFortuneWorkspace({ locale }: { locale:RouteLocale | "ru" | "tr" | "pl" }) {
   const t = dailyText[locale]; const p = dailyPools[locale];
   const [today,setToday]=useState("");
   useEffect(()=>{const d=new Date();const value=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;const id=window.setTimeout(()=>setToday(value),0);return()=>window.clearTimeout(id);},[]);
