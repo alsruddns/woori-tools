@@ -5,6 +5,7 @@ import { targetLotterySlugs, getTargetLotteryTranslation } from "../src/registry
 import { targetRussianToolSlugs, getTargetRussianToolTranslation } from "../src/registry/target-ru-translations";
 import { targetTurkishToolSlugs, getTargetTurkishToolTranslation } from "../src/registry/target-tr-translations";
 import { targetPolishToolSlugs, getTargetPolishToolTranslation } from "../src/registry/target-pl-translations";
+import { targetFilipinoToolSlugs, getTargetFilipinoToolTranslation } from "../src/registry/target-fil-translations";
 import { targetLocalePublication } from "../src/registry/target-locale-publication";
 
 const slugs = tools.filter((tool) => tool.isPublic).map((tool) => tool.slug);
@@ -14,7 +15,8 @@ const completeByLocale = Object.fromEntries(plannedLocaleConfig.map(({ routeLoca
     const russian = routeLocale === "ru" ? getTargetRussianToolTranslation(slug) : undefined;
     const turkish = routeLocale === "tr" ? getTargetTurkishToolTranslation(slug) : undefined;
     const polish = routeLocale === "pl" ? getTargetPolishToolTranslation(slug) : undefined;
-    return Boolean(lottery || russian || turkish || polish);
+    const filipino = routeLocale === "fil" ? getTargetFilipinoToolTranslation(slug) : undefined;
+    return Boolean(lottery || russian || turkish || polish || filipino);
   });
   return [routeLocale, completed];
 }));
@@ -49,6 +51,7 @@ const lines = [
   `- Additional Russian bundle slugs: ${targetRussianToolSlugs.join(", ")}`,
   `- Additional Turkish bundle slugs: ${targetTurkishToolSlugs.join(", ")}`,
   `- Additional Polish bundle slugs: ${targetPolishToolSlugs.join(", ")}`,
+  `- Additional Filipino bundle slugs: ${targetFilipinoToolSlugs.join(", ")}`,
   `- Russian completed tool bundles: ${currentComplete.length}/${slugs.length}`,
   `- Russian tools with UI verified: ${targetLocalePublication.ru.uiVerifiedToolSlugs.join(", ") || "none"}`,
   `- Russian tools with SEO verified: ${targetLocalePublication.ru.seoVerifiedToolSlugs.join(", ") || "none"}`,
@@ -65,11 +68,11 @@ const lines = [
   "",
   `- Russian and Turkish authoring, UI, and SEO verification is complete for all ${targetLocalePublication.ru.publishedToolSlugs.length} and ${targetLocalePublication.tr.publishedToolSlugs.length} tools, respectively.`,
   `- Polish translation data is complete for ${completeByLocale.pl.length}/${slugs.length}; ${targetLocalePublication.pl.publishedToolSlugs.length} verified tool pages are published, with ${slugs.length - targetLocalePublication.pl.publishedToolSlugs.length} otherwise unverified pages withheld.`,
-  `- Polish UI verification remains active at ${nextPolishUi}; ${slugs.length - targetLocalePublication.pl.uiVerifiedToolSlugs.length} Polish tool workspaces remain. Continue with Filipino (fil) at ${slugs.find((slug) => !completeByLocale.fil.includes(slug)) ?? "none"} after Polish UI/SEO verification reaches all ${slugs.length} tools, then proceed in order: bn, uk, ms, sv, cs, ro, el.`,
+  `- Polish UI/SEO verification is complete for ${targetLocalePublication.pl.publishedToolSlugs.length}/${slugs.length} tools. Filipino (fil) has authored data for ${completeByLocale.fil.length}/${slugs.length}, with ${targetLocalePublication.fil.publishedToolSlugs.length} pages UI-verified and public; continue at ${slugs.find((slug) => !completeByLocale.fil.includes(slug)) ?? "none"}, then proceed in order: bn, uk, ms, sv, cs, ro, el.`,
   "",
   "## Last verified checkpoint",
   "",
-  "- Validation on 2026-10-24: TypeScript passed; lint passed; all 179 tests passed; focused sitemap and IndexNow tests passed; production build passed.",
+  "- Validation on 2026-10-24: TypeScript passed; lint passed; all 180 tests passed; focused sitemap and IndexNow tests passed; production build passed.",
   `- Production build prerendered ${3_194 + targetLocalePublication.pl.publishedToolSlugs.length} static pages and ${2_992 + targetLocalePublication.pl.publishedToolSlugs.length} tool-locale URLs: 2,640 existing-locale pages, 176 Russian, 176 Turkish, and ${targetLocalePublication.pl.publishedToolSlugs.length} Polish.`,
   `- Polish production HTML for germany-iban-validator, german-number-format-converter, german-date-format-converter, spain-dni-validator, spain-nie-validator, spanish-number-format-converter, spanish-date-format-converter, france-phone-number-formatter, french-number-format-converter, french-date-format-converter, netherlands-iban-validator, dutch-number-format-converter, dutch-date-format-converter, brazil-cpf-validator, brazil-cnpj-validator, brazil-phone-number-formatter, brazil-cep-formatter, vietnam-phone-number-formatter, vietnam-number-format-converter, italy-fiscal-code-format-validator, italy-vat-number-validator, italy-number-format-converter, italian-date-format-converter, australia-postcode-formatter, english-date-format-converter, us-phone-number-formatter, us-zip-code-formatter, canada-postal-code-formatter, uk-postcode-formatter, indian-number-format-converter, lakh-crore-converter, pan-format-validator, gstin-format-validator, india-phone-number-formatter, simplified-traditional-chinese-converter, chinese-number-kanji-converter, rmb-uppercase-converter, chinese-zodiac-calculator, chinese-sexagenary-cycle-calculator, chinese-phone-number-formatter, taiwan-phone-number-formatter, jwt-decoder, url-query-parameter-parser, user-agent-parser, ip-cidr-calculator, base32-encoder-decoder, ulid-generator, uuid-v7-generator, hash-compare, regex-replace, html-entity-encoder-decoder, chmod-calculator, json-path-tester, csv-tsv-converter, url-slug-generator, unicode-code-point-checker, pdf-page-size-checker, wareki-converter, hiragana-katakana-converter, fullwidth-halfwidth-converter, japanese-romaji-converter, japanese-number-kanji-converter, yakudoshi-calculator, japanese-zodiac-calculator, numbers3-number-generator, numbers4-number-generator, bingo5-number-generator, timestamp-converter, jpg-to-png, png-to-jpg, webp-to-jpg, webp-to-png, jpg-to-webp, png-to-webp, heic-to-jpg, markdown-preview, sql-formatter, html-formatter, css-formatter, javascript-formatter, regex-tester, shuffle-lines, barcode-generator, wifi-qr, contact-qr, phone-qr, email-qr, password-generator, random-string-generator, world-clock, pomodoro-timer, timer, stopwatch, coin-flip, dice-roller, duty-picker, random-seat, random-order, random-team-maker, random-wheel, random-name-picker, draw-lots, random-number, saju, daily-fortune, tarot-card, lotto-number-generator, json-formatter, instagram-grid-split, and image-collage has localized page/workspace copy, a unique canonical, Polish hreflang, and x-default. Exactly ${targetLocalePublication.pl.publishedToolSlugs.length} Polish tool HTML files are generated; sitemap and route tests confirm only these pages enter the sitemap.`,
   "- Current branch is `develop`.",

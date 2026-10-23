@@ -15,6 +15,7 @@ async function importTypeScript(path, replacements = []) {
 
 const { locales, publishedTargetLocales, localeConfig, publishedTargetHreflangs } = await importTypeScript("../src/i18n/routing.ts");
 const { getTargetTurkishToolTranslation, targetTurkishToolSlugs } = await importTypeScript("../src/registry/target-tr-translations.ts");
+const { getTargetFilipinoToolTranslation, targetFilipinoToolSlugs } = await importTypeScript("../src/registry/target-fil-translations.ts");
 const { targetLocalePublication } = await importTypeScript("../src/registry/target-locale-publication.ts", [
   ['import { targetPolishToolSlugs } from "./target-pl-translations";', "const targetPolishToolSlugs = [];"],
 ]);
@@ -1198,4 +1199,21 @@ test("Polish US, Canada, and UK phone and postal tools are localized and publish
   assert.ok(polishNorthAmericaWorkspaceSource.includes("us-phone-number-formatter"));
   assert.ok(polishNorthAmericaWorkspaceSource.includes("canada-postal-code-formatter"));
   assert.ok(polishNorthAmericaWorkspaceSource.includes("serwer."));
+});
+
+test("Filipino authored tool translations include complete editorial and SEO fields", () => {
+  assert.equal(targetFilipinoToolSlugs.length, 40);
+  assert.ok(targetFilipinoToolSlugs.includes("tarot-card"));
+  assert.ok(targetFilipinoToolSlugs.includes("text-to-file"));
+  for (const slug of targetFilipinoToolSlugs) {
+    const translation = getTargetFilipinoToolTranslation(slug);
+    assert.ok(translation);
+    assert.ok(translation.title.length > 0);
+    assert.ok(translation.description.length > 30);
+    assert.ok(translation.seoTitle.length > 0);
+    assert.ok(translation.seoDescription.length > 30);
+    assert.equal(translation.steps.length, 3);
+    assert.ok(translation.faq.example.length > 0);
+    assert.ok(translation.faq.caution.length > 0);
+  }
 });
