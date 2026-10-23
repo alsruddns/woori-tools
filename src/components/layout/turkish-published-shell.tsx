@@ -21,6 +21,10 @@ export function TurkishPublishedShell({ children }: { children: ReactNode }) {
       <footer className="border-t border-slate-200 bg-white">
         <div className="mx-auto max-w-6xl px-4 py-6 text-sm text-slate-600 sm:px-6">
           <p>{messages.filePrivacy}</p>
+          <nav aria-label="Yasal bilgiler" className="mt-3 flex gap-4">
+            <Link href="/tr/privacy" className="underline underline-offset-2">Gizlilik Politikası</Link>
+            <Link href="/tr/terms" className="underline underline-offset-2">Kullanım Koşulları</Link>
+          </nav>
           <p className="mt-2">© {new Date().getFullYear()} Woori Tools</p>
         </div>
       </footer>
