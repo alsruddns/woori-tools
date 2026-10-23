@@ -1,10 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, type MouseEvent } from "react";
+import { copyText } from "@/lib/copy-to-clipboard";
 import { processImage } from "@/lib/image/process-image";
 
-type ImageToolSlug = "social-image-resize" | "add-text-to-image" | "jpg-to-png" | "png-to-jpg" | "webp-to-jpg" | "webp-to-png" | "jpg-to-webp" | "png-to-webp" | "heic-to-jpg" | "image-compress" | "image-resize" | "image-crop" | "image-rotate" | "image-flip" | "image-grayscale" | "image-brightness" | "image-contrast" | "image-blur" | "image-pixelate" | "remove-image-metadata" | "image-info" | "favicon-generator";
+type ImageToolSlug = "social-image-resize" | "add-text-to-image" | "jpg-to-png" | "png-to-jpg" | "webp-to-jpg" | "webp-to-png" | "jpg-to-webp" | "png-to-webp" | "heic-to-jpg" | "image-compress" | "image-resize" | "image-crop" | "image-rotate" | "image-flip" | "image-grayscale" | "image-brightness" | "image-contrast" | "image-blur" | "image-pixelate" | "remove-image-metadata" | "image-info" | "favicon-generator" | "image-color-picker";
 
 const labels: Record<ImageToolSlug, { title: string; file: string; drop: string; text: string; action: string; busy: string; reset: string; download: string; empty: string; invalid: string; tooLarge: string; failed: string; privacy: string }> = {
   "social-image-resize": {
@@ -33,6 +34,7 @@ const labels: Record<ImageToolSlug, { title: string; file: string; drop: string;
   "remove-image-metadata": { title: "Görsel metaverilerini kaldır", file: "Metaverileri temizlenecek görseli seçin", drop: "Görseli buraya sürükleyin veya dosya seçin", text: "", action: "Metaverileri kaldır", busy: "Görsel işleniyor…", reset: "Sıfırla", download: "Temizlenmiş görseli indir", empty: "Önce bir görsel seçin.", invalid: "Geçerli bir görsel dosyası seçin.", tooLarge: "Görsel 30 MB sınırını aşıyor.", failed: "Görsel metaverileri kaldırılamadı. Yeniden deneyin.", privacy: "Görseliniz tarayıcınızda işlenir ve sunucuya gönderilmez." },
   "image-info": { title: "Görsel bilgisi", file: "İncelenecek görseli seçin", drop: "Görseli buraya sürükleyin veya dosya seçin", text: "", action: "Görsel bilgisini göster", busy: "Bilgiler okunuyor…", reset: "Sıfırla", download: "", empty: "Önce bir görsel seçin.", invalid: "Geçerli bir görsel dosyası seçin.", tooLarge: "Görsel 30 MB sınırını aşıyor.", failed: "Görsel bilgisi okunamadı. Yeniden deneyin.", privacy: "Görsel bilgisi tarayıcınızda okunur ve sunucuya gönderilmez." },
   "favicon-generator": { title: "Favicon oluşturucu", file: "Favicon'a dönüştürülecek görseli seçin", drop: "Görseli buraya sürükleyin veya dosya seçin", text: "", action: "Favicon oluştur", busy: "Favicon hazırlanıyor…", reset: "Sıfırla", download: "PNG favicon dosyasını indir", empty: "Önce bir görsel seçin.", invalid: "Geçerli bir görsel dosyası seçin.", tooLarge: "Görsel 30 MB sınırını aşıyor.", failed: "Favicon oluşturulamadı. Başka bir dosya deneyin.", privacy: "Görseliniz tarayıcınızda işlenir ve sunucuya gönderilmez." },
+  "image-color-picker": { title: "Görselden renk seçici", file: "Rengi örneklenecek görseli seçin", drop: "Görseli buraya sürükleyin veya dosya seçin", text: "Rengi almak için görselin üzerine tıklayın", action: "Görsel yükleniyor…", busy: "Görsel yükleniyor…", reset: "Sıfırla", download: "", empty: "Önce bir görsel seçin.", invalid: "Geçerli bir görsel dosyası seçin.", tooLarge: "Görsel 30 MB sınırını aşıyor.", failed: "Görsel açılamadı. Başka bir dosya deneyin.", privacy: "Görseliniz tarayıcınızda kalır ve sunucuya gönderilmez." },
 };
 
 const presets = [
@@ -47,6 +49,7 @@ const presets = [
 export function TurkishImageToolsWorkspace({ slug }: { slug: ImageToolSlug }) {
   const copy = labels[slug];
   const defaultOption = slug === "image-flip" ? "horizontal" : slug === "image-crop" ? "1" : "90";
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const [file, setFile] = useState<File>();
   const [caption, setCaption] = useState("");
   const [preset, setPreset] = useState("square");
@@ -56,6 +59,7 @@ export function TurkishImageToolsWorkspace({ slug }: { slug: ImageToolSlug }) {
   const [height, setHeight] = useState(600);
   const [keepRatio, setKeepRatio] = useState(true);
   const [amount, setAmount] = useState(slug === "image-pixelate" ? 25 : 100);
+  const [sampledColor, setSampledColor] = useState<{ hex: string; rgb: string }>();
   const [outputUrl, setOutputUrl] = useState("");
   const [outputBlob, setOutputBlob] = useState<Blob>();
   const [result, setResult] = useState("");
@@ -64,8 +68,28 @@ export function TurkishImageToolsWorkspace({ slug }: { slug: ImageToolSlug }) {
 
   useEffect(() => () => { if (outputUrl) URL.revokeObjectURL(outputUrl); }, [outputUrl]);
 
+  useEffect(() => {
+    if (slug !== "image-color-picker" || !file) return;
+    let active = true;
+    void createImageBitmap(file).then((bitmap) => {
+      const canvas = canvasRef.current;
+      if (!active || !canvas) { bitmap.close(); return; }
+      const scale = Math.min(1, 1200 / Math.max(bitmap.width, bitmap.height));
+      canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+      canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+      try {
+        const context = canvas.getContext("2d");
+        if (!context) throw new Error("Canvas unavailable");
+        context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+      } finally { bitmap.close(); }
+      setSampledColor(undefined);
+    }).catch(() => { if (active) setError(copy.failed); });
+    return () => { active = false; };
+  }, [copy.failed, file, slug]);
+
   function chooseFile(next?: File) {
     setError(""); setOutputUrl(""); setOutputBlob(undefined); setResult("");
+    setSampledColor(undefined);
     if (!next) { setFile(undefined); return; }
     if (next.size > 30 * 1024 * 1024) { setFile(undefined); setError(copy.tooLarge); return; }
     if (!next.type.startsWith("image/") && !/\.(heic|heif)$/i.test(next.name)) { setFile(undefined); setError(copy.invalid); return; }
@@ -94,7 +118,19 @@ export function TurkishImageToolsWorkspace({ slug }: { slug: ImageToolSlug }) {
     } finally { setBusy(false); }
   }
 
-  function reset() { setFile(undefined); setCaption(""); setPreset("square"); setQuality(0.82); setOption(defaultOption); setWidth(800); setHeight(600); setKeepRatio(true); setAmount(slug === "image-pixelate" ? 25 : 100); setOutputUrl(""); setOutputBlob(undefined); setResult(""); setError(""); }
+  function sampleColor(event: MouseEvent<HTMLCanvasElement>) {
+    const canvas = canvasRef.current;
+    const context = canvas?.getContext("2d");
+    if (!canvas || !context) return;
+    const bounds = canvas.getBoundingClientRect();
+    const x = Math.min(canvas.width - 1, Math.max(0, Math.floor((event.clientX - bounds.left) * canvas.width / bounds.width)));
+    const y = Math.min(canvas.height - 1, Math.max(0, Math.floor((event.clientY - bounds.top) * canvas.height / bounds.height)));
+    const [red, green, blue] = context.getImageData(x, y, 1, 1).data;
+    const hex = `#${[red, green, blue].map((channel) => channel.toString(16).padStart(2, "0")).join("").toUpperCase()}`;
+    setSampledColor({ hex, rgb: `rgb(${red}, ${green}, ${blue})` });
+  }
+
+  function reset() { setFile(undefined); setSampledColor(undefined); setCaption(""); setPreset("square"); setQuality(0.82); setOption(defaultOption); setWidth(800); setHeight(600); setKeepRatio(true); setAmount(slug === "image-pixelate" ? 25 : 100); setOutputUrl(""); setOutputBlob(undefined); setResult(""); setError(""); }
 
   const extension = slug === "favicon-generator" || slug.includes("png") ? "png" : slug.includes("webp") ? "webp" : "jpg";
 
@@ -102,6 +138,7 @@ export function TurkishImageToolsWorkspace({ slug }: { slug: ImageToolSlug }) {
     <label htmlFor={`tr-${slug}-file`} className="block text-sm font-medium text-slate-800">{copy.file}<input id={`tr-${slug}-file`} type="file" accept="image/*,.heic,.heif" onChange={(event) => chooseFile(event.currentTarget.files?.[0])} className="mt-2 block min-h-12 w-full rounded-xl border border-slate-300 p-3 text-sm" /></label>
     <div onDragOver={(event) => event.preventDefault()} onDrop={(event) => { event.preventDefault(); chooseFile(event.dataTransfer.files[0]); }} className="mt-4 rounded-xl border border-dashed border-slate-300 p-5 text-center text-sm text-slate-600">{copy.drop} <span className="block pt-1 text-xs">En fazla 30 MB</span></div>
     {file && <p className="mt-3 break-all text-sm text-slate-600">Seçilen dosya: {file.name}</p>}
+    {slug === "image-color-picker" && file && <div className="mt-4"><p className="mb-2 text-sm text-slate-700">{copy.text}</p><canvas ref={canvasRef} onClick={sampleColor} aria-label={copy.title} className="max-h-[32rem] max-w-full cursor-crosshair rounded-xl border border-slate-200" />{sampledColor && <div className="mt-3 flex flex-wrap items-center gap-3"><span aria-hidden="true" className="h-10 w-10 rounded-lg border border-slate-300" style={{ backgroundColor: sampledColor.hex }} /><code className="rounded bg-slate-100 px-3 py-2">{sampledColor.hex} · {sampledColor.rgb}</code><button type="button" onClick={() => void copyText(sampledColor.hex)} className="min-h-10 rounded-xl border border-slate-300 px-4 text-sm font-medium">Rengi kopyala</button></div>}<button type="button" onClick={reset} className="mt-3 min-h-11 rounded-xl border border-slate-300 px-4 text-sm font-medium">{copy.reset}</button></div>}
     {slug === "social-image-resize" && <label htmlFor="tr-social-preset" className="mt-4 block text-sm font-medium">{copy.text}<select id="tr-social-preset" value={preset} onChange={(event) => setPreset(event.target.value)} className="mt-2 block min-h-12 w-full rounded-xl border border-slate-300 p-3">{presets.map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>}
     {slug === "add-text-to-image" && <label htmlFor="tr-image-caption" className="mt-4 block text-sm font-medium">{copy.text}<input id="tr-image-caption" value={caption} maxLength={160} onChange={(event) => setCaption(event.target.value)} className="mt-2 block min-h-12 w-full rounded-xl border border-slate-300 p-3" /></label>}
     {slug === "image-compress" && <label htmlFor="tr-image-quality" className="mt-4 block text-sm font-medium">{copy.text} · {Math.round(quality * 100)}%<input id="tr-image-quality" type="range" min="0.3" max="0.95" step="0.05" value={quality} onChange={(event) => setQuality(Number(event.target.value))} className="mt-2 block w-full sm:max-w-md" /></label>}
@@ -110,7 +147,7 @@ export function TurkishImageToolsWorkspace({ slug }: { slug: ImageToolSlug }) {
     {slug === "image-rotate" && <label htmlFor="tr-rotate-angle" className="mt-4 block text-sm font-medium">{copy.text}<select id="tr-rotate-angle" value={option} onChange={(event) => setOption(event.target.value)} className="mt-2 block min-h-12 w-full rounded-xl border border-slate-300 p-3 sm:max-w-sm"><option value="90">Saat yönünde 90°</option><option value="180">180°</option><option value="270">Saat yönünün tersine 90°</option></select></label>}
     {slug === "image-flip" && <label htmlFor="tr-flip-axis" className="mt-4 block text-sm font-medium">{copy.text}<select id="tr-flip-axis" value={option} onChange={(event) => setOption(event.target.value)} className="mt-2 block min-h-12 w-full rounded-xl border border-slate-300 p-3 sm:max-w-sm"><option value="horizontal">Yatay</option><option value="vertical">Dikey</option></select></label>}
     {["image-brightness", "image-contrast", "image-blur", "image-pixelate"].includes(slug) && <label htmlFor="tr-effect-amount" className="mt-4 block text-sm font-medium">{copy.text} · {slug === "image-blur" ? `${amount}%` : slug === "image-pixelate" ? amount : `${amount}%`}<input id="tr-effect-amount" type="range" min={slug === "image-pixelate" ? 4 : 0} max={slug === "image-pixelate" ? 80 : slug === "image-blur" ? 50 : 200} step="1" value={amount} onChange={(event) => setAmount(Number(event.target.value))} className="mt-2 block w-full sm:max-w-md" /></label>}
-    <div className="mt-5 flex flex-wrap gap-3"><button type="button" onClick={() => void run()} disabled={busy} className="min-h-12 rounded-xl bg-indigo-600 px-6 font-semibold text-white disabled:opacity-60">{busy ? copy.busy : copy.action}</button><button type="button" onClick={reset} className="min-h-12 rounded-xl border border-slate-300 px-5 font-medium">{copy.reset}</button>{outputUrl && <a href={outputUrl} download={`${file?.name.replace(/\.[^.]+$/, "") || "gorsel"}-${slug}.${extension}`} className="inline-flex min-h-12 items-center rounded-xl bg-emerald-700 px-5 font-semibold text-white">{copy.download}</a>}</div>
+    {slug !== "image-color-picker" && <div className="mt-5 flex flex-wrap gap-3"><button type="button" onClick={() => void run()} disabled={busy} className="min-h-12 rounded-xl bg-indigo-600 px-6 font-semibold text-white disabled:opacity-60">{busy ? copy.busy : copy.action}</button><button type="button" onClick={reset} className="min-h-12 rounded-xl border border-slate-300 px-5 font-medium">{copy.reset}</button>{outputUrl && <a href={outputUrl} download={`${file?.name.replace(/\.[^.]+$/, "") || "gorsel"}-${slug}.${extension}`} className="inline-flex min-h-12 items-center rounded-xl bg-emerald-700 px-5 font-semibold text-white">{copy.download}</a>}</div>}
     {error && <p role="alert" className="mt-4 rounded-xl bg-rose-50 p-4 text-sm text-rose-800">{error}</p>}
     {result && <div className="mt-5 space-y-3"><h2 className="font-semibold">{copy.title}</h2>{outputUrl ? <div className="relative aspect-video w-full max-w-2xl overflow-hidden rounded-xl border border-slate-200"><Image src={outputUrl} alt={`${copy.title} sonucu`} fill unoptimized sizes="(max-width: 768px) 100vw, 672px" className="object-contain" /></div> : <pre role="status" aria-live="polite" className="whitespace-pre-wrap rounded-xl bg-slate-50 p-4 text-sm leading-6 text-slate-700">{result}</pre>}<p aria-live="polite" className="text-sm text-slate-600">{result}</p></div>}
     {outputBlob && <p className="sr-only" aria-live="polite">{result}</p>}
