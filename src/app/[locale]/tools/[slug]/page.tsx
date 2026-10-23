@@ -319,7 +319,7 @@ function TurkishPublishedToolPage({ slug }: { slug: string }) {
     : ["text-compare", "csv-to-json", "json-to-csv", "base64", "url-encode-decode", "uuid-generator", "timestamp-converter"].includes(slug) ? <TurkishDataToolsWorkspace slug={slug as TurkishDataSlug} />
     : ["wareki-converter", "hiragana-katakana-converter", "fullwidth-halfwidth-converter", "japanese-romaji-converter", "japanese-number-kanji-converter", "yakudoshi-calculator", "japanese-zodiac-calculator", "numbers3-number-generator", "numbers4-number-generator", "bingo5-number-generator"].includes(slug) ? <TurkishJapaneseToolsWorkspace slug={slug as TurkishJapaneseSlug} />
     : ["us-phone-number-formatter", "us-zip-code-formatter", "canada-postal-code-formatter", "uk-postcode-formatter"].includes(slug) ? <TurkishCountryFormatWorkspace slug={slug as TurkishCountryFormatSlug} />
-    : ["jwt-decoder", "url-query-parameter-parser", "user-agent-parser", "ip-cidr-calculator", "hash-compare", "regex-replace", "html-entity-encoder-decoder", "chmod-calculator", "json-path-tester", "csv-tsv-converter", "url-slug-generator", "unicode-code-point-checker"].includes(slug) ? <TurkishDeveloperToolsWorkspace slug={slug as TurkishDeveloperSlug} />
+    : ["jwt-decoder", "url-query-parameter-parser", "user-agent-parser", "ip-cidr-calculator", "hash-compare", "regex-replace", "html-entity-encoder-decoder", "chmod-calculator", "json-path-tester", "csv-tsv-converter", "url-slug-generator", "unicode-code-point-checker", "base32-encoder-decoder", "ulid-generator", "uuid-v7-generator"].includes(slug) ? <TurkishDeveloperToolsWorkspace slug={slug as TurkishDeveloperSlug} />
     : slug === "lorem-ipsum" ? <TurkishLoremWorkspace title={tool.title} />
     : null;
   if (!workspace) notFound();
