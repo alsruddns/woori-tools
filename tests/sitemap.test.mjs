@@ -822,6 +822,16 @@ test("Polish random number generator uses localized range, count, options, and v
   assert.match(toolWorkspaceSource, /tool\.slug === "random-number"\) return <RandomNumberWorkspace locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
 });
 
+test("Polish name picker and draw lots share localized participant controls and winner actions", () => {
+  for (const slug of ["random-name-picker", "draw-lots"]) {
+    assert.equal(targetLocalePublication.pl.publishedToolSlugs.includes(slug), true);
+    assert.equal(entries.some(({ url }) => url === `https://www.woori.today/pl/tools/${slug}`), true);
+  }
+  assert.match(specialRandomWorkspaceSource, /RandomNameWorkspace\(\{ locale, slug: _slug \}: \{ locale:RouteLocale \| "ru" \| "tr" \| "pl"/);
+  assert.match(specialRandomWorkspaceSource, /locale === "ru" \|\| locale === "pl" \? t\.drawWinners : t\.draw/);
+  assert.match(toolWorkspaceSource, /slug=\{tool\.slug\} locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
+});
+
 test("Russian tarot page localizes controls, names, and card interpretations", () => {
   assert.match(toolPageSource, /slug === "tarot-card"/);
   assert.match(fortuneWorkspaceSource, /ru: \{ question: "Вопрос \(необязательно\)"[\s\S]*?note: "Таро предназначено/);
