@@ -90,6 +90,7 @@ const polishChinaWorkspaceSource = await readFile(new URL("../src/components/too
 const polishIndiaWorkspaceSource = await readFile(new URL("../src/components/tool/polish-india-tools-workspace.tsx", import.meta.url), "utf8");
 const polishGermanyWorkspaceSource = await readFile(new URL("../src/components/tool/polish-germany-tools-workspace.tsx", import.meta.url), "utf8");
 const polishWesternEuropeWorkspaceSource = await readFile(new URL("../src/components/tool/polish-western-europe-tools-workspace.tsx", import.meta.url), "utf8");
+const polishBrazilWorkspaceSource = await readFile(new URL("../src/components/tool/polish-brazil-tools-workspace.tsx", import.meta.url), "utf8");
 const specialRandomWorkspaceSource = await readFile(new URL("../src/components/tool/special-random-workspaces.tsx", import.meta.url), "utf8");
 const toolWorkspaceSource = await readFile(new URL("../src/components/tool/tool-workspace.tsx", import.meta.url), "utf8");
 const instagramGridWorkspaceSource = await readFile(new URL("../src/components/tool/russian-instagram-grid-workspace.tsx", import.meta.url), "utf8");
@@ -1148,4 +1149,20 @@ test("Polish Spain, France, and Netherlands country tools are localized and publ
   assert.ok(polishWesternEuropeWorkspaceSource.includes("rejestracji urz"));
   assert.ok(polishWesternEuropeWorkspaceSource.includes("reversibleDates"));
   assert.ok(polishWesternEuropeWorkspaceSource.includes("Warto"));
+});
+
+
+test("Polish Brazilian CPF, CNPJ, phone, and CEP tools are localized and published", () => {
+  const slugs = ["brazil-cpf-validator", "brazil-cnpj-validator", "brazil-phone-number-formatter", "brazil-cep-formatter"];
+  for (const slug of slugs) {
+    assert.equal(targetLocalePublication.pl.uiVerifiedToolSlugs.includes(slug), true);
+    assert.equal(targetLocalePublication.pl.seoVerifiedToolSlugs.includes(slug), true);
+    assert.equal(targetLocalePublication.pl.publishedToolSlugs.includes(slug), true);
+    assert.equal(entries.some(({ url }) => url === `https://www.woori.today/pl/tools/${slug}`), true);
+  }
+  assert.ok(toolWorkspaceSource.includes("isPolishBrazilSlug"));
+  assert.ok(polishBrazilWorkspaceSource.includes("brazil-cpf-validator"));
+  assert.ok(polishBrazilWorkspaceSource.includes("brazil-cnpj-validator"));
+  assert.ok(polishBrazilWorkspaceSource.includes("cyfry kontrolne"));
+  assert.ok(polishBrazilWorkspaceSource.includes("Warto"));
 });

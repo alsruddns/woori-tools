@@ -25,6 +25,8 @@ import { PolishGermanyToolsWorkspace } from "@/components/tool/polish-germany-to
 import type { PolishGermanySlug } from "@/components/tool/polish-germany-tools-workspace";
 import { PolishWesternEuropeToolsWorkspace } from "@/components/tool/polish-western-europe-tools-workspace";
 import type { PolishWesternEuropeSlug } from "@/components/tool/polish-western-europe-tools-workspace";
+import { PolishBrazilToolsWorkspace } from "@/components/tool/polish-brazil-tools-workspace";
+import type { PolishBrazilSlug } from "@/components/tool/polish-brazil-tools-workspace";
 import { RandomStringWorkspace } from "@/components/tool/random-string-workspace";
 import { LadderWorkspace } from "@/components/tool/ladder-workspace";
 import { DailyFortuneWorkspace, TarotWorkspace } from "@/components/tool/fortune-workspace";
@@ -117,6 +119,7 @@ export function ToolWorkspace({ tool, phaseLocale, optionLocale = phaseLocale, m
   if (phaseLocale === "pl" && isPolishIndiaSlug(tool.slug)) return <PolishIndiaToolsWorkspace slug={tool.slug} />;
   if (phaseLocale === "pl" && isPolishGermanySlug(tool.slug)) return <PolishGermanyToolsWorkspace slug={tool.slug} />;
   if (phaseLocale === "pl" && isPolishWesternEuropeSlug(tool.slug)) return <PolishWesternEuropeToolsWorkspace slug={tool.slug} />;
+  if (phaseLocale === "pl" && isPolishBrazilSlug(tool.slug)) return <PolishBrazilToolsWorkspace slug={tool.slug} />;
   if (["wifi-qr","contact-qr","phone-qr","email-qr"].includes(tool.slug)) return <QrWorkspace slug={tool.slug} locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;
   if (tool.slug === "random-wheel") return <RandomWheelWorkspace locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;
   if (tool.slug === "timer" || tool.slug === "pomodoro-timer") return <CountdownWorkspace slug={tool.slug} locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;
@@ -246,6 +249,10 @@ function isPolishGermanySlug(slug: string): slug is PolishGermanySlug {
 
 function isPolishWesternEuropeSlug(slug: string): slug is PolishWesternEuropeSlug {
   return slug === "spain-dni-validator" || slug === "spain-nie-validator" || slug === "spanish-number-format-converter" || slug === "spanish-date-format-converter" || slug === "france-phone-number-formatter" || slug === "french-number-format-converter" || slug === "french-date-format-converter" || slug === "netherlands-iban-validator" || slug === "dutch-number-format-converter" || slug === "dutch-date-format-converter";
+}
+
+function isPolishBrazilSlug(slug: string): slug is PolishBrazilSlug {
+  return slug === "brazil-cpf-validator" || slug === "brazil-cnpj-validator" || slug === "brazil-phone-number-formatter" || slug === "brazil-cep-formatter";
 }
 const polishOptionLabels:Record<string,string>={square:"Instagram — kwadrat",portraitPreset:"Instagram — pionowo",story:"Relacja na Instagramie",youtube:"Miniatura YouTube",xpost:"Post na X",facebook:"Post na Facebooku",grid3:"3 kafelki (3 × 1)",grid6:"6 kafelków (3 × 2)",grid9:"9 kafelków (3 × 3)",collage4:"4 zdjęcia (2 × 2)",collage6:"6 zdjęć (3 × 2)"};
 function localeLabel(locale:ToolOptionLocale,key:string){if(locale==="pl")return polishOptionLabels[key]??key;const labels:Record<string,Record<string,string>>={ko:{noRepeat:"중복 없이",repeat:"중복 허용",digits:"숫자",latin:"영문",hangul:"한글",special:"특수문자",custom:"사용자 지정",square:"Instagram 정사각형",portraitPreset:"Instagram 세로",story:"Instagram 스토리",youtube:"YouTube 썸네일",xpost:"X 게시물",facebook:"Facebook 게시물",grid3:"3개 (3 × 1)",grid6:"6개 (3 × 2)",grid9:"9개 (3 × 3)",collage4:"4장 (2 × 2)",collage6:"6장 (3 × 2)",renameRules:"줄마다 접두사, 접미사, 찾을 글자, 바꿀 글자를 입력",renameHint:"생략한 줄은 무시합니다. 변경본은 ZIP으로 받습니다."},en:{noRepeat:"Without repeats",repeat:"Allow repeats",digits:"Digits",latin:"Latin letters",hangul:"Korean characters",special:"Special characters",custom:"Custom string",square:"Instagram square",portraitPreset:"Instagram portrait",story:"Instagram story",youtube:"YouTube thumbnail",xpost:"X post",facebook:"Facebook post",grid3:"3 tiles (3 × 1)",grid6:"6 tiles (3 × 2)",grid9:"9 tiles (3 × 3)",collage4:"4 photos (2 × 2)",collage6:"6 photos (3 × 2)",renameRules:"Enter prefix, suffix, find, and replace on separate lines",renameHint:"Leave a line empty to skip that rule. Renamed copies are downloaded as a ZIP."},ja:{noRepeat:"重複なし",repeat:"重複あり",digits:"数字",latin:"英字",hangul:"ハングル",special:"記号",custom:"指定文字列",square:"Instagram正方形",portraitPreset:"Instagram縦長",story:"Instagramストーリー",youtube:"YouTubeサムネイル",xpost:"X投稿",facebook:"Facebook投稿",grid3:"3枚 (3 × 1)",grid6:"6枚 (3 × 2)",grid9:"9枚 (3 × 3)",collage4:"4枚 (2 × 2)",collage6:"6枚 (3 × 2)",renameRules:"接頭辞、接尾辞、検索文字、置換文字を各行に入力",renameHint:"空欄の規則は無視します。変更後のファイルはZIPで保存します。"},zh:{noRepeat:"不重复",repeat:"允许重复",digits:"数字",latin:"英文字母",hangul:"韩文",special:"特殊字符",custom:"自定义字符",square:"Instagram方形",portraitPreset:"Instagram竖版",story:"Instagram限时动态",youtube:"YouTube缩略图",xpost:"X帖子",facebook:"Facebook帖子",grid3:"3张（3 × 1）",grid6:"6张（3 × 2）",grid9:"9张（3 × 3）",collage4:"4张（2 × 2）",collage6:"6张（3 × 2）",renameRules:"每行输入前缀、后缀、查找内容和替换内容",renameHint:"留空的规则将跳过。重命名后的副本将打包为ZIP下载."}};
