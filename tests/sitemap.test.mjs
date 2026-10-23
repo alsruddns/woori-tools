@@ -82,6 +82,7 @@ const randomStringWorkspaceSource = await readFile(new URL("../src/components/to
 const qrWorkspaceSource = await readFile(new URL("../src/components/tool/qr-workspace.tsx", import.meta.url), "utf8");
 const worldClockWorkspaceSource = await readFile(new URL("../src/components/tool/world-clock-workspace.tsx", import.meta.url), "utf8");
 const barcodeWorkspaceSource = await readFile(new URL("../src/components/tool/barcode-workspace.tsx", import.meta.url), "utf8");
+const polishRegexWorkspaceSource = await readFile(new URL("../src/components/tool/polish-regex-workspace.tsx", import.meta.url), "utf8");
 const specialRandomWorkspaceSource = await readFile(new URL("../src/components/tool/special-random-workspaces.tsx", import.meta.url), "utf8");
 const toolWorkspaceSource = await readFile(new URL("../src/components/tool/tool-workspace.tsx", import.meta.url), "utf8");
 const instagramGridWorkspaceSource = await readFile(new URL("../src/components/tool/russian-instagram-grid-workspace.tsx", import.meta.url), "utf8");
@@ -962,6 +963,19 @@ test("Polish shuffle lines page uses the translated workspace and is published w
   assert.match(toolWorkspaceSource, /messages\.textPlaceholder/);
   assert.match(toolWorkspaceSource, /busy\?messages\.processing/);
   assert.match(targetLocalePublicationSource, /"remove-duplicate-lines", "sort-lines", "shuffle-lines"/);
+});
+
+test("Polish regex tester localizes both inputs, safety errors, and result states", () => {
+  assert.equal(targetLocalePublication.pl.uiVerifiedToolSlugs.includes("regex-tester"), true);
+  assert.equal(targetLocalePublication.pl.seoVerifiedToolSlugs.includes("regex-tester"), true);
+  assert.equal(targetLocalePublication.pl.publishedToolSlugs.includes("regex-tester"), true);
+  assert.equal(entries.some(({ url }) => url === "https://www.woori.today/pl/tools/regex-tester"), true);
+  assert.match(toolWorkspaceSource, /tool\.slug === "regex-tester" && phaseLocale === "pl"\) return <PolishRegexWorkspace \/>/);
+  assert.match(polishRegexWorkspaceSource, /pattern: "Wyrazenie regularne"|pattern: "Wyrażenie regularne"/);
+  assert.match(polishRegexWorkspaceSource, /sample: "Tekst do sprawdzenia"/);
+  assert.match(polishRegexWorkspaceSource, /Nie znaleziono dopasowa/);
+  assert.match(polishRegexWorkspaceSource, /role="alert"/);
+  assert.match(polishRegexWorkspaceSource, /Dane nie/);
 });
 
 test("Russian tarot page localizes controls, names, and card interpretations", () => {
