@@ -877,6 +877,14 @@ test("Polish duty picker localizes participant and duty assignment controls", ()
   assert.match(toolWorkspaceSource, /tool\.slug === "duty-picker" && phaseLocale === "pl"\) return <RussianDutyPickerWorkspace locale="pl" \/>/);
 });
 
+test("Polish dice roller localizes die settings, explanation, statistics, and validation", () => {
+  assert.equal(targetLocalePublication.pl.publishedToolSlugs.includes("dice-roller"), true);
+  assert.equal(entries.some(({ url }) => url === "https://www.woori.today/pl/tools/dice-roller"), true);
+  assert.match(specialRandomWorkspaceSource, /Object\.assign\(copy\.pl,\{selection:"Rodzaj ko\\u015Bci",diceCount:"Liczba ko\\u015Bci"/);
+  assert.match(specialRandomWorkspaceSource, /invalidCount:"Wybierz od 1 do 20 ko\\u015Bci/);
+  assert.match(toolWorkspaceSource, /tool\.slug === "dice-roller"\) return <DiceWorkspace locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
+});
+
 test("Russian tarot page localizes controls, names, and card interpretations", () => {
   assert.match(toolPageSource, /slug === "tarot-card"/);
   assert.match(fortuneWorkspaceSource, /ru: \{ question: "Вопрос \(необязательно\)"[\s\S]*?note: "Таро предназначено/);

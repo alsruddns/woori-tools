@@ -170,7 +170,8 @@ export function LottoWorkspace({ locale, min = 1, max = 45, numberCount = 6, his
 }
 
 Object.assign(copy.tr,{selection:"Zar türü",diceCount:"Zar sayısı",die:"yüzlü zar",draw:"Zarları at",total:"Toplam",minimum:"En az",maximum:"En çok",average:"Ortalama",history:"Son atışlar",invalidCount:"Zar sayısını kontrol edin.",explanation:"D, zarı ifade eder; ardından gelen sayı zarın yüz sayısıdır. D6 altı, D20 ise yirmi yüzlü bir zardır."});
-export function DiceWorkspace({ locale }: { locale:RouteLocale | "ru" | "tr" }) {
+Object.assign(copy.pl,{selection:"Rodzaj ko\u015Bci",diceCount:"Liczba ko\u015Bci",die:"-\u015Bcienna ko\u015B\u0107",draw:"Rzu\u0107 ko\u015B\u0107mi",total:"Suma",minimum:"Minimum",maximum:"Maksimum",average:"\u015Arednia",history:"Ostatnie rzuty",invalidCount:"Wybierz od 1 do 20 ko\u015Bci i prawid\u0142ow\u0105 liczb\u0119 \u015Bcian.",explanation:"Litera D oznacza ko\u015B\u0107 do gry, a nast\u0119puj\u0105ca po niej liczba okre\u015Bla liczb\u0119 \u015Bcian. D6 ma 6 \u015Bcian, a D20 ma 20."});
+export function DiceWorkspace({ locale }: { locale:RouteLocale | "ru" | "tr" | "pl" }) {
   const t = copy[locale];
   const [sides, setSides] = useState(6);
   const [count, setCount] = useState(1);
