@@ -900,6 +900,17 @@ test("Polish stopwatch localizes controls, elapsed-time terms, and date-time rou
   assert.match(toolWorkspaceSource, /pl:\{start:"Start",pause:"Wstrzymaj",resume:"Wzn\\u00F3w",reset:"Resetuj",lap:"Okr\\u0105\\u017Cenie"/);
 });
 
+test("Polish timer and Pomodoro localize controls, phases, presets, and locale dispatch", () => {
+  for (const slug of ["timer", "pomodoro-timer"]) {
+    assert.equal(targetLocalePublication.pl.publishedToolSlugs.includes(slug), true);
+    assert.equal(entries.some(({ url }) => url === `https://www.woori.today/pl/tools/${slug}`), true);
+  }
+  assert.match(countdownWorkspaceSource, /pl:\{hours:"Godziny",minutes:"Minuty",seconds:"Sekundy",start:"Start",pause:"Wstrzymaj",resume:"Wzn\\u00F3w"/);
+  assert.match(countdownWorkspaceSource, /phaseFocus:"Czas skupienia",phaseShort:"Kr\\u00F3tka przerwa",phaseLong:"D\\u0142uga przerwa"/);
+  assert.match(countdownWorkspaceSource, /Object\.assign\(presetLabels,\{pl:\["1 min","3 min","5 min","10 min","30 min","1 godz\."\]\}\)/);
+  assert.match(toolWorkspaceSource, /CountdownWorkspace slug=\{tool\.slug\} locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
+});
+
 test("Russian tarot page localizes controls, names, and card interpretations", () => {
   assert.match(toolPageSource, /slug === "tarot-card"/);
   assert.match(fortuneWorkspaceSource, /ru: \{ question: "Вопрос \(необязательно\)"[\s\S]*?note: "Таро предназначено/);

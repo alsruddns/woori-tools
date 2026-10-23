@@ -105,7 +105,7 @@ export function ToolWorkspace({ tool, phaseLocale, optionLocale = phaseLocale, m
   if (tool.slug === "barcode-generator") return <BarcodeWorkspace locale={specializedLocale} />;
   if (["wifi-qr","contact-qr","phone-qr","email-qr"].includes(tool.slug)) return <QrWorkspace slug={tool.slug} locale={specializedLocale} />;
   if (tool.slug === "random-wheel") return <RandomWheelWorkspace locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;
-  if (tool.slug === "timer" || tool.slug === "pomodoro-timer") return <CountdownWorkspace slug={tool.slug} locale={specializedLocale} />;
+  if (tool.slug === "timer" || tool.slug === "pomodoro-timer") return <CountdownWorkspace slug={tool.slug} locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;
   if (tool.slug === "world-clock") return <WorldClockWorkspace locale={specializedLocale} />;
   if (tool.slug === "stopwatch") return <DateTimeTool slug={tool.slug} locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;
   if (tool.category === "date-time") return <DateTimeTool slug={tool.slug} locale={specializedLocale} />;

@@ -39,7 +39,9 @@ Object.assign(labels, {
 Object.assign(presetLabels, { ru: ["1 мин", "3 мин", "5 мин", "10 мин", "30 мин", "1 ч"] });
 
 Object.assign(labels,{tr:{hours:"Saat",minutes:"Dakika",seconds:"Saniye",start:"Başlat",pause:"Duraklat",resume:"Sürdür",reset:"Sıfırla",focus:"Odaklanma",short:"Kısa mola",long:"Uzun mola",cycles:"Uzun molaya kadar odaklanma oturumu",session:"Oturum",presets:"Hızlı süreler",complete:"Süre doldu.",next:"Sonraki oturumu başlat",cyclesDone:"Tamamlanan odaklanma oturumu",phaseFocus:"Odaklanma süresi",phaseShort:"Kısa mola",phaseLong:"Uzun mola"}});
+Object.assign(labels,{pl:{hours:"Godziny",minutes:"Minuty",seconds:"Sekundy",start:"Start",pause:"Wstrzymaj",resume:"Wzn\u00F3w",reset:"Resetuj",focus:"Skupienie",short:"Kr\u00F3tka przerwa",long:"D\u0142uga przerwa",cycles:"Sesje skupienia przed d\u0142ug\u0105 przerw\u0105",session:"Sesja",presets:"Szybkie ustawienia",complete:"Czas min\u0105\u0142.",next:"Rozpocznij nast\u0119pn\u0105 sesj\u0119",cyclesDone:"Uko\u0144czone sesje skupienia",phaseFocus:"Czas skupienia",phaseShort:"Kr\u00F3tka przerwa",phaseLong:"D\u0142uga przerwa"}});
 Object.assign(presetLabels,{tr:["1 dk","3 dk","5 dk","10 dk","30 dk","1 sa"]});
+Object.assign(presetLabels,{pl:["1 min","3 min","5 min","10 min","30 min","1 godz."]});
 export function CountdownWorkspace({ slug, locale }: { slug: "timer" | "pomodoro-timer"; locale:PublishedTargetLocale }) {
   const t = labels[locale];
   const [settings, setSettings] = useState<Settings>({ focus: 25, short: 5, long: 15, cycleLength: 4 });
