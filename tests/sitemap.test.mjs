@@ -893,6 +893,13 @@ test("Polish coin flip localizes count, sides, results, and range validation", (
   assert.match(toolWorkspaceSource, /tool\.slug === "coin-flip" && phaseLocale === "pl"\) return <CoinFlipWorkspace locale="pl" \/>/);
 });
 
+test("Polish stopwatch localizes controls, elapsed-time terms, and date-time routing", () => {
+  assert.equal(targetLocalePublication.pl.publishedToolSlugs.includes("stopwatch"), true);
+  assert.equal(entries.some(({ url }) => url === "https://www.woori.today/pl/tools/stopwatch"), true);
+  assert.match(toolWorkspaceSource, /tool\.slug === "stopwatch"\) return <DateTimeTool slug=\{tool\.slug\} locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
+  assert.match(toolWorkspaceSource, /pl:\{start:"Start",pause:"Wstrzymaj",resume:"Wzn\\u00F3w",reset:"Resetuj",lap:"Okr\\u0105\\u017Cenie"/);
+});
+
 test("Russian tarot page localizes controls, names, and card interpretations", () => {
   assert.match(toolPageSource, /slug === "tarot-card"/);
   assert.match(fortuneWorkspaceSource, /ru: \{ question: "Вопрос \(необязательно\)"[\s\S]*?note: "Таро предназначено/);
