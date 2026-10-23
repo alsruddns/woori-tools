@@ -88,6 +88,7 @@ const japanToolsWorkspaceSource = await readFile(new URL("../src/components/tool
 const browserDeveloperWorkspaceSource = await readFile(new URL("../src/components/tool/browser-developer-tools-workspace.tsx", import.meta.url), "utf8");
 const polishChinaWorkspaceSource = await readFile(new URL("../src/components/tool/polish-china-tools-workspace.tsx", import.meta.url), "utf8");
 const polishIndiaWorkspaceSource = await readFile(new URL("../src/components/tool/polish-india-tools-workspace.tsx", import.meta.url), "utf8");
+const polishGermanyWorkspaceSource = await readFile(new URL("../src/components/tool/polish-germany-tools-workspace.tsx", import.meta.url), "utf8");
 const specialRandomWorkspaceSource = await readFile(new URL("../src/components/tool/special-random-workspaces.tsx", import.meta.url), "utf8");
 const toolWorkspaceSource = await readFile(new URL("../src/components/tool/tool-workspace.tsx", import.meta.url), "utf8");
 const instagramGridWorkspaceSource = await readFile(new URL("../src/components/tool/russian-instagram-grid-workspace.tsx", import.meta.url), "utf8");
@@ -1090,6 +1091,21 @@ test("Polish India number, lakh/crore, PAN, GSTIN, and phone tools are localized
   assert.match(polishIndiaWorkspaceSource, /Narzędzie nie potwierdza tożsamości ani rejestracji/);
   assert.match(polishIndiaWorkspaceSource, /Narzędzie nie odpytuje państwowych baz rejestracyjnych/);
   assert.match(polishIndiaWorkspaceSource, /Wyczyść/);
+});
+
+test("Polish German IBAN, number, and date tools are localized and published", () => {
+  const slugs = ["germany-iban-validator", "german-number-format-converter", "german-date-format-converter"];
+  for (const slug of slugs) {
+    assert.equal(targetLocalePublication.pl.uiVerifiedToolSlugs.includes(slug), true);
+    assert.equal(targetLocalePublication.pl.seoVerifiedToolSlugs.includes(slug), true);
+    assert.equal(targetLocalePublication.pl.publishedToolSlugs.includes(slug), true);
+    assert.equal(entries.some(({ url }) => url === `https://www.woori.today/pl/tools/${slug}`), true);
+  }
+  assert.match(toolWorkspaceSource, /if \(phaseLocale === "pl" && isPolishGermanySlug\(tool\.slug\)\) return <PolishGermanyToolsWorkspace slug=\{tool\.slug\} \/>/);
+  assert.match(polishGermanyWorkspaceSource, /Walidator niemieckiego numeru IBAN/);
+  assert.match(polishGermanyWorkspaceSource, /Nie potwierdza istnienia rachunku/);
+  assert.match(polishGermanyWorkspaceSource, /niemiecki zapis dzień\.miesiąc\.rok/);
+  assert.match(polishGermanyWorkspaceSource, /Wyczyść/);
 });
 
 test("Russian tarot page localizes controls, names, and card interpretations", () => {
