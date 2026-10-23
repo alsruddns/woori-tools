@@ -85,6 +85,7 @@ const barcodeWorkspaceSource = await readFile(new URL("../src/components/tool/ba
 const polishRegexWorkspaceSource = await readFile(new URL("../src/components/tool/polish-regex-workspace.tsx", import.meta.url), "utf8");
 const sharedMarkdownWorkspaceSource = await readFile(new URL("../src/components/tool/markdown-workspace.tsx", import.meta.url), "utf8");
 const japanToolsWorkspaceSource = await readFile(new URL("../src/components/tool/japan-tools-workspace.tsx", import.meta.url), "utf8");
+const browserDeveloperWorkspaceSource = await readFile(new URL("../src/components/tool/browser-developer-tools-workspace.tsx", import.meta.url), "utf8");
 const specialRandomWorkspaceSource = await readFile(new URL("../src/components/tool/special-random-workspaces.tsx", import.meta.url), "utf8");
 const toolWorkspaceSource = await readFile(new URL("../src/components/tool/tool-workspace.tsx", import.meta.url), "utf8");
 const instagramGridWorkspaceSource = await readFile(new URL("../src/components/tool/russian-instagram-grid-workspace.tsx", import.meta.url), "utf8");
@@ -1042,6 +1043,21 @@ test("Polish Japanese tool workspaces translate conversions, date inputs, and lo
   assert.match(japanToolsWorkspaceSource, /yakudoshiWarning:"Tradycje yakudoshi różnią się/);
   assert.match(japanToolsWorkspaceSource, /numbers3Rules:"Wybierz 3 cyfry/);
   assert.match(japanToolsWorkspaceSource, /locale === "pl" \? polishCopy : copy\[locale\]/);
+});
+
+test("Polish browser developer tools localize inputs, privacy, JWT status, and errors", () => {
+  const slugs = ["jwt-decoder", "url-query-parameter-parser", "user-agent-parser", "ip-cidr-calculator", "base32-encoder-decoder", "ulid-generator", "uuid-v7-generator", "hash-compare", "regex-replace", "html-entity-encoder-decoder", "chmod-calculator", "json-path-tester", "csv-tsv-converter", "url-slug-generator", "unicode-code-point-checker", "pdf-page-size-checker"];
+  for (const slug of slugs) {
+    assert.equal(targetLocalePublication.pl.uiVerifiedToolSlugs.includes(slug), true);
+    assert.equal(targetLocalePublication.pl.seoVerifiedToolSlugs.includes(slug), true);
+    assert.equal(targetLocalePublication.pl.publishedToolSlugs.includes(slug), true);
+    assert.equal(entries.some(({ url }) => url === `https://www.woori.today/pl/tools/${slug}`), true);
+  }
+  assert.match(toolWorkspaceSource, /BrowserDeveloperToolsWorkspace slug=\{tool\.slug\} locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
+  assert.match(browserDeveloperWorkspaceSource, /const polishFieldNames = \["Wartość wejściowa"/);
+  assert.match(browserDeveloperWorkspaceSource, /const polishHelper = \{ jwt:/);
+  assert.match(browserDeveloperWorkspaceSource, /const polishExpiry = \{ label:/);
+  assert.match(browserDeveloperWorkspaceSource, /locale === "pl" \? polishHelper : helperText\[locale\]/);
 });
 
 test("Russian tarot page localizes controls, names, and card interpretations", () => {
