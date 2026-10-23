@@ -14,6 +14,7 @@ import { TurkishLineToolsWorkspace } from "@/components/tool/turkish-line-tools-
 import { TurkishTextUtilityWorkspace } from "@/components/tool/turkish-text-utility-workspace";
 import { TurkishImageToolsWorkspace } from "@/components/tool/turkish-image-tools-workspace";
 import { TurkishRegexWorkspace } from "@/components/tool/turkish-regex-workspace";
+import { TurkishCodeToolsWorkspace } from "@/components/tool/turkish-code-tools-workspace";
 import { TurkishLoremWorkspace } from "@/components/tool/turkish-lorem-workspace";
 import { RussianZipWorkspace } from "@/components/tool/russian-zip-workspace";
 import { RussianRenameWorkspace } from "@/components/tool/russian-rename-workspace";
@@ -307,6 +308,7 @@ function TurkishPublishedToolPage({ slug }: { slug: string }) {
     : ["shuffle-lines", "add-line-numbers", "remove-line-numbers", "remove-empty-lines", "remove-characters", "sort-lines", "remove-duplicate-lines", "remove-spaces", "remove-line-breaks", "reverse-text", "text-repeater"].includes(slug) ? <TurkishLineToolsWorkspace slug={slug as "shuffle-lines" | "add-line-numbers" | "remove-line-numbers" | "remove-empty-lines" | "remove-characters" | "sort-lines" | "remove-duplicate-lines" | "remove-spaces" | "remove-line-breaks" | "reverse-text" | "text-repeater"} />
     : ["text-to-file", "character-count", "text-case-converter", "remove-duplicate-words"].includes(slug) ? <TurkishTextUtilityWorkspace slug={slug as "text-to-file" | "character-count" | "text-case-converter" | "remove-duplicate-words"} />
     : slug === "regex-tester" ? <TurkishRegexWorkspace />
+    : ["color-converter", "cron-parser", "sql-formatter", "html-formatter", "css-formatter", "javascript-formatter"].includes(slug) ? <TurkishCodeToolsWorkspace slug={slug as "color-converter" | "cron-parser" | "sql-formatter" | "html-formatter" | "css-formatter" | "javascript-formatter"} />
     : slug === "social-image-resize" || slug === "add-text-to-image" ? <TurkishImageToolsWorkspace slug={slug} />
     : slug === "lorem-ipsum" ? <TurkishLoremWorkspace title={tool.title} />
     : null;

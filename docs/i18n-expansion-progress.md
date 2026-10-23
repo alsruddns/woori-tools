@@ -8,7 +8,7 @@ Routable locales: 17 (ko, en, ja, zh, es, pt-br, de, fr, vi, id, th, zh-tw, it, 
 | Locale | Translation data | UI verified | SEO verified | Public tools | Pending data | Next tool |
 | --- | ---: | ---: | ---: | ---: | ---: | --- |
 | ru | 176/176 | 176 | 176 | 176 | 0 | none |
-| tr | 176/176 | 61 | 61 | 61 | 0 | color-converter |
+| tr | 176/176 | 67 | 67 | 67 | 0 | json-formatter |
 | pl | 6/176 | 0 | 0 | 0 | 170 | tarot-card |
 | fil | 6/176 | 0 | 0 | 0 | 170 | tarot-card |
 | bn | 6/176 | 0 | 0 | 0 | 170 | tarot-card |
@@ -38,12 +38,12 @@ Routable locales: 17 (ko, en, ja, zh, es, pt-br, de, fr, vi, id, th, zh-tw, it, 
 ## Next locale
 
 - Russian authoring, UI, and SEO verification remains complete for all 176 tools.
-- Turkish translation data is complete for 176/176 tools. UI, SEO, and publication are verified for 61 tools; the next tool to connect is color-converter.
+- Turkish translation data is complete for 176/176 tools. UI, SEO, and publication are verified for 67 tools; the next tool to connect is json-formatter.
 - Turkish common site navigation and non-tool pages are still not fully localized. Unpublished Turkish tool pages remain blocked by the publication registry.
 
 ## Last verified checkpoint
 
 - Validation: TypeScript passed; lint passed; all 136 tests passed; content-quality check passed; production build passed.
-- Production build prerendered 3,068 static pages. The sitemap contains 2,877 localized tool URLs (2,640 legacy-locale pages, 176 Russian pages, and 61 Turkish pages).
-- Turkish canonical, hreflang alternates (including tr and x-default), Open Graph metadata, static rendering, and sitemap membership were verified in the production output for text-to-file, character-count, social-image-resize, add-text-to-image, text-case-converter, remove-duplicate-words, and regex-tester.
-- Current branch is `develop`; last pushed commit is `ff0cfc4`. The Turkish regex-tool batch is verified and ready for commit and push.
+- Production build prerendered 3,074 static pages. The sitemap contains 2,883 localized tool URLs (2,640 legacy-locale pages, 176 Russian pages, and 67 Turkish pages).
+- Turkish canonical, hreflang alternates (including tr and x-default), Open Graph metadata, static rendering, and sitemap membership were verified in the production output for text-to-file, character-count, social-image-resize, add-text-to-image, text-case-converter, remove-duplicate-words, regex-tester, color-converter, cron-parser, sql-formatter, html-formatter, css-formatter, and javascript-formatter.
+- Current branch is `develop`; last pushed commit is `002b5a1`. The Turkish code-tool batch is verified and ready for commit and push.
