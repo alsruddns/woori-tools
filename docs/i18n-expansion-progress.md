@@ -9,7 +9,7 @@ Routable locales: 17 (ko, en, ja, zh, es, pt-br, de, fr, vi, id, th, zh-tw, it, 
 | --- | ---: | ---: | ---: | ---: | ---: | --- |
 | ru | 176/176 | 176 | 176 | 176 | 0 | none |
 | tr | 176/176 | 176 | 176 | 176 | 0 | none |
-| pl | 136/176 | 0 | 0 | 0 | 40 | text-repeater |
+| pl | 147/176 | 0 | 0 | 0 | 29 | jpg-to-png |
 | fil | 6/176 | 0 | 0 | 0 | 170 | tarot-card |
 | bn | 6/176 | 0 | 0 | 0 | 170 | tarot-card |
 | uk | 6/176 | 0 | 0 | 0 | 170 | tarot-card |
@@ -40,7 +40,7 @@ Routable locales: 17 (ko, en, ja, zh, es, pt-br, de, fr, vi, id, th, zh-tw, it, 
 
 - Russian authoring, UI, and SEO verification remains complete for all 176 tools.
 - Turkish translation data is complete for 176/176 tools. UI, SEO, and publication are verified for 176 tools; all Turkish tool routes are connected and published. The latest batches connected fifteen developer utilities and seven Chinese language, calendar, and phone tools plus five India number, tax ID, and phone tools plus twelve European number, date, phone, and IBAN tools plus thirteen Brazilian, Vietnamese, Italian, and English format tools with browser-local processing.
-- Polish authored translation data is complete for 136/176 tools, including the six shared lottery tools and one hundred thirty new editorial entries. No Polish UI or SEO pages are published; the next entry is text-repeater. Translation data is not yet connected to public Polish pages.
+- Polish authored translation data is complete for 147/176 tools, including the six shared lottery tools and one hundred forty-one new editorial entries. No Polish UI or SEO pages are published; the next entry is jpg-to-png. Translation data is not yet connected to public Polish pages.
 - Turkish common site navigation and non-tool pages are still not fully localized. Unpublished Turkish tool pages remain blocked by the publication registry.
 
 ## Last verified checkpoint
