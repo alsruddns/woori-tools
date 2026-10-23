@@ -18,6 +18,7 @@ import { TurkishCodeToolsWorkspace } from "@/components/tool/turkish-code-tools-
 import { TurkishLoremWorkspace } from "@/components/tool/turkish-lorem-workspace";
 import { TurkishPdfWorkspace, type TurkishPdfSlug } from "@/components/tool/turkish-pdf-workspace";
 import { TurkishDataToolsWorkspace, type TurkishDataSlug } from "@/components/tool/turkish-data-tools-workspace";
+import { TurkishJapaneseToolsWorkspace, type TurkishJapaneseSlug } from "@/components/tool/turkish-japanese-tools-workspace";
 import { RussianZipWorkspace } from "@/components/tool/russian-zip-workspace";
 import { RussianRenameWorkspace } from "@/components/tool/russian-rename-workspace";
 import { RussianLineToolsWorkspace } from "@/components/tool/russian-line-tools-workspace";
@@ -314,6 +315,7 @@ function TurkishPublishedToolPage({ slug }: { slug: string }) {
     : ["social-image-resize", "add-text-to-image", "jpg-to-png", "png-to-jpg", "webp-to-jpg", "webp-to-png", "jpg-to-webp", "png-to-webp", "heic-to-jpg", "image-compress", "image-resize", "image-crop", "image-rotate", "image-flip", "image-grayscale", "image-brightness", "image-contrast", "image-blur", "image-pixelate", "remove-image-metadata", "image-info", "favicon-generator", "image-color-picker"].includes(slug) ? <TurkishImageToolsWorkspace slug={slug as "social-image-resize" | "add-text-to-image" | "jpg-to-png" | "png-to-jpg" | "webp-to-jpg" | "webp-to-png" | "jpg-to-webp" | "png-to-webp" | "heic-to-jpg" | "image-compress" | "image-resize" | "image-crop" | "image-rotate" | "image-flip" | "image-grayscale" | "image-brightness" | "image-contrast" | "image-blur" | "image-pixelate" | "remove-image-metadata" | "image-info" | "favicon-generator" | "image-color-picker"} />
     : ["images-to-pdf", "pdf-merge", "pdf-split", "pdf-delete-pages", "pdf-reorder-pages", "pdf-rotate-pages", "pdf-add-page-numbers", "pdf-watermark", "pdf-metadata-viewer", "pdf-remove-metadata", "pdf-page-size-checker"].includes(slug) ? <TurkishPdfWorkspace slug={slug as TurkishPdfSlug} />
     : ["text-compare", "csv-to-json", "json-to-csv", "base64", "url-encode-decode", "uuid-generator", "timestamp-converter"].includes(slug) ? <TurkishDataToolsWorkspace slug={slug as TurkishDataSlug} />
+    : ["wareki-converter", "hiragana-katakana-converter", "fullwidth-halfwidth-converter", "japanese-romaji-converter", "japanese-number-kanji-converter"].includes(slug) ? <TurkishJapaneseToolsWorkspace slug={slug as TurkishJapaneseSlug} />
     : slug === "lorem-ipsum" ? <TurkishLoremWorkspace title={tool.title} />
     : null;
   if (!workspace) notFound();
