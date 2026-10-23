@@ -832,6 +832,16 @@ test("Polish name picker and draw lots share localized participant controls and 
   assert.match(toolWorkspaceSource, /slug=\{tool\.slug\} locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
 });
 
+test("Polish random wheel localizes editing, limits, speed, and spinning state", () => {
+  assert.equal(targetLocalePublication.pl.publishedToolSlugs.includes("random-wheel"), true);
+  assert.equal(entries.some(({ url }) => url === "https://www.woori.today/pl/tools/random-wheel"), true);
+  assert.match(specialRandomWorkspaceSource, /Object\.assign\(wheelCopy, \{ pl:/);
+  assert.match(specialRandomWorkspaceSource, /Wylosowana opcja/);
+  assert.match(specialRandomWorkspaceSource, /locale:RouteLocale \| "ru" \| "tr" \| "pl"/);
+  assert.match(specialRandomWorkspaceSource, /pl:\["Pizza","Kurczak","Burger","Sushi"\]/);
+  assert.match(toolWorkspaceSource, /tool\.slug === "random-wheel"\) return <RandomWheelWorkspace locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
+});
+
 test("Russian tarot page localizes controls, names, and card interpretations", () => {
   assert.match(toolPageSource, /slug === "tarot-card"/);
   assert.match(fortuneWorkspaceSource, /ru: \{ question: "Вопрос \(необязательно\)"[\s\S]*?note: "Таро предназначено/);
