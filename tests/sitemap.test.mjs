@@ -806,6 +806,14 @@ test("Polish daily fortune localizes date validation, result groups, and privacy
   assert.match(toolWorkspaceSource, /tool\.slug === "daily-fortune"\) return <DailyFortuneWorkspace locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
 });
 
+test("Polish saju localizes calendar inputs, five elements, methodology, and privacy before publication", () => {
+  assert.equal(targetLocalePublication.pl.publishedToolSlugs.includes("saju"), true);
+  assert.equal(entries.some(({ url }) => url === "https://www.woori.today/pl/tools/saju"), true);
+  assert.match(sajuWorkspaceSource, /Object\.assign\(labels, \{ pl:/);
+  assert.match(sajuWorkspaceSource, /elementNames\.pl=elementMap/);
+  assert.match(toolWorkspaceSource, /tool\.slug === "saju"\) return <SajuWorkspace locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
+});
+
 test("Russian tarot page localizes controls, names, and card interpretations", () => {
   assert.match(toolPageSource, /slug === "tarot-card"/);
   assert.match(fortuneWorkspaceSource, /ru: \{ question: "Вопрос \(необязательно\)"[\s\S]*?note: "Таро предназначено/);
