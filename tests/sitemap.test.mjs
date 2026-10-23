@@ -91,6 +91,8 @@ const polishIndiaWorkspaceSource = await readFile(new URL("../src/components/too
 const polishGermanyWorkspaceSource = await readFile(new URL("../src/components/tool/polish-germany-tools-workspace.tsx", import.meta.url), "utf8");
 const polishWesternEuropeWorkspaceSource = await readFile(new URL("../src/components/tool/polish-western-europe-tools-workspace.tsx", import.meta.url), "utf8");
 const polishBrazilWorkspaceSource = await readFile(new URL("../src/components/tool/polish-brazil-tools-workspace.tsx", import.meta.url), "utf8");
+const polishFinalCountryWorkspaceSource = await readFile(new URL("../src/components/tool/polish-final-country-tools-workspace.tsx", import.meta.url), "utf8");
+const polishNorthAmericaWorkspaceSource = await readFile(new URL("../src/components/tool/polish-north-america-tools-workspace.tsx", import.meta.url), "utf8");
 const specialRandomWorkspaceSource = await readFile(new URL("../src/components/tool/special-random-workspaces.tsx", import.meta.url), "utf8");
 const toolWorkspaceSource = await readFile(new URL("../src/components/tool/tool-workspace.tsx", import.meta.url), "utf8");
 const instagramGridWorkspaceSource = await readFile(new URL("../src/components/tool/russian-instagram-grid-workspace.tsx", import.meta.url), "utf8");
@@ -1165,4 +1167,35 @@ test("Polish Brazilian CPF, CNPJ, phone, and CEP tools are localized and publish
   assert.ok(polishBrazilWorkspaceSource.includes("brazil-cnpj-validator"));
   assert.ok(polishBrazilWorkspaceSource.includes("cyfry kontrolne"));
   assert.ok(polishBrazilWorkspaceSource.includes("Warto"));
+});
+
+
+test("Polish Vietnam, Italy, Australia, and English date tools are localized and published", () => {
+  const slugs = ["vietnam-phone-number-formatter", "vietnam-number-format-converter", "italy-fiscal-code-format-validator", "italy-vat-number-validator", "italy-number-format-converter", "italian-date-format-converter", "australia-postcode-formatter", "english-date-format-converter"];
+  for (const slug of slugs) {
+    assert.equal(targetLocalePublication.pl.uiVerifiedToolSlugs.includes(slug), true);
+    assert.equal(targetLocalePublication.pl.seoVerifiedToolSlugs.includes(slug), true);
+    assert.equal(targetLocalePublication.pl.publishedToolSlugs.includes(slug), true);
+    assert.equal(entries.some(({ url }) => url === `https://www.woori.today/pl/tools/${slug}`), true);
+  }
+  assert.ok(toolWorkspaceSource.includes("isPolishFinalCountrySlug"));
+  assert.ok(polishFinalCountryWorkspaceSource.includes("italy-fiscal-code-format-validator"));
+  assert.ok(polishFinalCountryWorkspaceSource.includes("english-date-format-converter"));
+  assert.ok(polishFinalCountryWorkspaceSource.includes("us-reverse"));
+  assert.ok(polishFinalCountryWorkspaceSource.includes("suma kontrolna"));
+});
+
+
+test("Polish US, Canada, and UK phone and postal tools are localized and published", () => {
+  const slugs = ["us-phone-number-formatter", "us-zip-code-formatter", "canada-postal-code-formatter", "uk-postcode-formatter"];
+  for (const slug of slugs) {
+    assert.equal(targetLocalePublication.pl.uiVerifiedToolSlugs.includes(slug), true);
+    assert.equal(targetLocalePublication.pl.seoVerifiedToolSlugs.includes(slug), true);
+    assert.equal(targetLocalePublication.pl.publishedToolSlugs.includes(slug), true);
+    assert.equal(entries.some(({ url }) => url === `https://www.woori.today/pl/tools/${slug}`), true);
+  }
+  assert.ok(toolWorkspaceSource.includes("isPolishNorthAmericaSlug"));
+  assert.ok(polishNorthAmericaWorkspaceSource.includes("us-phone-number-formatter"));
+  assert.ok(polishNorthAmericaWorkspaceSource.includes("canada-postal-code-formatter"));
+  assert.ok(polishNorthAmericaWorkspaceSource.includes("serwer."));
 });
