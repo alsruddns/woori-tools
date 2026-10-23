@@ -21,6 +21,7 @@ import { TurkishDataToolsWorkspace, type TurkishDataSlug } from "@/components/to
 import { TurkishJapaneseToolsWorkspace, type TurkishJapaneseSlug } from "@/components/tool/turkish-japanese-tools-workspace";
 import { TurkishCountryFormatWorkspace, type TurkishCountryFormatSlug } from "@/components/tool/turkish-country-format-workspace";
 import { TurkishDeveloperToolsWorkspace, type TurkishDeveloperSlug } from "@/components/tool/turkish-developer-tools-workspace";
+import { TurkishCultureToolsWorkspace, type TurkishCultureSlug } from "@/components/tool/turkish-culture-tools-workspace";
 import { RussianZipWorkspace } from "@/components/tool/russian-zip-workspace";
 import { RussianRenameWorkspace } from "@/components/tool/russian-rename-workspace";
 import { RussianLineToolsWorkspace } from "@/components/tool/russian-line-tools-workspace";
@@ -320,6 +321,7 @@ function TurkishPublishedToolPage({ slug }: { slug: string }) {
     : ["wareki-converter", "hiragana-katakana-converter", "fullwidth-halfwidth-converter", "japanese-romaji-converter", "japanese-number-kanji-converter", "yakudoshi-calculator", "japanese-zodiac-calculator", "numbers3-number-generator", "numbers4-number-generator", "bingo5-number-generator"].includes(slug) ? <TurkishJapaneseToolsWorkspace slug={slug as TurkishJapaneseSlug} />
     : ["us-phone-number-formatter", "us-zip-code-formatter", "canada-postal-code-formatter", "uk-postcode-formatter"].includes(slug) ? <TurkishCountryFormatWorkspace slug={slug as TurkishCountryFormatSlug} />
     : ["jwt-decoder", "url-query-parameter-parser", "user-agent-parser", "ip-cidr-calculator", "hash-compare", "regex-replace", "html-entity-encoder-decoder", "chmod-calculator", "json-path-tester", "csv-tsv-converter", "url-slug-generator", "unicode-code-point-checker", "base32-encoder-decoder", "ulid-generator", "uuid-v7-generator"].includes(slug) ? <TurkishDeveloperToolsWorkspace slug={slug as TurkishDeveloperSlug} />
+    : ["simplified-traditional-chinese-converter", "chinese-number-kanji-converter", "rmb-uppercase-converter", "chinese-zodiac-calculator", "chinese-sexagenary-cycle-calculator", "chinese-phone-number-formatter", "taiwan-phone-number-formatter"].includes(slug) ? <TurkishCultureToolsWorkspace slug={slug as TurkishCultureSlug} />
     : slug === "lorem-ipsum" ? <TurkishLoremWorkspace title={tool.title} />
     : null;
   if (!workspace) notFound();

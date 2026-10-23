@@ -8,7 +8,7 @@ Routable locales: 17 (ko, en, ja, zh, es, pt-br, de, fr, vi, id, th, zh-tw, it, 
 | Locale | Translation data | UI verified | SEO verified | Public tools | Pending data | Next tool |
 | --- | ---: | ---: | ---: | ---: | ---: | --- |
 | ru | 176/176 | 176 | 176 | 176 | 0 | none |
-| tr | 176/176 | 139 | 139 | 139 | 0 | simplified-traditional-chinese-converter |
+| tr | 176/176 | 146 | 146 | 146 | 0 | indian-number-format-converter |
 | pl | 6/176 | 0 | 0 | 0 | 170 | tarot-card |
 | fil | 6/176 | 0 | 0 | 0 | 170 | tarot-card |
 | bn | 6/176 | 0 | 0 | 0 | 170 | tarot-card |
@@ -38,12 +38,12 @@ Routable locales: 17 (ko, en, ja, zh, es, pt-br, de, fr, vi, id, th, zh-tw, it, 
 ## Next locale
 
 - Russian authoring, UI, and SEO verification remains complete for all 176 tools.
-- Turkish translation data is complete for 176/176 tools. UI, SEO, and publication are verified for 139 tools; the next public tool to connect is simplified-traditional-chinese-converter. The latest batches connected fifteen developer utilities with browser-local processing.
+- Turkish translation data is complete for 176/176 tools. UI, SEO, and publication are verified for 146 tools; the next public tool to connect is indian-number-format-converter. The latest batches connected fifteen developer utilities and seven Chinese language, calendar, and phone tools with browser-local processing.
 - Turkish common site navigation and non-tool pages are still not fully localized. Unpublished Turkish tool pages remain blocked by the publication registry.
 
 ## Last verified checkpoint
 
 - Validation: TypeScript passed; lint passed; all 140 tests passed; content-quality check passed; production build passed.
-- Production build prerendered 3,146 static pages. The sitemap contains 2,955 localized tool URLs (2,640 legacy-locale pages, 176 Russian pages, and 139 Turkish pages).
+- Production build prerendered 3,153 static pages. The sitemap contains 2,962 localized tool URLs (2,640 legacy-locale pages, 176 Russian pages, and 146 Turkish pages).
 - Turkish canonical, hreflang alternates (including tr and x-default), Open Graph metadata, static rendering, and sitemap membership were verified in the production output for text-to-file, character-count, social-image-resize, add-text-to-image, text-case-converter, remove-duplicate-words, regex-tester, color-converter, cron-parser, sql-formatter, html-formatter, css-formatter, javascript-formatter, json-formatter, json-validator, json-to-yaml, yaml-to-json, jpg-to-png, png-to-jpg, webp-to-jpg, webp-to-png, jpg-to-webp, png-to-webp, heic-to-jpg, image-compress, image-resize, image-crop, image-rotate, image-flip, image-grayscale, image-brightness, image-contrast, image-blur, image-pixelate, remove-image-metadata, image-info, favicon-generator, image-color-picker, the 11 Turkish PDF tools, and Turkish text comparison, CSV-to-JSON, JSON-to-CSV, Base64, URL encoding, UUID generation, timestamp conversion, and five Japanese calendar and text converters, plus two Japanese calendar calculators, three number generators, and four country-specific phone and postal formatters.
-- Current branch is `develop`; latest Turkish feature batches connect `jwt-decoder`, `url-query-parameter-parser`, `user-agent-parser`, `ip-cidr-calculator`, `hash-compare`, `regex-replace`, `html-entity-encoder-decoder`, `chmod-calculator`, `json-path-tester`, `csv-tsv-converter`, `url-slug-generator`, `unicode-code-point-checker`, `base32-encoder-decoder`, `ulid-generator`, and `uuid-v7-generator`. These routes reuse browser-local utility functions; the latest fifteen pages were checked for localized controls, canonical, hreflang, Open Graph, and sitemap output.
+- Current branch is `develop`; latest Turkish feature batches connect `jwt-decoder`, `url-query-parameter-parser`, `user-agent-parser`, `ip-cidr-calculator`, `hash-compare`, `regex-replace`, `html-entity-encoder-decoder`, `chmod-calculator`, `json-path-tester`, `csv-tsv-converter`, `url-slug-generator`, `unicode-code-point-checker`, `base32-encoder-decoder`, `ulid-generator`, `uuid-v7-generator`, `simplified-traditional-chinese-converter`, `chinese-number-kanji-converter`, `rmb-uppercase-converter`, `chinese-zodiac-calculator`, `chinese-sexagenary-cycle-calculator`, `chinese-phone-number-formatter`, and `taiwan-phone-number-formatter`. These routes reuse browser-local utility functions; the latest 22 pages were checked for localized controls, canonical, hreflang, Open Graph, and sitemap output.
