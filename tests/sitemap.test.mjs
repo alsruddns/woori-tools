@@ -952,6 +952,18 @@ test("Polish barcode generator localizes input, format, generation, and failure 
   assert.match(toolWorkspaceSource, /tool\.slug === "barcode-generator"\) return <BarcodeWorkspace locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
 });
 
+test("Polish shuffle lines page uses the translated workspace and is published with SEO", () => {
+  assert.equal(targetLocalePublication.pl.uiVerifiedToolSlugs.includes("shuffle-lines"), true);
+  assert.equal(targetLocalePublication.pl.seoVerifiedToolSlugs.includes("shuffle-lines"), true);
+  assert.equal(targetLocalePublication.pl.publishedToolSlugs.includes("shuffle-lines"), true);
+  assert.equal(entries.some(({ url }) => url === "https://www.woori.today/pl/tools/shuffle-lines"), true);
+  assert.match(toolWorkspaceSource, /phaseLocale === "pl" \? "pl" : specializedLocale/);
+  assert.match(toolWorkspaceSource, /messages\.input/);
+  assert.match(toolWorkspaceSource, /messages\.textPlaceholder/);
+  assert.match(toolWorkspaceSource, /busy\?messages\.processing/);
+  assert.match(targetLocalePublicationSource, /"remove-duplicate-lines", "sort-lines", "shuffle-lines"/);
+});
+
 test("Russian tarot page localizes controls, names, and card interpretations", () => {
   assert.match(toolPageSource, /slug === "tarot-card"/);
   assert.match(fortuneWorkspaceSource, /ru: \{ question: "Вопрос \(необязательно\)"[\s\S]*?note: "Таро предназначено/);
