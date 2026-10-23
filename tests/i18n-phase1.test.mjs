@@ -11,6 +11,7 @@ async function importTs(path, replacements = []) {
 }
 
 const { locales } = await importTs("../src/i18n/routing.ts");
+const { renameCopy, selectionCopy } = await importTs("../src/registry/tool-option-copy.ts");
 globalThis.__targetCoreMessages = (await importTs("../src/i18n/target-locale-copy.ts")).targetCoreMessages;
 const { COUNTRY_TOOL_SLUGS } = await importTs("../src/lib/country-tool-slugs.ts");
 globalThis.__countryToolSlugs = COUNTRY_TOOL_SLUGS;
@@ -306,6 +307,15 @@ test("expanded shared dictionaries are complete and do not silently reuse Englis
     }
   }
   assert.deepEqual(omissions, [], `Expanded shared dictionary omissions:\n${omissions.join("\n")}`);
+});
+
+test("Polish generic tool options and file rename fields are translated", () => {
+  assert.deepEqual(Object.keys(selectionCopy.pl).sort(), ["custom", "digits", "hangul", "latin", "noRepeat", "repeat", "special"].sort());
+  assert.deepEqual(Object.keys(renameCopy.pl).sort(), ["after", "before", "empty", "find", "padding", "prefix", "replace", "start", "suffix"].sort());
+  for (const [key, value] of Object.entries({ ...selectionCopy.pl, ...renameCopy.pl })) {
+    assert.ok(value.trim(), `Missing Polish option translation: ${key}`);
+    assert.notEqual(value, selectionCopy.en[key] ?? renameCopy.en[key], `English fallback in Polish option ${key}`);
+  }
 });
 
 function unwrapObject(node) {
