@@ -278,7 +278,7 @@ const phaseOneNavigationExtra: Record<string,Record<string,string>>={
 export function getMessages(locale: PublishedTargetLocale): Dictionary {
   const existing = messages[locale as keyof typeof messages];
   if (existing) return existing;
-  const merged = { ...messages.en, ...phaseOneCommon[locale], ...phaseOneVisibleExtra[locale], ...phaseOneNavigationExtra[locale], ...(locale === "ru" ? targetCoreMessages.ru : locale === "tr" ? targetCoreMessages.tr : {}) } as Record<string, unknown>;
+  const merged = { ...messages.en, ...phaseOneCommon[locale], ...phaseOneVisibleExtra[locale], ...phaseOneNavigationExtra[locale], ...(locale === "ru" || locale === "tr" || locale === "pl" ? targetCoreMessages[locale] : {}) } as Record<string, unknown>;
   for (const [path, value] of Object.entries(getExpandedMessages(locale))) {
     const [parent, child] = path.split(".");
     if (child) {

@@ -25,6 +25,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (rawLocale === "tr") {
     return pageMetadata({ locale: "tr", path: "/tools", title: "Tüm araçlar", description: "Günlük işler için Türkçe çevrim içi araçları keşfedin.", keywords: ["çevrim içi araçlar", "araçlar", "ücretsiz araçlar"], supportedLocales: publishedTargetLocales });
   }
+  if (rawLocale === "pl") {
+    return pageMetadata({ locale: "pl", path: "/tools", title: "Darmowe narzędzia online", description: "Korzystaj z bezpłatnych narzędzi do pracy z tekstem, obrazami, plikami PDF i danymi. Przetwarzanie odbywa się lokalnie w przeglądarce.", keywords: ["darmowe narzędzia online", "narzędzia PDF", "narzędzia do tekstu", "narzędzia do obrazów"], supportedLocales: publishedTargetLocales });
+  }
   if (!isLocale(rawLocale)) return {};
   const messages = getMessages(rawLocale);
   return pageMetadata({ locale: rawLocale, path: "/tools", title: messages.homeEyebrow, description: messages.homeDescription, keywords: ["online tools", "image", "PDF", "text"] });
@@ -32,6 +35,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ToolsHomePage({ params }: Props) {
   const { locale: rawLocale } = await params;
+  if (rawLocale === "pl") {
+    const polishPublishedSlugs = new Set<string>(targetLocalePublication.pl.publishedToolSlugs);
+    const polishTools = tools.filter((tool) => polishPublishedSlugs.has(tool.slug)).map((tool) => localizePublishedTool(tool, "pl"));
+    return <main className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
+      <section className="rounded-3xl bg-gradient-to-br from-indigo-50 via-white to-cyan-50 px-6 py-10 sm:px-12 sm:py-14">
+        <p className="font-semibold text-indigo-700">Bezpłatne narzędzia online</p>
+        <h1 className="mt-3 text-4xl font-bold tracking-tight text-slate-950 sm:text-5xl">Przydatne narzędzia na co dzień</h1>
+        <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-600">Wybierz narzędzie do pracy z tekstem, obrazami, dokumentami PDF i danymi. Pliki pozostają na Twoim urządzeniu.</p>
+        <ToolDirectory tools={polishTools} locale="pl" />
+      </section>
+      <section className="py-9" aria-labelledby="pl-all-tools"><h2 id="pl-all-tools" className="text-2xl font-bold">Wszystkie narzędzia <span className="text-base font-normal text-slate-500">({polishTools.length})</span></h2>
+        <div className="mt-5 grid gap-3 sm:grid-cols-2">{polishTools.map((tool) => <Link key={tool.slug} href={`/pl/tools/${tool.slug}`} className="block min-h-28 rounded-2xl border border-slate-200 bg-white p-5 hover:border-indigo-300 hover:shadow-sm"><span className="text-xs font-semibold text-indigo-700">Narzędzia online</span><h3 className="mt-1 font-semibold">{tool.title}</h3><p className="mt-2 text-sm leading-6 text-slate-600">{tool.description}</p></Link>)}</div>
+      </section>
+      <section className="rounded-2xl bg-emerald-50 p-5 text-sm text-emerald-900"><h2 className="text-lg font-bold">Prywatne przetwarzanie w przeglądarce</h2><p className="mt-2 leading-7">Pliki są przetwarzane na Twoim urządzeniu i nie są wysyłane na serwer.</p></section>
+    </main>;
+  }
   if (rawLocale === "ru") {
     const messages = getMessages("ru");
     const russianTools = tools.filter((tool) => tool.supportedLocales.includes("ru")).map((tool) => localizePublishedTool(tool, "ru"));

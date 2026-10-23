@@ -15,6 +15,7 @@ async function importTypeScript(path, replacements = []) {
 
 const { locales, publishedTargetLocales, localeConfig, publishedTargetHreflangs } = await importTypeScript("../src/i18n/routing.ts");
 const { getTargetTurkishToolTranslation, targetTurkishToolSlugs } = await importTypeScript("../src/registry/target-tr-translations.ts");
+const { targetPolishToolSlugs } = await importTypeScript("../src/registry/target-pl-translations.ts");
 const countrySlugSource = await readFile(new URL("../src/lib/country-tool-slugs.ts", import.meta.url), "utf8");
 const countrySlugs = [...countrySlugSource.matchAll(/"([a-z0-9-]+)"/g)].map((match) => match[1]);
 const { tools: publicTools, filterPublicTools } = await importTypeScript("../src/registry/tools.ts", [
@@ -86,9 +87,11 @@ const sajuWorkspaceSource = await readFile(new URL("../src/components/tool/saju-
 const nextConfig = await readFile(new URL("../next.config.ts", import.meta.url), "utf8");
 const siteOrigin = "https://www.woori.today";
 const turkishPublishedSlugs = ["lotto-number-generator", "powerball-number-generator", "mega-millions-number-generator", "japan-loto6-number-generator", "japan-loto7-number-generator", "japan-mini-loto-number-generator", "random-number", "random-name-picker", "random-wheel", "draw-lots", "random-team-maker", "random-order", "random-seat", "timer", "pomodoro-timer", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr", "dice-roller", "coin-flip", "stopwatch", "world-clock", "tarot-card", "daily-fortune", "saju", "duty-picker", "barcode-checker", "barcode-generator", "instagram-grid-split", "image-collage", "markdown-preview", "file-hash", "mime-type-checker", "file-extension-checker", "file-size-checker", "duplicate-file-checker", "bulk-file-renamer", "filename-cleaner", "zip-files", "shuffle-lines", "add-line-numbers", "remove-line-numbers", "remove-empty-lines", "remove-characters", "sort-lines", "remove-duplicate-lines", "remove-spaces", "remove-line-breaks", "reverse-text", "text-repeater", "lorem-ipsum", "text-to-file", "character-count", "social-image-resize", "add-text-to-image", "text-case-converter", "remove-duplicate-words", "regex-tester", "color-converter", "cron-parser", "sql-formatter", "html-formatter", "css-formatter", "javascript-formatter", "json-formatter", "json-validator", "json-to-yaml", "yaml-to-json", "jpg-to-png", "png-to-jpg", "webp-to-jpg", "webp-to-png", "jpg-to-webp", "png-to-webp", "heic-to-jpg", "image-compress", "image-resize", "image-crop", "image-rotate", "image-flip", "image-grayscale", "image-brightness", "image-contrast", "image-blur", "image-pixelate", "remove-image-metadata", "image-info", "favicon-generator", "image-color-picker", "images-to-pdf", "pdf-merge", "pdf-split", "pdf-delete-pages", "pdf-reorder-pages", "pdf-rotate-pages", "pdf-add-page-numbers", "pdf-watermark", "pdf-metadata-viewer", "pdf-remove-metadata", "pdf-page-size-checker", "text-compare", "csv-to-json", "json-to-csv", "base64", "url-encode-decode", "uuid-generator", "timestamp-converter", "wareki-converter", "hiragana-katakana-converter", "fullwidth-halfwidth-converter", "japanese-romaji-converter", "japanese-number-kanji-converter", "yakudoshi-calculator", "japanese-zodiac-calculator", "numbers3-number-generator", "numbers4-number-generator", "bingo5-number-generator", "us-phone-number-formatter", "us-zip-code-formatter", "canada-postal-code-formatter", "uk-postcode-formatter", "jwt-decoder", "url-query-parameter-parser", "user-agent-parser", "ip-cidr-calculator", "hash-compare", "regex-replace", "html-entity-encoder-decoder", "chmod-calculator", "json-path-tester", "csv-tsv-converter", "url-slug-generator", "unicode-code-point-checker", "base32-encoder-decoder", "ulid-generator", "uuid-v7-generator", "simplified-traditional-chinese-converter", "chinese-number-kanji-converter", "rmb-uppercase-converter", "chinese-zodiac-calculator", "chinese-sexagenary-cycle-calculator", "chinese-phone-number-formatter", "taiwan-phone-number-formatter", "indian-number-format-converter", "lakh-crore-converter", "pan-format-validator", "gstin-format-validator", "india-phone-number-formatter", "germany-iban-validator", "german-number-format-converter", "german-date-format-converter", "spain-dni-validator", "spain-nie-validator", "spanish-number-format-converter", "spanish-date-format-converter", "france-phone-number-formatter", "french-number-format-converter", "french-date-format-converter", "netherlands-iban-validator", "dutch-number-format-converter", "dutch-date-format-converter", "brazil-cpf-validator", "brazil-cnpj-validator", "brazil-phone-number-formatter", "brazil-cep-formatter", "vietnam-phone-number-formatter", "vietnam-number-format-converter", "italy-fiscal-code-format-validator", "italy-vat-number-validator", "italy-number-format-converter", "italian-date-format-converter", "australia-postcode-formatter", "english-date-format-converter"];
-const sitemapTools = publicTools.map((tool) => turkishPublishedSlugs.includes(tool.slug)
-  ? { ...tool, supportedLocales: [...tool.supportedLocales, "tr"] }
-  : tool);
+const polishPublishedSlugs = new Set([...targetPolishToolSlugs, "lotto-number-generator", "powerball-number-generator", "mega-millions-number-generator", "japan-loto6-number-generator", "japan-loto7-number-generator", "japan-mini-loto-number-generator"]);
+const sitemapTools = publicTools.map((tool) => ({
+  ...tool,
+  supportedLocales: [...tool.supportedLocales, ...(turkishPublishedSlugs.includes(tool.slug) ? ["tr"] : []), ...(polishPublishedSlugs.has(tool.slug) ? ["pl"] : [])],
+}));
 const entries = createSitemapEntries({
   tools: sitemapTools,
   locales: publishedTargetLocales,
@@ -109,11 +112,11 @@ test("sitemap is generated from the public registry and includes every locale", 
   const listingEntries = entries.filter(({ url }) => /\/tools$/.test(url));
   const detailEntries = entries.filter(({ url }) => /\/tools\/[^/]+$/.test(url));
   assert.equal(locales.length, 15);
-  assert.equal(publishedTargetLocales.length, 17);
-  assert.equal(listingEntries.length, 17);
+  assert.equal(publishedTargetLocales.length, 18);
+  assert.equal(listingEntries.length, 18);
   const expectedDetailCount = sitemapTools.reduce((sum, tool) => sum + tool.supportedLocales.length, 0);
   assert.equal(detailEntries.length, expectedDetailCount);
-  assert.equal(entries.length, expectedDetailCount + 17);
+  assert.equal(entries.length, expectedDetailCount + 18);
   assert.equal(new Set(entries.map(({ url }) => url)).size, entries.length);
 
   const publishedRouteMatrix = sitemapTools.flatMap(({ slug, supportedLocales }) => supportedLocales.map((locale) => `${siteOrigin}/${locale}/tools/${slug}`));
@@ -130,7 +133,7 @@ test("sitemap is generated from the public registry and includes every locale", 
 
   for (const entry of entries) {
     assert.ok(entry.url.startsWith(`${siteOrigin}/`));
-    assert.match(entry.url, /^https:\/\/www\.woori\.today\/(ko|en|ja|zh|es|pt-br|de|fr|vi|id|th|zh-tw|it|nl|hi|ru|tr)\/tools(?:\/[^/]+)?$/);
+    assert.match(entry.url, /^https:\/\/www\.woori\.today\/(ko|en|ja|zh|es|pt-br|de|fr|vi|id|th|zh-tw|it|nl|hi|ru|tr|pl)\/tools(?:\/[^/]+)?$/);
     assert.equal(entry.alternates.languages["x-default"], entry.alternates.languages.ko);
     const segments = new URL(entry.url).pathname.split("/").filter(Boolean);
     const slug = segments[2];
@@ -164,33 +167,33 @@ test("private registry tools are excluded from sitemap entries", () => {
 test("sitemap and SEO use the same language alternate helper", () => {
   assert.match(sitemapSource, /import \{[^}]*languageAlternates[^}]*\} from "@\/lib\/seo"/);
   assert.match(seoSource, /"x-default": localizedUrl\("ko", path\)/);
-  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/lotto-number-generator")).alternates.languages).length, 18);
-  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/barcode-generator")).alternates.languages).length, 18);
-  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/barcode-checker")).alternates.languages).length, 18);
-  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/instagram-grid-split")).alternates.languages).length, 18);
-  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/image-collage")).alternates.languages).length, 18);
+  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/lotto-number-generator")).alternates.languages).length, 19);
+  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/barcode-generator")).alternates.languages).length, 19);
+  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/barcode-checker")).alternates.languages).length, 19);
+  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/instagram-grid-split")).alternates.languages).length, 19);
+  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/image-collage")).alternates.languages).length, 19);
   for (const slug of [ ]) assert.equal(Object.keys(entries.find(({ url }) => url.endsWith(`/tools/${slug}`)).alternates.languages).length, 17);
-  for (const slug of ["file-hash", "mime-type-checker", "file-extension-checker", "file-size-checker", "duplicate-file-checker"]) assert.equal(Object.keys(entries.find(({ url }) => url.endsWith(`/tools/${slug}`)).alternates.languages).length, 18);
-  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/markdown-preview")).alternates.languages).length, 18);
-   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/timer")).alternates.languages).length, 18);
-  for (const slug of turkishPublishedSlugs) assert.equal(Object.keys(entries.find(({ url }) => url.endsWith(`/tr/tools/${slug}`)).alternates.languages).length, 18);
-   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/pomodoro-timer")).alternates.languages).length, 18);
-   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/password-generator")).alternates.languages).length, 18);
-   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/random-string-generator")).alternates.languages).length, 18);
-   for (const slug of ["wifi-qr", "contact-qr", "phone-qr", "email-qr"]) assert.equal(Object.keys(entries.find(({ url }) => url.endsWith(`/tools/${slug}`)).alternates.languages).length, 18);
-  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/world-clock")).alternates.languages).length, 18);
-  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/dice-roller")).alternates.languages).length, 18);
-  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/coin-flip")).alternates.languages).length, 18);
-  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/random-number")).alternates.languages).length, 18);
-  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/stopwatch")).alternates.languages).length, 18);
-  for (const slug of ["random-name-picker", "draw-lots", "random-team-maker"]) assert.equal(Object.keys(entries.find(({ url }) => url.endsWith(`/tools/${slug}`)).alternates.languages).length, 18);
-  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/random-order")).alternates.languages).length, 18);
-  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/random-seat")).alternates.languages).length, 18);
-  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/duty-picker")).alternates.languages).length, 18);
-  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/random-wheel")).alternates.languages).length, 18);
-  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/tarot-card")).alternates.languages).length, 18);
-  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/daily-fortune")).alternates.languages).length, 18);
-  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/saju")).alternates.languages).length, 18);
+  for (const slug of ["file-hash", "mime-type-checker", "file-extension-checker", "file-size-checker", "duplicate-file-checker"]) assert.equal(Object.keys(entries.find(({ url }) => url.endsWith(`/tools/${slug}`)).alternates.languages).length, 19);
+  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/markdown-preview")).alternates.languages).length, 19);
+   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/timer")).alternates.languages).length, 19);
+  for (const slug of turkishPublishedSlugs) assert.equal(Object.keys(entries.find(({ url }) => url.endsWith(`/tr/tools/${slug}`)).alternates.languages).length, 19);
+   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/pomodoro-timer")).alternates.languages).length, 19);
+   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/password-generator")).alternates.languages).length, 19);
+   assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/random-string-generator")).alternates.languages).length, 19);
+   for (const slug of ["wifi-qr", "contact-qr", "phone-qr", "email-qr"]) assert.equal(Object.keys(entries.find(({ url }) => url.endsWith(`/tools/${slug}`)).alternates.languages).length, 19);
+  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/world-clock")).alternates.languages).length, 19);
+  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/dice-roller")).alternates.languages).length, 19);
+  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/coin-flip")).alternates.languages).length, 19);
+  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/random-number")).alternates.languages).length, 19);
+  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/stopwatch")).alternates.languages).length, 19);
+  for (const slug of ["random-name-picker", "draw-lots", "random-team-maker"]) assert.equal(Object.keys(entries.find(({ url }) => url.endsWith(`/tools/${slug}`)).alternates.languages).length, 19);
+  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/random-order")).alternates.languages).length, 19);
+  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/random-seat")).alternates.languages).length, 19);
+  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/duty-picker")).alternates.languages).length, 19);
+  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/random-wheel")).alternates.languages).length, 19);
+  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/tarot-card")).alternates.languages).length, 19);
+  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/daily-fortune")).alternates.languages).length, 19);
+  assert.equal(Object.keys(entries.find(({ url }) => url.endsWith("/tools/saju")).alternates.languages).length, 19);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/barcode-generator")), true);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/barcode-checker")), true);
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/instagram-grid-split")), true);

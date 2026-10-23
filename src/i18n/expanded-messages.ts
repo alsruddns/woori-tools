@@ -39,7 +39,7 @@ extra.ru = [
 ];
 
 export function getExpandedMessages(locale: PublishedTargetLocale): Record<string, string> {
-  if (locale === "tr") return {};
+  if (locale === "tr" || locale === "pl") return {};
   if (ui[locale].length !== uiKeys.length) throw new Error(`Incomplete shared UI translations for ${locale}: expected ${uiKeys.length}, got ${ui[locale].length}`);
   if (extra[locale].length !== nestedKeys.length) throw new Error(`Incomplete shared error/privacy translations for ${locale}: expected ${nestedKeys.length}, got ${extra[locale].length}`);
   return Object.fromEntries([...uiKeys.map((key, index) => [key, ui[locale][index]] as const), ...nestedKeys.map((key, index) => [key, extra[locale][index]] as const)]);

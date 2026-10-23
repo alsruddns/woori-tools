@@ -1,7 +1,7 @@
 # Woori Tools 26-language localization progress
 
 Updated from the translation source modules. Public tool count: 176. Target locales: 11.
-Routable locales: 17 (ko, en, ja, zh, es, pt-br, de, fr, vi, id, th, zh-tw, it, nl, hi, ru, tr). A target locale is listed as published only for tool pages that pass the UI and SEO checks.
+Routable locales: 18 (ko, en, ja, zh, es, pt-br, de, fr, vi, id, th, zh-tw, it, nl, hi, ru, tr, pl). Polish tool routes are wired for all 176 translated entries, but remain provisional: specialized workspace controls still use English fallback copy and have not passed full UI verification.
 
 ## Per-locale status
 
@@ -9,7 +9,7 @@ Routable locales: 17 (ko, en, ja, zh, es, pt-br, de, fr, vi, id, th, zh-tw, it, 
 | --- | ---: | ---: | ---: | ---: | ---: | --- |
 | ru | 176/176 | 176 | 176 | 176 | 0 | none |
 | tr | 176/176 | 176 | 176 | 176 | 0 | none |
-| pl | 176/176 | 0 | 0 | 0 | 0 | none |
+| pl | 176/176 | 0 full / 176 routed | 176 | 176 provisional | 0 | localize specialized workspace controls |
 | fil | 6/176 | 0 | 0 | 0 | 170 | tarot-card |
 | bn | 6/176 | 0 | 0 | 0 | 170 | tarot-card |
 | uk | 6/176 | 0 | 0 | 0 | 170 | tarot-card |
@@ -32,21 +32,23 @@ Routable locales: 17 (ko, en, ja, zh, es, pt-br, de, fr, vi, id, th, zh-tw, it, 
 - Russian next tool: none
 - Russian shared site, search, workspace, error, privacy, and terms messages are wired for the published route; non-Russian target UI messages remain unpublished.
 - Only tool-locale URLs listed in the registry are included in the sitemap and hreflang sets.
+- Polish routing and its 176 translated editorial records are connected to the tool detail page, tool directory, language switcher, metadata helper, and registry sitemap. The tool workspace reuses the existing English `phaseLocale` for specialized controls while passing Polish common messages; therefore Polish does not meet the strict translated-control publication gate yet and must not be reported as a completed locale.
 
 ## Remaining Russian translation data
 
 
 ## Next locale
 
+- Polish remains the active locale until its 176 specialized workspaces, common interface, validation states, and result messages are translated and verified. The currently generated Polish pages are a provisional integration checkpoint, not a completed public locale. After Polish passes the UI gate, continue with Filipino (`fil`) at `tarot-card`.
 - Russian authoring, UI, and SEO verification remains complete for all 176 tools.
 - Turkish translation data is complete for 176/176 tools. UI, SEO, and publication are verified for 176 tools; all Turkish tool routes are connected and published. The latest batches connected fifteen developer utilities and seven Chinese language, calendar, and phone tools plus five India number, tax ID, and phone tools plus twelve European number, date, phone, and IBAN tools plus thirteen Brazilian, Vietnamese, Italian, and English format tools with browser-local processing.
-- Polish editorial translation data is complete for 176/176 tools: 170 tool-specific entries plus six shared lottery tools. Polish UI, routing, SEO, and publication remain unimplemented; public Polish tool pages: 0.
+- Polish editorial translation data is complete for 176/176 tools: 170 tool-specific entries plus six shared lottery tools. Polish tool routes are provisionally generated, and their metadata and sitemap alternates are connected. Specialized workspace labels, options, and result messages still need Polish localization and static output review; full UI/SEO verification remains pending.
 - Turkish tools, site shell, privacy page, and terms page are localized. All 176 Turkish tools are published; canonical and hreflang metadata for both legal pages were verified in the latest static build.
 
 ## Last verified checkpoint
 
-- Validation: TypeScript passed; lint passed; all 141 tests passed; content-quality check passed; production build passed after Turkish privacy and terms pages were added.
-- Production build prerendered 3,183 static pages. The sitemap contains 2,992 localized tool URLs (2,640 legacy-locale pages, 176 Russian pages, and 176 Turkish pages).
-- Russian and Turkish each have 176 authored tool pages when their 170 editorial entries are combined with the six shared lottery entries; UI, SEO, and publication registries each contain 176 tools for both locales. Turkish privacy and terms pages now render translated content with canonical, Turkish hreflang, and x-default metadata.
+- Validation: TypeScript passed; lint passed; all 141 tests passed; production build passed with provisional Polish routes connected. A static scan confirmed canonical, Polish and x-default hreflang, title, and Open Graph locale on all 176 Polish tool HTML pages; the generated sitemap contains exactly 176 Polish tool URLs.
+- Production build prerendered 3,370 static pages, including 176 Polish tool-detail pages. The sitemap registry now covers 3,168 localized tool URLs (2,640 legacy-locale pages, 176 Russian, 176 Turkish, and 176 provisional Polish pages).
+- Russian and Turkish each have 176 authored tool pages, UI-verified pages, SEO-verified pages, and published pages. Polish has 176 editorial records and generated routes, but specialized workspace copy is still English in several workspaces; Polish must remain marked incomplete until those controls, errors, and results are localized and verified.
 - Turkish canonical, hreflang alternates (including tr and x-default), Open Graph metadata, static rendering, and sitemap membership were verified in the production output for text-to-file, character-count, social-image-resize, add-text-to-image, text-case-converter, remove-duplicate-words, regex-tester, color-converter, cron-parser, sql-formatter, html-formatter, css-formatter, javascript-formatter, json-formatter, json-validator, json-to-yaml, yaml-to-json, jpg-to-png, png-to-jpg, webp-to-jpg, webp-to-png, jpg-to-webp, png-to-webp, heic-to-jpg, image-compress, image-resize, image-crop, image-rotate, image-flip, image-grayscale, image-brightness, image-contrast, image-blur, image-pixelate, remove-image-metadata, image-info, favicon-generator, image-color-picker, the 11 Turkish PDF tools, and Turkish text comparison, CSV-to-JSON, JSON-to-CSV, Base64, URL encoding, UUID generation, timestamp conversion, and five Japanese calendar and text converters, plus two Japanese calendar calculators, three number generators, and four country-specific phone and postal formatters.
 - Current branch is `develop`; latest Turkish feature batches connect `jwt-decoder`, `url-query-parameter-parser`, `user-agent-parser`, `ip-cidr-calculator`, `hash-compare`, `regex-replace`, `html-entity-encoder-decoder`, `chmod-calculator`, `json-path-tester`, `csv-tsv-converter`, `url-slug-generator`, `unicode-code-point-checker`, `base32-encoder-decoder`, `ulid-generator`, `uuid-v7-generator`, `simplified-traditional-chinese-converter`, `chinese-number-kanji-converter`, `rmb-uppercase-converter`, `chinese-zodiac-calculator`, `chinese-sexagenary-cycle-calculator`, `chinese-phone-number-formatter`, `taiwan-phone-number-formatter`, `indian-number-format-converter`, `lakh-crore-converter`, `pan-format-validator`, `gstin-format-validator`, and `india-phone-number-formatter`, `germany-iban-validator`, `german-number-format-converter`, `german-date-format-converter`, `spain-dni-validator`, `spain-nie-validator`, `spanish-number-format-converter`, `spanish-date-format-converter`, `france-phone-number-formatter`, `french-number-format-converter`, `french-date-format-converter`, `netherlands-iban-validator`, and `dutch-number-format-converter`, `dutch-date-format-converter`, `brazil-cpf-validator`, `brazil-cnpj-validator`, `brazil-phone-number-formatter`, `brazil-cep-formatter`, `vietnam-phone-number-formatter`, `vietnam-number-format-converter`, `italy-fiscal-code-format-validator`, `italy-vat-number-validator`, `italy-number-format-converter`, `italian-date-format-converter`, `australia-postcode-formatter`, and `english-date-format-converter`. These routes reuse browser-local utility functions; the latest 52 pages were checked for localized controls, canonical, hreflang, Open Graph, and sitemap output.
