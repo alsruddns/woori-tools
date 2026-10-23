@@ -94,7 +94,7 @@ test("Russian has complete page metadata and editorial copy for its translated t
 });
 
 test("Polish editorial batch contains complete translated metadata and help copy", () => {
-  const expected = ["tarot-card", "daily-fortune", "saju", "random-number", "random-name-picker", "random-wheel", "draw-lots", "random-team-maker", "random-order", "random-seat"];
+  const expected = ["tarot-card", "daily-fortune", "saju", "random-number", "random-name-picker", "random-wheel", "draw-lots", "random-team-maker", "random-order", "random-seat", "duty-picker", "dice-roller", "coin-flip", "stopwatch", "timer", "pomodoro-timer", "world-clock", "password-generator", "random-string-generator", "wifi-qr"];
   const fields = ["title", "description", "seoTitle", "seoDescription", "category", "keywords", "steps", "example", "options", "caution", "faq"];
   assert.deepEqual(polishTranslations.targetPolishToolSlugs, expected);
   for (const slug of expected) {
