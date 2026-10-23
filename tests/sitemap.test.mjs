@@ -978,6 +978,18 @@ test("Polish regex tester localizes both inputs, safety errors, and result state
   assert.match(polishRegexWorkspaceSource, /Dane nie/);
 });
 
+test("Polish code formatters use the translated generic workspace and SEO routes", () => {
+  for (const slug of ["sql-formatter", "html-formatter", "css-formatter", "javascript-formatter"]) {
+    assert.equal(targetLocalePublication.pl.uiVerifiedToolSlugs.includes(slug), true);
+    assert.equal(targetLocalePublication.pl.seoVerifiedToolSlugs.includes(slug), true);
+    assert.equal(targetLocalePublication.pl.publishedToolSlugs.includes(slug), true);
+    assert.equal(entries.some(({ url }) => url === `https://www.woori.today/pl/tools/${slug}`), true);
+  }
+  assert.match(toolWorkspaceSource, /processTextTool\(tool\.slug,text,secondText,option,amount,phaseLocale\)/);
+  assert.match(toolWorkspaceSource, /messages\.textPlaceholder/);
+  assert.match(toolWorkspaceSource, /busy\?messages\.processing/);
+});
+
 test("Russian tarot page localizes controls, names, and card interpretations", () => {
   assert.match(toolPageSource, /slug === "tarot-card"/);
   assert.match(fortuneWorkspaceSource, /ru: \{ question: "Вопрос \(необязательно\)"[\s\S]*?note: "Таро предназначено/);
