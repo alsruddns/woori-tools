@@ -1015,6 +1015,18 @@ test("Polish image conversion pages publish through the localized browser worksp
   assert.match(toolWorkspaceSource, /messages\.download/);
 });
 
+test("Polish timestamp converter localizes format selection, input hints, and results", () => {
+  assert.equal(targetLocalePublication.pl.uiVerifiedToolSlugs.includes("timestamp-converter"), true);
+  assert.equal(targetLocalePublication.pl.seoVerifiedToolSlugs.includes("timestamp-converter"), true);
+  assert.equal(targetLocalePublication.pl.publishedToolSlugs.includes("timestamp-converter"), true);
+  assert.equal(entries.some(({ url }) => url === "https://www.woori.today/pl/tools/timestamp-converter"), true);
+  assert.match(toolWorkspaceSource, /processTextTool\(tool\.slug,text,secondText,option,amount,phaseLocale\)/);
+  assert.match(toolWorkspaceSource, /timestampPlaceholder/);
+  assert.match(toolWorkspaceSource, /timestampHint/);
+  assert.match(toolWorkspaceSource, /messages\.unixSeconds/);
+  assert.match(toolWorkspaceSource, /messages\.unixMilliseconds/);
+});
+
 test("Russian tarot page localizes controls, names, and card interpretations", () => {
   assert.match(toolPageSource, /slug === "tarot-card"/);
   assert.match(fortuneWorkspaceSource, /ru: \{ question: "Вопрос \(необязательно\)"[\s\S]*?note: "Таро предназначено/);
