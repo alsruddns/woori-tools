@@ -38,7 +38,7 @@ Routable locales: 17 (ko, en, ja, zh, es, pt-br, de, fr, vi, id, th, zh-tw, it, 
 ## Next locale
 
 - Russian authoring, UI, and SEO verification remains complete for all 176 tools.
-- Turkish translation data is complete for 176/176 tools. UI, SEO, and publication are verified for 103 tools; the next tool to connect is ladder-game.
+- Turkish translation data is complete for 176/176 tools. UI, SEO, and publication are verified for 110 tools; the next public tool to connect is wareki-converter.
 - Turkish common site navigation and non-tool pages are still not fully localized. Unpublished Turkish tool pages remain blocked by the publication registry.
 
 ## Last verified checkpoint
@@ -46,4 +46,4 @@ Routable locales: 17 (ko, en, ja, zh, es, pt-br, de, fr, vi, id, th, zh-tw, it, 
 - Validation: TypeScript passed; lint passed; all 138 tests passed; content-quality check passed; production build passed.
 - Production build prerendered 3,117 static pages. The sitemap contains 2,926 localized tool URLs (2,640 legacy-locale pages, 176 Russian pages, and 110 Turkish pages).
 - Turkish canonical, hreflang alternates (including tr and x-default), Open Graph metadata, static rendering, and sitemap membership were verified in the production output for text-to-file, character-count, social-image-resize, add-text-to-image, text-case-converter, remove-duplicate-words, regex-tester, color-converter, cron-parser, sql-formatter, html-formatter, css-formatter, javascript-formatter, json-formatter, json-validator, json-to-yaml, yaml-to-json, jpg-to-png, png-to-jpg, webp-to-jpg, webp-to-png, jpg-to-webp, png-to-webp, heic-to-jpg, image-compress, image-resize, image-crop, image-rotate, image-flip, image-grayscale, image-brightness, image-contrast, image-blur, image-pixelate, remove-image-metadata, image-info, favicon-generator, image-color-picker, the 11 Turkish PDF tools, and Turkish text comparison, CSV-to-JSON, JSON-to-CSV, Base64, URL encoding, UUID generation, and timestamp conversion.
-- Current branch is `develop`; last pushed commit is `25582f8`. Turkish text comparison, CSV/JSON conversion, and Base64/URL encoding tools are connected to localized client-side processing and verified.
+- Current branch is `develop`; last pushed commit is `6963fe2`. Turkish image color picking, all 11 PDF tools, text comparison, CSV conversion, Base64, URL encoding, UUID generation, and timestamp conversion are connected and verified.
