@@ -51,6 +51,8 @@ Object.assign(zoneNames, { ru: { "Asia/Seoul": "Сеул", "Asia/Tokyo": "Ток
 
 Object.assign(labels, { tr: { title: "Dünya saati", add: "Şehir ekle", remove: "Kaldır", search: "Saat dilimlerini ara", none: "Gösterilecek şehir yok." } });
 Object.assign(zoneNames, { tr: { "Asia/Seoul": "Seul", "Asia/Tokyo": "Tokyo", "Asia/Shanghai": "Şanghay", "Asia/Singapore": "Singapur", "Europe/London": "Londra", "Europe/Paris": "Paris", "America/New_York": "New York", "America/Los_Angeles": "Los Angeles", "Australia/Sydney": "Sidney", "Pacific/Auckland": "Auckland" } });
+Object.assign(labels, { pl: { title: "Zegar światowy", add: "Dodaj miasto", remove: "Usuń", search: "Wyszukaj strefy czasowe", none: "Brak miast do wyświetlenia." } });
+Object.assign(zoneNames, { pl: { "Asia/Seoul": "Seul", "Asia/Tokyo": "Tokio", "Asia/Shanghai": "Szanghaj", "Asia/Singapore": "Singapur", "Europe/London": "Londyn", "Europe/Paris": "Paryż", "America/New_York": "Nowy Jork", "America/Los_Angeles": "Los Angeles", "Australia/Sydney": "Sydney", "Pacific/Auckland": "Auckland" } });
 
 export function WorldClockWorkspace({ locale }: { locale:PublishedTargetLocale }) {
   const t = labels[locale];

@@ -911,6 +911,14 @@ test("Polish timer and Pomodoro localize controls, phases, presets, and locale d
   assert.match(toolWorkspaceSource, /CountdownWorkspace slug=\{tool\.slug\} locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
 });
 
+test("Polish world clock localizes city controls, zone names, and locale formatting", () => {
+  assert.equal(targetLocalePublication.pl.publishedToolSlugs.includes("world-clock"), true);
+  assert.equal(entries.some(({ url }) => url === "https://www.woori.today/pl/tools/world-clock"), true);
+  assert.match(worldClockWorkspaceSource, /pl: \{ title: "Zegar .wiatowy", add: "Dodaj miasto", remove: "Usu."/);
+  assert.match(worldClockWorkspaceSource, /"Europe\/Paris": "Pary."/);
+  assert.match(toolWorkspaceSource, /tool\.slug === "world-clock"\) return <WorldClockWorkspace locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
+});
+
 test("Russian tarot page localizes controls, names, and card interpretations", () => {
   assert.match(toolPageSource, /slug === "tarot-card"/);
   assert.match(fortuneWorkspaceSource, /ru: \{ question: "Вопрос \(необязательно\)"[\s\S]*?note: "Таро предназначено/);
