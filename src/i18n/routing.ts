@@ -16,8 +16,8 @@ export const localeConfig = [
   { locale: "hi", routeLocale: "hi", hreflang: "hi", nativeName: "हिन्दी", intlLocale: "hi-IN" },
 ] as const;
 
-// These locales are part of the expansion target, but are intentionally not
-// routable or indexable until their complete translation set is published.
+// These locales are part of the expansion target. Routing and indexing are
+// enabled only for locales and tool slugs that pass the publication gate.
 export const plannedLocaleConfig = [
   { locale: "ru", routeLocale: "ru", hreflang: "ru", nativeName: "Русский", intlLocale: "ru-RU" },
   { locale: "tr", routeLocale: "tr", hreflang: "tr", nativeName: "Türkçe", intlLocale: "tr-TR" },
@@ -33,12 +33,11 @@ export const plannedLocaleConfig = [
 ] as const;
 
 export const targetLocaleConfig = [...localeConfig, ...plannedLocaleConfig] as const;
-export const publishedTargetLocaleConfig = [...localeConfig, plannedLocaleConfig[0], plannedLocaleConfig[1]] as const;
+export const publishedTargetLocaleConfig = [...localeConfig, plannedLocaleConfig[0], plannedLocaleConfig[1], plannedLocaleConfig[2]] as const;
 export type RouteLocale = (typeof localeConfig)[number]["routeLocale"];
 export type Locale = RouteLocale;
-// Include Polish in the translation-capable content type while it is withheld
-// from the runtime published locale list until workspace verification passes.
-export type PublishedTargetLocale = (typeof publishedTargetLocaleConfig)[number]["routeLocale"] | "pl";
+// Published target locales use a dedicated route shell and per-tool allowlist.
+export type PublishedTargetLocale = (typeof publishedTargetLocaleConfig)[number]["routeLocale"];
 export type PlannedLocale = (typeof plannedLocaleConfig)[number]["routeLocale"];
 export type TargetLocale = (typeof targetLocaleConfig)[number]["routeLocale"];
 export type UiLocale = "ko" | "en" | "ja" | "zh";
@@ -65,7 +64,7 @@ export function isLocale(value: string): value is RouteLocale {
   return getLocaleConfig(value) !== undefined;
 }
 
-export function isPublishedTargetLocale(value: string): value is Exclude<PublishedTargetLocale, "pl"> {
+export function isPublishedTargetLocale(value: string): value is PublishedTargetLocale {
   return publishedTargetLocaleConfig.some((item) => item.routeLocale === value);
 }
 

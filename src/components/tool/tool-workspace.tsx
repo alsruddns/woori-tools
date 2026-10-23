@@ -28,6 +28,7 @@ import { DiceWorkspace, LottoWorkspace, RandomNameWorkspace, RandomNumberWorkspa
 
 const MAX_IMAGE = 30 * 1024 * 1024;
 const MAX_PDF = 50 * 1024 * 1024;
+type ToolWorkspaceLocale = RouteLocale | "pl";
 const CountryToolsWorkspace = dynamic(() => import("@/components/tool/country-tools-workspace").then((module) => module.CountryToolsWorkspace));
 const selectionLimitMessages: Record<RouteLocale, { files: string; images: string }> = {
   ko:{files:"파일은 최대 100개, 전체 용량은 200MB까지 선택할 수 있습니다.",images:"이미지는 최대 6개, 전체 용량은 100MB까지 선택할 수 있습니다."},
@@ -47,7 +48,8 @@ const selectionLimitMessages: Record<RouteLocale, { files: string; images: strin
   hi:{files:"अधिकतम 100 फ़ाइलें चुनें, जिनका कुल आकार 200 MB तक हो।",images:"अधिकतम 6 चित्र चुनें, जिनका कुल आकार 100 MB तक हो।"},
 };
 
-export function ToolWorkspace({ tool, phaseLocale, optionLocale = phaseLocale, messages }: { tool: ToolDefinition; phaseLocale:RouteLocale; optionLocale?: ToolOptionLocale; messages: Dictionary }) {
+export function ToolWorkspace({ tool, phaseLocale, optionLocale = phaseLocale, messages }: { tool: ToolDefinition; phaseLocale:ToolWorkspaceLocale; optionLocale?: ToolOptionLocale; messages: Dictionary }) {
+  const specializedLocale: RouteLocale = phaseLocale === "pl" ? "en" : phaseLocale;
   const isImage = tool.category === "image";
   const isPdf = tool.category === "pdf" || tool.slug === "images-to-pdf";
   const isFileTool = ["file-hash","mime-type-checker","file-extension-checker","file-size-checker","duplicate-file-checker","zip-files","bulk-file-renamer","filename-cleaner"].includes(tool.slug);
@@ -77,33 +79,33 @@ export function ToolWorkspace({ tool, phaseLocale, optionLocale = phaseLocale, m
     const stem = files[0].name.replace(/\.[^.]+$/, "").replace(/[\\/:*?"<>|]/g, "-");
     return stem || "download";
   }, [files]);
-  if (tool.slug.startsWith("jwt-") || ["url-query-parameter-parser","user-agent-parser","ip-cidr-calculator","base32-encoder-decoder","ulid-generator","uuid-v7-generator","hash-compare","regex-replace","html-entity-encoder-decoder","chmod-calculator","json-path-tester","csv-tsv-converter","url-slug-generator","unicode-code-point-checker","pdf-page-size-checker"].includes(tool.slug)) return <BrowserDeveloperToolsWorkspace slug={tool.slug} locale={phaseLocale} title={tool.title} />;
-  if ((COUNTRY_TOOL_SLUGS as readonly string[]).includes(tool.slug)) return <CountryToolsWorkspace slug={tool.slug as (typeof COUNTRY_TOOL_SLUGS)[number]} locale={phaseLocale} />;
-  if (["wareki-converter", "hiragana-katakana-converter", "fullwidth-halfwidth-converter", "japanese-romaji-converter", "japanese-number-kanji-converter", "yakudoshi-calculator", "japanese-zodiac-calculator", "numbers3-number-generator", "numbers4-number-generator", "bingo5-number-generator"].includes(tool.slug)) return <JapanToolsWorkspace slug={tool.slug} locale={phaseLocale} />;
-  if (tool.slug === "tarot-card") return <TarotWorkspace locale={phaseLocale} />;
-  if (tool.slug === "daily-fortune") return <DailyFortuneWorkspace locale={phaseLocale} />;
-  if (tool.slug === "saju") return <SajuWorkspace locale={phaseLocale} />;
-  if (tool.slug === "lotto-number-generator") return <LottoWorkspace locale={phaseLocale} />;
-  if (tool.slug === "powerball-number-generator") return <LottoWorkspace locale={phaseLocale} min={1} max={69} numberCount={5} historyKey="lottery-history:powerball-number-generator" specialBall={{ min: 1, max: 26, label: Object.fromEntries(["ko","en","ja","zh","es","pt-br","de","fr","vi","id","th","zh-tw","it","nl","hi"].map((key)=>[key,"Powerball"])) }} />;
-  if (tool.slug === "mega-millions-number-generator") return <LottoWorkspace locale={phaseLocale} min={1} max={70} numberCount={5} historyKey="lottery-history:mega-millions-number-generator" specialBall={{ min: 1, max: 24, label: Object.fromEntries(["ko","en","ja","zh","es","pt-br","de","fr","vi","id","th","zh-tw","it","nl","hi"].map((key)=>[key,"Mega Ball"])) }} />;
-  if (tool.slug === "japan-loto6-number-generator") return <LottoWorkspace locale={phaseLocale} min={1} max={43} numberCount={6} historyKey="lottery-history:japan-loto6-number-generator" />;
-  if (tool.slug === "japan-loto7-number-generator") return <LottoWorkspace locale={phaseLocale} min={1} max={37} numberCount={7} historyKey="lottery-history:japan-loto7-number-generator" />;
-  if (tool.slug === "japan-mini-loto-number-generator") return <LottoWorkspace locale={phaseLocale} min={1} max={31} numberCount={5} historyKey="lottery-history:japan-mini-loto-number-generator" />;
-  if (tool.slug === "dice-roller") return <DiceWorkspace locale={phaseLocale} />;
-  if (tool.slug === "random-number") return <RandomNumberWorkspace locale={phaseLocale} />;
-  if (tool.slug === "random-name-picker" || tool.slug === "draw-lots") return <RandomNameWorkspace slug={tool.slug} locale={phaseLocale} />;
-  if (tool.slug === "random-team-maker") return <RandomTeamWorkspace locale={phaseLocale} />;
-  if (tool.slug === "random-order") return <RandomOrderWorkspace locale={phaseLocale} />;
-  if (tool.slug === "random-seat") return <RandomSeatWorkspace locale={phaseLocale} />;
-  if (["password-generator","random-string-generator"].includes(tool.slug)) return <RandomStringWorkspace slug={tool.slug} locale={phaseLocale} />;
-  if (tool.slug === "ladder-game") return <LadderWorkspace locale={phaseLocale} />;
-  if (tool.slug === "markdown-preview") return <MarkdownWorkspace locale={phaseLocale} />;
-  if (tool.slug === "barcode-generator") return <BarcodeWorkspace locale={phaseLocale} />;
-  if (["wifi-qr","contact-qr","phone-qr","email-qr"].includes(tool.slug)) return <QrWorkspace slug={tool.slug} locale={phaseLocale} />;
-  if (tool.slug === "random-wheel") return <RandomWheelWorkspace locale={phaseLocale} />;
-  if (tool.slug === "timer" || tool.slug === "pomodoro-timer") return <CountdownWorkspace slug={tool.slug} locale={phaseLocale} />;
-  if (tool.slug === "world-clock") return <WorldClockWorkspace locale={phaseLocale} />;
-  if (tool.category === "date-time") return <DateTimeTool slug={tool.slug} locale={phaseLocale} />;
+  if (tool.slug.startsWith("jwt-") || ["url-query-parameter-parser","user-agent-parser","ip-cidr-calculator","base32-encoder-decoder","ulid-generator","uuid-v7-generator","hash-compare","regex-replace","html-entity-encoder-decoder","chmod-calculator","json-path-tester","csv-tsv-converter","url-slug-generator","unicode-code-point-checker","pdf-page-size-checker"].includes(tool.slug)) return <BrowserDeveloperToolsWorkspace slug={tool.slug} locale={specializedLocale} title={tool.title} />;
+  if ((COUNTRY_TOOL_SLUGS as readonly string[]).includes(tool.slug)) return <CountryToolsWorkspace slug={tool.slug as (typeof COUNTRY_TOOL_SLUGS)[number]} locale={specializedLocale} />;
+  if (["wareki-converter", "hiragana-katakana-converter", "fullwidth-halfwidth-converter", "japanese-romaji-converter", "japanese-number-kanji-converter", "yakudoshi-calculator", "japanese-zodiac-calculator", "numbers3-number-generator", "numbers4-number-generator", "bingo5-number-generator"].includes(tool.slug)) return <JapanToolsWorkspace slug={tool.slug} locale={specializedLocale} />;
+  if (tool.slug === "tarot-card") return <TarotWorkspace locale={specializedLocale} />;
+  if (tool.slug === "daily-fortune") return <DailyFortuneWorkspace locale={specializedLocale} />;
+  if (tool.slug === "saju") return <SajuWorkspace locale={specializedLocale} />;
+  if (tool.slug === "lotto-number-generator") return <LottoWorkspace locale={specializedLocale} />;
+  if (tool.slug === "powerball-number-generator") return <LottoWorkspace locale={specializedLocale} min={1} max={69} numberCount={5} historyKey="lottery-history:powerball-number-generator" specialBall={{ min: 1, max: 26, label: Object.fromEntries(["ko","en","ja","zh","es","pt-br","de","fr","vi","id","th","zh-tw","it","nl","hi"].map((key)=>[key,"Powerball"])) }} />;
+  if (tool.slug === "mega-millions-number-generator") return <LottoWorkspace locale={specializedLocale} min={1} max={70} numberCount={5} historyKey="lottery-history:mega-millions-number-generator" specialBall={{ min: 1, max: 24, label: Object.fromEntries(["ko","en","ja","zh","es","pt-br","de","fr","vi","id","th","zh-tw","it","nl","hi"].map((key)=>[key,"Mega Ball"])) }} />;
+  if (tool.slug === "japan-loto6-number-generator") return <LottoWorkspace locale={specializedLocale} min={1} max={43} numberCount={6} historyKey="lottery-history:japan-loto6-number-generator" />;
+  if (tool.slug === "japan-loto7-number-generator") return <LottoWorkspace locale={specializedLocale} min={1} max={37} numberCount={7} historyKey="lottery-history:japan-loto7-number-generator" />;
+  if (tool.slug === "japan-mini-loto-number-generator") return <LottoWorkspace locale={specializedLocale} min={1} max={31} numberCount={5} historyKey="lottery-history:japan-mini-loto-number-generator" />;
+  if (tool.slug === "dice-roller") return <DiceWorkspace locale={specializedLocale} />;
+  if (tool.slug === "random-number") return <RandomNumberWorkspace locale={specializedLocale} />;
+  if (tool.slug === "random-name-picker" || tool.slug === "draw-lots") return <RandomNameWorkspace slug={tool.slug} locale={specializedLocale} />;
+  if (tool.slug === "random-team-maker") return <RandomTeamWorkspace locale={specializedLocale} />;
+  if (tool.slug === "random-order") return <RandomOrderWorkspace locale={specializedLocale} />;
+  if (tool.slug === "random-seat") return <RandomSeatWorkspace locale={specializedLocale} />;
+  if (["password-generator","random-string-generator"].includes(tool.slug)) return <RandomStringWorkspace slug={tool.slug} locale={specializedLocale} />;
+  if (tool.slug === "ladder-game") return <LadderWorkspace locale={specializedLocale} />;
+  if (tool.slug === "markdown-preview") return <MarkdownWorkspace locale={specializedLocale} />;
+  if (tool.slug === "barcode-generator") return <BarcodeWorkspace locale={specializedLocale} />;
+  if (["wifi-qr","contact-qr","phone-qr","email-qr"].includes(tool.slug)) return <QrWorkspace slug={tool.slug} locale={specializedLocale} />;
+  if (tool.slug === "random-wheel") return <RandomWheelWorkspace locale={specializedLocale} />;
+  if (tool.slug === "timer" || tool.slug === "pomodoro-timer") return <CountdownWorkspace slug={tool.slug} locale={specializedLocale} />;
+  if (tool.slug === "world-clock") return <WorldClockWorkspace locale={specializedLocale} />;
+  if (tool.category === "date-time") return <DateTimeTool slug={tool.slug} locale={specializedLocale} />;
 
   function selectFiles(list: FileList | null) {
     if (!list) return;
@@ -111,8 +113,8 @@ export function ToolWorkspace({ tool, phaseLocale, optionLocale = phaseLocale, m
     const limit = isImage ? MAX_IMAGE : isPdf ? MAX_PDF : 100 * 1024 * 1024;
     const bad = incoming.find((file) => file.size > limit);
     if (bad) { setError(messages.errors.tooLarge.replace("{size}", String(isImage ? 30 : 50))); return; }
-    if(isFileTool&&(incoming.length>100||incoming.reduce((sum,file)=>sum+file.size,0)>200*1024*1024)){setError(selectionLimitMessages[phaseLocale].files);return;}
-    if(tool.slug==="image-collage"&&(incoming.length>6||incoming.reduce((sum,file)=>sum+file.size,0)>100*1024*1024)){setError(selectionLimitMessages[phaseLocale].images);return;}
+    if(isFileTool&&(incoming.length>100||incoming.reduce((sum,file)=>sum+file.size,0)>200*1024*1024)){setError(phaseLocale==="pl"?"Wybierz maksymalnie 100 plików o łącznym rozmiarze do 200 MB.":selectionLimitMessages[phaseLocale].files);return;}
+    if(tool.slug==="image-collage"&&(incoming.length>6||incoming.reduce((sum,file)=>sum+file.size,0)>100*1024*1024)){setError(phaseLocale==="pl"?"Wybierz maksymalnie 6 obrazów o łącznym rozmiarze do 100 MB.":selectionLimitMessages[phaseLocale].images);return;}
     const valid = incoming.filter((file) => isImage ? (/^image\//.test(file.type) || /\.heic$/i.test(file.name) || /\.heif$/i.test(file.name)) : isPdf ? (file.type === "application/pdf" || /\.pdf$/i.test(file.name)) : true);
     if (valid.length !== incoming.length) { setError(isImage ? messages.errors.imageOnly : messages.errors.pdfOnly); return; }
     const selected = tool.slug==="image-collage" || isFileTool || (isPdf && tool.slug !== "pdf-split" && tool.slug !== "pdf-delete-pages" && tool.slug !== "pdf-rotate-pages" && tool.slug !== "pdf-add-page-numbers" && tool.slug !== "pdf-watermark" && tool.slug !== "pdf-metadata-viewer" && tool.slug !== "pdf-remove-metadata") ? valid : valid.slice(0, 1);
