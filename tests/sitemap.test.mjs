@@ -814,6 +814,14 @@ test("Polish saju localizes calendar inputs, five elements, methodology, and pri
   assert.match(toolWorkspaceSource, /tool\.slug === "saju"\) return <SajuWorkspace locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
 });
 
+test("Polish random number generator uses localized range, count, options, and validation", () => {
+  assert.equal(targetLocalePublication.pl.publishedToolSlugs.includes("random-number"), true);
+  assert.equal(entries.some(({ url }) => url === "https://www.woori.today/pl/tools/random-number"), true);
+  assert.match(specialRandomWorkspaceSource, /export function RandomNumberWorkspace\(\{ locale \}: \{ locale:RouteLocale \| "ru" \| "tr" \| "pl" \}\)/);
+  assert.match(specialRandomWorkspaceSource, /locale === "pl" \? \{ \.\.\.copy\[locale\], drawCount: "Liczba losowanych liczb" \}/);
+  assert.match(toolWorkspaceSource, /tool\.slug === "random-number"\) return <RandomNumberWorkspace locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
+});
+
 test("Russian tarot page localizes controls, names, and card interpretations", () => {
   assert.match(toolPageSource, /slug === "tarot-card"/);
   assert.match(fortuneWorkspaceSource, /ru: \{ question: "Вопрос \(необязательно\)"[\s\S]*?note: "Таро предназначено/);

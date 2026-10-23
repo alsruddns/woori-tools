@@ -92,7 +92,7 @@ export function ToolWorkspace({ tool, phaseLocale, optionLocale = phaseLocale, m
   if (tool.slug === "japan-loto7-number-generator") return <LottoWorkspace locale={phaseLocale === "pl" ? "pl" : specializedLocale} min={1} max={37} numberCount={7} historyKey="lottery-history:japan-loto7-number-generator" />;
   if (tool.slug === "japan-mini-loto-number-generator") return <LottoWorkspace locale={phaseLocale === "pl" ? "pl" : specializedLocale} min={1} max={31} numberCount={5} historyKey="lottery-history:japan-mini-loto-number-generator" />;
   if (tool.slug === "dice-roller") return <DiceWorkspace locale={specializedLocale} />;
-  if (tool.slug === "random-number") return <RandomNumberWorkspace locale={specializedLocale} />;
+  if (tool.slug === "random-number") return <RandomNumberWorkspace locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;
   if (tool.slug === "random-name-picker" || tool.slug === "draw-lots") return <RandomNameWorkspace slug={tool.slug} locale={specializedLocale} />;
   if (tool.slug === "random-team-maker") return <RandomTeamWorkspace locale={specializedLocale} />;
   if (tool.slug === "random-order") return <RandomOrderWorkspace locale={specializedLocale} />;

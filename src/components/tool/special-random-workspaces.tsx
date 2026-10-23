@@ -189,8 +189,8 @@ export function DiceWorkspace({ locale }: { locale:RouteLocale | "ru" | "tr" }) 
   </section>;
 }
 
-export function RandomNumberWorkspace({ locale }: { locale:RouteLocale | "ru" | "tr" }) {
-  const t = copy[locale];
+export function RandomNumberWorkspace({ locale }: { locale:RouteLocale | "ru" | "tr" | "pl" }) {
+  const t = locale === "pl" ? { ...copy[locale], drawCount: "Liczba losowanych liczb" } : copy[locale];
   const [min, setMin] = useState(1), [max, setMax] = useState(45), [count, setCount] = useState(1), [unique, setUnique] = useState(true), [sorted, setSorted] = useState(true);
   const [result, setResult] = useState<number[]>([]), [error, setError] = useState("");
   function draw() {
