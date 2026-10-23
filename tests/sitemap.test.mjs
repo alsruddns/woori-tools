@@ -89,6 +89,7 @@ const browserDeveloperWorkspaceSource = await readFile(new URL("../src/component
 const polishChinaWorkspaceSource = await readFile(new URL("../src/components/tool/polish-china-tools-workspace.tsx", import.meta.url), "utf8");
 const polishIndiaWorkspaceSource = await readFile(new URL("../src/components/tool/polish-india-tools-workspace.tsx", import.meta.url), "utf8");
 const polishGermanyWorkspaceSource = await readFile(new URL("../src/components/tool/polish-germany-tools-workspace.tsx", import.meta.url), "utf8");
+const polishWesternEuropeWorkspaceSource = await readFile(new URL("../src/components/tool/polish-western-europe-tools-workspace.tsx", import.meta.url), "utf8");
 const specialRandomWorkspaceSource = await readFile(new URL("../src/components/tool/special-random-workspaces.tsx", import.meta.url), "utf8");
 const toolWorkspaceSource = await readFile(new URL("../src/components/tool/tool-workspace.tsx", import.meta.url), "utf8");
 const instagramGridWorkspaceSource = await readFile(new URL("../src/components/tool/russian-instagram-grid-workspace.tsx", import.meta.url), "utf8");
@@ -1131,4 +1132,20 @@ test("Russian saju localizes calendar inputs, five elements, methodology, and pr
   assert.match(sajuWorkspaceSource, /"hi","ru"/);
   assert.equal(publicTools.find((tool) => tool.slug === "saju").supportedLocales.includes("ru"), true);
   assert.equal(entries.some(({ url }) => url === `${siteOrigin}/ru/tools/saju`), true);
+});
+
+
+test("Polish Spain, France, and Netherlands country tools are localized and published", () => {
+  const slugs = ["spain-dni-validator", "spain-nie-validator", "spanish-number-format-converter", "spanish-date-format-converter", "france-phone-number-formatter", "french-number-format-converter", "french-date-format-converter", "netherlands-iban-validator", "dutch-number-format-converter", "dutch-date-format-converter"];
+  for (const slug of slugs) {
+    assert.equal(targetLocalePublication.pl.uiVerifiedToolSlugs.includes(slug), true);
+    assert.equal(targetLocalePublication.pl.seoVerifiedToolSlugs.includes(slug), true);
+    assert.equal(targetLocalePublication.pl.publishedToolSlugs.includes(slug), true);
+    assert.equal(entries.some(({ url }) => url === `https://www.woori.today/pl/tools/${slug}`), true);
+  }
+  assert.ok(toolWorkspaceSource.includes('if (phaseLocale === "pl" && isPolishWesternEuropeSlug(tool.slug)) return <PolishWesternEuropeToolsWorkspace slug={tool.slug} />'));
+  assert.ok(polishWesternEuropeWorkspaceSource.includes('"spain-dni-validator": { title: "Walidator hiszpa'));
+  assert.ok(polishWesternEuropeWorkspaceSource.includes("rejestracji urz"));
+  assert.ok(polishWesternEuropeWorkspaceSource.includes("reversibleDates"));
+  assert.ok(polishWesternEuropeWorkspaceSource.includes("Warto"));
 });
