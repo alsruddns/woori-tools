@@ -1202,7 +1202,7 @@ test("Polish US, Canada, and UK phone and postal tools are localized and publish
 });
 
 test("Filipino authored tool translations include complete editorial and SEO fields", () => {
-  assert.equal(targetFilipinoToolSlugs.length, 60);
+  assert.equal(targetFilipinoToolSlugs.length, 70);
   assert.ok(targetFilipinoToolSlugs.includes("tarot-card"));
   assert.ok(targetFilipinoToolSlugs.includes("text-to-file"));
   for (const slug of targetFilipinoToolSlugs) {
