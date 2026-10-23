@@ -1,4 +1,5 @@
 import type { PublishedTargetLocale } from "./routing";
+import { polishExpandedMessages } from "./polish-expanded-messages";
 
 const uiKeys = ["colorPickerLabel","workspaceLabel","chooseOrDrop","fileLimit","selectFile","resetSelection","selectedImageAlt","clickImageColor","firstText","secondText","input","textPlaceholder","timestampPlaceholder","timestampHint","process","run","processing","processingStatus","completedStatus","width","height","keepRatio","rotation","flipDirection","horizontal","vertical","cropAspect","square","landscape","portrait","brightness","contrast","blur","mosaic","generateCount","removeAllSpaces","collapseSpaces","ascending","descending","lowercase","uppercase","titleCase","prettyPrint","minify","encode","decode","unixSeconds","unixMilliseconds","enterDate","localTime","pageRange","pageOrder","watermark","countCharacters","countCharactersNoSpaces","lineCount","wordCount","fileName","mime","unknown","fileWidth","fileHeight","fileSize","ratio","pageCount","title","author","subject","keywords","creator","sameText","validJson","jsonArray","line","copyFailed"] as const;
 const nestedKeys = ["errors.tooLarge","errors.imageOnly","errors.pdfOnly","errors.noImage","errors.noPdf","errors.noImages","errors.pdfTotal","errors.invalidJson","errors.invalidYaml","errors.invalidCsv","errors.invalidPdf","errors.processing","errors.noContent","errors.unsupported","errors.copy","errors.pixels","errors.canvas","errors.imageOutput","errors.invalidPage","errors.emptyPdf","errors.pageOrder","errors.invalidDate","errors.invalidImage","privacyPage.title","privacyPage.description","privacyPage.intro","privacyPage.fileHeading","privacyPage.fileBody","privacyPage.dataHeading","privacyPage.dataBody","privacyPage.browserHeading","privacyPage.browserBody","privacyPage.ending","termsPage.title","termsPage.description","termsPage.intro","termsPage.resultsHeading","termsPage.resultsBody","termsPage.useHeading","termsPage.useBody","termsPage.changesHeading","termsPage.changesBody"] as const;
@@ -39,7 +40,8 @@ extra.ru = [
 ];
 
 export function getExpandedMessages(locale: PublishedTargetLocale): Record<string, string> {
-  if (locale === "tr" || locale === "pl") return {};
+  if (locale === "tr") return {};
+  if (locale === "pl") return polishExpandedMessages;
   if (ui[locale].length !== uiKeys.length) throw new Error(`Incomplete shared UI translations for ${locale}: expected ${uiKeys.length}, got ${ui[locale].length}`);
   if (extra[locale].length !== nestedKeys.length) throw new Error(`Incomplete shared error/privacy translations for ${locale}: expected ${nestedKeys.length}, got ${extra[locale].length}`);
   return Object.fromEntries([...uiKeys.map((key, index) => [key, ui[locale][index]] as const), ...nestedKeys.map((key, index) => [key, extra[locale][index]] as const)]);

@@ -66,7 +66,11 @@ const { getToolContent } = await importTs("../src/registry/tool-content.ts", [[
   'import { getToolRiskNote } from "@/registry/tool-risk-notes";',
   'const getToolRiskNote = globalThis.__getToolRiskNote;',
 ]]);
-const expandedModule = await importTs("../src/i18n/expanded-messages.ts");
+const polishExpandedMessages = (await importTs("../src/i18n/polish-expanded-messages.ts")).polishExpandedMessages;
+const expandedModule = await importTs("../src/i18n/expanded-messages.ts", [[
+  'import { polishExpandedMessages } from "./polish-expanded-messages";',
+  `const polishExpandedMessages = ${JSON.stringify(polishExpandedMessages)};`,
+]]);
 globalThis.__getExpandedMessages = expandedModule.getExpandedMessages;
 const { getMessages } = await importTs("../src/i18n/messages.ts", [[
   'import { getExpandedMessages } from "./expanded-messages";',
