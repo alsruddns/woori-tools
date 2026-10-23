@@ -919,6 +919,17 @@ test("Polish world clock localizes city controls, zone names, and locale formatt
   assert.match(toolWorkspaceSource, /tool\.slug === "world-clock"\) return <WorldClockWorkspace locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
 });
 
+test("Polish password and random string tools localize character settings and validation", () => {
+  for (const slug of ["password-generator", "random-string-generator"]) {
+    assert.equal(targetLocalePublication.pl.publishedToolSlugs.includes(slug), true);
+    assert.equal(entries.some(({ url }) => url === `https://www.woori.today/pl/tools/${slug}`), true);
+  }
+  assert.match(randomStringWorkspaceSource, /Object\.assign\(labels,\{pl:\{length:"D[^"]+",count:"Liczba do wygenerowania"/);
+  assert.match(randomStringWorkspaceSource, /error:"Wybierz co najmniej jeden zestaw znak/);
+  assert.match(randomStringWorkspaceSource, /Object\.assign\(optionLegend,\{pl:"Opcje znak/);
+  assert.match(toolWorkspaceSource, /RandomStringWorkspace slug=\{tool\.slug\} locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
+});
+
 test("Russian tarot page localizes controls, names, and card interpretations", () => {
   assert.match(toolPageSource, /slug === "tarot-card"/);
   assert.match(fortuneWorkspaceSource, /ru: \{ question: "Вопрос \(необязательно\)"[\s\S]*?note: "Таро предназначено/);
