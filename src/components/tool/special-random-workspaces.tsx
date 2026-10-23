@@ -204,11 +204,13 @@ export function RandomNumberWorkspace({ locale }: { locale:RouteLocale | "ru" | 
   return <section className="rounded-3xl border bg-white p-5 shadow-sm sm:p-7"><div className="grid gap-4 sm:grid-cols-3">{[[t.minimum, min, setMin], [t.maximum, max, setMax], [t.drawCount, count, setCount]].map(([label, value, setter]) => <label key={String(label)} className="text-sm font-medium">{String(label)}<input type="number" min={label === t.drawCount ? 1 : undefined} max={label === t.drawCount ? 100 : undefined} value={Number(value)} onChange={(event) => (setter as (value: number) => void)(Number(event.target.value))} className="mt-2 block w-full rounded-xl border p-3" /></label>)}</div><div className="mt-4 flex flex-wrap gap-5 text-sm"><label className="flex items-center gap-2"><input type="checkbox" checked={unique} onChange={(event) => setUnique(event.target.checked)} />{t.unique}</label><label className="flex items-center gap-2"><input type="checkbox" checked={sorted} onChange={(event) => setSorted(event.target.checked)} />{t.sorted}</label></div><button type="button" onClick={draw} className="mt-5 min-h-12 rounded-xl bg-indigo-600 px-5 font-semibold text-white">{result.length ? t.again : t.generate}</button><button type="button" onClick={() => { setMin(1); setMax(45); setCount(1); setResult([]); setError(""); }} className="ml-2 min-h-12 rounded-xl border px-5">{t.reset}</button>{error && <p role="alert" className="mt-3 text-sm text-rose-700">{error}</p>}{result.length > 0 && <section className="mt-5 rounded-2xl bg-slate-50 p-4"><div className="flex flex-wrap items-center justify-between gap-3"><h3 className="font-semibold">{t.result}</h3><button type="button" onClick={() => void copyResult()} className="rounded-lg border bg-white px-3 py-2 text-sm">{t.copy}</button></div><div className="mt-3 flex flex-wrap gap-2">{result.map((number, index) => <span key={`${number}-${index}`} className="grid min-h-12 min-w-12 place-items-center rounded-xl bg-indigo-100 px-3 font-bold text-indigo-900">{number}</span>)}</div></section>}</section>;
 }
 
-export function CoinFlipWorkspace({ locale = "ru" }: { locale?: "ru" | "tr" }) {
+export function CoinFlipWorkspace({ locale = "ru" }: { locale?: "ru" | "tr" | "pl" }) {
   const [count, setCount] = useState(1);
   const [flips, setFlips] = useState<number[]>([]);
   const [error, setError] = useState("");
-  const labels = locale === "tr"
+  const labels = locale === "pl"
+    ? { count: "Liczba rzut\u00F3w", again: "Rzu\u0107 ponownie", flip: "Rzu\u0107 monet\u0105", result: "Wynik", heads: "Orze\u0142", tails: "Reszka", invalid: "Wpisz liczb\u0119 od 1 do 1000." }
+    : locale === "tr"
     ? { count: "Yaz? tura say?s?", again: "Tekrar at", flip: "Yaz? tura at", result: "Sonu?", heads: "Yaz?", tails: "Tura", invalid: "1 ile 1000 aras?nda bir say? girin." }
     : { count: "?????????? ???????", again: "??????? ???", flip: "??????? ??????", result: "?????????", heads: "????", tails: "?????", invalid: "??????? ????? ?? 1 ?? 1000." };
   function flip() {

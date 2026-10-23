@@ -885,6 +885,14 @@ test("Polish dice roller localizes die settings, explanation, statistics, and va
   assert.match(toolWorkspaceSource, /tool\.slug === "dice-roller"\) return <DiceWorkspace locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
 });
 
+test("Polish coin flip localizes count, sides, results, and range validation", () => {
+  assert.equal(targetLocalePublication.pl.publishedToolSlugs.includes("coin-flip"), true);
+  assert.equal(entries.some(({ url }) => url === "https://www.woori.today/pl/tools/coin-flip"), true);
+  assert.match(specialRandomWorkspaceSource, /locale === "pl"\s*\? \{ count: "Liczba rzut\\u00F3w", again: "Rzu\\u0107 ponownie", flip: "Rzu\\u0107 monet\\u0105"/);
+  assert.match(specialRandomWorkspaceSource, /tails: "Reszka", invalid: "Wpisz liczb\\u0119 od 1 do 1000\."/);
+  assert.match(toolWorkspaceSource, /tool\.slug === "coin-flip" && phaseLocale === "pl"\) return <CoinFlipWorkspace locale="pl" \/>/);
+});
+
 test("Russian tarot page localizes controls, names, and card interpretations", () => {
   assert.match(toolPageSource, /slug === "tarot-card"/);
   assert.match(fortuneWorkspaceSource, /ru: \{ question: "Вопрос \(необязательно\)"[\s\S]*?note: "Таро предназначено/);

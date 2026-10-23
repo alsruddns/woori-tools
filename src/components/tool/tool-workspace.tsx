@@ -24,7 +24,7 @@ import { JapanToolsWorkspace } from "@/components/tool/japan-tools-workspace";
 import { COUNTRY_TOOL_SLUGS } from "@/lib/country-tool-slugs";
 import { renameCopy, selectionCopy, type ToolOptionLocale } from "@/registry/tool-option-copy";
 import { BrowserDeveloperToolsWorkspace } from "@/components/tool/browser-developer-tools-workspace";
-import { DiceWorkspace, LottoWorkspace, RandomNameWorkspace, RandomNumberWorkspace, RandomOrderWorkspace, RandomSeatWorkspace, RandomTeamWorkspace, RandomWheelWorkspace, RussianDutyPickerWorkspace } from "@/components/tool/special-random-workspaces";
+import { CoinFlipWorkspace, DiceWorkspace, LottoWorkspace, RandomNameWorkspace, RandomNumberWorkspace, RandomOrderWorkspace, RandomSeatWorkspace, RandomTeamWorkspace, RandomWheelWorkspace, RussianDutyPickerWorkspace } from "@/components/tool/special-random-workspaces";
 
 const MAX_IMAGE = 30 * 1024 * 1024;
 const MAX_PDF = 50 * 1024 * 1024;
@@ -92,6 +92,7 @@ export function ToolWorkspace({ tool, phaseLocale, optionLocale = phaseLocale, m
   if (tool.slug === "japan-loto7-number-generator") return <LottoWorkspace locale={phaseLocale === "pl" ? "pl" : specializedLocale} min={1} max={37} numberCount={7} historyKey="lottery-history:japan-loto7-number-generator" />;
   if (tool.slug === "japan-mini-loto-number-generator") return <LottoWorkspace locale={phaseLocale === "pl" ? "pl" : specializedLocale} min={1} max={31} numberCount={5} historyKey="lottery-history:japan-mini-loto-number-generator" />;
   if (tool.slug === "dice-roller") return <DiceWorkspace locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;
+  if (tool.slug === "coin-flip" && phaseLocale === "pl") return <CoinFlipWorkspace locale="pl" />;
   if (tool.slug === "random-number") return <RandomNumberWorkspace locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;
   if (tool.slug === "random-name-picker" || tool.slug === "draw-lots") return <RandomNameWorkspace slug={tool.slug} locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;
   if (tool.slug === "random-team-maker") return <RandomTeamWorkspace locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;
