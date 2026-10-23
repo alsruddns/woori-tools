@@ -22,6 +22,7 @@ import { TurkishJapaneseToolsWorkspace, type TurkishJapaneseSlug } from "@/compo
 import { TurkishCountryFormatWorkspace, type TurkishCountryFormatSlug } from "@/components/tool/turkish-country-format-workspace";
 import { TurkishDeveloperToolsWorkspace, type TurkishDeveloperSlug } from "@/components/tool/turkish-developer-tools-workspace";
 import { TurkishCultureToolsWorkspace, type TurkishCultureSlug } from "@/components/tool/turkish-culture-tools-workspace";
+import { TurkishIndiaToolsWorkspace, type TurkishIndiaSlug } from "@/components/tool/turkish-india-tools-workspace";
 import { RussianZipWorkspace } from "@/components/tool/russian-zip-workspace";
 import { RussianRenameWorkspace } from "@/components/tool/russian-rename-workspace";
 import { RussianLineToolsWorkspace } from "@/components/tool/russian-line-tools-workspace";
@@ -322,6 +323,7 @@ function TurkishPublishedToolPage({ slug }: { slug: string }) {
     : ["us-phone-number-formatter", "us-zip-code-formatter", "canada-postal-code-formatter", "uk-postcode-formatter"].includes(slug) ? <TurkishCountryFormatWorkspace slug={slug as TurkishCountryFormatSlug} />
     : ["jwt-decoder", "url-query-parameter-parser", "user-agent-parser", "ip-cidr-calculator", "hash-compare", "regex-replace", "html-entity-encoder-decoder", "chmod-calculator", "json-path-tester", "csv-tsv-converter", "url-slug-generator", "unicode-code-point-checker", "base32-encoder-decoder", "ulid-generator", "uuid-v7-generator"].includes(slug) ? <TurkishDeveloperToolsWorkspace slug={slug as TurkishDeveloperSlug} />
     : ["simplified-traditional-chinese-converter", "chinese-number-kanji-converter", "rmb-uppercase-converter", "chinese-zodiac-calculator", "chinese-sexagenary-cycle-calculator", "chinese-phone-number-formatter", "taiwan-phone-number-formatter"].includes(slug) ? <TurkishCultureToolsWorkspace slug={slug as TurkishCultureSlug} />
+    : ["indian-number-format-converter", "lakh-crore-converter", "pan-format-validator", "gstin-format-validator", "india-phone-number-formatter"].includes(slug) ? <TurkishIndiaToolsWorkspace slug={slug as TurkishIndiaSlug} />
     : slug === "lorem-ipsum" ? <TurkishLoremWorkspace title={tool.title} />
     : null;
   if (!workspace) notFound();
