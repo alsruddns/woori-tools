@@ -9,7 +9,7 @@ Routable locales: 18 (ko, en, ja, zh, es, pt-br, de, fr, vi, id, th, zh-tw, it, 
 | --- | ---: | ---: | ---: | ---: | ---: | --- |
 | ru | 176/176 | 176 | 176 | 176 | 0 | none |
 | tr | 176/176 | 176 | 176 | 176 | 0 | none |
-| pl | 176/176 | 54 | 54 | 54 | 0 | none |
+| pl | 176/176 | 56 | 56 | 56 | 0 | none |
 | fil | 6/176 | 0 | 0 | 0 | 170 | tarot-card |
 | bn | 6/176 | 0 | 0 | 0 | 170 | tarot-card |
 | uk | 6/176 | 0 | 0 | 0 | 170 | tarot-card |
@@ -39,13 +39,13 @@ Routable locales: 18 (ko, en, ja, zh, es, pt-br, de, fr, vi, id, th, zh-tw, it, 
 ## Next locale
 
 - Russian and Turkish authoring, UI, and SEO verification is complete for all 176 and 176 tools, respectively.
-- Polish translation data is complete for 176/176; 54 generic-workspace tool pages are published, with 122 specialized or otherwise unverified pages withheld.
+- Polish translation data is complete for 176/176; 56 generic-workspace tool pages are published, with 120 specialized or otherwise unverified pages withheld.
 - Continue with Filipino (fil) at tarot-card; 170 translation-data tools remain. Then proceed in order: bn, uk, ms, sv, cs, ro, el.
 
 ## Last verified checkpoint
 
-- Validation on 2026-10-23: TypeScript passed; lint passed; all 142 tests passed; focused sitemap and IndexNow tests passed; production build passed.
-- Production build prerendered 3,248 static pages and 3,046 tool-locale URLs: 2,640 existing-locale pages, 176 Russian, 176 Turkish, and 54 Polish.
-- Polish production HTML for json-formatter has Polish title and workspace controls, a unique canonical, Polish hreflang, x-default, and no English generic input label. Exactly 54 Polish tool HTML files were generated; sitemap and route tests confirm only these 54 enter the sitemap.
+- Validation on 2026-10-23: TypeScript passed; lint passed; all 144 tests passed; focused sitemap and IndexNow tests passed; production build passed.
+- Production build prerendered 3,250 static pages and 3048 tool-locale URLs: 2,640 existing-locale pages, 176 Russian, 176 Turkish, and 56 Polish.
+- Polish production HTML for json-formatter, instagram-grid-split, and image-collage has localized page/workspace copy, a unique canonical, Polish hreflang, and x-default. Exactly 56 Polish tool HTML files are generated; sitemap and route tests confirm only these pages enter the sitemap.
 - Current branch is `develop`.
 - Next Russian translation-data tool: `none`; next Russian workspace UI tool: `none`.

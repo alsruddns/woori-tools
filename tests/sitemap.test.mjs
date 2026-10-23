@@ -83,6 +83,8 @@ const qrWorkspaceSource = await readFile(new URL("../src/components/tool/qr-work
 const worldClockWorkspaceSource = await readFile(new URL("../src/components/tool/world-clock-workspace.tsx", import.meta.url), "utf8");
 const specialRandomWorkspaceSource = await readFile(new URL("../src/components/tool/special-random-workspaces.tsx", import.meta.url), "utf8");
 const toolWorkspaceSource = await readFile(new URL("../src/components/tool/tool-workspace.tsx", import.meta.url), "utf8");
+const instagramGridWorkspaceSource = await readFile(new URL("../src/components/tool/russian-instagram-grid-workspace.tsx", import.meta.url), "utf8");
+const imageCollageWorkspaceSource = await readFile(new URL("../src/components/tool/russian-image-collage-workspace.tsx", import.meta.url), "utf8");
 const fortuneWorkspaceSource = await readFile(new URL("../src/components/tool/fortune-workspace.tsx", import.meta.url), "utf8");
 const tarotLocalizationSource = await readFile(new URL("../src/lib/fortune/tarot-localization.ts", import.meta.url), "utf8");
 const sajuWorkspaceSource = await readFile(new URL("../src/components/tool/saju-workspace.tsx", import.meta.url), "utf8");
@@ -202,6 +204,23 @@ test("sitemap and SEO use the same language alternate helper", () => {
   assert.equal(entries.some(({ url }) => url.endsWith("/ru/tools/image-compress")), true);
   assert.equal(localeConfig.find(({ routeLocale }) => routeLocale === "pt-br").hreflang, "pt-BR");
   assert.equal(localeConfig.find(({ routeLocale }) => routeLocale === "zh-tw").hreflang, "zh-TW");
+});
+
+test("Polish Instagram grid page uses localized controls and is included in the sitemap", () => {
+  assert.equal(targetLocalePublication.pl.publishedToolSlugs.includes("instagram-grid-split"), true);
+  assert.match(toolPageSource, /slug === "instagram-grid-split" \? <RussianInstagramGridWorkspace locale="pl" \/>/);
+  assert.match(instagramGridWorkspaceSource, /locale\?: "ru" \| "tr" \| "pl"/);
+  assert.match(instagramGridWorkspaceSource, /Podziel obraz na kafelki na Instagram/);
+  assert.match(instagramGridWorkspaceSource, /Nie udało się przetworzyć obrazu/);
+  assert.equal(entries.some(({ url }) => url === `${siteOrigin}/pl/tools/instagram-grid-split`), true);
+});
+
+test("Polish image collage page localizes selection, layout, processing, and results", () => {
+  assert.equal(targetLocalePublication.pl.publishedToolSlugs.includes("image-collage"), true);
+  assert.match(toolPageSource, /slug === "image-collage" \? <RussianImageCollageWorkspace locale="pl" \/>/);
+  assert.match(toolPageSource, /import \{ RussianImageCollageWorkspace \}/);
+  assert.match(imageCollageWorkspaceSource, /Wybierz zdjęcia lub przeciągnij je tutaj[\s\S]*?Utworzono kolaż z/);
+  assert.equal(entries.some(({ url }) => url === `${siteOrigin}/pl/tools/image-collage`), true);
 });
 
 test("Russian and Turkish markdown previews use localized controls", () => {
