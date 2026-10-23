@@ -223,6 +223,16 @@ test("Polish image collage page localizes selection, layout, processing, and res
   assert.equal(entries.some(({ url }) => url === `${siteOrigin}/pl/tools/image-collage`), true);
 });
 
+test("Polish file utilities localize duplicate results and MIME fallbacks while retaining browser processing", () => {
+  for (const slug of ["file-hash", "mime-type-checker", "file-extension-checker", "file-size-checker", "duplicate-file-checker", "zip-files", "bulk-file-renamer", "filename-cleaner"]) {
+    assert.equal(targetLocalePublication.pl.publishedToolSlugs.includes(slug), true);
+  }
+  assert.match(toolWorkspaceSource, /phaseLocale==="pl"\?"Grupa"/);
+  assert.match(toolWorkspaceSource, /Nie znaleziono identycznej zawartości plików/);
+  assert.match(toolWorkspaceSource, /nieznany typ MIME/);
+  assert.match(toolWorkspaceSource, /await file\.arrayBuffer\(\)/);
+});
+
 test("Russian and Turkish markdown previews use localized controls", () => {
   assert.match(toolPageSource, /slug === "markdown-preview"\s*\? <RussianMarkdownWorkspace locale="tr" \/>/);
   assert.match(markdownWorkspaceSource, /locale === "tr" \? "# Ba\\u015Fl\\u0131k\\n\\nBir \*\*Markdown\*\* \\u00F6rne\\u011Fi girin\."/);

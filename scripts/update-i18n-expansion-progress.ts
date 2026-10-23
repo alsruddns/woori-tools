@@ -23,6 +23,8 @@ const currentLocale = "ru" as const;
 const currentComplete = completeByLocale[currentLocale];
 const currentPending = slugs.filter((slug) => !currentComplete.includes(slug));
 const nextWorkspace = targetRussianToolSlugs.find((slug) => !targetLocalePublication.ru.publishedToolSlugs.includes(slug)) ?? "none";
+const polishUiVerified = new Set<string>(targetLocalePublication.pl.uiVerifiedToolSlugs);
+const nextPolishUi = slugs.find((slug) => !polishUiVerified.has(slug)) ?? "none";
 const lines = [
   "# Woori Tools 26-language localization progress",
   "",
@@ -31,13 +33,14 @@ const lines = [
   "",
   "## Per-locale status",
   "",
-  "| Locale | Translation data | UI verified | SEO verified | Public tools | Pending data | Next tool |",
+  "| Locale | Translation data | UI verified | SEO verified | Public tools | Pending data | Next data/UI |",
   "| --- | ---: | ---: | ---: | ---: | ---: | --- |",
   ...plannedLocaleConfig.map(({ routeLocale }) => {
     const done = completeByLocale[routeLocale];
     const pending = slugs.filter((slug) => !done.includes(slug));
     const publication = targetLocalePublication[routeLocale];
-    return `| ${routeLocale} | ${done.length}/${slugs.length} | ${publication.uiVerifiedToolSlugs.length} | ${publication.seoVerifiedToolSlugs.length} | ${publication.publishedToolSlugs.length} | ${pending.length} | ${pending[0] ?? "none"} |`;
+    const next = pending[0] ?? (routeLocale === "pl" ? `UI: ${nextPolishUi}` : "none");
+    return `| ${routeLocale} | ${done.length}/${slugs.length} | ${publication.uiVerifiedToolSlugs.length} | ${publication.seoVerifiedToolSlugs.length} | ${publication.publishedToolSlugs.length} | ${pending.length} | ${next} |`;
   }),
   "",
   "## Translation coverage",
@@ -62,12 +65,12 @@ const lines = [
   "",
   `- Russian and Turkish authoring, UI, and SEO verification is complete for all ${targetLocalePublication.ru.publishedToolSlugs.length} and ${targetLocalePublication.tr.publishedToolSlugs.length} tools, respectively.`,
   `- Polish translation data is complete for ${completeByLocale.pl.length}/${slugs.length}; ${targetLocalePublication.pl.publishedToolSlugs.length} generic-workspace tool pages are published, with ${slugs.length - targetLocalePublication.pl.publishedToolSlugs.length} specialized or otherwise unverified pages withheld.`,
-  `- Continue with Filipino (fil) at ${slugs.find((slug) => !completeByLocale.fil.includes(slug)) ?? "none"}; ${slugs.length - completeByLocale.fil.length} translation-data tools remain. Then proceed in order: bn, uk, ms, sv, cs, ro, el.`,
+  `- Polish UI verification remains active at ${nextPolishUi}; ${slugs.length - targetLocalePublication.pl.uiVerifiedToolSlugs.length} Polish tool workspaces remain. Continue with Filipino (fil) at ${slugs.find((slug) => !completeByLocale.fil.includes(slug)) ?? "none"} after Polish UI/SEO verification reaches all ${slugs.length} tools, then proceed in order: bn, uk, ms, sv, cs, ro, el.`,
   "",
   "## Last verified checkpoint",
   "",
-  "- Validation on 2026-10-23: TypeScript passed; lint passed; all 144 tests passed; focused sitemap and IndexNow tests passed; production build passed.",
-  `- Production build prerendered 3,250 static pages and ${2_992 + targetLocalePublication.pl.publishedToolSlugs.length} tool-locale URLs: 2,640 existing-locale pages, 176 Russian, 176 Turkish, and ${targetLocalePublication.pl.publishedToolSlugs.length} Polish.`,
+  "- Validation on 2026-10-23: TypeScript passed; lint passed; all 145 tests passed; focused sitemap and IndexNow tests passed; production build passed.",
+  `- Production build prerendered ${3_194 + targetLocalePublication.pl.publishedToolSlugs.length} static pages and ${2_992 + targetLocalePublication.pl.publishedToolSlugs.length} tool-locale URLs: 2,640 existing-locale pages, 176 Russian, 176 Turkish, and ${targetLocalePublication.pl.publishedToolSlugs.length} Polish.`,
   `- Polish production HTML for json-formatter, instagram-grid-split, and image-collage has localized page/workspace copy, a unique canonical, Polish hreflang, and x-default. Exactly ${targetLocalePublication.pl.publishedToolSlugs.length} Polish tool HTML files are generated; sitemap and route tests confirm only these pages enter the sitemap.`,
   "- Current branch is `develop`.",
   `- Next Russian translation-data tool: \`${currentPending[0] ?? "none"}\`; next Russian workspace UI tool: \`${nextWorkspace}\`.`,
