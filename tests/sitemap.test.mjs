@@ -860,6 +860,15 @@ test("Polish random order localizes participant labels, reveal actions, and copy
   assert.match(toolWorkspaceSource, /tool\.slug === "random-order"\) return <RandomOrderWorkspace locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
 });
 
+test("Polish random seat localizes the seating grid and capacity error", () => {
+  assert.equal(targetLocalePublication.pl.publishedToolSlugs.includes("random-seat"), true);
+  assert.equal(entries.some(({ url }) => url === "https://www.woori.today/pl/tools/random-seat"), true);
+  assert.match(specialRandomWorkspaceSource, /RandomSeatWorkspace\(\{ locale \}: \{ locale:RouteLocale \| "ru" \| "tr" \| "pl" \}\)/);
+  assert.match(specialRandomWorkspaceSource, /pl:\{people:"Uczestnicy \(jedna osoba w ka\\u017Cdym wierszu\)",rows:"Wiersze",columns:"Kolumny",arrange:"Przydziel miejsca",empty:"Wolne"\}/);
+  assert.match(specialRandomWorkspaceSource, /pl:"Dodaj miejsca lub zmniejsz liczb\\u0119 uczestnik\\u00F3w\./);
+  assert.match(toolWorkspaceSource, /tool\.slug === "random-seat"\) return <RandomSeatWorkspace locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
+});
+
 test("Russian tarot page localizes controls, names, and card interpretations", () => {
   assert.match(toolPageSource, /slug === "tarot-card"/);
   assert.match(fortuneWorkspaceSource, /ru: \{ question: "Вопрос \(необязательно\)"[\s\S]*?note: "Таро предназначено/);
