@@ -4,7 +4,7 @@ import { useState } from "react";
 import { copyText } from "@/lib/copy-to-clipboard";
 import { processText } from "@/lib/text/process-text";
 
-type CodeToolSlug = "color-converter" | "cron-parser" | "sql-formatter" | "html-formatter" | "css-formatter" | "javascript-formatter";
+type CodeToolSlug = "color-converter" | "cron-parser" | "sql-formatter" | "html-formatter" | "css-formatter" | "javascript-formatter" | "json-formatter" | "json-validator" | "json-to-yaml" | "yaml-to-json";
 
 const labels: Record<CodeToolSlug, { title: string; input: string; placeholder: string; action: string; result: string; privacy: string }> = {
   "color-converter": { title: "Renk kodu dönüştürücü", input: "Renk değeri", placeholder: "#3366FF, rgb(51, 102, 255) veya hsl(225, 100%, 60%)", action: "Rengi dönüştür", result: "Renk biçimleri", privacy: "Dönüştürme tarayıcınızda yapılır." },
@@ -13,6 +13,10 @@ const labels: Record<CodeToolSlug, { title: string; input: string; placeholder: 
   "html-formatter": { title: "HTML biçimlendirici", input: "HTML kodu", placeholder: "HTML kodunuzu buraya yapıştırın", action: "HTML kodunu biçimlendir", result: "Biçimlendirilmiş HTML", privacy: "Kodunuz tarayıcınızda biçimlendirilir ve sunucuya gönderilmez." },
   "css-formatter": { title: "CSS biçimlendirici", input: "CSS kodu", placeholder: "CSS kodunuzu buraya yapıştırın", action: "CSS kodunu biçimlendir", result: "Biçimlendirilmiş CSS", privacy: "Kodunuz tarayıcınızda biçimlendirilir ve sunucuya gönderilmez." },
   "javascript-formatter": { title: "JavaScript biçimlendirici", input: "JavaScript kodu", placeholder: "JavaScript kodunuzu buraya yapıştırın", action: "JavaScript kodunu biçimlendir", result: "Biçimlendirilmiş JavaScript", privacy: "Kodunuz tarayıcınızda biçimlendirilir ve sunucuya gönderilmez." },
+  "json-formatter": { title: "JSON biçimlendirici", input: "JSON verisi", placeholder: "JSON verinizi buraya yapıştırın", action: "JSON verisini biçimlendir", result: "Biçimlendirilmiş JSON", privacy: "Veriniz tarayıcınızda işlenir ve sunucuya gönderilmez." },
+  "json-validator": { title: "JSON doğrulayıcı", input: "JSON verisi", placeholder: "Doğrulanacak JSON verisini buraya yapıştırın", action: "JSON verisini doğrula", result: "Doğrulama sonucu", privacy: "Veriniz tarayıcınızda doğrulanır ve sunucuya gönderilmez." },
+  "json-to-yaml": { title: "JSON'dan YAML'a dönüştürücü", input: "JSON verisi", placeholder: "Dönüştürülecek JSON verisini buraya yapıştırın", action: "YAML'a dönüştür", result: "YAML çıktısı", privacy: "Veriniz tarayıcınızda dönüştürülür ve sunucuya gönderilmez." },
+  "yaml-to-json": { title: "YAML'dan JSON'a dönüştürücü", input: "YAML verisi", placeholder: "Dönüştürülecek YAML verisini buraya yapıştırın", action: "JSON'a dönüştür", result: "JSON çıktısı", privacy: "Veriniz tarayıcınızda dönüştürülür ve sunucuya gönderilmez." },
 };
 
 export function TurkishCodeToolsWorkspace({ slug }: { slug: CodeToolSlug }) {
@@ -21,22 +25,24 @@ export function TurkishCodeToolsWorkspace({ slug }: { slug: CodeToolSlug }) {
   const [result, setResult] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const [option, setOption] = useState("pretty");
 
   async function run() {
     if (!value.trim()) { setError("İşlem yapmak için bir değer girin."); setResult(""); return; }
     setBusy(true); setError(""); setResult("");
     try {
-      const processed = await processText(slug, value, "", "", 1, "tr");
-      setResult(processed.result);
+      const processed = await processText(slug, value, "", option, 1, "tr");
+      setResult(slug === "json-validator" ? "JSON geçerli." : processed.result);
     } catch {
-      setError(slug === "color-converter" ? "HEX, RGB veya HSL biçiminde geçerli bir renk girin." : slug === "cron-parser" ? "Beş veya altı alanlı geçerli bir Cron ifadesi girin." : "Kod biçimlendirilemedi. Sözdizimini kontrol edip yeniden deneyin.");
+      setError(slug === "color-converter" ? "HEX, RGB veya HSL biçiminde geçerli bir renk girin." : slug === "cron-parser" ? "Beş veya altı alanlı geçerli bir Cron ifadesi girin." : slug.includes("yaml") ? "Geçerli JSON veya YAML verisi girin." : slug.startsWith("json-") ? "Geçerli JSON verisi girin." : "Kod biçimlendirilemedi. Sözdizimini kontrol edip yeniden deneyin.");
     } finally { setBusy(false); }
   }
 
-  function reset() { setValue(""); setResult(""); setError(""); }
+  function reset() { setValue(""); setResult(""); setError(""); setOption("pretty"); }
 
   return <section aria-label={copy.title} className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
     <label htmlFor={`turkish-${slug}-input`} className="block text-sm font-medium text-slate-800">{copy.input}{slug === "color-converter" ? <input id={`turkish-${slug}-input`} value={value} onChange={(event) => { setValue(event.target.value); setError(""); }} onKeyDown={(event) => { if (event.key === "Enter") void run(); }} placeholder={copy.placeholder} maxLength={120} className="mt-2 block min-h-12 w-full rounded-xl border border-slate-300 p-3 font-mono text-sm" /> : <textarea id={`turkish-${slug}-input`} value={value} onChange={(event) => { setValue(event.target.value); setError(""); }} rows={slug === "cron-parser" ? 2 : 12} maxLength={slug === "cron-parser" ? 200 : 100000} placeholder={copy.placeholder} className="mt-2 block w-full rounded-xl border border-slate-300 p-3 font-mono text-sm" />}</label>
+    {slug === "json-formatter" && <label htmlFor="turkish-json-format-option" className="mt-4 block text-sm font-medium">Çıktı biçimi<select id="turkish-json-format-option" value={option} onChange={(event) => setOption(event.target.value)} className="mt-2 block min-h-12 w-full rounded-xl border border-slate-300 p-3 sm:max-w-sm"><option value="pretty">Girintili</option><option value="minify">Sıkıştırılmış</option></select></label>}
     <div className="mt-5 flex flex-wrap gap-3"><button type="button" onClick={() => void run()} disabled={busy} className="min-h-12 rounded-xl bg-indigo-600 px-6 font-semibold text-white disabled:opacity-60">{busy ? "İşleniyor…" : copy.action}</button><button type="button" onClick={reset} className="min-h-12 rounded-xl border border-slate-300 px-5 font-medium">Temizle</button></div>
     {error && <p role="alert" className="mt-4 rounded-xl bg-rose-50 p-4 text-sm text-rose-800">{error}</p>}
     {result && <div className="mt-5"><div className="flex flex-wrap items-center justify-between gap-3"><h2 className="font-semibold">{copy.result}</h2><button type="button" onClick={() => void copyText(result)} className="min-h-10 rounded-xl border border-slate-300 px-4 text-sm font-medium">Sonucu kopyala</button></div><pre role="status" aria-live="polite" className="mt-3 max-h-[32rem] overflow-auto whitespace-pre-wrap break-words rounded-xl bg-slate-950 p-4 text-sm leading-6 text-slate-100">{result}</pre></div>}
