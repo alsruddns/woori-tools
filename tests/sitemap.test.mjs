@@ -83,6 +83,7 @@ const qrWorkspaceSource = await readFile(new URL("../src/components/tool/qr-work
 const worldClockWorkspaceSource = await readFile(new URL("../src/components/tool/world-clock-workspace.tsx", import.meta.url), "utf8");
 const barcodeWorkspaceSource = await readFile(new URL("../src/components/tool/barcode-workspace.tsx", import.meta.url), "utf8");
 const polishRegexWorkspaceSource = await readFile(new URL("../src/components/tool/polish-regex-workspace.tsx", import.meta.url), "utf8");
+const sharedMarkdownWorkspaceSource = await readFile(new URL("../src/components/tool/markdown-workspace.tsx", import.meta.url), "utf8");
 const specialRandomWorkspaceSource = await readFile(new URL("../src/components/tool/special-random-workspaces.tsx", import.meta.url), "utf8");
 const toolWorkspaceSource = await readFile(new URL("../src/components/tool/tool-workspace.tsx", import.meta.url), "utf8");
 const instagramGridWorkspaceSource = await readFile(new URL("../src/components/tool/russian-instagram-grid-workspace.tsx", import.meta.url), "utf8");
@@ -988,6 +989,16 @@ test("Polish code formatters use the translated generic workspace and SEO routes
   assert.match(toolWorkspaceSource, /processTextTool\(tool\.slug,text,secondText,option,amount,phaseLocale\)/);
   assert.match(toolWorkspaceSource, /messages\.textPlaceholder/);
   assert.match(toolWorkspaceSource, /busy\?messages\.processing/);
+});
+
+test("Polish Markdown preview loads Polish shared messages and example text", () => {
+  assert.equal(targetLocalePublication.pl.uiVerifiedToolSlugs.includes("markdown-preview"), true);
+  assert.equal(targetLocalePublication.pl.seoVerifiedToolSlugs.includes("markdown-preview"), true);
+  assert.equal(targetLocalePublication.pl.publishedToolSlugs.includes("markdown-preview"), true);
+  assert.equal(entries.some(({ url }) => url === "https://www.woori.today/pl/tools/markdown-preview"), true);
+  assert.match(toolWorkspaceSource, /MarkdownWorkspace locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
+  assert.match(sharedMarkdownWorkspaceSource, /const t=getMessages\(locale\)/);
+  assert.match(sharedMarkdownWorkspaceSource, /Nag\\u0142\\u00F3wek/);
 });
 
 test("Russian tarot page localizes controls, names, and card interpretations", () => {
