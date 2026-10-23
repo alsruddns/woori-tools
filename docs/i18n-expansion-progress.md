@@ -9,7 +9,7 @@ Routable locales: 18 (ko, en, ja, zh, es, pt-br, de, fr, vi, id, th, zh-tw, it, 
 | --- | ---: | ---: | ---: | ---: | ---: | --- |
 | ru | 176/176 | 176 | 176 | 176 | 0 | none |
 | tr | 176/176 | 176 | 176 | 176 | 0 | none |
-| pl | 176/176 | 93 | 93 | 93 | 0 | UI: barcode-generator |
+| pl | 176/176 | 94 | 94 | 94 | 0 | UI: shuffle-lines |
 | fil | 6/176 | 0 | 0 | 0 | 170 | tarot-card |
 | bn | 6/176 | 0 | 0 | 0 | 170 | tarot-card |
 | uk | 6/176 | 0 | 0 | 0 | 170 | tarot-card |
@@ -39,13 +39,13 @@ Routable locales: 18 (ko, en, ja, zh, es, pt-br, de, fr, vi, id, th, zh-tw, it, 
 ## Next locale
 
 - Russian and Turkish authoring, UI, and SEO verification is complete for all 176 and 176 tools, respectively.
-- Polish translation data is complete for 176/176; 93 verified tool pages are published, with 83 otherwise unverified pages withheld.
-- Polish UI verification remains active at barcode-generator; 83 Polish tool workspaces remain. Continue with Filipino (fil) at tarot-card after Polish UI/SEO verification reaches all 176 tools, then proceed in order: bn, uk, ms, sv, cs, ro, el.
+- Polish translation data is complete for 176/176; 94 verified tool pages are published, with 82 otherwise unverified pages withheld.
+- Polish UI verification remains active at shuffle-lines; 82 Polish tool workspaces remain. Continue with Filipino (fil) at tarot-card after Polish UI/SEO verification reaches all 176 tools, then proceed in order: bn, uk, ms, sv, cs, ro, el.
 
 ## Last verified checkpoint
 
-- Validation on 2026-10-23: TypeScript passed; lint passed; all 163 tests passed; focused sitemap and IndexNow tests passed; production build passed.
-- Production build prerendered 3287 static pages and 3085 tool-locale URLs: 2,640 existing-locale pages, 176 Russian, 176 Turkish, and 93 Polish.
-- Polish production HTML for wifi-qr, contact-qr, phone-qr, email-qr, password-generator, random-string-generator, world-clock, pomodoro-timer, timer, stopwatch, coin-flip, dice-roller, duty-picker, random-seat, random-order, random-team-maker, random-wheel, random-name-picker, draw-lots, random-number, saju, daily-fortune, tarot-card, lotto-number-generator, json-formatter, instagram-grid-split, and image-collage has localized page/workspace copy, a unique canonical, Polish hreflang, and x-default. Exactly 93 Polish tool HTML files are generated; sitemap and route tests confirm only these pages enter the sitemap.
+- Validation on 2026-10-23: TypeScript passed; lint passed; all 164 tests passed; focused sitemap and IndexNow tests passed; production build passed.
+- Production build prerendered 3288 static pages and 3086 tool-locale URLs: 2,640 existing-locale pages, 176 Russian, 176 Turkish, and 94 Polish.
+- Polish production HTML for barcode-generator, wifi-qr, contact-qr, phone-qr, email-qr, password-generator, random-string-generator, world-clock, pomodoro-timer, timer, stopwatch, coin-flip, dice-roller, duty-picker, random-seat, random-order, random-team-maker, random-wheel, random-name-picker, draw-lots, random-number, saju, daily-fortune, tarot-card, lotto-number-generator, json-formatter, instagram-grid-split, and image-collage has localized page/workspace copy, a unique canonical, Polish hreflang, and x-default. Exactly 94 Polish tool HTML files are generated; sitemap and route tests confirm only these pages enter the sitemap.
 - Current branch is `develop`.
 - Next Russian translation-data tool: `none`; next Russian workspace UI tool: `none`.

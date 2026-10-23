@@ -102,7 +102,7 @@ export function ToolWorkspace({ tool, phaseLocale, optionLocale = phaseLocale, m
   if (["password-generator","random-string-generator"].includes(tool.slug)) return <RandomStringWorkspace slug={tool.slug} locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;
   if (tool.slug === "ladder-game") return <LadderWorkspace locale={specializedLocale} />;
   if (tool.slug === "markdown-preview") return <MarkdownWorkspace locale={specializedLocale} />;
-  if (tool.slug === "barcode-generator") return <BarcodeWorkspace locale={specializedLocale} />;
+  if (tool.slug === "barcode-generator") return <BarcodeWorkspace locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;
   if (["wifi-qr","contact-qr","phone-qr","email-qr"].includes(tool.slug)) return <QrWorkspace slug={tool.slug} locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;
   if (tool.slug === "random-wheel") return <RandomWheelWorkspace locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;
   if (tool.slug === "timer" || tool.slug === "pomodoro-timer") return <CountdownWorkspace slug={tool.slug} locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;

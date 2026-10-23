@@ -81,6 +81,7 @@ const countdownWorkspaceSource = await readFile(new URL("../src/components/tool/
 const randomStringWorkspaceSource = await readFile(new URL("../src/components/tool/random-string-workspace.tsx", import.meta.url), "utf8");
 const qrWorkspaceSource = await readFile(new URL("../src/components/tool/qr-workspace.tsx", import.meta.url), "utf8");
 const worldClockWorkspaceSource = await readFile(new URL("../src/components/tool/world-clock-workspace.tsx", import.meta.url), "utf8");
+const barcodeWorkspaceSource = await readFile(new URL("../src/components/tool/barcode-workspace.tsx", import.meta.url), "utf8");
 const specialRandomWorkspaceSource = await readFile(new URL("../src/components/tool/special-random-workspaces.tsx", import.meta.url), "utf8");
 const toolWorkspaceSource = await readFile(new URL("../src/components/tool/tool-workspace.tsx", import.meta.url), "utf8");
 const instagramGridWorkspaceSource = await readFile(new URL("../src/components/tool/russian-instagram-grid-workspace.tsx", import.meta.url), "utf8");
@@ -941,6 +942,14 @@ test("Polish QR tools localize privacy, input labels, QR errors, and downloads",
   assert.match(qrWorkspaceSource, /busy\?\(locale==="pl"\?t\.generating:/);
   assert.match(qrWorkspaceSource, /pl:"Zobacz zakodowan/);
   assert.match(toolWorkspaceSource, /QrWorkspace slug=\{tool\.slug\} locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
+});
+
+test("Polish barcode generator localizes input, format, generation, and failure feedback", () => {
+  assert.equal(targetLocalePublication.pl.publishedToolSlugs.includes("barcode-generator"), true);
+  assert.equal(entries.some(({ url }) => url === "https://www.woori.today/pl/tools/barcode-generator"), true);
+  assert.match(barcodeWorkspaceSource, /locale==="pl"\?\{\.\.\.messages,input:"Warto\u015B\u0107",mime:"Tekst lub numer",option:"Format kodu kreskowego",run:"Generuj kod kreskowy"/);
+  assert.match(barcodeWorkspaceSource, /Nie uda\u0142o si\u0119 utworzy\u0107 kodu kreskowego/);
+  assert.match(toolWorkspaceSource, /tool\.slug === "barcode-generator"\) return <BarcodeWorkspace locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
 });
 
 test("Russian tarot page localizes controls, names, and card interpretations", () => {
