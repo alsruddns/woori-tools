@@ -852,6 +852,14 @@ test("Polish random team maker localizes team controls, validation, and generate
   assert.match(toolWorkspaceSource, /tool\.slug === "random-team-maker"\) return <RandomTeamWorkspace locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
 });
 
+test("Polish random order localizes participant labels, reveal actions, and copy", () => {
+  assert.equal(targetLocalePublication.pl.publishedToolSlugs.includes("random-order"), true);
+  assert.equal(entries.some(({ url }) => url === "https://www.woori.today/pl/tools/random-order"), true);
+  assert.match(specialRandomWorkspaceSource, /const labels = \(\{ pl:\{label:"Uczestnicy/);
+  assert.match(specialRandomWorkspaceSource, /RandomOrderWorkspace\(\{ locale \}: \{ locale:RouteLocale \| "ru" \| "tr" \| "pl" \}\)/);
+  assert.match(toolWorkspaceSource, /tool\.slug === "random-order"\) return <RandomOrderWorkspace locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
+});
+
 test("Russian tarot page localizes controls, names, and card interpretations", () => {
   assert.match(toolPageSource, /slug === "tarot-card"/);
   assert.match(fortuneWorkspaceSource, /ru: \{ question: "Вопрос \(необязательно\)"[\s\S]*?note: "Таро предназначено/);

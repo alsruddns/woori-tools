@@ -95,7 +95,7 @@ export function ToolWorkspace({ tool, phaseLocale, optionLocale = phaseLocale, m
   if (tool.slug === "random-number") return <RandomNumberWorkspace locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;
   if (tool.slug === "random-name-picker" || tool.slug === "draw-lots") return <RandomNameWorkspace slug={tool.slug} locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;
   if (tool.slug === "random-team-maker") return <RandomTeamWorkspace locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;
-  if (tool.slug === "random-order") return <RandomOrderWorkspace locale={specializedLocale} />;
+  if (tool.slug === "random-order") return <RandomOrderWorkspace locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;
   if (tool.slug === "random-seat") return <RandomSeatWorkspace locale={specializedLocale} />;
   if (["password-generator","random-string-generator"].includes(tool.slug)) return <RandomStringWorkspace slug={tool.slug} locale={specializedLocale} />;
   if (tool.slug === "ladder-game") return <LadderWorkspace locale={specializedLocale} />;
