@@ -1001,6 +1001,20 @@ test("Polish Markdown preview loads Polish shared messages and example text", ()
   assert.match(sharedMarkdownWorkspaceSource, /Nag\\u0142\\u00F3wek/);
 });
 
+test("Polish image conversion pages publish through the localized browser workspace", () => {
+  for (const slug of ["jpg-to-png", "png-to-jpg", "webp-to-jpg", "webp-to-png", "jpg-to-webp", "png-to-webp", "heic-to-jpg"]) {
+    assert.equal(targetLocalePublication.pl.uiVerifiedToolSlugs.includes(slug), true);
+    assert.equal(targetLocalePublication.pl.seoVerifiedToolSlugs.includes(slug), true);
+    assert.equal(targetLocalePublication.pl.publishedToolSlugs.includes(slug), true);
+    assert.equal(entries.some(({ url }) => url === `https://www.woori.today/pl/tools/${slug}`), true);
+  }
+  assert.match(toolWorkspaceSource, /processImageFile\(tool\.slug,file,\{quality,width,height,keepRatio,amount,option,text\},phaseLocale\)/);
+  assert.match(toolWorkspaceSource, /messages\.chooseOrDrop/);
+  assert.match(toolWorkspaceSource, /messages\.fileLimit/);
+  assert.match(toolWorkspaceSource, /messages\.process/);
+  assert.match(toolWorkspaceSource, /messages\.download/);
+});
+
 test("Russian tarot page localizes controls, names, and card interpretations", () => {
   assert.match(toolPageSource, /slug === "tarot-card"/);
   assert.match(fortuneWorkspaceSource, /ru: \{ question: "Вопрос \(необязательно\)"[\s\S]*?note: "Таро предназначено/);
