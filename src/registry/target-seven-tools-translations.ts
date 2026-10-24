@@ -11,6 +11,7 @@ import { getTargetSevenImageEffectsBatchNineTranslation, targetSevenImageEffects
 import { getTargetSevenPdfBatchTenTranslation, targetSevenPdfBatchTenSlugs } from "./target-seven-pdf-batch-ten-translations";
 import { getTargetSevenPdfBatchElevenTranslation, targetSevenPdfBatchElevenSlugs } from "./target-seven-pdf-batch-eleven-translations";
 import { getTargetSevenTextBatchTwelveTranslation, targetSevenTextBatchTwelveSlugs } from "./target-seven-text-batch-twelve-translations";
+import { getTargetSevenTextBatchThirteenTranslation, targetSevenTextBatchThirteenSlugs } from "./target-seven-text-batch-thirteen-translations";
 import { getTargetSevenWorkflowTranslation, targetSevenWorkflowSlugs } from "./target-seven-workflow-translations";
 
 export type SevenTargetLocale = Extract<PlannedLocale, "bn" | "uk" | "ms" | "sv" | "cs" | "ro" | "el">;
@@ -199,12 +200,12 @@ const utilityTranslations: Record<SevenTargetLocale, Record<string, TargetSevenT
   },
 };
 
-export const targetSevenToolSlugs = Array.from(new Set([...Object.keys(translations.bn), ...Object.keys(additionalTranslations.bn), ...Object.keys(utilityTranslations.bn), ...targetSevenWorkflowSlugs, ...targetSevenFileSlugs, ...targetSevenFileBatchTwoSlugs, ...targetSevenTextBatchThreeSlugs, ...targetSevenDeveloperBatchFourSlugs, ...targetSevenFormattersBatchFiveSlugs, ...targetSevenImageBatchSixSlugs, ...targetSevenImageBatchSevenSlugs, ...targetSevenImageEffectsBatchEightSlugs, ...targetSevenImageEffectsBatchNineSlugs, ...targetSevenPdfBatchTenSlugs, ...targetSevenPdfBatchElevenSlugs, ...targetSevenTextBatchTwelveSlugs]));
+export const targetSevenToolSlugs = Array.from(new Set([...Object.keys(translations.bn), ...Object.keys(additionalTranslations.bn), ...Object.keys(utilityTranslations.bn), ...targetSevenWorkflowSlugs, ...targetSevenFileSlugs, ...targetSevenFileBatchTwoSlugs, ...targetSevenTextBatchThreeSlugs, ...targetSevenDeveloperBatchFourSlugs, ...targetSevenFormattersBatchFiveSlugs, ...targetSevenImageBatchSixSlugs, ...targetSevenImageBatchSevenSlugs, ...targetSevenImageEffectsBatchEightSlugs, ...targetSevenImageEffectsBatchNineSlugs, ...targetSevenPdfBatchTenSlugs, ...targetSevenPdfBatchElevenSlugs, ...targetSevenTextBatchTwelveSlugs, ...targetSevenTextBatchThirteenSlugs]));
 
 export function isSevenTargetLocale(locale: PlannedLocale): locale is SevenTargetLocale {
   return locale === "bn" || locale === "uk" || locale === "ms" || locale === "sv" || locale === "cs" || locale === "ro" || locale === "el";
 }
 
 export function getTargetSevenToolTranslation(locale: SevenTargetLocale, slug: string): TargetSevenToolTranslation | undefined {
-  return translations[locale][slug] ?? additionalTranslations[locale][slug] ?? utilityTranslations[locale][slug] ?? getTargetSevenWorkflowTranslation(locale, slug) ?? getTargetSevenFileTranslation(locale, slug) ?? getTargetSevenFileBatchTwoTranslation(locale, slug) ?? getTargetSevenTextBatchThreeTranslation(locale, slug) ?? getTargetSevenDeveloperBatchFourTranslation(locale, slug) ?? getTargetSevenFormattersBatchFiveTranslation(locale, slug) ?? getTargetSevenImageBatchSixTranslation(locale, slug) ?? getTargetSevenImageBatchSevenTranslation(locale, slug) ?? getTargetSevenImageEffectsBatchEightTranslation(locale, slug) ?? getTargetSevenImageEffectsBatchNineTranslation(locale, slug) ?? getTargetSevenPdfBatchTenTranslation(locale, slug) ?? getTargetSevenPdfBatchElevenTranslation(locale, slug) ?? getTargetSevenTextBatchTwelveTranslation(locale, slug);
+  return translations[locale][slug] ?? additionalTranslations[locale][slug] ?? utilityTranslations[locale][slug] ?? getTargetSevenWorkflowTranslation(locale, slug) ?? getTargetSevenFileTranslation(locale, slug) ?? getTargetSevenFileBatchTwoTranslation(locale, slug) ?? getTargetSevenTextBatchThreeTranslation(locale, slug) ?? getTargetSevenDeveloperBatchFourTranslation(locale, slug) ?? getTargetSevenFormattersBatchFiveTranslation(locale, slug) ?? getTargetSevenImageBatchSixTranslation(locale, slug) ?? getTargetSevenImageBatchSevenTranslation(locale, slug) ?? getTargetSevenImageEffectsBatchEightTranslation(locale, slug) ?? getTargetSevenImageEffectsBatchNineTranslation(locale, slug) ?? getTargetSevenPdfBatchTenTranslation(locale, slug) ?? getTargetSevenPdfBatchElevenTranslation(locale, slug) ?? getTargetSevenTextBatchTwelveTranslation(locale, slug) ?? getTargetSevenTextBatchThirteenTranslation(locale, slug);
 }
