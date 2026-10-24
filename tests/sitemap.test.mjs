@@ -46,6 +46,9 @@ const { getTargetSevenToolTranslation, targetSevenToolSlugs } = await importType
 ], [
   'import { getTargetSevenImageEffectsBatchNineTranslation, targetSevenImageEffectsBatchNineSlugs } from "./target-seven-image-effects-batch-nine-translations";',
   `const targetSevenImageEffectsBatchNineSlugs = ["image-blur", "image-pixelate", "remove-image-metadata", "image-info", "favicon-generator"]; const getTargetSevenImageEffectsBatchNineTranslation = () => undefined;`,
+], [
+  'import { getTargetSevenPdfBatchTenTranslation, targetSevenPdfBatchTenSlugs } from "./target-seven-pdf-batch-ten-translations";',
+  `const targetSevenPdfBatchTenSlugs = ["images-to-pdf", "pdf-merge", "pdf-split", "pdf-delete-pages", "pdf-reorder-pages"]; const getTargetSevenPdfBatchTenTranslation = () => undefined;`,
 ]]);
 const { getTargetSevenFileTranslation } = await importTypeScript("../src/registry/target-seven-file-translations.ts", [[
   'import type { SevenTargetLocale, TargetSevenToolTranslation } from "./target-seven-tools-translations";',
@@ -80,6 +83,10 @@ const { getTargetSevenImageEffectsBatchEightTranslation } = await importTypeScri
   "",
 ]]);
 const { getTargetSevenImageEffectsBatchNineTranslation } = await importTypeScript("../src/registry/target-seven-image-effects-batch-nine-translations.ts", [[
+  'import type { SevenTargetLocale, TargetSevenToolTranslation } from "./target-seven-tools-translations";',
+  "",
+]]);
+const { getTargetSevenPdfBatchTenTranslation } = await importTypeScript("../src/registry/target-seven-pdf-batch-ten-translations.ts", [[
   'import type { SevenTargetLocale, TargetSevenToolTranslation } from "./target-seven-tools-translations";',
   "",
 ]]);
@@ -1291,11 +1298,11 @@ test("Filipino authored tool translations include complete editorial and SEO fie
 
 test("seven remaining locales have complete authored translations for the current tool bundles", () => {
   const locales = ["bn", "uk", "ms", "sv", "cs", "ro", "el"];
-  assert.equal(targetSevenToolSlugs.length, 76);
-  assert.deepEqual(targetSevenToolSlugs.slice(-3), ["image-blur", "image-pixelate", "remove-image-metadata"]);
+  assert.equal(targetSevenToolSlugs.length, 81);
+  assert.deepEqual(targetSevenToolSlugs.slice(-5), ["images-to-pdf", "pdf-merge", "pdf-split", "pdf-delete-pages", "pdf-reorder-pages"]);
   for (const locale of locales) {
     for (const slug of targetSevenToolSlugs) {
-      const translation = getTargetSevenToolTranslation(locale, slug) ?? getTargetSevenWorkflowTranslation(locale, slug) ?? getTargetSevenFileTranslation(locale, slug) ?? getTargetSevenFileBatchTwoTranslation(locale, slug) ?? getTargetSevenTextBatchThreeTranslation(locale, slug) ?? getTargetSevenDeveloperBatchFourTranslation(locale, slug) ?? getTargetSevenFormattersBatchFiveTranslation(locale, slug) ?? getTargetSevenImageBatchSixTranslation(locale, slug) ?? getTargetSevenImageBatchSevenTranslation(locale, slug) ?? getTargetSevenImageEffectsBatchEightTranslation(locale, slug) ?? getTargetSevenImageEffectsBatchNineTranslation(locale, slug);
+      const translation = getTargetSevenToolTranslation(locale, slug) ?? getTargetSevenWorkflowTranslation(locale, slug) ?? getTargetSevenFileTranslation(locale, slug) ?? getTargetSevenFileBatchTwoTranslation(locale, slug) ?? getTargetSevenTextBatchThreeTranslation(locale, slug) ?? getTargetSevenDeveloperBatchFourTranslation(locale, slug) ?? getTargetSevenFormattersBatchFiveTranslation(locale, slug) ?? getTargetSevenImageBatchSixTranslation(locale, slug) ?? getTargetSevenImageBatchSevenTranslation(locale, slug) ?? getTargetSevenImageEffectsBatchEightTranslation(locale, slug) ?? getTargetSevenImageEffectsBatchNineTranslation(locale, slug) ?? getTargetSevenPdfBatchTenTranslation(locale, slug);
       assert.ok(translation, `${locale}/${slug}`);
       assert.ok(translation.title.length > 0);
       assert.ok(translation.description.length > 30);
