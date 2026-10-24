@@ -58,6 +58,9 @@ const { getTargetSevenToolTranslation, targetSevenToolSlugs } = await importType
 ], [
   'import { getTargetSevenTextBatchThirteenTranslation, targetSevenTextBatchThirteenSlugs } from "./target-seven-text-batch-thirteen-translations";',
   `const targetSevenTextBatchThirteenSlugs = ["text-compare", "reverse-text", "remove-duplicate-words", "json-validator", "json-to-yaml"]; const getTargetSevenTextBatchThirteenTranslation = () => undefined;`,
+], [
+  'import { getTargetSevenDataBatchFourteenTranslation, targetSevenDataBatchFourteenSlugs } from "./target-seven-data-batch-fourteen-translations";',
+  `const targetSevenDataBatchFourteenSlugs = ["yaml-to-json", "csv-to-json", "json-to-csv", "base64", "url-encode-decode"]; const getTargetSevenDataBatchFourteenTranslation = () => undefined;`,
 ]]);
 const { getTargetSevenFileTranslation } = await importTypeScript("../src/registry/target-seven-file-translations.ts", [[
   'import type { SevenTargetLocale, TargetSevenToolTranslation } from "./target-seven-tools-translations";',
@@ -108,6 +111,10 @@ const { getTargetSevenTextBatchTwelveTranslation } = await importTypeScript("../
   "",
 ]]);
 const { getTargetSevenTextBatchThirteenTranslation } = await importTypeScript("../src/registry/target-seven-text-batch-thirteen-translations.ts", [[
+  'import type { SevenTargetLocale, TargetSevenToolTranslation } from "./target-seven-tools-translations";',
+  "",
+]]);
+const { getTargetSevenDataBatchFourteenTranslation } = await importTypeScript("../src/registry/target-seven-data-batch-fourteen-translations.ts", [[
   'import type { SevenTargetLocale, TargetSevenToolTranslation } from "./target-seven-tools-translations";',
   "",
 ]]);
@@ -1319,11 +1326,11 @@ test("Filipino authored tool translations include complete editorial and SEO fie
 
 test("seven remaining locales have complete authored translations for the current tool bundles", () => {
   const locales = ["bn", "uk", "ms", "sv", "cs", "ro", "el"];
-  assert.equal(targetSevenToolSlugs.length, 96);
-  assert.deepEqual(targetSevenToolSlugs.slice(-5), ["text-compare", "reverse-text", "remove-duplicate-words", "json-validator", "json-to-yaml"]);
+  assert.equal(targetSevenToolSlugs.length, 101);
+  assert.deepEqual(targetSevenToolSlugs.slice(-5), ["yaml-to-json", "csv-to-json", "json-to-csv", "base64", "url-encode-decode"]);
   for (const locale of locales) {
     for (const slug of targetSevenToolSlugs) {
-      const translation = getTargetSevenToolTranslation(locale, slug) ?? getTargetSevenWorkflowTranslation(locale, slug) ?? getTargetSevenFileTranslation(locale, slug) ?? getTargetSevenFileBatchTwoTranslation(locale, slug) ?? getTargetSevenTextBatchThreeTranslation(locale, slug) ?? getTargetSevenDeveloperBatchFourTranslation(locale, slug) ?? getTargetSevenFormattersBatchFiveTranslation(locale, slug) ?? getTargetSevenImageBatchSixTranslation(locale, slug) ?? getTargetSevenImageBatchSevenTranslation(locale, slug) ?? getTargetSevenImageEffectsBatchEightTranslation(locale, slug) ?? getTargetSevenImageEffectsBatchNineTranslation(locale, slug) ?? getTargetSevenPdfBatchTenTranslation(locale, slug) ?? getTargetSevenPdfBatchElevenTranslation(locale, slug) ?? getTargetSevenTextBatchTwelveTranslation(locale, slug) ?? getTargetSevenTextBatchThirteenTranslation(locale, slug);
+      const translation = getTargetSevenToolTranslation(locale, slug) ?? getTargetSevenWorkflowTranslation(locale, slug) ?? getTargetSevenFileTranslation(locale, slug) ?? getTargetSevenFileBatchTwoTranslation(locale, slug) ?? getTargetSevenTextBatchThreeTranslation(locale, slug) ?? getTargetSevenDeveloperBatchFourTranslation(locale, slug) ?? getTargetSevenFormattersBatchFiveTranslation(locale, slug) ?? getTargetSevenImageBatchSixTranslation(locale, slug) ?? getTargetSevenImageBatchSevenTranslation(locale, slug) ?? getTargetSevenImageEffectsBatchEightTranslation(locale, slug) ?? getTargetSevenImageEffectsBatchNineTranslation(locale, slug) ?? getTargetSevenPdfBatchTenTranslation(locale, slug) ?? getTargetSevenPdfBatchElevenTranslation(locale, slug) ?? getTargetSevenTextBatchTwelveTranslation(locale, slug) ?? getTargetSevenTextBatchThirteenTranslation(locale, slug) ?? getTargetSevenDataBatchFourteenTranslation(locale, slug);
       assert.ok(translation, `${locale}/${slug}`);
       assert.ok(translation.title.length > 0);
       assert.ok(translation.description.length > 30);
