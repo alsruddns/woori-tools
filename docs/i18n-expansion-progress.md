@@ -9,15 +9,15 @@ Routable locales: 18 (ko, en, ja, zh, es, pt-br, de, fr, vi, id, th, zh-tw, it, 
 | --- | ---: | ---: | ---: | ---: | ---: | --- |
 | ru | 176/176 | 176 | 176 | 176 | 0 | none |
 | tr | 176/176 | 176 | 176 | 176 | 0 | none |
-| pl | 176/176 | 176 | 176 | 176 | 0 | UI: none |
-| fil | 176/176 | 0 | 0 | 0 | 0 | none |
-| bn | 176/176 | 0 | 0 | 0 | 0 | none |
-| uk | 176/176 | 0 | 0 | 0 | 0 | none |
-| ms | 176/176 | 0 | 0 | 0 | 0 | none |
-| sv | 176/176 | 0 | 0 | 0 | 0 | none |
-| cs | 176/176 | 0 | 0 | 0 | 0 | none |
-| ro | 176/176 | 0 | 0 | 0 | 0 | none |
-| el | 176/176 | 0 | 0 | 0 | 0 | none |
+| pl | 176/176 | 176 | 176 | 176 | 0 | none |
+| fil | 176/176 | 0 | 0 | 0 | 0 | UI: lotto-number-generator |
+| bn | 176/176 | 0 | 0 | 0 | 0 | UI: lotto-number-generator |
+| uk | 176/176 | 0 | 0 | 0 | 0 | UI: lotto-number-generator |
+| ms | 176/176 | 0 | 0 | 0 | 0 | UI: lotto-number-generator |
+| sv | 176/176 | 0 | 0 | 0 | 0 | UI: lotto-number-generator |
+| cs | 176/176 | 0 | 0 | 0 | 0 | UI: lotto-number-generator |
+| ro | 176/176 | 0 | 0 | 0 | 0 | UI: lotto-number-generator |
+| el | 176/176 | 0 | 0 | 0 | 0 | UI: lotto-number-generator |
 
 ## Translation coverage
 

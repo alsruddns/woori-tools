@@ -27,8 +27,6 @@ const currentLocale = "ru" as const;
 const currentComplete = completeByLocale[currentLocale];
 const currentPending = slugs.filter((slug) => !currentComplete.includes(slug));
 const nextWorkspace = targetRussianToolSlugs.find((slug) => !targetLocalePublication.ru.publishedToolSlugs.includes(slug)) ?? "none";
-const polishUiVerified = new Set<string>(targetLocalePublication.pl.uiVerifiedToolSlugs);
-const nextPolishUi = slugs.find((slug) => !polishUiVerified.has(slug)) ?? "none";
 const lines = [
   "# Woori Tools 26-language localization progress",
   "",
@@ -43,7 +41,8 @@ const lines = [
     const done = completeByLocale[routeLocale];
     const pending = slugs.filter((slug) => !done.includes(slug));
     const publication = targetLocalePublication[routeLocale];
-    const next = pending[0] ?? (routeLocale === "pl" ? `UI: ${nextPolishUi}` : "none");
+    const nextUi = slugs.find((slug) => !publication.uiVerifiedToolSlugs.includes(slug));
+    const next = pending[0] ?? (nextUi ? `UI: ${nextUi}` : "none");
     return `| ${routeLocale} | ${done.length}/${slugs.length} | ${publication.uiVerifiedToolSlugs.length} | ${publication.seoVerifiedToolSlugs.length} | ${publication.publishedToolSlugs.length} | ${pending.length} | ${next} |`;
   }),
   "",
