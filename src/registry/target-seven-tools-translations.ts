@@ -1,5 +1,6 @@
 import type { PlannedLocale } from "@/i18n/routing";
 import { getTargetSevenFileTranslation, targetSevenFileSlugs } from "./target-seven-file-translations";
+import { getTargetSevenFileBatchTwoTranslation, targetSevenFileBatchTwoSlugs } from "./target-seven-file-batch-two-translations";
 import { getTargetSevenWorkflowTranslation, targetSevenWorkflowSlugs } from "./target-seven-workflow-translations";
 
 export type SevenTargetLocale = Extract<PlannedLocale, "bn" | "uk" | "ms" | "sv" | "cs" | "ro" | "el">;
@@ -188,12 +189,12 @@ const utilityTranslations: Record<SevenTargetLocale, Record<string, TargetSevenT
   },
 };
 
-export const targetSevenToolSlugs = Array.from(new Set([...Object.keys(translations.bn), ...Object.keys(additionalTranslations.bn), ...Object.keys(utilityTranslations.bn), ...targetSevenWorkflowSlugs, ...targetSevenFileSlugs]));
+export const targetSevenToolSlugs = Array.from(new Set([...Object.keys(translations.bn), ...Object.keys(additionalTranslations.bn), ...Object.keys(utilityTranslations.bn), ...targetSevenWorkflowSlugs, ...targetSevenFileSlugs, ...targetSevenFileBatchTwoSlugs]));
 
 export function isSevenTargetLocale(locale: PlannedLocale): locale is SevenTargetLocale {
   return locale === "bn" || locale === "uk" || locale === "ms" || locale === "sv" || locale === "cs" || locale === "ro" || locale === "el";
 }
 
 export function getTargetSevenToolTranslation(locale: SevenTargetLocale, slug: string): TargetSevenToolTranslation | undefined {
-  return translations[locale][slug] ?? additionalTranslations[locale][slug] ?? utilityTranslations[locale][slug] ?? getTargetSevenWorkflowTranslation(locale, slug) ?? getTargetSevenFileTranslation(locale, slug);
+  return translations[locale][slug] ?? additionalTranslations[locale][slug] ?? utilityTranslations[locale][slug] ?? getTargetSevenWorkflowTranslation(locale, slug) ?? getTargetSevenFileTranslation(locale, slug) ?? getTargetSevenFileBatchTwoTranslation(locale, slug);
 }
