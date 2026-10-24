@@ -31,6 +31,9 @@ const { getTargetSevenToolTranslation, targetSevenToolSlugs } = await importType
 ], [
   'import { getTargetSevenDeveloperBatchFourTranslation, targetSevenDeveloperBatchFourSlugs } from "./target-seven-developer-batch-four-translations";',
   `const targetSevenDeveloperBatchFourSlugs = ["lorem-ipsum", "regex-tester", "color-converter", "cron-parser", "sql-formatter"]; const getTargetSevenDeveloperBatchFourTranslation = () => undefined;`,
+], [
+  'import { getTargetSevenFormattersBatchFiveTranslation, targetSevenFormattersBatchFiveSlugs } from "./target-seven-formatters-batch-five-translations";',
+  `const targetSevenFormattersBatchFiveSlugs = ["html-formatter", "css-formatter", "javascript-formatter", "markdown-preview", "json-formatter"]; const getTargetSevenFormattersBatchFiveTranslation = () => undefined;`,
 ]]);
 const { getTargetSevenFileTranslation } = await importTypeScript("../src/registry/target-seven-file-translations.ts", [[
   'import type { SevenTargetLocale, TargetSevenToolTranslation } from "./target-seven-tools-translations";',
@@ -45,6 +48,10 @@ const { getTargetSevenTextBatchThreeTranslation } = await importTypeScript("../s
   "",
 ]]);
 const { getTargetSevenDeveloperBatchFourTranslation } = await importTypeScript("../src/registry/target-seven-developer-batch-four-translations.ts", [[
+  'import type { SevenTargetLocale, TargetSevenToolTranslation } from "./target-seven-tools-translations";',
+  "",
+]]);
+const { getTargetSevenFormattersBatchFiveTranslation } = await importTypeScript("../src/registry/target-seven-formatters-batch-five-translations.ts", [[
   'import type { SevenTargetLocale, TargetSevenToolTranslation } from "./target-seven-tools-translations";',
   "",
 ]]);
@@ -1256,10 +1263,10 @@ test("Filipino authored tool translations include complete editorial and SEO fie
 
 test("seven remaining locales have complete authored translations for the current tool bundles", () => {
   const locales = ["bn", "uk", "ms", "sv", "cs", "ro", "el"];
-  assert.deepEqual(targetSevenToolSlugs, ["tarot-card", "daily-fortune", "saju", "random-number", "random-name-picker", "random-wheel", "draw-lots", "random-team-maker", "random-order", "random-seat", "duty-picker", "dice-roller", "coin-flip", "stopwatch", "timer", "pomodoro-timer", "world-clock", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr", "barcode-generator", "barcode-checker", "social-image-resize", "add-text-to-image", "file-hash", "instagram-grid-split", "image-collage", "image-info", "favicon-generator", "image-color-picker", "mime-type-checker", "file-extension-checker", "file-size-checker", "duplicate-file-checker", "zip-files", "bulk-file-renamer", "filename-cleaner", "shuffle-lines", "add-line-numbers", "remove-line-numbers", "remove-empty-lines", "remove-characters", "text-repeater", "text-to-file", "remove-spaces", "lorem-ipsum", "regex-tester", "color-converter", "cron-parser", "sql-formatter"]);
+  assert.deepEqual(targetSevenToolSlugs, ["tarot-card", "daily-fortune", "saju", "random-number", "random-name-picker", "random-wheel", "draw-lots", "random-team-maker", "random-order", "random-seat", "duty-picker", "dice-roller", "coin-flip", "stopwatch", "timer", "pomodoro-timer", "world-clock", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr", "barcode-generator", "barcode-checker", "social-image-resize", "add-text-to-image", "file-hash", "instagram-grid-split", "image-collage", "image-info", "favicon-generator", "image-color-picker", "mime-type-checker", "file-extension-checker", "file-size-checker", "duplicate-file-checker", "zip-files", "bulk-file-renamer", "filename-cleaner", "shuffle-lines", "add-line-numbers", "remove-line-numbers", "remove-empty-lines", "remove-characters", "text-repeater", "text-to-file", "remove-spaces", "lorem-ipsum", "regex-tester", "color-converter", "cron-parser", "sql-formatter", "html-formatter", "css-formatter", "javascript-formatter", "markdown-preview", "json-formatter"]);
   for (const locale of locales) {
     for (const slug of targetSevenToolSlugs) {
-      const translation = getTargetSevenToolTranslation(locale, slug) ?? getTargetSevenWorkflowTranslation(locale, slug) ?? getTargetSevenFileTranslation(locale, slug) ?? getTargetSevenFileBatchTwoTranslation(locale, slug) ?? getTargetSevenTextBatchThreeTranslation(locale, slug) ?? getTargetSevenDeveloperBatchFourTranslation(locale, slug);
+      const translation = getTargetSevenToolTranslation(locale, slug) ?? getTargetSevenWorkflowTranslation(locale, slug) ?? getTargetSevenFileTranslation(locale, slug) ?? getTargetSevenFileBatchTwoTranslation(locale, slug) ?? getTargetSevenTextBatchThreeTranslation(locale, slug) ?? getTargetSevenDeveloperBatchFourTranslation(locale, slug) ?? getTargetSevenFormattersBatchFiveTranslation(locale, slug);
       assert.ok(translation, `${locale}/${slug}`);
       assert.ok(translation.title.length > 0);
       assert.ok(translation.description.length > 30);
