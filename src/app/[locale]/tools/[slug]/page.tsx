@@ -68,6 +68,7 @@ import { getToolContent, getToolStorageNote } from "@/registry/tool-content";
 import { getFileGuidance } from "@/registry/file-guidance";
 import { getToolFaqQuestions } from "@/registry/tool-faq";
 import { localizePublishedTool } from "@/registry/published-tool-translations";
+import { getTargetToolTranslation } from "@/registry/target-tool-translation";
 import { getTargetRussianToolTranslation } from "@/registry/target-ru-translations";
 import { getTargetLotteryTranslation } from "@/registry/target-lottery-translations";
 import { getTargetTurkishToolTranslation } from "@/registry/target-tr-translations";
@@ -89,19 +90,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale: rawLocale, slug } = await params;
   if (rawLocale === "pl") {
     const tool = getTool(slug);
-    const translation = getTargetPolishToolTranslation(slug) ?? getTargetLotteryTranslation("pl", slug);
+    const translation = getTargetToolTranslation("pl", slug);
     if (!tool || !translation || !(targetLocalePublication.pl.publishedToolSlugs as readonly string[]).includes(slug)) return {};
     return pageMetadata({ locale: "pl", path: `/tools/${slug}`, title: translation.seoTitle, description: translation.seoDescription, keywords: translation.keywords, supportedLocales: [...new Set([...tool.supportedLocales, "pl" as const])] });
   }
   if (rawLocale === "ru") {
     const tool = getTool(slug);
-    const translation = getTargetRussianToolTranslation(slug) ?? getTargetLotteryTranslation("ru", slug);
+    const translation = getTargetToolTranslation("ru", slug);
     if (!tool || !tool.supportedLocales.includes("ru") || !translation) return {};
     return pageMetadata({ locale: "ru", path: `/tools/${slug}`, title: translation.seoTitle, description: translation.seoDescription, keywords: translation.keywords, supportedLocales: tool.supportedLocales });
   }
   if (rawLocale === "tr") {
     const tool = getTool(slug);
-    const translation = getTargetTurkishToolTranslation(slug) ?? getTargetLotteryTranslation("tr", slug);
+    const translation = getTargetToolTranslation("tr", slug);
     if (!tool || !tool.supportedLocales.includes("tr") || !translation || !(targetLocalePublication.tr.publishedToolSlugs as readonly string[]).includes(slug)) return {};
     return pageMetadata({ locale: "tr", path: `/tools/${slug}`, title: translation.seoTitle, description: translation.seoDescription, keywords: translation.keywords, supportedLocales: tool.supportedLocales });
   }
