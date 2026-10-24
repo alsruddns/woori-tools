@@ -11,7 +11,11 @@ async function importTs(path, replacements = []) {
 }
 
 const { locales } = await importTs("../src/i18n/routing.ts");
-const { renameCopy, selectionCopy } = await importTs("../src/registry/tool-option-copy.ts");
+globalThis.__targetToolOptionCopy = await importTs("../src/registry/target-tool-option-copy.ts");
+const { renameCopy, selectionCopy } = await importTs("../src/registry/tool-option-copy.ts", [[
+  'import { targetRenameCopy, targetSelectionLimitMessages, targetToolOptionLabels, type TargetToolOptionLabels, type ToolOptionLabelKey } from "./target-tool-option-copy";',
+  'const { targetRenameCopy, targetSelectionLimitMessages, targetToolOptionLabels } = globalThis.__targetToolOptionCopy;',
+]]);
 globalThis.__targetCoreMessages = (await importTs("../src/i18n/target-locale-copy.ts")).targetCoreMessages;
 const { COUNTRY_TOOL_SLUGS } = await importTs("../src/lib/country-tool-slugs.ts");
 globalThis.__countryToolSlugs = COUNTRY_TOOL_SLUGS;

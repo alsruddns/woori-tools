@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import NextImage from "next/image";
 import type { ToolDefinition } from "@/registry/tools";
 import type { Dictionary } from "@/i18n/messages";
-import type { RouteLocale } from "@/i18n/routing";
+import { isLocale, isPublishedTargetLocale, type PlannedLocale, type RouteLocale } from "@/i18n/routing";
 import { processImage as processImageFile } from "@/lib/image/process-image";
 import { processPdf as processPdfFile } from "@/lib/pdf/process-pdf";
 import { processText as processTextTool } from "@/lib/text/process-text";
@@ -37,13 +37,30 @@ import { DailyFortuneWorkspace, TarotWorkspace } from "@/components/tool/fortune
 import { SajuWorkspace } from "@/components/tool/saju-workspace";
 import { JapanToolsWorkspace } from "@/components/tool/japan-tools-workspace";
 import { COUNTRY_TOOL_SLUGS } from "@/lib/country-tool-slugs";
-import { renameCopy, selectionCopy, type ToolOptionLocale } from "@/registry/tool-option-copy";
+import { getRenameCopy, getTargetToolOptionLabel, isPlannedToolOptionLocale, selectionCopy, targetSelectionLimitMessages, type ToolOptionLocale } from "@/registry/tool-option-copy";
 import { BrowserDeveloperToolsWorkspace } from "@/components/tool/browser-developer-tools-workspace";
 import { CoinFlipWorkspace, DiceWorkspace, LottoWorkspace, RandomNameWorkspace, RandomNumberWorkspace, RandomOrderWorkspace, RandomSeatWorkspace, RandomTeamWorkspace, RandomWheelWorkspace, RussianDutyPickerWorkspace } from "@/components/tool/special-random-workspaces";
 
 const MAX_IMAGE = 30 * 1024 * 1024;
 const MAX_PDF = 50 * 1024 * 1024;
-type ToolWorkspaceLocale = RouteLocale | "pl";
+type ToolWorkspaceLocale = RouteLocale | PlannedLocale;
+const workspaceUnavailable: Record<PlannedLocale, string> = {
+  ru: "Эта рабочая область ещё не переведена полностью.",
+  tr: "Bu çalışma alanının çevirisi henüz tamamlanmadı.",
+  pl: "Tłumaczenie tego obszaru roboczego nie jest jeszcze kompletne.",
+  fil: "Hindi pa kumpleto ang salin ng workspace na ito.",
+  bn: "এই কাজের অংশটির অনুবাদ এখনও সম্পূর্ণ হয়নি।",
+  uk: "Переклад цієї робочої області ще не завершено.",
+  ms: "Terjemahan ruang kerja ini belum selesai.",
+  sv: "Översättningen av den här arbetsytan är inte klar ännu.",
+  cs: "Překlad tohoto pracovního prostoru ještě není dokončen.",
+  ro: "Traducerea acestui spațiu de lucru nu este încă finalizată.",
+  el: "Η μετάφραση αυτού του χώρου εργασίας δεν έχει ολοκληρωθεί ακόμη.",
+};
+function getWorkspaceProcessorLocale(locale: ToolWorkspaceLocale) {
+  if (isPublishedTargetLocale(locale)) return locale;
+  throw new Error(workspaceUnavailable[locale]);
+}
 const CountryToolsWorkspace = dynamic(() => import("@/components/tool/country-tools-workspace").then((module) => module.CountryToolsWorkspace));
 const selectionLimitMessages: Record<RouteLocale, { files: string; images: string }> = {
   ko:{files:"파일은 최대 100개, 전체 용량은 200MB까지 선택할 수 있습니다.",images:"이미지는 최대 6개, 전체 용량은 100MB까지 선택할 수 있습니다."},
@@ -64,7 +81,7 @@ const selectionLimitMessages: Record<RouteLocale, { files: string; images: strin
 };
 
 export function ToolWorkspace({ tool, phaseLocale, optionLocale = phaseLocale, messages }: { tool: ToolDefinition; phaseLocale:ToolWorkspaceLocale; optionLocale?: ToolOptionLocale; messages: Dictionary }) {
-  const specializedLocale: RouteLocale = phaseLocale === "pl" ? "en" : phaseLocale;
+  const specializedLocale: RouteLocale = phaseLocale === "pl" ? "en" : isLocale(phaseLocale) ? phaseLocale : "en";
   const isImage = tool.category === "image";
   const isPdf = tool.category === "pdf" || tool.slug === "images-to-pdf";
   const isFileTool = ["file-hash","mime-type-checker","file-extension-checker","file-size-checker","duplicate-file-checker","zip-files","bulk-file-renamer","filename-cleaner"].includes(tool.slug);
@@ -94,6 +111,7 @@ export function ToolWorkspace({ tool, phaseLocale, optionLocale = phaseLocale, m
     const stem = files[0].name.replace(/\.[^.]+$/, "").replace(/[\\/:*?"<>|]/g, "-");
     return stem || "download";
   }, [files]);
+  if (!isPublishedTargetLocale(phaseLocale)) return <p role="status">{workspaceUnavailable[phaseLocale]}</p>;
   if (tool.slug.startsWith("jwt-") || ["url-query-parameter-parser","user-agent-parser","ip-cidr-calculator","base32-encoder-decoder","ulid-generator","uuid-v7-generator","hash-compare","regex-replace","html-entity-encoder-decoder","chmod-calculator","json-path-tester","csv-tsv-converter","url-slug-generator","unicode-code-point-checker","pdf-page-size-checker"].includes(tool.slug)) return <BrowserDeveloperToolsWorkspace slug={tool.slug} locale={phaseLocale === "pl" ? "pl" : specializedLocale} title={tool.title} />;
   if ((COUNTRY_TOOL_SLUGS as readonly string[]).includes(tool.slug)) return <CountryToolsWorkspace slug={tool.slug as (typeof COUNTRY_TOOL_SLUGS)[number]} locale={specializedLocale} />;
   if (["wareki-converter", "hiragana-katakana-converter", "fullwidth-halfwidth-converter", "japanese-romaji-converter", "japanese-number-kanji-converter", "yakudoshi-calculator", "japanese-zodiac-calculator", "numbers3-number-generator", "numbers4-number-generator", "bingo5-number-generator"].includes(tool.slug)) return <JapanToolsWorkspace slug={tool.slug} locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;
@@ -136,11 +154,12 @@ export function ToolWorkspace({ tool, phaseLocale, optionLocale = phaseLocale, m
   function selectFiles(list: FileList | null) {
     if (!list) return;
     const incoming = Array.from(list);
+    const selectionLimits = isPlannedToolOptionLocale(phaseLocale) ? targetSelectionLimitMessages[phaseLocale] : selectionLimitMessages[phaseLocale];
     const limit = isImage ? MAX_IMAGE : isPdf ? MAX_PDF : 100 * 1024 * 1024;
     const bad = incoming.find((file) => file.size > limit);
     if (bad) { setError(messages.errors.tooLarge.replace("{size}", String(isImage ? 30 : 50))); return; }
-    if(isFileTool&&(incoming.length>100||incoming.reduce((sum,file)=>sum+file.size,0)>200*1024*1024)){setError(phaseLocale==="pl"?"Wybierz maksymalnie 100 plików o łącznym rozmiarze do 200 MB.":selectionLimitMessages[phaseLocale].files);return;}
-    if(tool.slug==="image-collage"&&(incoming.length>6||incoming.reduce((sum,file)=>sum+file.size,0)>100*1024*1024)){setError(phaseLocale==="pl"?"Wybierz maksymalnie 6 obrazów o łącznym rozmiarze do 100 MB.":selectionLimitMessages[phaseLocale].images);return;}
+    if(isFileTool&&(incoming.length>100||incoming.reduce((sum,file)=>sum+file.size,0)>200*1024*1024)){setError(selectionLimits.files);return;}
+    if(tool.slug==="image-collage"&&(incoming.length>6||incoming.reduce((sum,file)=>sum+file.size,0)>100*1024*1024)){setError(selectionLimits.images);return;}
     const valid = incoming.filter((file) => isImage ? (/^image\//.test(file.type) || /\.heic$/i.test(file.name) || /\.heif$/i.test(file.name)) : isPdf ? (file.type === "application/pdf" || /\.pdf$/i.test(file.name)) : true);
     if (valid.length !== incoming.length) { setError(isImage ? messages.errors.imageOnly : messages.errors.pdfOnly); return; }
     const selected = tool.slug==="image-collage" || isFileTool || (isPdf && tool.slug !== "pdf-split" && tool.slug !== "pdf-delete-pages" && tool.slug !== "pdf-rotate-pages" && tool.slug !== "pdf-add-page-numbers" && tool.slug !== "pdf-watermark" && tool.slug !== "pdf-metadata-viewer" && tool.slug !== "pdf-remove-metadata") ? valid : valid.slice(0, 1);
@@ -164,19 +183,22 @@ export function ToolWorkspace({ tool, phaseLocale, optionLocale = phaseLocale, m
   async function processImage() {
     if(tool.slug==="image-collage"){await processCollage();return;}
     const file=files[0]; if(!file) throw new Error(messages.errors.noImage);
-    const processed=await processImageFile(tool.slug,file,{quality,width,height,keepRatio,amount,option,text},phaseLocale);
+    const processorLocale = getWorkspaceProcessorLocale(phaseLocale);
+    const processed=await processImageFile(tool.slug,file,{quality,width,height,keepRatio,amount,option,text},processorLocale);
     if(processed.blob) setOutputUrl(URL.createObjectURL(processed.blob));
     setResult(processed.result);
   }
 
   async function processPdf() {
-    const processed=await processPdfFile(tool.slug,files,option,text,phaseLocale);
+    const processorLocale = getWorkspaceProcessorLocale(phaseLocale);
+    const processed=await processPdfFile(tool.slug,files,option,text,processorLocale);
     if(processed.blob) setOutputUrl(URL.createObjectURL(processed.blob));
     setResult(processed.result);
   }
 
   async function processText() {
-    const processed=await processTextTool(tool.slug,text,secondText,option,amount,phaseLocale);
+    const processorLocale = getWorkspaceProcessorLocale(phaseLocale);
+    const processed=await processTextTool(tool.slug,text,secondText,option,amount,processorLocale);
     if(processed.download) setOutputUrl(URL.createObjectURL(processed.download));
     setResult(processed.result);
   }
@@ -204,7 +226,7 @@ export function ToolWorkspace({ tool, phaseLocale, optionLocale = phaseLocale, m
 }
 
 function BulkRenameOptions({locale,files,value,onChange}:{locale:ToolOptionLocale;files:File[];value:string;onChange:(value:string)=>void}) {
-  const t=renameCopy[locale];
+  const t=getRenameCopy(locale);
   const options=parseRenameOptions(value); const fields:[keyof ReturnType<typeof parseRenameOptions>,string][]=[["prefix",t.prefix],["suffix",t.suffix],["find",t.find],["replace",t.replace],["startNumber",t.start],["padding",t.padding]];
   function update(key:keyof ReturnType<typeof parseRenameOptions>,next:string){onChange(fields.map(([field])=>field===key?next:options[field]??"").join("\n"));}
   const renamed=renameFileNames(files.map((file)=>file.name),options);
@@ -213,13 +235,13 @@ function BulkRenameOptions({locale,files,value,onChange}:{locale:ToolOptionLocal
 
 function ToolOptions({tool,locale,messages,files,quality,setQuality,width,setWidth,height,setHeight,keepRatio,setKeepRatio,amount,setAmount,option,setOption,text,setText}:{tool:ToolDefinition;locale:ToolOptionLocale;messages:Dictionary;files:File[];quality:number;setQuality:(v:number)=>void;width:number;setWidth:(v:number)=>void;height:number;setHeight:(v:number)=>void;keepRatio:boolean;setKeepRatio:(v:boolean)=>void;amount:number;setAmount:(v:number)=>void;option:string;setOption:(v:string)=>void;text:string;setText:(v:string)=>void}) {
   const slug=tool.slug;
-  if (slug==="image-collage") return <SelectOption label={messages.option} value={option||"4"} onChange={setOption} options={[["4",localeLabel(locale,"collage4")],["6",localeLabel(locale,"collage6")]]} />;
-  if (slug==="instagram-grid-split") return <SelectOption label={messages.option} value={option||"9"} onChange={setOption} options={[["3",localeLabel(locale,"grid3")],["6",localeLabel(locale,"grid6")],["9",localeLabel(locale,"grid9")]]} />;
+  if (slug==="image-collage") return <SelectOption label={messages.option} value={option||"4"} onChange={setOption} options={[["4",localizedOptionLabel(locale,"collage4")],["6",localizedOptionLabel(locale,"collage6")]]} />;
+  if (slug==="instagram-grid-split") return <SelectOption label={messages.option} value={option||"9"} onChange={setOption} options={[["3",localizedOptionLabel(locale,"grid3")],["6",localizedOptionLabel(locale,"grid6")],["9",localizedOptionLabel(locale,"grid9")]]} />;
   if (slug==="bulk-file-renamer") return <BulkRenameOptions locale={locale} files={files} value={text} onChange={setText} />;
-  if (slug==="social-image-resize") return <SelectOption label={messages.option} value={option||"square"} onChange={setOption} options={[["square",localeLabel(locale,"square")],["portrait",localeLabel(locale,"portraitPreset")],["story",localeLabel(locale,"story")],["youtube",localeLabel(locale,"youtube")],["x",localeLabel(locale,"xpost")],["facebook",localeLabel(locale,"facebook")]]} />;
+  if (slug==="social-image-resize") return <SelectOption label={messages.option} value={option||"square"} onChange={setOption} options={[["square",localizedOptionLabel(locale,"square")],["portrait",localizedOptionLabel(locale,"portraitPreset")],["story",localizedOptionLabel(locale,"story")],["youtube",localizedOptionLabel(locale,"youtube")],["x",localizedOptionLabel(locale,"xpost")],["facebook",localizedOptionLabel(locale,"facebook")]]} />;
   if (slug==="add-text-to-image") return <label className="mt-4 block text-sm">{messages.input}<input value={text} onChange={e=>setText(e.target.value)} maxLength={160} className="mt-1 block w-full rounded-lg border p-3"/></label>;
-  if (["random-number","random-name-picker","random-wheel","draw-lots","random-team-maker","random-order","dice-roller","coin-flip","password-generator","random-string-generator","uuid-generator","text-repeater","lorem-ipsum"].includes(slug)) return <div className="mt-4 grid gap-4 sm:grid-cols-2"><label className="text-sm">{messages.generateCount}<input type="number" min="1" max={slug==="coin-flip"?1000:100} value={amount} onChange={(e)=>setAmount(Number(e.target.value))} className="mt-1 block w-full rounded-lg border p-2" /></label>{["random-number","random-name-picker","random-wheel","draw-lots"].includes(slug)&&<SelectOption label={messages.option} value={option} onChange={setOption} options={[["unique",localeLabel(locale,"noRepeat")],["repeat",localeLabel(locale,"repeat")]]} />}{slug==="dice-roller"&&<SelectOption label={messages.option} value={option||"6"} onChange={setOption} options={[["4","D4"],["6","D6"],["8","D8"],["10","D10"],["12","D12"],["20","D20"]]} />}{slug==="text-repeater"&&<label className="text-sm">{messages.option}<input value={option} onChange={(e)=>setOption(e.target.value)} placeholder=", " className="mt-1 block w-full rounded-lg border p-2" /></label>}</div>;
-  if (slug==="remove-characters") return <SelectOption label={messages.option} value={option||"digits"} onChange={setOption} options={[["digits",localeLabel(locale,"digits")],["latin",localeLabel(locale,"latin")],["hangul",localeLabel(locale,"hangul")],["special",localeLabel(locale,"special")],["custom",localeLabel(locale,"custom")]]} />;
+  if (["random-number","random-name-picker","random-wheel","draw-lots","random-team-maker","random-order","dice-roller","coin-flip","password-generator","random-string-generator","uuid-generator","text-repeater","lorem-ipsum"].includes(slug)) return <div className="mt-4 grid gap-4 sm:grid-cols-2"><label className="text-sm">{messages.generateCount}<input type="number" min="1" max={slug==="coin-flip"?1000:100} value={amount} onChange={(e)=>setAmount(Number(e.target.value))} className="mt-1 block w-full rounded-lg border p-2" /></label>{["random-number","random-name-picker","random-wheel","draw-lots"].includes(slug)&&<SelectOption label={messages.option} value={option} onChange={setOption} options={[["unique",localizedOptionLabel(locale,"noRepeat")],["repeat",localizedOptionLabel(locale,"repeat")]]} />}{slug==="dice-roller"&&<SelectOption label={messages.option} value={option||"6"} onChange={setOption} options={[["4","D4"],["6","D6"],["8","D8"],["10","D10"],["12","D12"],["20","D20"]]} />}{slug==="text-repeater"&&<label className="text-sm">{messages.option}<input value={option} onChange={(e)=>setOption(e.target.value)} placeholder=", " className="mt-1 block w-full rounded-lg border p-2" /></label>}</div>;
+  if (slug==="remove-characters") return <SelectOption label={messages.option} value={option||"digits"} onChange={setOption} options={[["digits",localizedOptionLabel(locale,"digits")],["latin",localizedOptionLabel(locale,"latin")],["hangul",localizedOptionLabel(locale,"hangul")],["special",localizedOptionLabel(locale,"special")],["custom",localizedOptionLabel(locale,"custom")]]} />;
   if (["image-compress","jpg-to-webp","png-to-webp","png-to-jpg","webp-to-jpg","heic-to-jpg"].includes(slug)) return <label className="mt-5 block text-sm">{messages.quality}: {Math.round(quality*100)}% <input type="range" min="0.2" max="1" step="0.01" value={quality} onChange={(e)=>setQuality(Number(e.target.value))} className="mt-2 block w-full accent-indigo-600" /></label>;
   if (slug==="image-resize") return <div className="mt-5 flex flex-wrap items-end gap-4"><label className="text-sm">{messages.width}<input type="number" min="1" max="12000" value={width} onChange={(e)=>setWidth(Number(e.target.value))} className="mt-1 block w-28 rounded-lg border p-2" /></label><label className="text-sm">{messages.height}<input type="number" min="1" max="12000" value={height} onChange={(e)=>setHeight(Number(e.target.value))} disabled={keepRatio} className="mt-1 block w-28 rounded-lg border p-2 disabled:bg-slate-100" /></label><label className="flex min-h-10 items-center gap-2 text-sm"><input type="checkbox" checked={keepRatio} onChange={(e)=>setKeepRatio(e.target.checked)} />{messages.keepRatio}</label></div>;
   if (slug==="image-rotate") return <SelectOption label={messages.rotation} value={option} onChange={setOption} options={[["90","90°"],["180","180°"],["270","270°"]]} />;
@@ -269,7 +291,8 @@ function isPolishNorthAmericaSlug(slug: string): slug is PolishNorthAmericaSlug 
   return slug === "us-phone-number-formatter" || slug === "us-zip-code-formatter" || slug === "canada-postal-code-formatter" || slug === "uk-postcode-formatter";
 }
 const polishOptionLabels:Record<string,string>={square:"Instagram — kwadrat",portraitPreset:"Instagram — pionowo",story:"Relacja na Instagramie",youtube:"Miniatura YouTube",xpost:"Post na X",facebook:"Post na Facebooku",grid3:"3 kafelki (3 × 1)",grid6:"6 kafelków (3 × 2)",grid9:"9 kafelków (3 × 3)",collage4:"4 zdjęcia (2 × 2)",collage6:"6 zdjęć (3 × 2)"};
-function localeLabel(locale:ToolOptionLocale,key:string){if(locale==="pl")return polishOptionLabels[key]??key;const labels:Record<string,Record<string,string>>={ko:{noRepeat:"중복 없이",repeat:"중복 허용",digits:"숫자",latin:"영문",hangul:"한글",special:"특수문자",custom:"사용자 지정",square:"Instagram 정사각형",portraitPreset:"Instagram 세로",story:"Instagram 스토리",youtube:"YouTube 썸네일",xpost:"X 게시물",facebook:"Facebook 게시물",grid3:"3개 (3 × 1)",grid6:"6개 (3 × 2)",grid9:"9개 (3 × 3)",collage4:"4장 (2 × 2)",collage6:"6장 (3 × 2)",renameRules:"줄마다 접두사, 접미사, 찾을 글자, 바꿀 글자를 입력",renameHint:"생략한 줄은 무시합니다. 변경본은 ZIP으로 받습니다."},en:{noRepeat:"Without repeats",repeat:"Allow repeats",digits:"Digits",latin:"Latin letters",hangul:"Korean characters",special:"Special characters",custom:"Custom string",square:"Instagram square",portraitPreset:"Instagram portrait",story:"Instagram story",youtube:"YouTube thumbnail",xpost:"X post",facebook:"Facebook post",grid3:"3 tiles (3 × 1)",grid6:"6 tiles (3 × 2)",grid9:"9 tiles (3 × 3)",collage4:"4 photos (2 × 2)",collage6:"6 photos (3 × 2)",renameRules:"Enter prefix, suffix, find, and replace on separate lines",renameHint:"Leave a line empty to skip that rule. Renamed copies are downloaded as a ZIP."},ja:{noRepeat:"重複なし",repeat:"重複あり",digits:"数字",latin:"英字",hangul:"ハングル",special:"記号",custom:"指定文字列",square:"Instagram正方形",portraitPreset:"Instagram縦長",story:"Instagramストーリー",youtube:"YouTubeサムネイル",xpost:"X投稿",facebook:"Facebook投稿",grid3:"3枚 (3 × 1)",grid6:"6枚 (3 × 2)",grid9:"9枚 (3 × 3)",collage4:"4枚 (2 × 2)",collage6:"6枚 (3 × 2)",renameRules:"接頭辞、接尾辞、検索文字、置換文字を各行に入力",renameHint:"空欄の規則は無視します。変更後のファイルはZIPで保存します。"},zh:{noRepeat:"不重复",repeat:"允许重复",digits:"数字",latin:"英文字母",hangul:"韩文",special:"特殊字符",custom:"自定义字符",square:"Instagram方形",portraitPreset:"Instagram竖版",story:"Instagram限时动态",youtube:"YouTube缩略图",xpost:"X帖子",facebook:"Facebook帖子",grid3:"3张（3 × 1）",grid6:"6张（3 × 2）",grid9:"9张（3 × 3）",collage4:"4张（2 × 2）",collage6:"6张（3 × 2）",renameRules:"每行输入前缀、后缀、查找内容和替换内容",renameHint:"留空的规则将跳过。重命名后的副本将打包为ZIP下载."}};
+function localizedOptionLabel(locale:ToolOptionLocale,key:string){if(isPlannedToolOptionLocale(locale))return getTargetToolOptionLabel(locale,key)??key;return legacyLocaleLabel(locale,key);}
+function legacyLocaleLabel(locale:ToolOptionLocale,key:string){if(locale==="pl")return polishOptionLabels[key]??key;const labels:Record<string,Record<string,string>>={ko:{noRepeat:"중복 없이",repeat:"중복 허용",digits:"숫자",latin:"영문",hangul:"한글",special:"특수문자",custom:"사용자 지정",square:"Instagram 정사각형",portraitPreset:"Instagram 세로",story:"Instagram 스토리",youtube:"YouTube 썸네일",xpost:"X 게시물",facebook:"Facebook 게시물",grid3:"3개 (3 × 1)",grid6:"6개 (3 × 2)",grid9:"9개 (3 × 3)",collage4:"4장 (2 × 2)",collage6:"6장 (3 × 2)",renameRules:"줄마다 접두사, 접미사, 찾을 글자, 바꿀 글자를 입력",renameHint:"생략한 줄은 무시합니다. 변경본은 ZIP으로 받습니다."},en:{noRepeat:"Without repeats",repeat:"Allow repeats",digits:"Digits",latin:"Latin letters",hangul:"Korean characters",special:"Special characters",custom:"Custom string",square:"Instagram square",portraitPreset:"Instagram portrait",story:"Instagram story",youtube:"YouTube thumbnail",xpost:"X post",facebook:"Facebook post",grid3:"3 tiles (3 × 1)",grid6:"6 tiles (3 × 2)",grid9:"9 tiles (3 × 3)",collage4:"4 photos (2 × 2)",collage6:"6 photos (3 × 2)",renameRules:"Enter prefix, suffix, find, and replace on separate lines",renameHint:"Leave a line empty to skip that rule. Renamed copies are downloaded as a ZIP."},ja:{noRepeat:"重複なし",repeat:"重複あり",digits:"数字",latin:"英字",hangul:"ハングル",special:"記号",custom:"指定文字列",square:"Instagram正方形",portraitPreset:"Instagram縦長",story:"Instagramストーリー",youtube:"YouTubeサムネイル",xpost:"X投稿",facebook:"Facebook投稿",grid3:"3枚 (3 × 1)",grid6:"6枚 (3 × 2)",grid9:"9枚 (3 × 3)",collage4:"4枚 (2 × 2)",collage6:"6枚 (3 × 2)",renameRules:"接頭辞、接尾辞、検索文字、置換文字を各行に入力",renameHint:"空欄の規則は無視します。変更後のファイルはZIPで保存します。"},zh:{noRepeat:"不重复",repeat:"允许重复",digits:"数字",latin:"英文字母",hangul:"韩文",special:"特殊字符",custom:"自定义字符",square:"Instagram方形",portraitPreset:"Instagram竖版",story:"Instagram限时动态",youtube:"YouTube缩略图",xpost:"X帖子",facebook:"Facebook帖子",grid3:"3张（3 × 1）",grid6:"6张（3 × 2）",grid9:"9张（3 × 3）",collage4:"4张（2 × 2）",collage6:"6张（3 × 2）",renameRules:"每行输入前缀、后缀、查找内容和替换内容",renameHint:"留空的规则将跳过。重命名后的副本将打包为ZIP下载."}};
 const localized:Record<string,Record<string,string>>={es:{square:"Instagram cuadrado",portraitPreset:"Instagram vertical",story:"Historia de Instagram",youtube:"Miniatura de YouTube",xpost:"Publicación de X",facebook:"Publicación de Facebook",grid3:"3 mosaicos (3 × 1)",grid6:"6 mosaicos (3 × 2)",grid9:"9 mosaicos (3 × 3)",collage4:"4 fotos (2 × 2)",collage6:"6 fotos (3 × 2)"},"pt-br":{square:"Instagram quadrado",portraitPreset:"Instagram vertical",story:"Story do Instagram",youtube:"Miniatura do YouTube",xpost:"Publicação no X",facebook:"Publicação no Facebook",grid3:"3 peças (3 × 1)",grid6:"6 peças (3 × 2)",grid9:"9 peças (3 × 3)",collage4:"4 fotos (2 × 2)",collage6:"6 fotos (3 × 2)"},de:{square:"Instagram quadratisch",portraitPreset:"Instagram Hochformat",story:"Instagram-Story",youtube:"YouTube-Thumbnail",xpost:"X-Beitrag",facebook:"Facebook-Beitrag",grid3:"3 Kacheln (3 × 1)",grid6:"6 Kacheln (3 × 2)",grid9:"9 Kacheln (3 × 3)",collage4:"4 Fotos (2 × 2)",collage6:"6 Fotos (3 × 2)"},fr:{square:"Carré Instagram",portraitPreset:"Portrait Instagram",story:"Story Instagram",youtube:"Miniature YouTube",xpost:"Publication X",facebook:"Publication Facebook",grid3:"3 vignettes (3 × 1)",grid6:"6 vignettes (3 × 2)",grid9:"9 vignettes (3 × 3)",collage4:"4 photos (2 × 2)",collage6:"6 photos (3 × 2)"},vi:{square:"Instagram vuông",portraitPreset:"Instagram dọc",story:"Tin Instagram",youtube:"Ảnh thu nhỏ YouTube",xpost:"Bài đăng X",facebook:"Bài đăng Facebook",grid3:"3 ô (3 × 1)",grid6:"6 ô (3 × 2)",grid9:"9 ô (3 × 3)",collage4:"4 ảnh (2 × 2)",collage6:"6 ảnh (3 × 2)"},id:{square:"Instagram persegi",portraitPreset:"Instagram potret",story:"Instagram Story",youtube:"Thumbnail YouTube",xpost:"Postingan X",facebook:"Postingan Facebook",grid3:"3 ubin (3 × 1)",grid6:"6 ubin (3 × 2)",grid9:"9 ubin (3 × 3)",collage4:"4 foto (2 × 2)",collage6:"6 foto (3 × 2)"},th:{square:"Instagram สี่เหลี่ยม",portraitPreset:"Instagram แนวตั้ง",story:"สตอรี่ Instagram",youtube:"ภาพปก YouTube",xpost:"โพสต์ X",facebook:"โพสต์ Facebook",grid3:"3 ช่อง (3 × 1)",grid6:"6 ช่อง (3 × 2)",grid9:"9 ช่อง (3 × 3)",collage4:"4 ภาพ (2 × 2)",collage6:"6 ภาพ (3 × 2)"},"zh-tw":{square:"Instagram 正方形",portraitPreset:"Instagram 直式",story:"Instagram 限時動態",youtube:"YouTube 縮圖",xpost:"X 貼文",facebook:"Facebook 貼文",grid3:"3 張拼圖 (3 × 1)",grid6:"6 張拼圖 (3 × 2)",grid9:"9 張拼圖 (3 × 3)",collage4:"4 張照片 (2 × 2)",collage6:"6 張照片 (3 × 2)"},it:{square:"Instagram quadrato",portraitPreset:"Instagram verticale",story:"Storia Instagram",youtube:"Miniatura YouTube",xpost:"Post su X",facebook:"Post Facebook",grid3:"3 riquadri (3 × 1)",grid6:"6 riquadri (3 × 2)",grid9:"9 riquadri (3 × 3)",collage4:"4 foto (2 × 2)",collage6:"6 foto (3 × 2)"},nl:{square:"Instagram vierkant",portraitPreset:"Instagram staand",story:"Instagram-verhaal",youtube:"YouTube-miniatuur",xpost:"X-bericht",facebook:"Facebook-bericht",grid3:"3 tegels (3 × 1)",grid6:"6 tegels (3 × 2)",grid9:"9 tegels (3 × 3)",collage4:"4 foto's (2 × 2)",collage6:"6 foto's (3 × 2)"},hi:{square:"Instagram वर्ग",portraitPreset:"Instagram पोर्ट्रेट",story:"Instagram स्टोरी",youtube:"YouTube थंबनेल",xpost:"X पोस्ट",facebook:"Facebook पोस्ट",grid3:"3 टाइल (3 × 1)",grid6:"6 टाइल (3 × 2)",grid9:"9 टाइल (3 × 3)",collage4:"4 तस्वीरें (2 × 2)",collage6:"6 तस्वीरें (3 × 2)"}};return selectionCopy[locale][key as keyof typeof selectionCopy[typeof locale]]??localized[locale]?.[key]??labels[locale]?.[key]??key;}
 function downloadName(slug:string,stem:string){if(slug==="images-to-pdf"||slug.startsWith("pdf-"))return`${stem}-${slug==="pdf-merge"?"merged":"processed"}.pdf`;if(slug==="text-to-file")return `${stem}.txt`;if(["zip-files","bulk-file-renamer","filename-cleaner","instagram-grid-split"].includes(slug))return `${slug}.zip`;const extension=slug.includes("png")||slug==="favicon-generator"?"png":slug.includes("webp")?"webp":"jpg";return`${stem}-${slug}.${extension}`;}
 function safeArchiveName(value:string){return value.replace(/^[. ]+|[. ]+$/g,"").replace(/[<>:"/\\|?*\u0000-\u001f]/g,"_")||"file";}

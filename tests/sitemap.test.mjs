@@ -1200,7 +1200,7 @@ test("Polish code formatters use the translated generic workspace and SEO routes
     assert.equal(targetLocalePublication.pl.publishedToolSlugs.includes(slug), true);
     assert.equal(entries.some(({ url }) => url === `https://www.woori.today/pl/tools/${slug}`), true);
   }
-  assert.match(toolWorkspaceSource, /processTextTool\(tool\.slug,text,secondText,option,amount,phaseLocale\)/);
+  assert.match(toolWorkspaceSource, /processTextTool\(tool\.slug,text,secondText,option,amount,processorLocale\)/);
   assert.match(toolWorkspaceSource, /messages\.textPlaceholder/);
   assert.match(toolWorkspaceSource, /busy\?messages\.processing/);
 });
@@ -1222,7 +1222,7 @@ test("Polish image conversion pages publish through the localized browser worksp
     assert.equal(targetLocalePublication.pl.publishedToolSlugs.includes(slug), true);
     assert.equal(entries.some(({ url }) => url === `https://www.woori.today/pl/tools/${slug}`), true);
   }
-  assert.match(toolWorkspaceSource, /processImageFile\(tool\.slug,file,\{quality,width,height,keepRatio,amount,option,text\},phaseLocale\)/);
+  assert.match(toolWorkspaceSource, /processImageFile\(tool\.slug,file,\{quality,width,height,keepRatio,amount,option,text\},processorLocale\)/);
   assert.match(toolWorkspaceSource, /messages\.chooseOrDrop/);
   assert.match(toolWorkspaceSource, /messages\.fileLimit/);
   assert.match(toolWorkspaceSource, /messages\.process/);
@@ -1234,7 +1234,7 @@ test("Polish timestamp converter localizes format selection, input hints, and re
   assert.equal(targetLocalePublication.pl.seoVerifiedToolSlugs.includes("timestamp-converter"), true);
   assert.equal(targetLocalePublication.pl.publishedToolSlugs.includes("timestamp-converter"), true);
   assert.equal(entries.some(({ url }) => url === "https://www.woori.today/pl/tools/timestamp-converter"), true);
-  assert.match(toolWorkspaceSource, /processTextTool\(tool\.slug,text,secondText,option,amount,phaseLocale\)/);
+  assert.match(toolWorkspaceSource, /processTextTool\(tool\.slug,text,secondText,option,amount,processorLocale\)/);
   assert.match(toolWorkspaceSource, /timestampPlaceholder/);
   assert.match(toolWorkspaceSource, /timestampHint/);
   assert.match(toolWorkspaceSource, /messages\.unixSeconds/);
