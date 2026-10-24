@@ -1,0 +1,71 @@
+import type { SevenTargetLocale, TargetSevenToolTranslation } from "./target-seven-tools-translations";
+
+type Copy = readonly [string, string, string, string, string, string];
+type Shared = { category: string; steps: [string, string, string]; caution: string; faq: { example: string; caution: string }; privacy: string };
+const shared: Record<SevenTargetLocale, Shared> = {
+  bn: { category: "ডেভেলপার ও ডেটা সরঞ্জাম", steps: ["ইনপুটে টেক্সট বা ডেটা দিন।", "প্রয়োজনীয় ফরম্যাট ও বিকল্প নির্বাচন করুন।", "ফল পরীক্ষা করে কপি করুন।"], caution: "ফলাফল ব্যবহারের আগে ইনপুট ও আউটপুট নিজে যাচাই করুন।", faq: { example: "আমি কি ফলাফলটি কপি করতে পারি?", caution: "আমার ডেটা কি সার্ভারে পাঠানো হয়?" }, privacy: "ডেটা আপনার ব্রাউজারেই প্রক্রিয়াকৃত হয় এবং সার্ভারে পাঠানো হয় না।" },
+  uk: { category: "Інструменти для розробників і даних", steps: ["Введіть текст або дані.", "Оберіть формат і потрібні параметри.", "Перевірте й скопіюйте результат."], caution: "Перед використанням самостійно перевірте вхідні та вихідні дані.", faq: { example: "Чи можна скопіювати результат?", caution: "Чи надсилаються мої дані на сервер?" }, privacy: "Дані обробляються у браузері й не надсилаються на сервер." },
+  ms: { category: "Alat pembangun dan data", steps: ["Masukkan teks atau data.", "Pilih format dan pilihan yang diperlukan.", "Semak dan salin hasil."], caution: "Semak input dan output sendiri sebelum menggunakan hasil.", faq: { example: "Bolehkah saya menyalin hasilnya?", caution: "Adakah data saya dihantar ke pelayan?" }, privacy: "Data diproses dalam pelayar anda dan tidak dihantar ke pelayan." },
+  sv: { category: "Utvecklar- och dataverktyg", steps: ["Ange text eller data.", "Välj önskat format och alternativ.", "Granska och kopiera resultatet."], caution: "Kontrollera indata och resultat själv innan du använder dem.", faq: { example: "Kan jag kopiera resultatet?", caution: "Skickas mina data till en server?" }, privacy: "Data behandlas i webbläsaren och skickas inte till en server." },
+  cs: { category: "Nástroje pro vývojáře a data", steps: ["Zadejte text nebo data.", "Vyberte požadovaný formát a možnosti.", "Zkontrolujte a zkopírujte výsledek."], caution: "Před použitím výsledku sami zkontrolujte vstupní i výstupní data.", faq: { example: "Mohu výsledek zkopírovat?", caution: "Odesílají se moje data na server?" }, privacy: "Data se zpracovávají v prohlížeči a neodesílají se na server." },
+  ro: { category: "Instrumente pentru dezvoltare și date", steps: ["Introduceți text sau date.", "Alegeți formatul și opțiunile dorite.", "Verificați și copiați rezultatul."], caution: "Verificați personal datele de intrare și rezultatul înainte de utilizare.", faq: { example: "Pot copia rezultatul?", caution: "Datele mele sunt trimise la server?" }, privacy: "Datele sunt procesate în browser și nu sunt trimise la server." },
+  el: { category: "Εργαλεία προγραμματιστών και δεδομένων", steps: ["Εισαγάγετε κείμενο ή δεδομένα.", "Επιλέξτε τη μορφή και τις ρυθμίσεις.", "Ελέγξτε και αντιγράψτε το αποτέλεσμα."], caution: "Ελέγξτε μόνοι σας τα δεδομένα εισόδου και το αποτέλεσμα πριν από τη χρήση.", faq: { example: "Μπορώ να αντιγράψω το αποτέλεσμα;", caution: "Αποστέλλονται τα δεδομένα μου σε διακομιστή;" }, privacy: "Τα δεδομένα επεξεργάζονται στο πρόγραμμα περιήγησης και δεν αποστέλλονται σε διακομιστή." },
+};
+const content: Record<SevenTargetLocale, Record<string, Copy>> = {
+  bn: {
+    "chmod-calculator": ["Chmod পারমিশন ক্যালকুলেটর", "Unix ফাইল পারমিশনের প্রতীকী মান ও অক্টাল chmod মোডের মধ্যে রূপান্তর করুন।", "chmod ক্যালকুলেটর", "পারমিশন বেছে নিন বা অক্টাল মান দিন।", "একটি chmod পারমিশন মান হিসাব করুন।", "মালিক, গ্রুপ ও অন্যদের অনুমতি সেট করুন।"],
+    "json-path-tester": ["JSONPath টেস্টার", "JSON ডেটার ওপর JSONPath এক্সপ্রেশন চালিয়ে মিলে যাওয়া মান দেখুন।", "JSONPath টেস্ট", "JSON ও JSONPath এক্সপ্রেশন দিন।", "JSON ডকুমেন্ট থেকে মান নির্বাচন করুন।", "প্রয়োজন হলে root ও array index-এর পথ নির্দিষ্ট করুন।"],
+    "csv-tsv-converter": ["CSV ও TSV কনভার্টার", "CSV ও TSV টেক্সটের মধ্যে delimiter পরিবর্তন করে ডেটা রূপান্তর করুন।", "CSV TSV রূপান্তর", "CSV বা TSV ডেটা পেস্ট করুন।", "CSV ডেটাকে TSV-তে রূপান্তর করুন।", "delimiter ও উদ্ধৃতি অক্ষর নির্বাচন করুন।"],
+    "url-slug-generator": ["URL Slug জেনারেটর", "শিরোনাম বা টেক্সটকে ছোট হাতের, হাইফেন-যুক্ত URL slug-এ রূপান্তর করুন।", "URL slug তৈরি", "শিরোনাম বা টেক্সট লিখুন।", "শিরোনাম থেকে URL slug তৈরি করুন।", "বিভাজক ও Unicode অক্ষরের আচরণ বেছে নিন।"],
+    "unicode-code-point-checker": ["Unicode Code Point পরীক্ষক", "টেক্সটের প্রতিটি অক্ষরের Unicode code point ও নাম পরীক্ষা করুন।", "Unicode code point", "যে টেক্সট পরীক্ষা করতে চান তা পেস্ট করুন।", "অক্ষরের code point ও Unicode তথ্য দেখুন।", "ফলাফল কোড পয়েন্ট অনুযায়ী পর্যালোচনা করুন।"],
+  },
+  uk: {
+    "chmod-calculator": ["Калькулятор прав chmod", "Перетворюйте символічні права Unix-файлів на вісімковий режим chmod і навпаки.", "калькулятор chmod", "Оберіть права або введіть вісімкове значення.", "Обчисліть значення прав chmod.", "Налаштуйте права власника, групи та інших."],
+    "json-path-tester": ["Тестер JSONPath", "Виконайте вираз JSONPath для даних JSON і перегляньте знайдені значення.", "тест JSONPath", "Введіть JSON і вираз JSONPath.", "Виберіть значення з документа JSON.", "За потреби задайте кореневий шлях і індекси масиву."],
+    "csv-tsv-converter": ["Конвертер CSV і TSV", "Перетворюйте текстові дані між CSV і TSV, змінюючи роздільник.", "конвертер CSV TSV", "Вставте дані CSV або TSV.", "Перетворіть CSV на TSV.", "Оберіть роздільник і символ лапок."],
+    "url-slug-generator": ["Генератор URL-слагів", "Перетворюйте заголовок або текст на короткий URL-слаг у нижньому регістрі з дефісами.", "генерація URL-слага", "Введіть заголовок або текст.", "Створіть URL-слаг із заголовка.", "Оберіть роздільник і обробку символів Unicode."],
+    "unicode-code-point-checker": ["Перевірка кодових точок Unicode", "Перегляньте кодову точку Unicode та назву кожного символу в тексті.", "кодова точка Unicode", "Вставте текст для перевірки.", "Перегляньте кодові точки та дані символів.", "Перевірте результати для кожної кодової точки."],
+  },
+  ms: {
+    "chmod-calculator": ["Kalkulator keizinan chmod", "Tukar keizinan fail Unix simbolik kepada mod chmod perlapanan dan sebaliknya.", "kalkulator chmod", "Pilih keizinan atau masukkan nilai perlapanan.", "Kira nilai keizinan chmod.", "Tetapkan hak pemilik, kumpulan dan pengguna lain."],
+    "json-path-tester": ["Penguji JSONPath", "Jalankan ungkapan JSONPath pada data JSON untuk melihat nilai yang sepadan.", "ujian JSONPath", "Masukkan JSON dan ungkapan JSONPath.", "Pilih nilai daripada dokumen JSON.", "Tetapkan laluan akar dan indeks tatasusunan jika perlu."],
+    "csv-tsv-converter": ["Penukar CSV dan TSV", "Tukar data teks antara CSV dan TSV dengan menukar pembatas.", "penukar CSV TSV", "Tampal data CSV atau TSV.", "Tukar data CSV kepada TSV.", "Pilih pembatas dan aksara petikan."],
+    "url-slug-generator": ["Penjana slug URL", "Tukar tajuk atau teks kepada slug URL huruf kecil yang dipisahkan tanda sempang.", "jana slug URL", "Masukkan tajuk atau teks.", "Jana slug URL daripada tajuk.", "Pilih pemisah dan cara aksara Unicode dikendalikan."],
+    "unicode-code-point-checker": ["Pemeriksa titik kod Unicode", "Periksa titik kod dan nama Unicode bagi setiap aksara dalam teks.", "titik kod Unicode", "Tampal teks untuk diperiksa.", "Lihat titik kod dan maklumat aksara.", "Semak hasil mengikut titik kod."],
+  },
+  sv: {
+    "chmod-calculator": ["Chmod-rättighetskalkylator", "Konvertera symboliska Unix-filrättigheter till oktala chmod-lägen och tvärtom.", "chmod-kalkylator", "Välj rättigheter eller ange ett oktalt värde.", "Beräkna ett chmod-rättighetsvärde.", "Ange rättigheter för ägare, grupp och andra."],
+    "json-path-tester": ["JSONPath-testare", "Kör ett JSONPath-uttryck mot JSON-data och visa matchande värden.", "JSONPath-test", "Ange JSON och ett JSONPath-uttryck.", "Välj värden ur ett JSON-dokument.", "Ange vid behov rotväg och index för arrayer."],
+    "csv-tsv-converter": ["CSV- och TSV-konverterare", "Konvertera textdata mellan CSV och TSV genom att ändra avgränsare.", "CSV TSV-konverterare", "Klistra in CSV- eller TSV-data.", "Konvertera CSV-data till TSV.", "Välj avgränsare och citattecken."],
+    "url-slug-generator": ["URL-sluggenerator", "Omvandla en rubrik eller text till en kort URL-slug med gemener och bindestreck.", "skapa URL-slug", "Ange en rubrik eller text.", "Skapa en URL-slug från en rubrik.", "Välj avgränsare och hantering av Unicode-tecken."],
+    "unicode-code-point-checker": ["Kontrollera Unicode-kodpunkter", "Kontrollera Unicode-kodpunkten och namnet för varje tecken i en text.", "Unicode-kodpunkt", "Klistra in texten som ska kontrolleras.", "Visa tecknens kodpunkter och information.", "Granska resultatet per kodpunkt."],
+  },
+  cs: {
+    "chmod-calculator": ["Kalkulačka oprávnění chmod", "Převádějte symbolická oprávnění unixových souborů na osmičkový režim chmod a zpět.", "kalkulačka chmod", "Vyberte oprávnění nebo zadejte osmičkovou hodnotu.", "Vypočítejte hodnotu oprávnění chmod.", "Nastavte práva vlastníka, skupiny a ostatních."],
+    "json-path-tester": ["Tester JSONPath", "Spusťte výraz JSONPath nad daty JSON a zobrazte odpovídající hodnoty.", "test JSONPath", "Zadejte JSON a výraz JSONPath.", "Vyberte hodnoty z dokumentu JSON.", "Podle potřeby nastavte kořenovou cestu a indexy polí."],
+    "csv-tsv-converter": ["Převodník CSV a TSV", "Převádějte textová data mezi CSV a TSV změnou oddělovače.", "převodník CSV TSV", "Vložte data CSV nebo TSV.", "Převeďte data CSV na TSV.", "Vyberte oddělovač a znak uvozovek."],
+    "url-slug-generator": ["Generátor URL slugů", "Převeďte nadpis nebo text na krátký URL slug s malými písmeny a spojovníky.", "generování URL slugu", "Zadejte nadpis nebo text.", "Vytvořte URL slug z nadpisu.", "Vyberte oddělovač a zpracování znaků Unicode."],
+    "unicode-code-point-checker": ["Kontrola kódových bodů Unicode", "Zkontrolujte kódový bod Unicode a název každého znaku v textu.", "kódový bod Unicode", "Vložte text ke kontrole.", "Zobrazte kódové body a informace o znacích.", "Zkontrolujte výsledek pro každý kódový bod."],
+  },
+  ro: {
+    "chmod-calculator": ["Calculator de permisiuni chmod", "Convertiți permisiunile simbolice ale fișierelor Unix în moduri chmod octale și invers.", "calculator chmod", "Alegeți permisiunile sau introduceți valoarea octală.", "Calculați valoarea permisiunilor chmod.", "Setați drepturile proprietarului, grupului și celorlalți."],
+    "json-path-tester": ["Tester JSONPath", "Rulați o expresie JSONPath pe date JSON pentru a vedea valorile potrivite.", "test JSONPath", "Introduceți JSON și expresia JSONPath.", "Selectați valori dintr-un document JSON.", "Setați calea rădăcină și indicii tablourilor, dacă este necesar."],
+    "csv-tsv-converter": ["Convertor CSV și TSV", "Convertiți date text între CSV și TSV schimbând delimitatorul.", "convertor CSV TSV", "Lipiți date CSV sau TSV.", "Convertiți date CSV în TSV.", "Alegeți delimitatorul și caracterul de citare."],
+    "url-slug-generator": ["Generator de sluguri URL", "Transformați un titlu sau text într-un slug URL scurt, cu litere mici și cratime.", "generare slug URL", "Introduceți un titlu sau text.", "Generați un slug URL din titlu.", "Alegeți separatorul și tratarea caracterelor Unicode."],
+    "unicode-code-point-checker": ["Verificator de puncte de cod Unicode", "Verificați punctul de cod și numele Unicode pentru fiecare caracter din text.", "punct de cod Unicode", "Lipiți textul de verificat.", "Vedeți punctele de cod și informațiile caracterelor.", "Analizați rezultatele pentru fiecare punct de cod."],
+  },
+  el: {
+    "chmod-calculator": ["Υπολογιστής δικαιωμάτων chmod", "Μετατρέψτε συμβολικά δικαιώματα αρχείων Unix σε οκταδική λειτουργία chmod και αντίστροφα.", "υπολογιστής chmod", "Επιλέξτε δικαιώματα ή εισαγάγετε οκταδική τιμή.", "Υπολογίστε μια τιμή δικαιωμάτων chmod.", "Ορίστε δικαιώματα κατόχου, ομάδας και άλλων."],
+    "json-path-tester": ["Δοκιμαστής JSONPath", "Εκτελέστε έκφραση JSONPath σε δεδομένα JSON και δείτε τις τιμές που ταιριάζουν.", "δοκιμή JSONPath", "Εισαγάγετε JSON και έκφραση JSONPath.", "Επιλέξτε τιμές από έγγραφο JSON.", "Ορίστε διαδρομή ρίζας και δείκτες πινάκων, αν χρειάζεται."],
+    "csv-tsv-converter": ["Μετατροπέας CSV και TSV", "Μετατρέψτε δεδομένα κειμένου μεταξύ CSV και TSV αλλάζοντας τον διαχωριστή.", "μετατροπέας CSV TSV", "Επικολλήστε δεδομένα CSV ή TSV.", "Μετατρέψτε δεδομένα CSV σε TSV.", "Επιλέξτε διαχωριστή και χαρακτήρα εισαγωγικών."],
+    "url-slug-generator": ["Γεννήτρια slug URL", "Μετατρέψτε τίτλο ή κείμενο σε σύντομο slug URL με πεζά γράμματα και παύλες.", "δημιουργία slug URL", "Εισαγάγετε τίτλο ή κείμενο.", "Δημιουργήστε slug URL από τίτλο.", "Επιλέξτε διαχωριστικό και χειρισμό χαρακτήρων Unicode."],
+    "unicode-code-point-checker": ["Έλεγχος σημείων κώδικα Unicode", "Ελέγξτε το σημείο κώδικα Unicode και το όνομα κάθε χαρακτήρα στο κείμενο.", "σημείο κώδικα Unicode", "Επικολλήστε κείμενο για έλεγχο.", "Δείτε σημεία κώδικα και πληροφορίες χαρακτήρων.", "Εξετάστε τα αποτελέσματα ανά σημείο κώδικα."],
+  },
+};
+function build(locale: SevenTargetLocale, slug: string, [title, description, keyword, action, example, options]: Copy): TargetSevenToolTranslation {
+  const ui = shared[locale];
+  return { title, description, seoTitle: `${title} | Woori Tools`, seoDescription: `${description} ${ui.privacy}`, category: ui.category, keywords: [keyword, title, slug], steps: [ui.steps[0], action, ui.steps[2]], example, options, caution: ui.caution, faq: { example: ui.faq.example, caution: ui.faq.caution } };
+}
+const translations = Object.fromEntries((Object.keys(content) as SevenTargetLocale[]).map((locale) => [locale, Object.fromEntries(Object.entries(content[locale]).map(([slug, copy]) => [slug, build(locale, slug, copy)]))])) as Record<SevenTargetLocale, Record<string, TargetSevenToolTranslation>>;
+export const targetSevenDataDeveloperBatchTwentySlugs = ["chmod-calculator", "json-path-tester", "csv-tsv-converter", "url-slug-generator", "unicode-code-point-checker"] as const;
+export function getTargetSevenDataDeveloperBatchTwentyTranslation(locale: SevenTargetLocale, slug: string): TargetSevenToolTranslation | undefined { return translations[locale][slug]; }
