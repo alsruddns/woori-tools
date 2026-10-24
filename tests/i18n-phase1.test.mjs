@@ -309,6 +309,15 @@ test("expanded shared dictionaries are complete and do not silently reuse Englis
   assert.deepEqual(omissions, [], `Expanded shared dictionary omissions:\n${omissions.join("\n")}`);
 });
 
+test("planned locales without shared UI dictionaries fail closed with an actionable error", () => {
+  for (const locale of ["bn", "uk", "ms", "sv", "cs", "ro", "el"]) {
+    assert.throws(
+      () => expandedModule.getExpandedMessages(locale),
+      new RegExp(`Shared UI translations are not registered for ${locale}`),
+    );
+  }
+});
+
 test("Polish generic tool options and file rename fields are translated", () => {
   assert.deepEqual(Object.keys(selectionCopy.pl).sort(), ["custom", "digits", "hangul", "latin", "noRepeat", "repeat", "special"].sort());
   assert.deepEqual(Object.keys(renameCopy.pl).sort(), ["after", "before", "empty", "find", "padding", "prefix", "replace", "start", "suffix"].sort());

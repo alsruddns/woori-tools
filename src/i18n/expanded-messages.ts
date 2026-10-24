@@ -42,7 +42,11 @@ extra.ru = [
 export function getExpandedMessages(locale: PublishedTargetLocale): Record<string, string> {
   if (locale === "tr") return {};
   if (locale === "pl") return polishExpandedMessages;
-  if (ui[locale].length !== uiKeys.length) throw new Error(`Incomplete shared UI translations for ${locale}: expected ${uiKeys.length}, got ${ui[locale].length}`);
-  if (extra[locale].length !== nestedKeys.length) throw new Error(`Incomplete shared error/privacy translations for ${locale}: expected ${nestedKeys.length}, got ${extra[locale].length}`);
-  return Object.fromEntries([...uiKeys.map((key, index) => [key, ui[locale][index]] as const), ...nestedKeys.map((key, index) => [key, extra[locale][index]] as const)]);
+  const uiMessages = ui[locale];
+  const extraMessages = extra[locale];
+  if (!uiMessages) throw new Error(`Shared UI translations are not registered for ${locale}`);
+  if (!extraMessages) throw new Error(`Shared error and policy translations are not registered for ${locale}`);
+  if (uiMessages.length !== uiKeys.length) throw new Error(`Incomplete shared UI translations for ${locale}: expected ${uiKeys.length}, got ${uiMessages.length}`);
+  if (extraMessages.length !== nestedKeys.length) throw new Error(`Incomplete shared error/privacy translations for ${locale}: expected ${nestedKeys.length}, got ${extraMessages.length}`);
+  return Object.fromEntries([...uiKeys.map((key, index) => [key, uiMessages[index]] as const), ...nestedKeys.map((key, index) => [key, extraMessages[index]] as const)]);
 }
