@@ -94,6 +94,9 @@ const { getTargetSevenToolTranslation, targetSevenToolSlugs } = await importType
 ], [
   'import { getTargetSevenEuropeWestBatchTwentyFiveTranslation, targetSevenEuropeWestBatchTwentyFiveSlugs } from "./target-seven-europe-west-batch-twenty-five-translations";',
   `const targetSevenEuropeWestBatchTwentyFiveSlugs = ["france-phone-number-formatter", "french-number-format-converter", "french-date-format-converter", "netherlands-iban-validator", "dutch-number-format-converter"]; const getTargetSevenEuropeWestBatchTwentyFiveTranslation = () => undefined;`,
+], [
+  'import { getTargetSevenLatinAmericaBatchTwentySixTranslation, targetSevenLatinAmericaBatchTwentySixSlugs } from "./target-seven-latin-america-batch-twenty-six-translations";',
+  `const targetSevenLatinAmericaBatchTwentySixSlugs = ["dutch-date-format-converter", "brazil-cpf-validator", "brazil-cnpj-validator", "brazil-phone-number-formatter", "brazil-cep-formatter"]; const getTargetSevenLatinAmericaBatchTwentySixTranslation = () => undefined;`,
 ]]);
 const { getTargetSevenFileTranslation } = await importTypeScript("../src/registry/target-seven-file-translations.ts", [[
   'import type { SevenTargetLocale, TargetSevenToolTranslation } from "./target-seven-tools-translations";',
@@ -192,6 +195,10 @@ const { getTargetSevenEuropeBatchTwentyFourTranslation } = await importTypeScrip
   "",
 ]]);
 const { getTargetSevenEuropeWestBatchTwentyFiveTranslation } = await importTypeScript("../src/registry/target-seven-europe-west-batch-twenty-five-translations.ts", [[
+  'import type { SevenTargetLocale, TargetSevenToolTranslation } from "./target-seven-tools-translations";',
+  "",
+]]);
+const { getTargetSevenLatinAmericaBatchTwentySixTranslation } = await importTypeScript("../src/registry/target-seven-latin-america-batch-twenty-six-translations.ts", [[
   'import type { SevenTargetLocale, TargetSevenToolTranslation } from "./target-seven-tools-translations";',
   "",
 ]]);
@@ -1403,11 +1410,11 @@ test("Filipino authored tool translations include complete editorial and SEO fie
 
 test("seven remaining locales have complete authored translations for the current tool bundles", () => {
   const locales = ["bn", "uk", "ms", "sv", "cs", "ro", "el"];
-  assert.equal(targetSevenToolSlugs.length, 156);
-  assert.deepEqual(targetSevenToolSlugs.slice(-5), ["france-phone-number-formatter", "french-number-format-converter", "french-date-format-converter", "netherlands-iban-validator", "dutch-number-format-converter"]);
+  assert.equal(targetSevenToolSlugs.length, 161);
+  assert.deepEqual(targetSevenToolSlugs.slice(-5), ["dutch-date-format-converter", "brazil-cpf-validator", "brazil-cnpj-validator", "brazil-phone-number-formatter", "brazil-cep-formatter"]);
   for (const locale of locales) {
     for (const slug of targetSevenToolSlugs) {
-      const translation = getTargetSevenToolTranslation(locale, slug) ?? getTargetSevenWorkflowTranslation(locale, slug) ?? getTargetSevenFileTranslation(locale, slug) ?? getTargetSevenFileBatchTwoTranslation(locale, slug) ?? getTargetSevenTextBatchThreeTranslation(locale, slug) ?? getTargetSevenDeveloperBatchFourTranslation(locale, slug) ?? getTargetSevenFormattersBatchFiveTranslation(locale, slug) ?? getTargetSevenImageBatchSixTranslation(locale, slug) ?? getTargetSevenImageBatchSevenTranslation(locale, slug) ?? getTargetSevenImageEffectsBatchEightTranslation(locale, slug) ?? getTargetSevenImageEffectsBatchNineTranslation(locale, slug) ?? getTargetSevenPdfBatchTenTranslation(locale, slug) ?? getTargetSevenPdfBatchElevenTranslation(locale, slug) ?? getTargetSevenTextBatchTwelveTranslation(locale, slug) ?? getTargetSevenTextBatchThirteenTranslation(locale, slug) ?? getTargetSevenDataBatchFourteenTranslation(locale, slug) ?? getTargetSevenTimeJapaneseBatchFifteenTranslation(locale, slug) ?? getTargetSevenJapanBatchSixteenTranslation(locale, slug) ?? getTargetSevenCountryFormattersBatchSeventeenTranslation(locale, slug) ?? getTargetSevenDeveloperBatchEighteenTranslation(locale, slug) ?? getTargetSevenEncodingIdentifiersBatchNineteenTranslation(locale, slug) ?? getTargetSevenDataDeveloperBatchTwentyTranslation(locale, slug) ?? getTargetSevenDocumentChinaBatchTwentyOneTranslation(locale, slug) ?? getTargetSevenAsiaFormatBatchTwentyTwoTranslation(locale, slug) ?? getTargetSevenCountryValidationBatchTwentyThreeTranslation(locale, slug) ?? getTargetSevenEuropeBatchTwentyFourTranslation(locale, slug) ?? getTargetSevenEuropeWestBatchTwentyFiveTranslation(locale, slug);
+      const translation = getTargetSevenToolTranslation(locale, slug) ?? getTargetSevenWorkflowTranslation(locale, slug) ?? getTargetSevenFileTranslation(locale, slug) ?? getTargetSevenFileBatchTwoTranslation(locale, slug) ?? getTargetSevenTextBatchThreeTranslation(locale, slug) ?? getTargetSevenDeveloperBatchFourTranslation(locale, slug) ?? getTargetSevenFormattersBatchFiveTranslation(locale, slug) ?? getTargetSevenImageBatchSixTranslation(locale, slug) ?? getTargetSevenImageBatchSevenTranslation(locale, slug) ?? getTargetSevenImageEffectsBatchEightTranslation(locale, slug) ?? getTargetSevenImageEffectsBatchNineTranslation(locale, slug) ?? getTargetSevenPdfBatchTenTranslation(locale, slug) ?? getTargetSevenPdfBatchElevenTranslation(locale, slug) ?? getTargetSevenTextBatchTwelveTranslation(locale, slug) ?? getTargetSevenTextBatchThirteenTranslation(locale, slug) ?? getTargetSevenDataBatchFourteenTranslation(locale, slug) ?? getTargetSevenTimeJapaneseBatchFifteenTranslation(locale, slug) ?? getTargetSevenJapanBatchSixteenTranslation(locale, slug) ?? getTargetSevenCountryFormattersBatchSeventeenTranslation(locale, slug) ?? getTargetSevenDeveloperBatchEighteenTranslation(locale, slug) ?? getTargetSevenEncodingIdentifiersBatchNineteenTranslation(locale, slug) ?? getTargetSevenDataDeveloperBatchTwentyTranslation(locale, slug) ?? getTargetSevenDocumentChinaBatchTwentyOneTranslation(locale, slug) ?? getTargetSevenAsiaFormatBatchTwentyTwoTranslation(locale, slug) ?? getTargetSevenCountryValidationBatchTwentyThreeTranslation(locale, slug) ?? getTargetSevenEuropeBatchTwentyFourTranslation(locale, slug) ?? getTargetSevenEuropeWestBatchTwentyFiveTranslation(locale, slug) ?? getTargetSevenLatinAmericaBatchTwentySixTranslation(locale, slug);
       assert.ok(translation, `${locale}/${slug}`);
       assert.ok(translation.title.length > 0);
       assert.ok(translation.description.length > 30);
