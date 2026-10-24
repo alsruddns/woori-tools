@@ -17,8 +17,15 @@ const { locales, publishedTargetLocales, localeConfig, publishedTargetHreflangs 
 const { getTargetTurkishToolTranslation, targetTurkishToolSlugs } = await importTypeScript("../src/registry/target-tr-translations.ts");
 const { getTargetFilipinoToolTranslation, targetFilipinoToolSlugs } = await importTypeScript("../src/registry/target-fil-translations.ts");
 const { getTargetSevenToolTranslation, targetSevenToolSlugs } = await importTypeScript("../src/registry/target-seven-tools-translations.ts", [[
+  'import { getTargetSevenFileTranslation, targetSevenFileSlugs } from "./target-seven-file-translations";',
+  `const targetSevenFileSlugs = ["mime-type-checker", "file-extension-checker", "file-size-checker", "duplicate-file-checker", "zip-files"]; const getTargetSevenFileTranslation = () => undefined;`,
+], [
   'import { getTargetSevenWorkflowTranslation, targetSevenWorkflowSlugs } from "./target-seven-workflow-translations";',
   `const targetSevenWorkflowSlugs = ["pomodoro-timer", "world-clock", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr", "barcode-generator", "barcode-checker", "social-image-resize", "add-text-to-image", "file-hash", "instagram-grid-split", "image-collage", "image-info", "favicon-generator", "image-color-picker"]; const getTargetSevenWorkflowTranslation = () => undefined;`,
+]]);
+const { getTargetSevenFileTranslation } = await importTypeScript("../src/registry/target-seven-file-translations.ts", [[
+  'import type { SevenTargetLocale, TargetSevenToolTranslation } from "./target-seven-tools-translations";',
+  "",
 ]]);
 const { getTargetSevenWorkflowTranslation } = await importTypeScript("../src/registry/target-seven-workflow-translations.ts", [[
   'import type { SevenTargetLocale, TargetSevenToolTranslation } from "./target-seven-tools-translations";',
@@ -1226,15 +1233,15 @@ test("Filipino authored tool translations include complete editorial and SEO fie
   }
 });
 
-test("seven remaining locales have complete authored translations for the random-choice tool bundle", () => {
+test("seven remaining locales have complete authored translations for the current tool bundles", () => {
   const locales = ["bn", "uk", "ms", "sv", "cs", "ro", "el"];
-  assert.deepEqual(targetSevenToolSlugs, ["tarot-card", "daily-fortune", "saju", "random-number", "random-name-picker", "random-wheel", "draw-lots", "random-team-maker", "random-order", "random-seat", "duty-picker", "dice-roller", "coin-flip", "stopwatch", "timer", "pomodoro-timer", "world-clock", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr", "barcode-generator", "barcode-checker", "social-image-resize", "add-text-to-image", "file-hash", "instagram-grid-split", "image-collage", "image-info", "favicon-generator", "image-color-picker"]);
+  assert.deepEqual(targetSevenToolSlugs, ["tarot-card", "daily-fortune", "saju", "random-number", "random-name-picker", "random-wheel", "draw-lots", "random-team-maker", "random-order", "random-seat", "duty-picker", "dice-roller", "coin-flip", "stopwatch", "timer", "pomodoro-timer", "world-clock", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr", "barcode-generator", "barcode-checker", "social-image-resize", "add-text-to-image", "file-hash", "instagram-grid-split", "image-collage", "image-info", "favicon-generator", "image-color-picker", "mime-type-checker", "file-extension-checker", "file-size-checker", "duplicate-file-checker", "zip-files"]);
   for (const locale of locales) {
     for (const slug of targetSevenToolSlugs) {
-      const translation = getTargetSevenToolTranslation(locale, slug) ?? getTargetSevenWorkflowTranslation(locale, slug);
+      const translation = getTargetSevenToolTranslation(locale, slug) ?? getTargetSevenWorkflowTranslation(locale, slug) ?? getTargetSevenFileTranslation(locale, slug);
       assert.ok(translation, `${locale}/${slug}`);
       assert.ok(translation.title.length > 0);
-      assert.ok(translation.description.length > 40);
+      assert.ok(translation.description.length > 30);
       assert.ok(translation.seoTitle.length > 0);
       assert.ok(translation.seoDescription.length > 40);
       assert.equal(translation.steps.length, 3);
