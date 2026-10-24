@@ -4,6 +4,7 @@ import { getTargetSevenFileBatchTwoTranslation, targetSevenFileBatchTwoSlugs } f
 import { getTargetSevenTextBatchThreeTranslation, targetSevenTextBatchThreeSlugs } from "./target-seven-text-batch-three-translations";
 import { getTargetSevenDeveloperBatchFourTranslation, targetSevenDeveloperBatchFourSlugs } from "./target-seven-developer-batch-four-translations";
 import { getTargetSevenFormattersBatchFiveTranslation, targetSevenFormattersBatchFiveSlugs } from "./target-seven-formatters-batch-five-translations";
+import { getTargetSevenImageBatchSixTranslation, targetSevenImageBatchSixSlugs } from "./target-seven-image-batch-six-translations";
 import { getTargetSevenWorkflowTranslation, targetSevenWorkflowSlugs } from "./target-seven-workflow-translations";
 
 export type SevenTargetLocale = Extract<PlannedLocale, "bn" | "uk" | "ms" | "sv" | "cs" | "ro" | "el">;
@@ -192,12 +193,12 @@ const utilityTranslations: Record<SevenTargetLocale, Record<string, TargetSevenT
   },
 };
 
-export const targetSevenToolSlugs = Array.from(new Set([...Object.keys(translations.bn), ...Object.keys(additionalTranslations.bn), ...Object.keys(utilityTranslations.bn), ...targetSevenWorkflowSlugs, ...targetSevenFileSlugs, ...targetSevenFileBatchTwoSlugs, ...targetSevenTextBatchThreeSlugs, ...targetSevenDeveloperBatchFourSlugs, ...targetSevenFormattersBatchFiveSlugs]));
+export const targetSevenToolSlugs = Array.from(new Set([...Object.keys(translations.bn), ...Object.keys(additionalTranslations.bn), ...Object.keys(utilityTranslations.bn), ...targetSevenWorkflowSlugs, ...targetSevenFileSlugs, ...targetSevenFileBatchTwoSlugs, ...targetSevenTextBatchThreeSlugs, ...targetSevenDeveloperBatchFourSlugs, ...targetSevenFormattersBatchFiveSlugs, ...targetSevenImageBatchSixSlugs]));
 
 export function isSevenTargetLocale(locale: PlannedLocale): locale is SevenTargetLocale {
   return locale === "bn" || locale === "uk" || locale === "ms" || locale === "sv" || locale === "cs" || locale === "ro" || locale === "el";
 }
 
 export function getTargetSevenToolTranslation(locale: SevenTargetLocale, slug: string): TargetSevenToolTranslation | undefined {
-  return translations[locale][slug] ?? additionalTranslations[locale][slug] ?? utilityTranslations[locale][slug] ?? getTargetSevenWorkflowTranslation(locale, slug) ?? getTargetSevenFileTranslation(locale, slug) ?? getTargetSevenFileBatchTwoTranslation(locale, slug) ?? getTargetSevenTextBatchThreeTranslation(locale, slug) ?? getTargetSevenDeveloperBatchFourTranslation(locale, slug) ?? getTargetSevenFormattersBatchFiveTranslation(locale, slug);
+  return translations[locale][slug] ?? additionalTranslations[locale][slug] ?? utilityTranslations[locale][slug] ?? getTargetSevenWorkflowTranslation(locale, slug) ?? getTargetSevenFileTranslation(locale, slug) ?? getTargetSevenFileBatchTwoTranslation(locale, slug) ?? getTargetSevenTextBatchThreeTranslation(locale, slug) ?? getTargetSevenDeveloperBatchFourTranslation(locale, slug) ?? getTargetSevenFormattersBatchFiveTranslation(locale, slug) ?? getTargetSevenImageBatchSixTranslation(locale, slug);
 }
