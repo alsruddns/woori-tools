@@ -12,6 +12,7 @@ permissions:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -67,17 +68,53 @@ jobs:
           echo "old_image_id=$OLD_IMAGE_ID" >> "$GITHUB_OUTPUT"
           ssh "$SERVER_USER@$SERVER_HOST" 'cd /opt/services/compose && docker compose --env-file .env.moneybook --env-file .env.portal pull tools && docker compose --env-file .env.moneybook --env-file .env.portal up -d --no-deps tools'
 
-      - name: Check production health
-        id: health
+      - name: Verify deployed Tools image routes and sitemap
+        id: image_verify
+        env:
+          SERVER_HOST: ${{ secrets.SERVER_HOST }}
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+          SERVER_SSH_KEY: ${{ secrets.SERVER_SSH_KEY }}
         run: |
           set -euo pipefail
-          curl --fail --silent --show-error --retry 12 --retry-delay 5 --retry-connrefused https://www.woori.today/robots.txt
-          curl --fail --silent --show-error --retry 12 --retry-delay 5 --retry-connrefused https://www.woori.today/fil/tools/tarot-card
-          curl --fail --silent --show-error https://www.woori.today/sitemap.xml | grep -q '/el/tools/daily-fortune'
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SERVER_SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H "$SERVER_HOST" >> ~/.ssh/known_hosts
+          ssh -o BatchMode=yes "$SERVER_USER@$SERVER_HOST" 'docker exec -i tools node -' <<'NODE'
+          (async () => {
+            const paths = ["/fil/tools/tarot-card", "/bn/tools/json-formatter", "/el/tools/daily-fortune"];
+            for (const path of paths) {
+              const response = await fetch(`http://127.0.0.1:3002${path}`);
+              console.log(`Tools loopback ${path}: HTTP ${response.status}`);
+              if (!response.ok) process.exitCode = 1;
+            }
+            const response = await fetch("http://127.0.0.1:3002/sitemap.xml");
+            if (!response.ok) throw new Error(`Tools loopback sitemap: HTTP ${response.status}`);
+            const xml = await response.text();
+            const details = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]).filter((url) => {
+              const path = new URL(url).pathname.split("/").filter(Boolean);
+              return path.length === 3 && path[1] === "tools";
+            });
+            console.log(`Tools loopback sitemap detail URLs: ${details.length}`);
+            if (details.length !== 4576) process.exitCode = 1;
+          })().catch((error) => {
+            console.error(error);
+            process.exitCode = 1;
+          });
+          NODE
+
+      - name: Check production health and SEO
+        id: health
+        env:
+          PRODUCTION_BASE_URL: https://www.woori.today
+          DEPLOY_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          node scripts/check-production-tools-smoke.mjs
 
       - name: Roll back Tools if deployment health check fails
         id: rollback
-        if: failure() && steps.deploy.outputs.old_image_id != '' && (steps.deploy.outcome == 'failure' || steps.health.outcome == 'failure')
+        if: failure() && steps.deploy.outputs.old_image_id != '' && (steps.deploy.outcome == 'failure' || steps.image_verify.outcome == 'failure' || steps.health.outcome == 'failure')
         env:
           SERVER_HOST: ${{ secrets.SERVER_HOST }}
           SERVER_USER: ${{ secrets.SERVER_USER }}
@@ -85,8 +122,19 @@ jobs:
         run: |
           set -euo pipefail
           ssh "$SERVER_USER@$SERVER_HOST" "cd /opt/services/compose && docker image tag '$OLD_IMAGE_ID' ghcr.io/alsruddns/woori-tools:latest && docker compose --env-file .env.moneybook --env-file .env.portal up -d --no-deps tools"
-          curl --fail --silent --show-error --retry 12 --retry-delay 5 --retry-connrefused https://www.woori.today/robots.txt
-          curl --fail --silent --show-error --retry 12 --retry-delay 5 --retry-connrefused https://www.woori.today/fil/tools/tarot-card
+          test "$(ssh "$SERVER_USER@$SERVER_HOST" 'docker inspect --format "{{.Image}}" tools')" = "$OLD_IMAGE_ID"
+          ssh "$SERVER_USER@$SERVER_HOST" 'docker exec -i tools node -' <<'NODE'
+          (async () => {
+            const response = await fetch("http://127.0.0.1:3002/ko/tools/json-formatter");
+            console.log(`Rollback Tools loopback: HTTP ${response.status}`);
+            if (!response.ok) process.exitCode = 1;
+          })().catch((error) => {
+            console.error(error);
+            process.exitCode = 1;
+          });
+          NODE
+          curl --fail --silent --show-error --retry 12 --retry-delay 5 --retry-connrefused "https://www.woori.today/robots.txt?rollback_check=$GITHUB_SHA" > /dev/null
+          curl --fail --silent --show-error --retry 12 --retry-delay 5 --retry-connrefused "https://www.woori.today/ko/tools/json-formatter?rollback_check=$GITHUB_SHA" > /dev/null
 
       - name: Submit URLs to IndexNow
         env:
