@@ -69,6 +69,7 @@ jobs:
           ssh "$SERVER_USER@$SERVER_HOST" 'cd /opt/services/compose && docker compose --env-file .env.moneybook --env-file .env.portal pull tools && docker compose --env-file .env.moneybook --env-file .env.portal up -d --no-deps tools'
 
       - name: Verify deployed Tools image routes and sitemap
+        id: image_verify
         env:
           SERVER_HOST: ${{ secrets.SERVER_HOST }}
           SERVER_USER: ${{ secrets.SERVER_USER }}
@@ -113,7 +114,7 @@ jobs:
 
       - name: Roll back Tools if deployment health check fails
         id: rollback
-        if: failure() && steps.deploy.outputs.old_image_id != '' && (steps.deploy.outcome == 'failure' || steps.health.outcome == 'failure')
+        if: failure() && steps.deploy.outputs.old_image_id != '' && (steps.deploy.outcome == 'failure' || steps.image_verify.outcome == 'failure' || steps.health.outcome == 'failure')
         env:
           SERVER_HOST: ${{ secrets.SERVER_HOST }}
           SERVER_USER: ${{ secrets.SERVER_USER }}
