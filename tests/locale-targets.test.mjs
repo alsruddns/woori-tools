@@ -72,10 +72,10 @@ test("expanded random workspace processor labels are authored for every new loca
     }
   }
   const workspace = await readFile(new URL("../src/components/tool/tool-workspace.tsx", import.meta.url), "utf8");
-  for (const slug of ["random-number", "random-name-picker", "draw-lots", "random-team-maker", "dice-roller", "coin-flip"]) {
+  for (const slug of ["random-number", "random-name-picker", "draw-lots", "random-team-maker", "dice-roller", "coin-flip", "random-wheel", "random-order", "random-seat", "lotto-number-generator"]) {
     assert.match(workspace, new RegExp(`"${slug}"`), `${slug} is routed through the workspace`);
   }
-  assert.match(workspace, /isTargetPageMessageLocale\(phaseLocale\) && \["random-number", "random-name-picker", "draw-lots", "random-team-maker", "dice-roller", "coin-flip"\]/, "only the eight expanded page locales use the shared random workspace");
+  assert.match(workspace, /isTargetPageMessageLocale\(phaseLocale\) && \["random-number", "random-name-picker", "draw-lots", "random-team-maker", "dice-roller", "coin-flip", "random-order", "random-seat"\]/, "only the eight expanded page locales use the shared random workspace");
   const stringWorkspace = await readFile(new URL("../src/components/tool/random-string-workspace.tsx", import.meta.url), "utf8");
   for (const locale of locales) assert.match(stringWorkspace, new RegExp(`${locale}:\\{length:`), `${locale} password and string controls are translated`);
   assert.match(workspace, /RandomStringWorkspace slug=\{tool\.slug\} locale=\{phaseLocale === "pl" \|\| isPlannedLocale\(phaseLocale\) \? phaseLocale : specializedLocale\}/);

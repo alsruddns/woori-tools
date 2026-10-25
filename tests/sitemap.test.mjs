@@ -397,11 +397,11 @@ test("private registry tools are excluded from sitemap entries", () => {
 test("new locale detail routes are included only when both workspace and SEO checks pass", () => {
   const expandedLocales = plannedLocaleConfig.slice(3).map(({ routeLocale }) => routeLocale);
   const expectedSlugs = [...targetLocalePublication.fil.publishedToolSlugs].sort();
-  const verifiedWorkspaceSamples = ["markdown-preview", "json-formatter", "text-compare", "jpg-to-png", "pdf-merge", "file-hash", "timestamp-converter", "random-number", "random-name-picker", "draw-lots", "random-team-maker", "dice-roller", "coin-flip", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr", "timer", "pomodoro-timer", "world-clock", "stopwatch"];
+  const verifiedWorkspaceSamples = ["markdown-preview", "json-formatter", "text-compare", "jpg-to-png", "pdf-merge", "file-hash", "timestamp-converter", "random-number", "random-name-picker", "draw-lots", "random-team-maker", "dice-roller", "coin-flip", "random-order", "random-seat", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr", "timer", "pomodoro-timer", "world-clock", "stopwatch"];
   const expandedWorkspaceSamples = ["json-path-tester", "jwt-decoder", "pdf-page-size-checker"];
-  const stillGatedSamples = ["random-wheel", "saju"];
+  const stillGatedSamples = ["random-wheel", "lotto-number-generator", "saju"];
   assert.deepEqual(expandedLocales, ["fil", "bn", "uk", "ms", "sv", "cs", "ro", "el"]);
-  assert.equal(expectedSlugs.length, 109);
+  assert.equal(expectedSlugs.length, 111);
   for (const slug of verifiedWorkspaceSamples) assert.ok(expectedSlugs.includes(slug), `${slug} has a verified workspace`);
   for (const slug of expandedWorkspaceSamples) assert.ok(expectedSlugs.includes(slug), `${slug} uses the translated browser developer workspace`);
   for (const slug of stillGatedSamples) assert.equal(expectedSlugs.includes(slug), false, `${slug} remains outside the verified shared workspace`);
@@ -1106,7 +1106,7 @@ test("Polish random order localizes participant labels, reveal actions, and copy
   assert.equal(entries.some(({ url }) => url === "https://www.woori.today/pl/tools/random-order"), true);
   assert.match(specialRandomWorkspaceSource, /const labels = \(\{ pl:\{label:"Uczestnicy/);
   assert.match(specialRandomWorkspaceSource, /RandomOrderWorkspace\(\{ locale \}: \{ locale:RouteLocale \| "ru" \| "tr" \| "pl" \}\)/);
-  assert.match(toolWorkspaceSource, /tool\.slug === "random-order"\) return <RandomOrderWorkspace locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
+  assert.match(toolWorkspaceSource, /tool\.slug === "random-order" && !expandedRandomWorkspace\) return <RandomOrderWorkspace locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
 });
 
 test("Polish random seat localizes the seating grid and capacity error", () => {
@@ -1115,7 +1115,7 @@ test("Polish random seat localizes the seating grid and capacity error", () => {
   assert.match(specialRandomWorkspaceSource, /RandomSeatWorkspace\(\{ locale \}: \{ locale:RouteLocale \| "ru" \| "tr" \| "pl" \}\)/);
   assert.match(specialRandomWorkspaceSource, /pl:\{people:"Uczestnicy \(jedna osoba w ka\\u017Cdym wierszu\)",rows:"Wiersze",columns:"Kolumny",arrange:"Przydziel miejsca",empty:"Wolne"\}/);
   assert.match(specialRandomWorkspaceSource, /pl:"Dodaj miejsca lub zmniejsz liczb\\u0119 uczestnik\\u00F3w\./);
-  assert.match(toolWorkspaceSource, /tool\.slug === "random-seat"\) return <RandomSeatWorkspace locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
+  assert.match(toolWorkspaceSource, /tool\.slug === "random-seat" && !expandedRandomWorkspace\) return <RandomSeatWorkspace locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
 });
 
 test("Polish duty picker localizes participant and duty assignment controls", () => {
@@ -1169,6 +1169,16 @@ test("expanded locales reach translated countdown, world clock, and stopwatch wo
     assert.match(worldClockWorkspaceSource, new RegExp(`${locale}: \\{ title:`));
     assert.match(toolWorkspaceSource, new RegExp(`${locale}: \\[`));
   }
+});
+
+test("expanded random order and seat tools use the translated processor workspace", () => {
+  for (const slug of ["random-order", "random-seat"]) {
+    assert.ok(targetLocalePublication.fil.publishedToolSlugs.includes(slug), `${slug} is published after workspace verification`);
+  }
+  for (const slug of ["random-wheel", "lotto-number-generator"]) {
+    assert.equal(targetLocalePublication.fil.publishedToolSlugs.includes(slug), false, `${slug} remains gated until its specialized controls are translated`);
+  }
+  assert.match(toolWorkspaceSource, /"random-order", "random-seat"\]\.includes\(tool\.slug\)/);
 });
 
 test("Polish world clock localizes city controls, zone names, and locale formatting", () => {

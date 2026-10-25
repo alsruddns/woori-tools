@@ -79,7 +79,7 @@ const selectionLimitMessages: Record<ToolOptionLocale, { files: string; images: 
 
 export function ToolWorkspace({ tool, phaseLocale, optionLocale = phaseLocale, messages }: { tool: ToolDefinition; phaseLocale:ToolWorkspaceLocale; optionLocale?: ToolOptionLocale; messages: Dictionary }) {
   const specializedLocale: RouteLocale = phaseLocale === "pl" ? "en" : isLocale(phaseLocale) ? phaseLocale : "en";
-  const expandedRandomWorkspace = isTargetPageMessageLocale(phaseLocale) && ["random-number", "random-name-picker", "draw-lots", "random-team-maker", "dice-roller", "coin-flip"].includes(tool.slug);
+  const expandedRandomWorkspace = isTargetPageMessageLocale(phaseLocale) && ["random-number", "random-name-picker", "draw-lots", "random-team-maker", "dice-roller", "coin-flip", "random-order", "random-seat"].includes(tool.slug);
   const randomWorkspaceCopy = isPlannedLocale(phaseLocale) ? getTargetRandomProcessorCopy(phaseLocale) : undefined;
   const isImage = tool.category === "image";
   const isPdf = tool.category === "pdf" || tool.slug === "images-to-pdf";
@@ -129,8 +129,8 @@ export function ToolWorkspace({ tool, phaseLocale, optionLocale = phaseLocale, m
   if (tool.slug === "random-number" && !expandedRandomWorkspace) return <RandomNumberWorkspace locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;
   if ((tool.slug === "random-name-picker" || tool.slug === "draw-lots") && !expandedRandomWorkspace) return <RandomNameWorkspace slug={tool.slug} locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;
   if (tool.slug === "random-team-maker" && !expandedRandomWorkspace) return <RandomTeamWorkspace locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;
-  if (tool.slug === "random-order") return <RandomOrderWorkspace locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;
-  if (tool.slug === "random-seat") return <RandomSeatWorkspace locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;
+  if (tool.slug === "random-order" && !expandedRandomWorkspace) return <RandomOrderWorkspace locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;
+  if (tool.slug === "random-seat" && !expandedRandomWorkspace) return <RandomSeatWorkspace locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;
   if (tool.slug === "duty-picker" && phaseLocale === "pl") return <RussianDutyPickerWorkspace locale="pl" />;
   if (["password-generator","random-string-generator"].includes(tool.slug)) return <RandomStringWorkspace slug={tool.slug} locale={phaseLocale === "pl" || isPlannedLocale(phaseLocale) ? phaseLocale : specializedLocale} />;
   if (tool.slug === "ladder-game") return <LadderWorkspace locale={specializedLocale} />;
