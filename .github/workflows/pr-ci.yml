@@ -36,6 +36,12 @@ jobs:
           ssh -o BatchMode=yes "$SERVER_USER@$SERVER_HOST" 'bash -s' <<'REMOTE'
           set -euo pipefail
           cd /opt/services/compose
+          nginx_conf=/opt/services/nginx/conf.d/default.conf
+          test -r "$nginx_conf"
+          printf 'Live Nginx Tools locale map and route matcher (routing rules only):\n'
+          grep -nE 'map[[:space:]]+\$uri[[:space:]]+\$valid_locale|location[[:space:]]+~.*tools' "$nginx_conf"
+          docker inspect nginx --format 'Nginx config mount={{range .Mounts}}{{if eq .Source "/opt/services/nginx/conf.d/default.conf"}}{{.Source}} -> {{.Destination}}{{end}}{{end}}'
+          docker exec nginx nginx -t
           printf 'Environment file names: '
           find . -maxdepth 1 -type f -name '.env*' -printf '%f '
           printf '\nExisting Portal variable names (values are not read):\n'
