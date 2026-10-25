@@ -460,7 +460,7 @@ test("interactive workspace dictionaries cover all locales with complete transla
   assert.deepEqual(omissions, [], `Workspace localization omissions:\n${omissions.join("\n")}`);
 });
 
-test("planned workspace option, rename, and file-limit copy is complete without English fallback", () => {
+test("planned workspace option, rename, and file-limit copy is complete without English fallback", async () => {
   const omissions = [];
   const optionKeys = ["noRepeat", "repeat", "digits", "latin", "hangul", "special", "custom", "square", "portraitPreset", "story", "youtube", "xpost", "facebook", "grid3", "grid6", "grid9", "collage4", "collage6", "renameRules", "renameHint"];
   for (const { routeLocale: locale } of plannedLocaleConfig) {
@@ -477,5 +477,8 @@ test("planned workspace option, rename, and file-limit copy is complete without 
       if (!limits?.[key]?.trim()) omissions.push(`${locale}.${key}: missing selection limit`);
     }
   }
+  const workspaceSource = await readFile(new URL("../src/components/tool/tool-workspace.tsx", import.meta.url), "utf8");
+  assert.match(workspaceSource, /Record<ToolOptionLocale, \{ files: string; images: string \}>/);
+  assert.match(workspaceSource, /\.\.\.targetSelectionLimitMessages/);
   assert.deepEqual(omissions, []);
 });

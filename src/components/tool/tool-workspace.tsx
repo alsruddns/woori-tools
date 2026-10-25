@@ -54,7 +54,7 @@ function getWorkspaceProcessorLocale(locale: ToolWorkspaceLocale) {
   throw new Error(getWorkspaceUnavailableMessage(locale));
 }
 const CountryToolsWorkspace = dynamic(() => import("@/components/tool/country-tools-workspace").then((module) => module.CountryToolsWorkspace));
-const selectionLimitMessages: Record<RouteLocale, { files: string; images: string }> = {
+const selectionLimitMessages: Record<ToolOptionLocale, { files: string; images: string }> = {
   ko:{files:"파일은 최대 100개, 전체 용량은 200MB까지 선택할 수 있습니다.",images:"이미지는 최대 6개, 전체 용량은 100MB까지 선택할 수 있습니다."},
   en:{files:"Select up to 100 files and 200 MB total.",images:"Select up to 6 images and 100 MB total."},
   ja:{files:"ファイルは最大100件、合計200 MBまで選択できます。",images:"画像は最大6枚、合計100 MBまで選択できます。"},
@@ -70,6 +70,7 @@ const selectionLimitMessages: Record<RouteLocale, { files: string; images: strin
   it:{files:"Seleziona fino a 100 file, per un totale massimo di 200 MB.",images:"Seleziona fino a 6 immagini, per un totale massimo di 100 MB."},
   nl:{files:"Selecteer maximaal 100 bestanden met in totaal maximaal 200 MB.",images:"Selecteer maximaal 6 afbeeldingen met in totaal maximaal 100 MB."},
   hi:{files:"अधिकतम 100 फ़ाइलें चुनें, जिनका कुल आकार 200 MB तक हो।",images:"अधिकतम 6 चित्र चुनें, जिनका कुल आकार 100 MB तक हो।"},
+  ...targetSelectionLimitMessages,
 };
 
 export function ToolWorkspace({ tool, phaseLocale, optionLocale = phaseLocale, messages }: { tool: ToolDefinition; phaseLocale:ToolWorkspaceLocale; optionLocale?: ToolOptionLocale; messages: Dictionary }) {
