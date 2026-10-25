@@ -314,11 +314,16 @@ test("expanded shared dictionaries are complete and do not silently reuse Englis
   assert.deepEqual(omissions, [], `Expanded shared dictionary omissions:\n${omissions.join("\n")}`);
 });
 
-test("planned locales without shared UI dictionaries fail closed with an actionable error", () => {
-  for (const locale of ["bn", "uk", "ms", "sv", "cs", "ro", "el"]) {
+test("eight new locales without complete shared UI dictionaries fail closed", () => {
+  for (const { routeLocale: locale } of plannedLocaleConfig.slice(3)) {
     assert.throws(
       () => expandedModule.getExpandedMessages(locale),
       new RegExp(`Shared UI translations are not registered for ${locale}`),
+    );
+    assert.throws(
+      () => getMessages(locale),
+      new RegExp(`Shared UI translations are not registered for ${locale}`),
+      "incomplete locales must not receive the English base dictionary",
     );
   }
 });
