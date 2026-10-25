@@ -23,6 +23,7 @@ globalThis.__targetExpandedModule = await importTs("../src/i18n/target-expanded-
   'import { targetCoreMessages } from "./target-locale-copy";',
   "const { targetCoreMessages } = globalThis.__targetCoreMessagesModule;",
 ]]);
+globalThis.__targetPageModule = await importTs("../src/i18n/target-page-messages.ts");
 const { COUNTRY_TOOL_SLUGS } = await importTs("../src/lib/country-tool-slugs.ts");
 globalThis.__countryToolSlugs = COUNTRY_TOOL_SLUGS;
 const countryTranslationModule = await importTs("../src/registry/country-tool-translations.ts", [[
@@ -91,11 +92,17 @@ const { getMessages } = await importTs("../src/i18n/messages.ts", [[
   'import { getExpandedMessages } from "./expanded-messages";',
   'const getExpandedMessages = globalThis.__getExpandedMessages;',
 ], [
+  'import { isExpandedTargetLocale } from "./target-expanded-messages";',
+  'const isExpandedTargetLocale = globalThis.__targetExpandedModule.isExpandedTargetLocale;',
+], [
   'import { targetCoreMessages } from "./target-locale-copy";',
   'const targetCoreMessages = globalThis.__targetCoreMessages;',
 ], [
   'import { isPublishedTargetLocale, type TargetLocale } from "./routing";',
   'const isPublishedTargetLocale = globalThis.__isPublishedTargetLocale;',
+], [
+  'import { getTargetPageMessages, isTargetPageMessageLocale } from "./target-page-messages";',
+  'const { getTargetPageMessages, isTargetPageMessageLocale } = globalThis.__targetPageModule;',
 ]]);
 const { getTarotInterpretation } = await importTs("../src/lib/fortune/tarot-localization.ts");
 
@@ -352,14 +359,27 @@ test("expanded shared dictionaries contain the canonical 117 UI, error, and poli
   assert.deepEqual(omissions, [], `Expanded shared dictionary omissions:\n${omissions.join("\n")}`);
 });
 
-test("eight new locales resolve their expanded dictionary and page messages fail closed", () => {
+test("eight new locales resolve every shared page and workspace message without English fallback", () => {
+  const english = getMessages("en");
+  const flatten = (value, prefix = "") => Object.entries(value).flatMap(([key, item]) => {
+    const path = prefix ? `${prefix}.${key}` : key;
+    return typeof item === "string" ? [[path, item]] : item && typeof item === "object" ? flatten(item, path) : [];
+  });
+  const source = new Map(flatten(english));
+  const allowedExactMatches = new Set(["sv/rotation", "ro/contrast"]);
+  const placeholders = (value) => [...value.matchAll(/\{[a-zA-Z][a-zA-Z0-9]*\}/g)].map(([token]) => token).sort().join("|");
   for (const { routeLocale: locale } of plannedLocaleConfig.slice(3)) {
     assert.equal(Object.keys(expandedModule.getExpandedMessages(locale)).length, 117);
-    assert.throws(
-      () => getMessages(locale),
-      new RegExp(`Complete page UI messages are not registered for ${locale}`),
-      "incomplete page dictionaries must not receive the English base dictionary",
-    );
+    const messages = getMessages(locale);
+    const translated = new Map(flatten(messages));
+    for (const key of source.keys()) assert.ok(translated.has(key), `${locale}/${key} is missing`);
+    for (const [key, value] of translated) {
+      assert.ok(value.trim(), `${locale}/${key} must not be empty`);
+      if (!source.has(key)) continue;
+      const original = source.get(key);
+      assert.equal(placeholders(value), placeholders(original), `${locale}/${key} must preserve placeholders`);
+      assert.ok(value !== original || allowedExactMatches.has(`${locale}/${key}`), `${locale}/${key} must not fall back to English`);
+    }
   }
 });
 

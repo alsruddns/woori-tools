@@ -1,6 +1,8 @@
 import { getExpandedMessages } from "./expanded-messages";
+import { isExpandedTargetLocale } from "./target-expanded-messages";
 import { targetCoreMessages } from "./target-locale-copy";
 import { isPublishedTargetLocale, type TargetLocale } from "./routing";
+import { getTargetPageMessages, isTargetPageMessageLocale } from "./target-page-messages";
 
 const messages = {
   ko: {
@@ -280,6 +282,23 @@ const phaseOneNavigationExtra: Record<string,Record<string,string>>={
 
 export function getMessages(locale: TargetLocale): Dictionary {
   if (!isPublishedTargetLocale(locale)) {
+    if (isTargetPageMessageLocale(locale) && isExpandedTargetLocale(locale)) {
+      const complete: Record<string, unknown> = {};
+      const assignPath = (path: string, value: string) => {
+        const parts = path.split(".");
+        let current = complete;
+        for (const part of parts.slice(0, -1)) {
+          const existing = current[part];
+          current[part] = existing && typeof existing === "object" ? existing : {};
+          current = current[part] as Record<string, unknown>;
+        }
+        current[parts.at(-1)!] = value;
+      };
+      for (const [key, value] of Object.entries(targetCoreMessages[locale])) assignPath(key, value);
+      for (const [key, value] of Object.entries(getTargetPageMessages(locale))) assignPath(key, value);
+      for (const [key, value] of Object.entries(getExpandedMessages(locale))) assignPath(key, value);
+      return complete as Dictionary;
+    }
     throw new Error(`Complete page UI messages are not registered for ${locale}`);
   }
   const existing = messages[locale as keyof typeof messages];

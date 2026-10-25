@@ -30,7 +30,7 @@ export const targetCoreMessages = {
     chooseOrDrop: "Upuść pliki tutaj lub wybierz je", selectFile: "Wybierz plik", filePrivacy: "Pliki są przetwarzane w przeglądarce i nie są wysyłane na serwer.", error: "Nie udało się wykonać operacji. Sprawdź dane i spróbuj ponownie.", copySuccess: "Skopiowano.", copyFailure: "Nie udało się skopiować.", workspaceUnavailable: "Tłumaczenie tego obszaru roboczego nie jest jeszcze kompletne.",
   },
   fil: {
-    language: "Wika", tools: "Mga tool", categories: "Mga kategorya", privacy: "Privacy", terms: "Mga tuntunin sa paggamit", allTools: "Lahat ng tool",
+    language: "Wika", tools: "Mga tool", categories: "Mga kategorya", privacy: "Pagkapribado", terms: "Mga tuntunin sa paggamit", allTools: "Lahat ng tool",
     search: "Maghanap ng mga tool", searchPlaceholder: "Anong gawain ang gusto mong gawin?", howTo: "Paano gamitin", introduction: "Tungkol sa tool na ito", faq: "Mga madalas itanong", relatedTools: "Mga kaugnay na tool",
     result: "Resulta", download: "I-download", process: "Iproseso", run: "Simulan", processing: "Pinoproseso…", reset: "I-reset", copy: "Kopyahin", clear: "I-clear",
     chooseOrDrop: "Ihulog dito ang mga file o piliin ang mga ito", selectFile: "Pumili ng file", filePrivacy: "Pinoproseso ang mga file sa browser at hindi ina-upload sa server.", error: "Hindi nakumpleto ang operasyon. Suriin ang inilagay at subukan muli.", copySuccess: "Nakopya.", copyFailure: "Hindi makopya.", workspaceUnavailable: "Hindi pa kumpleto ang salin ng workspace na ito.",
