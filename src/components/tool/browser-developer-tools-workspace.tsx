@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import type { RouteLocale } from "@/i18n/routing";
+import { isPlannedLocale, type RouteLocale, type TargetLocale } from "@/i18n/routing";
 import { getMessages } from "@/i18n/messages";
+import { getTargetBrowserDeveloperCopy } from "@/i18n/target-browser-developer-copy";
 import { copyText } from "@/lib/copy-to-clipboard";
 import { calculateChmod, calculateIpv4Cidr, compareHashes, convertCsvTsv, createUlid, createUrlSlug, createUuidV7, decodeBase32, decodeHtmlEntities, decodeJwt, encodeBase32, encodeHtmlEntities, evaluateJsonPath, inspectCodePoints, inspectUserAgent, parseUrlQuery, replaceWithRegex } from "@/lib/browser-developer-tools";
 
@@ -55,15 +56,16 @@ const polishFieldNames = ["Wartość wejściowa", "Druga wartość", "Wzorzec lu
 const polishHelper = { jwt:"Narzędzie dekoduje treść tokenu i sprawdza wyłącznie pole exp. Nie weryfikuje podpisu ani ważności tokenu.", ua:"Wynik opiera się na lokalnych heurystykach i nie gwarantuje prawidłowego rozpoznania przeglądarki.", cidr:"Przykład IPv4 CIDR: 192.168.1.15/24", pdf:"Plik jest odczytywany w przeglądarce. Rozmiary stron podajemy w punktach PDF i milimetrach.", unsupported:"Narzędzie działa w przeglądarce. Wprowadzone dane nie są wysyłane na serwer.", success:"Gotowe", failure:"Sprawdź format danych wejściowych.", directionA:"Koduj", directionB:"Dekoduj" } as const;
 const polishExpiry = { label:"Stan wygaśnięcia", absent:"Brak pola exp", active:"Token nie wygasł", expired:"Token wygasł" } as const;
 
-export function BrowserDeveloperToolsWorkspace({ slug, locale, title }: { slug: string; locale: RouteLocale | "pl"; title: string }) {
+export function BrowserDeveloperToolsWorkspace({ slug, locale, title }: { slug: string; locale: TargetLocale; title: string }) {
   if (!supportedSlugs.has(slug)) return null;
   return <Workspace slug={slug} locale={locale} title={title} />;
 }
 
-function Workspace({ slug, locale, title }: { slug: string; locale: RouteLocale | "pl"; title: string }) {
+function Workspace({ slug, locale, title }: { slug: string; locale: TargetLocale; title: string }) {
   const messages = getMessages(locale);
-  const labels = locale === "pl" ? polishFieldNames : fieldNames[locale];
-  const helper = locale === "pl" ? polishHelper : helperText[locale];
+  const targetCopy = isPlannedLocale(locale) ? getTargetBrowserDeveloperCopy(locale) : undefined;
+  const labels = targetCopy?.fields ?? (locale === "pl" ? polishFieldNames : fieldNames[locale as RouteLocale]);
+  const helper = targetCopy?.helper ?? (locale === "pl" ? polishHelper : helperText[locale as RouteLocale]);
   const [first, setFirst] = useState("");
   const [second, setSecond] = useState("");
   const [third, setThird] = useState("");
@@ -83,7 +85,7 @@ function Workspace({ slug, locale, title }: { slug: string; locale: RouteLocale 
       switch (slug) {
         case "jwt-decoder": {
           const decoded = decodeJwt(first);
-          const expiry = locale === "pl" ? polishExpiry : expiryLabels[locale];
+          const expiry = targetCopy?.expiry ?? (locale === "pl" ? polishExpiry : expiryLabels[locale as RouteLocale]);
           const expText = decoded.expiry === null ? expiry.absent : `${decoded.status === "active" ? expiry.active : expiry.expired}: ${new Date(decoded.expiry).toISOString()}`;
           value = `${JSON.stringify(decoded.payload, null, 2)}\n\n${expiry.label}: ${expText}`;
           break;

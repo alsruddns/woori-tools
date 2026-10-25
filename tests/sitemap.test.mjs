@@ -398,10 +398,12 @@ test("new locale detail routes are included only when both workspace and SEO che
   const expandedLocales = plannedLocaleConfig.slice(3).map(({ routeLocale }) => routeLocale);
   const expectedSlugs = [...targetLocalePublication.fil.publishedToolSlugs].sort();
   const genericWorkspaceSamples = ["markdown-preview", "json-formatter", "text-compare", "jpg-to-png", "pdf-merge", "file-hash", "timestamp-converter"];
-  const stillGatedSamples = ["random-number", "json-path-tester", "saju", "pdf-page-size-checker"];
+  const expandedWorkspaceSamples = ["json-path-tester", "jwt-decoder", "pdf-page-size-checker"];
+  const stillGatedSamples = ["random-number", "saju"];
   assert.deepEqual(expandedLocales, ["fil", "bn", "uk", "ms", "sv", "cs", "ro", "el"]);
-  assert.equal(expectedSlugs.length, 77);
+  assert.equal(expectedSlugs.length, 93);
   for (const slug of genericWorkspaceSamples) assert.ok(expectedSlugs.includes(slug), `${slug} uses the shared workspace`);
+  for (const slug of expandedWorkspaceSamples) assert.ok(expectedSlugs.includes(slug), `${slug} uses the translated browser developer workspace`);
   for (const slug of stillGatedSamples) assert.equal(expectedSlugs.includes(slug), false, `${slug} remains outside the verified shared workspace`);
   for (const locale of expandedLocales) {
     const publication = targetLocalePublication[locale];
@@ -1295,11 +1297,12 @@ test("Polish browser developer tools localize inputs, privacy, JWT status, and e
     assert.equal(targetLocalePublication.pl.publishedToolSlugs.includes(slug), true);
     assert.equal(entries.some(({ url }) => url === `https://www.woori.today/pl/tools/${slug}`), true);
   }
-  assert.match(toolWorkspaceSource, /BrowserDeveloperToolsWorkspace slug=\{tool\.slug\} locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
+  assert.match(toolWorkspaceSource, /BrowserDeveloperToolsWorkspace slug=\{tool\.slug\} locale=\{phaseLocale === "pl" \|\| isPlannedLocale\(phaseLocale\) \? phaseLocale : specializedLocale\}/);
   assert.match(browserDeveloperWorkspaceSource, /const polishFieldNames = \["Wartość wejściowa"/);
   assert.match(browserDeveloperWorkspaceSource, /const polishHelper = \{ jwt:/);
   assert.match(browserDeveloperWorkspaceSource, /const polishExpiry = \{ label:/);
-  assert.match(browserDeveloperWorkspaceSource, /locale === "pl" \? polishHelper : helperText\[locale\]/);
+  assert.match(browserDeveloperWorkspaceSource, /targetCopy\?\.helper/);
+  assert.match(browserDeveloperWorkspaceSource, /targetCopy\?\.expiry/);
 });
 
 test("Polish Chinese text, number, zodiac, and phone tools share the localized workspace", () => {

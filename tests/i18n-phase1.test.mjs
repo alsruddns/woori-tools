@@ -112,6 +112,7 @@ const { getMessages } = await importTs("../src/i18n/messages.ts", [[
 ]]);
 const { getTarotInterpretation } = await importTs("../src/lib/fortune/tarot-localization.ts");
 const { getTargetFileProcessorCopy } = await importTs("../src/i18n/target-file-processor-copy.ts");
+const { getTargetBrowserDeveloperCopy } = await importTs("../src/i18n/target-browser-developer-copy.ts");
 
 test("legacy registry tools retain all 15 route locales and RU is limited to verified publication", () => {
   assert.equal(locales.length, 15);
@@ -230,6 +231,28 @@ test("expanded file inspection workspaces use translated processor status and re
   assert.match(workspaceComponentSource, /getTargetFileProcessorCopy\(phaseLocale\)/);
   assert.match(workspaceComponentSource, /targetFileCopy\?\.noDuplicates/);
   assert.match(workspaceComponentSource, /targetFileCopy\?\.unknownMime/);
+});
+
+test("expanded browser developer workspaces localize fields, guidance, errors, and JWT expiry", async () => {
+  const locales = ["fil", "bn", "uk", "ms", "sv", "cs", "ro", "el"];
+  const workspaceSource = await readFile(new URL("../src/components/tool/browser-developer-tools-workspace.tsx", import.meta.url), "utf8");
+  const englishCopy = new Set(["Decodes the payload and checks exp only. It does not verify the signature or establish token validity.", "Uses local heuristics; browser identification is not guaranteed.", "IPv4 CIDR example: 192.168.1.15/24", "The file is read in your browser. Page sizes are shown in PDF points and millimeters.", "This tool runs in your browser. Inputs are not sent to a server.", "Done", "Check the input format.", "Encode", "Decode", "Expiry status", "No exp claim", "Not expired", "Expired"]);
+  for (const locale of locales) {
+    const copy = getTargetBrowserDeveloperCopy(locale);
+    assert.ok(copy, `${locale} must have browser developer workspace copy`);
+    assert.equal(copy.fields.length, 4);
+    assert.ok(copy.fields.every((value) => value.trim()));
+    for (const [key, value] of Object.entries(copy.helper)) {
+      assert.ok(value.trim(), `${locale}/helper.${key} must not be empty`);
+      assert.equal(englishCopy.has(value), false, `${locale}/helper.${key} must not fall back to English`);
+    }
+    for (const [key, value] of Object.entries(copy.expiry)) {
+      assert.ok(value.trim(), `${locale}/expiry.${key} must not be empty`);
+      assert.equal(englishCopy.has(value), false, `${locale}/expiry.${key} must not fall back to English`);
+    }
+  }
+  assert.match(workspaceSource, /getTargetBrowserDeveloperCopy\(locale\)/);
+  assert.match(workspaceSource, /targetCopy\?\.expiry/);
 });
 
 test("Japan-specific tools have translated metadata, complete page content, and related links", () => {
