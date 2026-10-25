@@ -32,7 +32,7 @@ const translatedPageMessages = {
     "optionsStep": "Pumili ng anumang mga opsyon na kailangan mo, pagkatapos ay simulan ang pagproseso.",
     "resultStep": "Suriin ang resulta, pagkatapos ay kopyahin o i-download ito sa iyong device.",
     "introPrivacy": "Ang pagpoproseso ay nananatili sa iyong browser, at ang iyong orihinal na input ay hindi nababago.",
-    "privacyNotice": "Privacy: hindi kailanman ina-upload ang mga nilalaman ng file. Ang mga resulta ay nilikha sa browser na ito.",
+    "privacyNotice": "Pagkapribado: nananatili sa browser na ito ang mga inilagay na input at resulta.",
     "categoryHeading": "{category} tool",
     "quality": "Kalidad",
     "option": "Pagpipilian"
@@ -66,7 +66,7 @@ const translatedPageMessages = {
     "optionsStep": "আপনার প্রয়োজনীয় যেকোনো বিকল্প বেছে নিন, তারপর প্রক্রিয়াকরণ শুরু করুন।",
     "resultStep": "ফলাফল পর্যালোচনা করুন, তারপর কপি বা আপনার ডিভাইসে ডাউনলোড করুন.",
     "introPrivacy": "প্রক্রিয়াকরণ আপনার ব্রাউজারে থাকে এবং আপনার আসল ইনপুট অপরিবর্তিত থাকে।",
-    "privacyNotice": "গোপনীয়তা: ফাইল বিষয়বস্তু আপলোড করা হয় না. ফলাফল এই ব্রাউজারে তৈরি করা হয়.",
+    "privacyNotice": "গোপনীয়তা: আপনার দেওয়া তথ্য ও ফলাফল এই ব্রাউজারেই থাকে।",
     "categoryHeading": "{category} টুল",
     "quality": "গুণমান",
     "option": "অপশন"
@@ -100,7 +100,7 @@ const translatedPageMessages = {
     "optionsStep": "Виберіть будь-які потрібні параметри, а потім приступайте до обробки.",
     "resultStep": "Перегляньте результат, потім скопіюйте або завантажте його на свій пристрій.",
     "introPrivacy": "Обробка залишається у вашому веб-переглядачі, а вихідні дані залишаються незмінними.",
-    "privacyNotice": "Конфіденційність: вміст файлу ніколи не завантажується. Результати створюються в цьому браузері.",
+    "privacyNotice": "Конфіденційність: введені дані та результати залишаються в цьому браузері.",
     "categoryHeading": "Інструменти {category}",
     "quality": "якість",
     "option": "Варіант"
@@ -134,7 +134,7 @@ const translatedPageMessages = {
     "optionsStep": "Pilih mana-mana pilihan yang anda perlukan, kemudian mula memproses.",
     "resultStep": "Semak keputusan, kemudian salin atau muat turun ke peranti anda.",
     "introPrivacy": "Pemprosesan kekal dalam penyemak imbas anda, dan input asal anda dibiarkan tidak berubah.",
-    "privacyNotice": "Privasi: kandungan fail tidak pernah dimuat naik. Keputusan dibuat dalam penyemak imbas ini.",
+    "privacyNotice": "Privasi: input dan hasil kekal dalam pelayar ini.",
     "categoryHeading": "Alat {category}",
     "quality": "Kualiti",
     "option": "Pilihan"
@@ -168,7 +168,7 @@ const translatedPageMessages = {
     "optionsStep": "Välj de alternativ du behöver och börja sedan bearbeta.",
     "resultStep": "Granska resultatet och kopiera eller ladda ner det till din enhet.",
     "introPrivacy": "Bearbetningen stannar i din webbläsare och din ursprungliga inmatning lämnas oförändrad.",
-    "privacyNotice": "Sekretess: filinnehåll laddas aldrig upp. Resultat skapas i den här webbläsaren.",
+    "privacyNotice": "Integritet: det du anger och resultaten stannar i den här webbläsaren.",
     "categoryHeading": "{category} verktyg",
     "quality": "Kvalitet",
     "option": "Alternativ"
@@ -202,7 +202,7 @@ const translatedPageMessages = {
     "optionsStep": "Vyberte požadované možnosti a začněte zpracovávat.",
     "resultStep": "Zkontrolujte výsledek a poté jej zkopírujte nebo stáhněte do svého zařízení.",
     "introPrivacy": "Zpracování zůstane ve vašem prohlížeči a váš původní vstup zůstane nezměněn.",
-    "privacyNotice": "Soukromí: obsah souboru se nikdy nenahrává. Výsledky se vytvářejí v tomto prohlížeči.",
+    "privacyNotice": "Soukromí: zadané údaje i výsledky zůstávají v tomto prohlížeči.",
     "categoryHeading": "Nástroje {category}",
     "quality": "Kvalita",
     "option": "Možnost"
@@ -236,7 +236,7 @@ const translatedPageMessages = {
     "optionsStep": "Alegeți orice opțiune de care aveți nevoie, apoi începeți procesarea.",
     "resultStep": "Examinați rezultatul, apoi copiați-l sau descărcați-l pe dispozitiv.",
     "introPrivacy": "Procesarea rămâne în browser, iar intrarea inițială rămâne neschimbată.",
-    "privacyNotice": "Confidențialitate: conținutul fișierului nu este încărcat niciodată. Rezultatele sunt create în acest browser.",
+    "privacyNotice": "Confidențialitate: datele introduse și rezultatele rămân în acest browser.",
     "categoryHeading": "{category} instrumente",
     "quality": "Calitate",
     "option": "Opțiune"
@@ -270,7 +270,7 @@ const translatedPageMessages = {
     "optionsStep": "Επιλέξτε όποιες επιλογές χρειάζεστε και, στη συνέχεια, ξεκινήστε την επεξεργασία.",
     "resultStep": "Ελέγξτε το αποτέλεσμα και, στη συνέχεια, αντιγράψτε ή κατεβάστε το στη συσκευή σας.",
     "introPrivacy": "Η επεξεργασία παραμένει στο πρόγραμμα περιήγησής σας και η αρχική σας εισαγωγή παραμένει αμετάβλητη.",
-    "privacyNotice": "Απόρρητο: τα περιεχόμενα του αρχείου δεν μεταφορτώνονται ποτέ. Τα αποτελέσματα δημιουργούνται σε αυτό το πρόγραμμα περιήγησης.",
+    "privacyNotice": "Απόρρητο: τα δεδομένα που εισάγετε και τα αποτελέσματα παραμένουν σε αυτό το πρόγραμμα περιήγησης.",
     "categoryHeading": "Εργαλεία {category}",
     "quality": "Ποιότητα",
     "option": "Επιλογή"

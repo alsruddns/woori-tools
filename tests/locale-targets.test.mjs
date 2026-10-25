@@ -13,6 +13,11 @@ const { outputText: copyOutput } = ts.transpileModule(copySource, {
   compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
 });
 const { targetCoreMessages } = await import(`data:text/javascript;base64,${Buffer.from(copyOutput).toString("base64")}`);
+const randomCopySource = await readFile(new URL("../src/i18n/target-random-processor-copy.ts", import.meta.url), "utf8");
+const { outputText: randomCopyOutput } = ts.transpileModule(randomCopySource, {
+  compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
+});
+const randomCopyModule = await import(`data:text/javascript;base64,${Buffer.from(randomCopyOutput).toString("base64")}`);
 const processorCopySource = await readFile(new URL("../src/i18n/target-processor-copy.ts", import.meta.url), "utf8");
 const { outputText: processorCopyOutput } = ts.transpileModule(processorCopySource, {
   compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
@@ -52,6 +57,40 @@ test("planned locale routing expands independently from legacy content locale ty
     assert.equal(routing.isPublishedTargetLocale(locale), true);
     assert.equal(routing.targetLocaleLabels[locale].length > 0, true);
   }
+});
+
+test("expanded random workspace processor labels are authored for every new locale", async () => {
+  const locales = ["fil", "bn", "uk", "ms", "sv", "cs", "ro", "el"];
+  const keys = ["total", "heads", "tails", "headsRatio", "team", "rangeHint"];
+  for (const locale of locales) {
+    const copy = randomCopyModule.getTargetRandomProcessorCopy(locale);
+    assert.ok(copy, `${locale} random processor copy exists`);
+    for (const key of keys) {
+      assert.equal(typeof copy[key], "string", `${locale}.${key} is a string`);
+      assert.ok(copy[key].trim(), `${locale}.${key} is not blank`);
+      assert.notEqual(copy[key], key, `${locale}.${key} is translated`);
+    }
+  }
+  const workspace = await readFile(new URL("../src/components/tool/tool-workspace.tsx", import.meta.url), "utf8");
+  for (const slug of ["random-number", "random-name-picker", "draw-lots", "random-team-maker", "dice-roller", "coin-flip"]) {
+    assert.match(workspace, new RegExp(`"${slug}"`), `${slug} is routed through the workspace`);
+  }
+  assert.match(workspace, /isTargetPageMessageLocale\(phaseLocale\) && \["random-number", "random-name-picker", "draw-lots", "random-team-maker", "dice-roller", "coin-flip"\]/, "only the eight expanded page locales use the shared random workspace");
+  const stringWorkspace = await readFile(new URL("../src/components/tool/random-string-workspace.tsx", import.meta.url), "utf8");
+  for (const locale of locales) assert.match(stringWorkspace, new RegExp(`${locale}:\\{length:`), `${locale} password and string controls are translated`);
+  assert.match(workspace, /RandomStringWorkspace slug=\{tool\.slug\} locale=\{phaseLocale === "pl" \|\| isPlannedLocale\(phaseLocale\) \? phaseLocale : specializedLocale\}/);
+});
+
+test("expanded QR workspace has localized fields, privacy, validation, and failure copy", async () => {
+  const locales = ["fil", "bn", "uk", "ms", "sv", "cs", "ro", "el"];
+  const source = await readFile(new URL("../src/components/tool/qr-workspace.tsx", import.meta.url), "utf8");
+  for (const locale of locales) {
+    assert.match(source, new RegExp(`${locale}:\\{ssid:`), `${locale} QR fields are authored`);
+    assert.match(source, new RegExp(`${locale}:\\{[^\\n]*failure:`), `${locale} QR failure is translated`);
+    assert.match(source, new RegExp(`${locale}:"[^\\n]*"`), `${locale} QR details label is present`);
+  }
+  const workspace = await readFile(new URL("../src/components/tool/tool-workspace.tsx", import.meta.url), "utf8");
+  assert.match(workspace, /QrWorkspace slug=\{tool\.slug\} locale=\{phaseLocale === "pl" \|\| isPlannedLocale\(phaseLocale\) \? phaseLocale : specializedLocale\}/);
 });
 
 test("expanded barcode workspace controls are translated for every newly exposed locale", async () => {

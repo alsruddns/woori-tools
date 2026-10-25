@@ -1,6 +1,7 @@
 import { getMessages } from "@/i18n/messages";
 import { isPlannedLocale, type TargetLocale } from "@/i18n/routing";
 import { getTargetProcessorCopy } from "@/i18n/target-processor-copy";
+import { getTargetRandomProcessorCopy } from "@/i18n/target-random-processor-copy";
 import { randomInt, secureShuffle, pickUnique, pickUniqueRange } from "@/lib/random";
 
 export type ProcessedText={result:string;download?:Blob};
@@ -8,17 +9,18 @@ export type ProcessedText={result:string;download?:Blob};
 export async function processText(slug:string,text:string,secondText:string,option:string,amount:number,locale:TargetLocale="ko"):Promise<ProcessedText>{
   const messages=getMessages(locale);
   const targetCopy=isPlannedLocale(locale)?getTargetProcessorCopy(locale):undefined;
+  const randomCopy=isPlannedLocale(locale)?getTargetRandomProcessorCopy(locale):undefined;
   const lines=text.split(/\r?\n/);let output=text;
   switch(slug){
     case "lotto-number-generator": return {result: pickUnique(Array.from({length:45},(_,i)=>i+1),6).sort((a,b)=>a-b).join(", ")};
     case "random-number": { const [minText,maxText]=text.split(/[\s,]+/); const min=Number(minText),max=Number(maxText); if(!Number.isSafeInteger(min)||!Number.isSafeInteger(max)||min>max)throw new Error(targetCopy?.invalidRange??(locale==="pl"?"Podaj prawidłowe minimum i maksimum oddzielone przecinkiem.":"Enter a valid minimum and maximum separated by a comma.")); const count=Math.max(1,Math.min(100,Math.trunc(amount)||1)); if(option==="unique"&&count>max-min+1)throw new Error(targetCopy?.insufficientRange??(locale==="pl"?"Zakres jest za mały dla takiej liczby unikalnych wyników.":"The range is too small for that many unique numbers.")); const values=option==="unique"?pickUniqueRange(min,max,count):Array.from({length:count},()=>randomInt(min,max)); if(option.includes("sort"))values.sort((a,b)=>a-b); return {result:values.join("\n")}; }
     case "random-name-picker": case "random-wheel": case "draw-lots": { const entries=lines.map(s=>s.trim()).filter(Boolean); if(!entries.length)throw new Error(messages.errors.noContent); const count=Math.max(1,Math.min(entries.length,Math.trunc(amount)||1)); return {result:(option==="repeat"?Array.from({length:count},()=>entries[randomInt(0,entries.length-1)]):pickUnique(entries,count)).join("\n")}; }
-    case "random-team-maker": { const entries=lines.map(s=>s.trim()).filter(Boolean); if(!entries.length)throw new Error(messages.errors.noContent); const shuffled=secureShuffle(entries); const teams=Array.from({length:Math.min(entries.length,Math.max(1,Math.trunc(amount)||2))},()=>[] as string[]); shuffled.forEach((name,i)=>teams[i%teams.length].push(name)); return {result:teams.map((team,i)=>`${targetCopy?.team??(locale==="pl"?"Zespół":"Team")} ${i+1}\n${team.join("\n")}`).join("\n\n")}; }
+    case "random-team-maker": { const entries=lines.map(s=>s.trim()).filter(Boolean); if(!entries.length)throw new Error(messages.errors.noContent); const shuffled=secureShuffle(entries); const teams=Array.from({length:Math.min(entries.length,Math.max(1,Math.trunc(amount)||2))},()=>[] as string[]); shuffled.forEach((name,i)=>teams[i%teams.length].push(name)); return {result:teams.map((team,i)=>`${randomCopy?.team??targetCopy?.team??(locale==="pl"?"Zespół":"Team")} ${i+1}\n${team.join("\n")}`).join("\n\n")}; }
     case "random-seat": {const names=secureShuffle(lines.map(s=>s.trim()).filter(Boolean));if(!names.length)throw new Error(messages.errors.noContent);return{result:names.map((name,i)=>`${i+1}. ${name}`).join("\n")};}
     case "duty-picker": {const people=secureShuffle(lines.map(s=>s.trim()).filter(Boolean)),duties=secureShuffle(secondText.split(/\r?\n/).map(s=>s.trim()).filter(Boolean));if(!people.length||!duties.length)throw new Error(messages.errors.noContent);return{result:people.map((person,i)=>`${person} — ${duties[i%duties.length]}`).join("\n")};}
     case "random-order": case "shuffle-lines": return {result:secureShuffle(lines.filter((line)=>line.length>0)).map((line,i)=>slug==="random-order"?`${i+1}. ${line}`:line).join("\n")};
-    case "dice-roller": { const sides=Number(option)||6,count=Math.max(1,Math.min(100,Math.trunc(amount)||1)); const rolls=Array.from({length:count},()=>randomInt(1,sides)); return {result:`${rolls.join(", ")}\nTotal: ${rolls.reduce((a,b)=>a+b,0)}`}; }
-    case "coin-flip": { const count=Math.max(1,Math.min(1000,Math.trunc(amount)||1)); const heads=Array.from({length:count},()=>randomInt(0,1)).filter(Boolean).length; return {result:`Heads: ${heads}\nTails: ${count-heads}\nHeads ratio: ${(heads/count*100).toFixed(1)}%`}; }
+    case "dice-roller": { const sides=Number(option)||6,count=Math.max(1,Math.min(100,Math.trunc(amount)||1)); const rolls=Array.from({length:count},()=>randomInt(1,sides)); return {result:`${rolls.join(", ")}\n${randomCopy?.total??"Total"}: ${rolls.reduce((a,b)=>a+b,0)}`}; }
+    case "coin-flip": { const count=Math.max(1,Math.min(1000,Math.trunc(amount)||1)); const heads=Array.from({length:count},()=>randomInt(0,1)).filter(Boolean).length; return {result:`${randomCopy?.heads??"Heads"}: ${heads}\n${randomCopy?.tails??"Tails"}: ${count-heads}\n${randomCopy?.headsRatio??"Heads ratio"}: ${(heads/count*100).toFixed(1)}%`}; }
     case "password-generator": case "random-string-generator": { const length=Math.max(4,Math.min(256,Math.trunc(amount)||16)); const chars="ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%^&*()-_=+"; let out=""; for(let i=0;i<length;i++)out+=chars[randomInt(0,chars.length-1)]; return {result:out}; }
     case "character-count":return{result:`${messages.countCharacters}: ${text.length}\n${messages.countCharactersNoSpaces}: ${text.replace(/\s/g,"").length}\n${messages.lineCount}: ${text?lines.length:0}\n${messages.wordCount}: ${(text.trim().match(/\S+/g)||[]).length}`};
     case "remove-spaces":output=option==="all"?text.replace(/\s/g,""):text.replace(/[\t ]{2,}/g," ");break;

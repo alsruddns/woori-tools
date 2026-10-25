@@ -397,12 +397,12 @@ test("private registry tools are excluded from sitemap entries", () => {
 test("new locale detail routes are included only when both workspace and SEO checks pass", () => {
   const expandedLocales = plannedLocaleConfig.slice(3).map(({ routeLocale }) => routeLocale);
   const expectedSlugs = [...targetLocalePublication.fil.publishedToolSlugs].sort();
-  const genericWorkspaceSamples = ["markdown-preview", "json-formatter", "text-compare", "jpg-to-png", "pdf-merge", "file-hash", "timestamp-converter"];
+  const verifiedWorkspaceSamples = ["markdown-preview", "json-formatter", "text-compare", "jpg-to-png", "pdf-merge", "file-hash", "timestamp-converter", "random-number", "random-name-picker", "draw-lots", "random-team-maker", "dice-roller", "coin-flip", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr"];
   const expandedWorkspaceSamples = ["json-path-tester", "jwt-decoder", "pdf-page-size-checker"];
-  const stillGatedSamples = ["random-number", "saju"];
+  const stillGatedSamples = ["random-wheel", "saju"];
   assert.deepEqual(expandedLocales, ["fil", "bn", "uk", "ms", "sv", "cs", "ro", "el"]);
-  assert.equal(expectedSlugs.length, 93);
-  for (const slug of genericWorkspaceSamples) assert.ok(expectedSlugs.includes(slug), `${slug} uses the shared workspace`);
+  assert.equal(expectedSlugs.length, 105);
+  for (const slug of verifiedWorkspaceSamples) assert.ok(expectedSlugs.includes(slug), `${slug} has a verified workspace`);
   for (const slug of expandedWorkspaceSamples) assert.ok(expectedSlugs.includes(slug), `${slug} uses the translated browser developer workspace`);
   for (const slug of stillGatedSamples) assert.equal(expectedSlugs.includes(slug), false, `${slug} remains outside the verified shared workspace`);
   for (const locale of expandedLocales) {
@@ -1068,7 +1068,7 @@ test("Polish random number generator uses localized range, count, options, and v
   assert.equal(entries.some(({ url }) => url === "https://www.woori.today/pl/tools/random-number"), true);
   assert.match(specialRandomWorkspaceSource, /export function RandomNumberWorkspace\(\{ locale \}: \{ locale:RouteLocale \| "ru" \| "tr" \| "pl" \}\)/);
   assert.match(specialRandomWorkspaceSource, /locale === "pl" \? \{ \.\.\.copy\[locale\], drawCount: "Liczba losowanych liczb" \}/);
-  assert.match(toolWorkspaceSource, /tool\.slug === "random-number"\) return <RandomNumberWorkspace locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
+  assert.match(toolWorkspaceSource, /tool\.slug === "random-number" && !expandedRandomWorkspace\) return <RandomNumberWorkspace locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
 });
 
 test("Polish name picker and draw lots share localized participant controls and winner actions", () => {
@@ -1098,7 +1098,7 @@ test("Polish random team maker localizes team controls, validation, and generate
   assert.match(specialRandomWorkspaceSource, /teamPrefix:Record<string,string>=\{pl:"Zespół"/);
   assert.match(specialRandomWorkspaceSource, /drawWinners:"Losuj zwycięzców"/);
   assert.match(specialRandomWorkspaceSource, /locale === "ru" \|\| locale === "pl" \? \(teams.length \? t.makeTeamsAgain : t.makeTeams\)/);
-  assert.match(toolWorkspaceSource, /tool\.slug === "random-team-maker"\) return <RandomTeamWorkspace locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
+  assert.match(toolWorkspaceSource, /tool\.slug === "random-team-maker" && !expandedRandomWorkspace\) return <RandomTeamWorkspace locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
 });
 
 test("Polish random order localizes participant labels, reveal actions, and copy", () => {
@@ -1131,7 +1131,7 @@ test("Polish dice roller localizes die settings, explanation, statistics, and va
   assert.equal(entries.some(({ url }) => url === "https://www.woori.today/pl/tools/dice-roller"), true);
   assert.match(specialRandomWorkspaceSource, /Object\.assign\(copy\.pl,\{selection:"Rodzaj ko\\u015Bci",diceCount:"Liczba ko\\u015Bci"/);
   assert.match(specialRandomWorkspaceSource, /invalidCount:"Wybierz od 1 do 20 ko\\u015Bci/);
-  assert.match(toolWorkspaceSource, /tool\.slug === "dice-roller"\) return <DiceWorkspace locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
+  assert.match(toolWorkspaceSource, /tool\.slug === "dice-roller" && !expandedRandomWorkspace\) return <DiceWorkspace locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
 });
 
 test("Polish coin flip localizes count, sides, results, and range validation", () => {
@@ -1176,7 +1176,7 @@ test("Polish password and random string tools localize character settings and va
   assert.match(randomStringWorkspaceSource, /Object\.assign\(labels,\{pl:\{length:"D[^"]+",count:"Liczba do wygenerowania"/);
   assert.match(randomStringWorkspaceSource, /error:"Wybierz co najmniej jeden zestaw znak/);
   assert.match(randomStringWorkspaceSource, /Object\.assign\(optionLegend,\{pl:"Opcje znak/);
-  assert.match(toolWorkspaceSource, /RandomStringWorkspace slug=\{tool\.slug\} locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
+  assert.match(toolWorkspaceSource, /RandomStringWorkspace slug=\{tool\.slug\} locale=\{phaseLocale === "pl" \|\| isPlannedLocale\(phaseLocale\) \? phaseLocale : specializedLocale\}/);
 });
 
 test("Polish QR tools localize privacy, input labels, QR errors, and downloads", () => {
@@ -1186,10 +1186,10 @@ test("Polish QR tools localize privacy, input labels, QR errors, and downloads",
   }
   assert.match(qrWorkspaceSource, /Object\.assign\(text,\{pl:\{ssid:"Nazwa sieci Wi-Fi \(SSID\)",password:"Has/);
   assert.match(qrWorkspaceSource, /privacy:"Wprowadzone dane s/);
-  assert.match(qrWorkspaceSource, /setError\(locale==="pl"\?"Nie uda/);
-  assert.match(qrWorkspaceSource, /busy\?\(locale==="pl"\?t\.generating:/);
+  assert.match(qrWorkspaceSource, /setError\(t\.failure\?\?/);
+  assert.match(qrWorkspaceSource, /busy\?\(t\.generating\?\?/);
   assert.match(qrWorkspaceSource, /pl:"Zobacz zakodowan/);
-  assert.match(toolWorkspaceSource, /QrWorkspace slug=\{tool\.slug\} locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
+  assert.match(toolWorkspaceSource, /QrWorkspace slug=\{tool\.slug\} locale=\{phaseLocale === "pl" \|\| isPlannedLocale\(phaseLocale\) \? phaseLocale : specializedLocale\}/);
 });
 
 test("Polish barcode generator localizes input, format, generation, and failure feedback", () => {

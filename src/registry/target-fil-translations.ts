@@ -53,9 +53,9 @@ const translations = {
     faq: { example: "Kailangan ko ba ang eksaktong oras ng kapanganakan?", caution: "Sa server ba ginagawa ang pagkalkula?" },
   },
   "random-number": {
-    title: "Random number generator",
+    title: "Tagabuo ng mga random na numero",
     description: "Bumunot ng mga numero mula sa pinili mong saklaw. Itakda ang minimum, maximum, dami, at kung maaari itong maulit.",
-    seoTitle: "Random Number Generator | Bumunot Mula sa Saklaw",
+    seoTitle: "Tagabuo ng Random na Numero | Bumunot Mula sa Saklaw",
     seoDescription: "Pumili ng saklaw at dami upang bumuo ng mga numerong may o walang pag-uulit. Sa browser ginagawa ang pagbuo.",
     category: "Mga random na pagpili",
     keywords: ["random number generator", "bunot ng numero", "random na numero mula sa saklaw"],

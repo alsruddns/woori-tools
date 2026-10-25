@@ -8,7 +8,9 @@ import { targetLocalePublication } from "@/registry/target-locale-publication";
 import type { Dictionary } from "@/i18n/messages";
 import { isLocale, isPlannedLocale, isPublishedTargetLocale, isTargetLocale, type RouteLocale, type TargetLocale } from "@/i18n/routing";
 import { targetCoreMessages } from "@/i18n/target-locale-copy";
+import { isTargetPageMessageLocale } from "@/i18n/target-page-messages";
 import { getTargetFileProcessorCopy } from "@/i18n/target-file-processor-copy";
+import { getTargetRandomProcessorCopy } from "@/i18n/target-random-processor-copy";
 import { processImage as processImageFile } from "@/lib/image/process-image";
 import { processPdf as processPdfFile } from "@/lib/pdf/process-pdf";
 import { processText as processTextTool } from "@/lib/text/process-text";
@@ -77,9 +79,12 @@ const selectionLimitMessages: Record<ToolOptionLocale, { files: string; images: 
 
 export function ToolWorkspace({ tool, phaseLocale, optionLocale = phaseLocale, messages }: { tool: ToolDefinition; phaseLocale:ToolWorkspaceLocale; optionLocale?: ToolOptionLocale; messages: Dictionary }) {
   const specializedLocale: RouteLocale = phaseLocale === "pl" ? "en" : isLocale(phaseLocale) ? phaseLocale : "en";
+  const expandedRandomWorkspace = isTargetPageMessageLocale(phaseLocale) && ["random-number", "random-name-picker", "draw-lots", "random-team-maker", "dice-roller", "coin-flip"].includes(tool.slug);
+  const randomWorkspaceCopy = isPlannedLocale(phaseLocale) ? getTargetRandomProcessorCopy(phaseLocale) : undefined;
   const isImage = tool.category === "image";
   const isPdf = tool.category === "pdf" || tool.slug === "images-to-pdf";
   const isFileTool = ["file-hash","mime-type-checker","file-extension-checker","file-size-checker","duplicate-file-checker","zip-files","bulk-file-renamer","filename-cleaner"].includes(tool.slug);
+  const inputlessExpandedRandom = expandedRandomWorkspace && ["dice-roller", "coin-flip"].includes(tool.slug);
   const [files, setFiles] = useState<File[]>([]);
   const [text, setText] = useState("");
   const [secondText, setSecondText] = useState("");
@@ -119,15 +124,15 @@ export function ToolWorkspace({ tool, phaseLocale, optionLocale = phaseLocale, m
   if (tool.slug === "japan-loto6-number-generator") return <LottoWorkspace locale={phaseLocale === "pl" ? "pl" : specializedLocale} min={1} max={43} numberCount={6} historyKey="lottery-history:japan-loto6-number-generator" />;
   if (tool.slug === "japan-loto7-number-generator") return <LottoWorkspace locale={phaseLocale === "pl" ? "pl" : specializedLocale} min={1} max={37} numberCount={7} historyKey="lottery-history:japan-loto7-number-generator" />;
   if (tool.slug === "japan-mini-loto-number-generator") return <LottoWorkspace locale={phaseLocale === "pl" ? "pl" : specializedLocale} min={1} max={31} numberCount={5} historyKey="lottery-history:japan-mini-loto-number-generator" />;
-  if (tool.slug === "dice-roller") return <DiceWorkspace locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;
+  if (tool.slug === "dice-roller" && !expandedRandomWorkspace) return <DiceWorkspace locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;
   if (tool.slug === "coin-flip" && phaseLocale === "pl") return <CoinFlipWorkspace locale="pl" />;
-  if (tool.slug === "random-number") return <RandomNumberWorkspace locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;
-  if (tool.slug === "random-name-picker" || tool.slug === "draw-lots") return <RandomNameWorkspace slug={tool.slug} locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;
-  if (tool.slug === "random-team-maker") return <RandomTeamWorkspace locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;
+  if (tool.slug === "random-number" && !expandedRandomWorkspace) return <RandomNumberWorkspace locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;
+  if ((tool.slug === "random-name-picker" || tool.slug === "draw-lots") && !expandedRandomWorkspace) return <RandomNameWorkspace slug={tool.slug} locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;
+  if (tool.slug === "random-team-maker" && !expandedRandomWorkspace) return <RandomTeamWorkspace locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;
   if (tool.slug === "random-order") return <RandomOrderWorkspace locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;
   if (tool.slug === "random-seat") return <RandomSeatWorkspace locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;
   if (tool.slug === "duty-picker" && phaseLocale === "pl") return <RussianDutyPickerWorkspace locale="pl" />;
-  if (["password-generator","random-string-generator"].includes(tool.slug)) return <RandomStringWorkspace slug={tool.slug} locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;
+  if (["password-generator","random-string-generator"].includes(tool.slug)) return <RandomStringWorkspace slug={tool.slug} locale={phaseLocale === "pl" || isPlannedLocale(phaseLocale) ? phaseLocale : specializedLocale} />;
   if (tool.slug === "ladder-game") return <LadderWorkspace locale={specializedLocale} />;
   if (tool.slug === "markdown-preview") return <MarkdownWorkspace locale={phaseLocale} />;
   if (tool.slug === "barcode-generator") return <BarcodeWorkspace locale={phaseLocale} title={tool.title} />;
@@ -139,7 +144,7 @@ export function ToolWorkspace({ tool, phaseLocale, optionLocale = phaseLocale, m
   if (phaseLocale === "pl" && isPolishBrazilSlug(tool.slug)) return <PolishBrazilToolsWorkspace slug={tool.slug} />;
   if (phaseLocale === "pl" && isPolishFinalCountrySlug(tool.slug)) return <PolishFinalCountryToolsWorkspace slug={tool.slug} />;
   if (phaseLocale === "pl" && isPolishNorthAmericaSlug(tool.slug)) return <PolishNorthAmericaToolsWorkspace slug={tool.slug} />;
-  if (["wifi-qr","contact-qr","phone-qr","email-qr"].includes(tool.slug)) return <QrWorkspace slug={tool.slug} locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;
+  if (["wifi-qr","contact-qr","phone-qr","email-qr"].includes(tool.slug)) return <QrWorkspace slug={tool.slug} locale={phaseLocale === "pl" || isPlannedLocale(phaseLocale) ? phaseLocale : specializedLocale} />;
   if (tool.slug === "random-wheel") return <RandomWheelWorkspace locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;
   if (tool.slug === "timer" || tool.slug === "pomodoro-timer") return <CountdownWorkspace slug={tool.slug} locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;
   if (tool.slug === "world-clock") return <WorldClockWorkspace locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;
@@ -208,8 +213,8 @@ export function ToolWorkspace({ tool, phaseLocale, optionLocale = phaseLocale, m
       {files.length>0&&<div className="mt-4 rounded-xl bg-slate-50 p-4"><ul className="space-y-2">{files.map((file,i)=><li key={`${file.name}-${i}`} className="flex justify-between gap-3 text-sm"><span className="truncate">{file.name}</span><span className="shrink-0 text-slate-500">{(file.size/1024/1024).toFixed(2)} MB</span></li>)}</ul><button type="button" onClick={()=>{setFiles([]);setPreviewUrl("");setResult("");setOutputUrl("");}} className="mt-3 text-sm font-medium text-rose-700 underline">{messages.resetSelection}</button></div>}
       {previewUrl&&tool.slug!=="image-color-picker"&&<NextImage unoptimized src={previewUrl} alt={messages.selectedImageAlt} width={960} height={600} className="mt-4 max-h-72 max-w-full rounded-xl border border-slate-200 object-contain" />}
       {previewUrl&&tool.slug==="image-color-picker"&&<div className="mt-4"><p className="mb-2 text-sm">{messages.clickImageColor}</p><ColorPicker src={previewUrl} label={messages.colorPickerLabel} onPick={setResult}/></div>}
-    </div> : <div className="grid gap-4 sm:grid-cols-2">
-      <div><label htmlFor="input-text" className="mb-2 block text-sm font-medium">{needsSecond?messages.firstText:messages.input}</label><textarea id="input-text" value={text} onChange={(e)=>setText(e.target.value)} rows={9} placeholder={tool.slug==="timestamp-converter"?messages.timestampPlaceholder:tool.slug==="random-number"?({ko:"최소값, 최대값 예: 1, 45",en:"Minimum, maximum e.g. 1, 45",ja:"最小値, 最大値 例: 1, 45",zh:"最小值、最大值，例如：1, 45",es:"Mínimo y máximo; p. ej., 1, 45","pt-br":"Mínimo e máximo; ex.: 1, 45",de:"Minimum und Maximum, z. B. 1, 45",fr:"Minimum et maximum, p. ex. 1, 45",vi:"Giá trị nhỏ nhất, lớn nhất; ví dụ: 1, 45",id:"Nilai minimum, maksimum; misalnya 1, 45",th:"ค่าต่ำสุดและค่าสูงสุด เช่น 1, 45","zh-tw":"最小值、最大值，例如：1, 45",it:"Minimo e massimo, ad es. 1, 45",nl:"Minimum en maximum, bijv. 1, 45",hi:"न्यूनतम, अधिकतम; जैसे 1, 45"} as Record<string,string>)[phaseLocale]:tool.slug==="color-converter"?"#3366FF":messages.textPlaceholder} className="w-full rounded-xl border border-slate-300 p-3 font-mono text-sm outline-none focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100" />{tool.slug==="timestamp-converter"&&<p className="mt-2 text-xs text-slate-500">{messages.timestampHint}</p>}</div>
+    </div> : inputlessExpandedRandom ? null : <div className="grid gap-4 sm:grid-cols-2">
+      <div><label htmlFor="input-text" className="mb-2 block text-sm font-medium">{needsSecond?messages.firstText:messages.input}</label><textarea id="input-text" value={text} onChange={(e)=>setText(e.target.value)} rows={9} placeholder={tool.slug==="timestamp-converter"?messages.timestampPlaceholder:tool.slug==="random-number"?(randomWorkspaceCopy?.rangeHint??messages.textPlaceholder):tool.slug==="color-converter"?"#3366FF":messages.textPlaceholder} className="w-full rounded-xl border border-slate-300 p-3 font-mono text-sm outline-none focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100" />{tool.slug==="timestamp-converter"&&<p className="mt-2 text-xs text-slate-500">{messages.timestampHint}</p>}</div>
       {needsSecond&&<div><label htmlFor="second-text" className="mb-2 block text-sm font-medium">{messages.secondText}</label><textarea id="second-text" value={secondText} onChange={(e)=>setSecondText(e.target.value)} rows={9} className="w-full rounded-xl border border-slate-300 p-3 font-mono text-sm outline-none focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100" /></div>}
     </div>}
     <ToolOptions tool={tool} locale={optionLocale} messages={messages} files={files} {...{quality,setQuality,width,setWidth,height,setHeight,keepRatio,setKeepRatio,amount,setAmount,option,setOption,text,setText}} />
