@@ -13,6 +13,11 @@ const { outputText: copyOutput } = ts.transpileModule(copySource, {
   compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
 });
 const { targetCoreMessages } = await import(`data:text/javascript;base64,${Buffer.from(copyOutput).toString("base64")}`);
+const processorCopySource = await readFile(new URL("../src/i18n/target-processor-copy.ts", import.meta.url), "utf8");
+const { outputText: processorCopyOutput } = ts.transpileModule(processorCopySource, {
+  compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
+});
+const processorCopyModule = await import(`data:text/javascript;base64,${Buffer.from(processorCopyOutput).toString("base64")}`);
 const lotterySource = await readFile(new URL("../src/registry/target-lottery-translations.ts", import.meta.url), "utf8");
 const { outputText: lotteryOutput } = ts.transpileModule(lotterySource, {
   compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
@@ -57,6 +62,56 @@ test("each planned locale has the complete translated core UI message set", () =
       assert.ok(value.trim().length > 0, `${locale}.${key} must not be empty`);
     }
   }
+});
+
+test("new eight locales have complete localized processor status and validation copy", () => {
+  const expectedLocales = ["fil", "bn", "cs", "el", "ms", "ro", "sv", "uk"].sort();
+  const expectedKeys = [
+    "invalidRange", "insufficientRange", "team", "repeaterLimit", "fileReady", "regexPattern", "regexTooLong", "regexUnsafe",
+    "regexNoMatches", "regexInvalid", "regexTimeout", "regexFailure", "colorInvalid", "barcodeInvalid", "valid", "invalid",
+    "expectedCheckDigit", "cronHeading", "cronInvalid", "imageGridInvalid", "imageGridCanvas", "imageGridExport", "imageGridLimit", "imageGridResult",
+  ].sort();
+  const englishFallbacks = {
+    invalidRange: "Enter a valid minimum and maximum separated by a comma.",
+    insufficientRange: "The range is too small for that many unique numbers.", team: "Team",
+    repeaterLimit: "The generated text is limited to 1,000,000 characters.", fileReady: "3 characters ready to download.",
+    regexPattern: "Enter a pattern as /pattern/flags in the first line.", regexTooLong: "Pattern or sample is too long.",
+    regexUnsafe: "Nested repetition and backreferences are disabled for safety.", regexNoMatches: "No matches",
+    regexInvalid: "Invalid regular expression.", regexTimeout: "Regular expression exceeded the 250 ms time limit.",
+    regexFailure: "Regular expression could not be processed.", colorInvalid: "Enter HEX, rgb(r, g, b), or hsl(h, s%, l%).",
+    barcodeInvalid: "Enter a 12-digit UPC-A or 13-digit EAN-13 code.", valid: "Valid", invalid: "Invalid",
+    expectedCheckDigit: "Expected check digit", cronHeading: "Upcoming run times",
+    cronInvalid: "Enter a valid five or six field cron expression.", imageGridInvalid: "Choose 3, 6, or 9 tiles.",
+    imageGridCanvas: "Could not start image processing.", imageGridExport: "Could not export a tile.",
+    imageGridLimit: "The generated tiles exceed the 80 MB browser limit.", imageGridResult: "3 square PNG tiles · 128 × 128px",
+  };
+  const validExactMatches = new Set(["ro.valid"]);
+  assert.deepEqual([...processorCopyModule.targetProcessorLocales].sort(), expectedLocales);
+  for (const locale of expectedLocales) {
+    const copy = processorCopyModule.getTargetProcessorCopy(locale);
+    assert.ok(copy, `${locale} processor copy exists`);
+    assert.deepEqual(Object.keys(copy).sort(), expectedKeys, `${locale} processor message keys`);
+    for (const [key, value] of Object.entries(copy)) {
+      const resolved = typeof value === "function" ? value(3, 128) : value;
+      assert.equal(typeof resolved, "string", `${locale}.${key} resolves to text`);
+      assert.ok(resolved.trim(), `${locale}.${key} must not be empty`);
+      if (!validExactMatches.has(`${locale}.${key}`)) assert.notEqual(resolved, englishFallbacks[key], `${locale}.${key} must not use English fallback`);
+    }
+  }
+});
+
+test("text, image, and PDF processors accept all target locales while workspace publication remains gated", async () => {
+  const [textProcessor, imageProcessor, pdfProcessor, workspace] = await Promise.all([
+    readFile(new URL("../src/lib/text/process-text.ts", import.meta.url), "utf8"),
+    readFile(new URL("../src/lib/image/process-image.ts", import.meta.url), "utf8"),
+    readFile(new URL("../src/lib/pdf/process-pdf.ts", import.meta.url), "utf8"),
+    readFile(new URL("../src/components/tool/tool-workspace.tsx", import.meta.url), "utf8"),
+  ]);
+  for (const [name, source] of [["text", textProcessor], ["image", imageProcessor], ["PDF", pdfProcessor]]) {
+    assert.match(source, /\bTargetLocale\b[^;]*from ["']@\/i18n\/routing["']/s, `${name} processor uses the target locale type`);
+    assert.doesNotMatch(source, /PublishedTargetLocale/, `${name} processor must not narrow to published routes`);
+  }
+  assert.match(workspace, /if \(!isPublishedTargetLocale\(phaseLocale\)\) return/, "unverified workspace locales remain blocked from publication");
 });
 
 test("copy toast has authored success and failure messages for every planned locale", async () => {

@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import NextImage from "next/image";
 import type { ToolDefinition } from "@/registry/tools";
 import type { Dictionary } from "@/i18n/messages";
-import { isLocale, isPlannedLocale, isPublishedTargetLocale, type RouteLocale, type TargetLocale } from "@/i18n/routing";
+import { isLocale, isPlannedLocale, isPublishedTargetLocale, isTargetLocale, type RouteLocale, type TargetLocale } from "@/i18n/routing";
 import { targetCoreMessages } from "@/i18n/target-locale-copy";
 import { processImage as processImageFile } from "@/lib/image/process-image";
 import { processPdf as processPdfFile } from "@/lib/pdf/process-pdf";
@@ -49,9 +49,9 @@ function getWorkspaceUnavailableMessage(locale: ToolWorkspaceLocale): string {
   if (!isPlannedLocale(locale)) throw new Error(`Workspace locale ${locale} must be publishable or planned`);
   return targetCoreMessages[locale].workspaceUnavailable;
 }
-function getWorkspaceProcessorLocale(locale: ToolWorkspaceLocale) {
-  if (isPublishedTargetLocale(locale)) return locale;
-  throw new Error(getWorkspaceUnavailableMessage(locale));
+function getWorkspaceProcessorLocale(locale: ToolWorkspaceLocale): TargetLocale {
+  if (isTargetLocale(locale)) return locale;
+  throw new Error(`Unknown workspace locale: ${locale}`);
 }
 const CountryToolsWorkspace = dynamic(() => import("@/components/tool/country-tools-workspace").then((module) => module.CountryToolsWorkspace));
 const selectionLimitMessages: Record<ToolOptionLocale, { files: string; images: string }> = {
