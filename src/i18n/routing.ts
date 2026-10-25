@@ -72,6 +72,10 @@ export function isTargetLocale(value: string): value is TargetLocale {
   return targetLocaleConfig.some((item) => item.routeLocale === value);
 }
 
+export function isPlannedLocale(value: string): value is PlannedLocale {
+  return plannedLocaleConfig.some((item) => item.routeLocale === value);
+}
+
 export function getUiLocale(locale: RouteLocale): UiLocale {
   return locale === "ko" || locale === "en" || locale === "ja" || locale === "zh" ? locale : "en";
 }

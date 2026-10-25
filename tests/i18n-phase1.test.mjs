@@ -10,12 +10,13 @@ async function importTs(path, replacements = []) {
   return import(`data:text/javascript;base64,${Buffer.from(outputText).toString("base64")}`);
 }
 
-const { locales } = await importTs("../src/i18n/routing.ts");
+const { locales, plannedLocaleConfig } = await importTs("../src/i18n/routing.ts");
 globalThis.__targetToolOptionCopy = await importTs("../src/registry/target-tool-option-copy.ts");
 const { renameCopy, selectionCopy } = await importTs("../src/registry/tool-option-copy.ts", [[
   'import { targetRenameCopy, targetSelectionLimitMessages, targetToolOptionLabels, type TargetToolOptionLabels, type ToolOptionLabelKey } from "./target-tool-option-copy";',
   'const { targetRenameCopy, targetSelectionLimitMessages, targetToolOptionLabels } = globalThis.__targetToolOptionCopy;',
 ]]);
+const { targetToolOptionLabels, targetRenameCopy, targetSelectionLimitMessages } = globalThis.__targetToolOptionCopy;
 globalThis.__targetCoreMessages = (await importTs("../src/i18n/target-locale-copy.ts")).targetCoreMessages;
 const { COUNTRY_TOOL_SLUGS } = await importTs("../src/lib/country-tool-slugs.ts");
 globalThis.__countryToolSlugs = COUNTRY_TOOL_SLUGS;
@@ -397,4 +398,24 @@ test("interactive workspace dictionaries cover all locales with complete transla
     }
   }
   assert.deepEqual(omissions, [], `Workspace localization omissions:\n${omissions.join("\n")}`);
+});
+
+test("planned workspace option, rename, and file-limit copy is complete without English fallback", () => {
+  const omissions = [];
+  const optionKeys = ["noRepeat", "repeat", "digits", "latin", "hangul", "special", "custom", "square", "portraitPreset", "story", "youtube", "xpost", "facebook", "grid3", "grid6", "grid9", "collage4", "collage6", "renameRules", "renameHint"];
+  for (const { routeLocale: locale } of plannedLocaleConfig) {
+    const options = targetToolOptionLabels[locale];
+    const rename = targetRenameCopy[locale];
+    const limits = targetSelectionLimitMessages[locale];
+    for (const key of optionKeys) {
+      if (!options?.[key]?.trim()) omissions.push(`${locale}.${key}: missing workspace option`);
+    }
+    for (const key of ["prefix", "suffix", "find", "replace", "start", "padding", "before", "after", "empty"]) {
+      if (!rename?.[key]?.trim()) omissions.push(`${locale}.${key}: missing rename label`);
+    }
+    for (const key of ["files", "images"]) {
+      if (!limits?.[key]?.trim()) omissions.push(`${locale}.${key}: missing selection limit`);
+    }
+  }
+  assert.deepEqual(omissions, []);
 });

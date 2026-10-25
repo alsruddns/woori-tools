@@ -47,7 +47,7 @@ test("each planned locale has the complete translated core UI message set", () =
   const expectedKeys = [
     "language", "tools", "categories", "privacy", "terms", "allTools", "search", "searchPlaceholder",
     "howTo", "introduction", "faq", "relatedTools", "result", "download", "process", "run", "processing",
-    "reset", "copy", "clear", "chooseOrDrop", "selectFile", "filePrivacy", "error",
+    "reset", "copy", "clear", "chooseOrDrop", "selectFile", "filePrivacy", "error", "copySuccess", "copyFailure",
   ].sort();
   assert.deepEqual(Object.keys(targetCoreMessages).sort(), routing.plannedLocaleConfig.map(({ routeLocale }) => routeLocale).sort());
   for (const [locale, messages] of Object.entries(targetCoreMessages)) {
@@ -57,6 +57,22 @@ test("each planned locale has the complete translated core UI message set", () =
       assert.ok(value.trim().length > 0, `${locale}.${key} must not be empty`);
     }
   }
+});
+
+test("copy toast has authored success and failure messages for every planned locale", async () => {
+  const omissions = [];
+  for (const { routeLocale } of routing.plannedLocaleConfig) {
+    const messages = targetCoreMessages[routeLocale];
+    for (const key of ["copySuccess", "copyFailure"]) {
+      if (!messages[key]?.trim()) omissions.push(`${routeLocale}.${key}: missing copy toast message`);
+      if (messages[key] === targetCoreMessages.en?.[key]) omissions.push(`${routeLocale}.${key}: English fallback`);
+    }
+  }
+  const source = await readFile(new URL("../src/components/copy-toast.tsx", import.meta.url), "utf8");
+  assert.match(source, /isPlannedLocale\(locale\)/, "copy toast must resolve planned locales from translated core UI copy");
+  assert.match(source, /targetCoreMessages\[locale\]\.copySuccess/);
+  assert.match(source, /targetCoreMessages\[locale\]\.copyFailure/);
+  assert.deepEqual(omissions, []);
 });
 
 test("the six lottery tools have complete authored copy in every planned locale", () => {
