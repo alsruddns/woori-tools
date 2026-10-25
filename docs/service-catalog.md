@@ -150,47 +150,47 @@ registry와 번역 source를 기준으로 생성한 전체 Tool 목록입니다.
 | 134 | URL 슬러그 생성기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | url-slug-generator |
 | 135 | 유니코드 코드 포인트 확인기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | unicode-code-point-checker |
 | 136 | PDF 페이지 크기 확인기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | pdf-page-size-checker |
-| 137 | 중국·대만 간체·번체 중국어 변환기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | simplified-traditional-chinese-converter |
-| 138 | 중국·대만 중국어 숫자 변환기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | chinese-number-kanji-converter |
-| 139 | 중국·대만 인민폐 대문자 금액 위안화 대문자 변환기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | rmb-uppercase-converter |
-| 140 | 중국·대만 띠 계산기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | chinese-zodiac-calculator |
-| 141 | 중국·대만 천간지지 간지 계산기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | chinese-sexagenary-cycle-calculator |
-| 142 | 중국·대만 전화번호 형식 변환기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | chinese-phone-number-formatter |
-| 143 | 대만 대만 전화번호 전화번호 형식 변환기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | taiwan-phone-number-formatter |
-| 144 | 인도 인도 숫자 자릿수 인도식 숫자 변환기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | indian-number-format-converter |
-| 145 | 인도 라크·크로르 인도식 숫자 변환기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | lakh-crore-converter |
-| 146 | 인도 PAN 형식 검증기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | pan-format-validator |
-| 147 | 인도 GSTIN 형식 검증기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | gstin-format-validator |
-| 148 | 인도 인도 전화번호 전화번호 형식 변환기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | india-phone-number-formatter |
-| 149 | 독일 독일 IBAN 형식 검증기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | germany-iban-validator |
-| 150 | 독일 숫자 형식 변환기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | german-number-format-converter |
-| 151 | 독일 날짜 형식 변환기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | german-date-format-converter |
-| 152 | 스페인 DNI 형식 검증기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | spain-dni-validator |
-| 153 | 스페인 NIE 형식 검증기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | spain-nie-validator |
-| 154 | 스페인 숫자 형식 변환기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | spanish-number-format-converter |
-| 155 | 스페인 스페인 날짜 날짜 형식 변환기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | spanish-date-format-converter |
-| 156 | 프랑스 전화번호 형식 변환기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | france-phone-number-formatter |
-| 157 | 프랑스 숫자 형식 변환기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | french-number-format-converter |
-| 158 | 프랑스 날짜 형식 변환기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | french-date-format-converter |
-| 159 | 브라질 CPF 형식 검증기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | brazil-cpf-validator |
-| 160 | 브라질 CNPJ 형식 검증기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | brazil-cnpj-validator |
-| 161 | 브라질 전화번호 형식 변환기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | brazil-phone-number-formatter |
-| 162 | 브라질 브라질 CEP 우편번호 우편번호 형식 도구 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | brazil-cep-formatter |
-| 163 | 네덜란드 네덜란드 IBAN 형식 검증기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | netherlands-iban-validator |
-| 164 | 네덜란드 숫자 형식 변환기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | dutch-number-format-converter |
-| 165 | 네덜란드 네덜란드 날짜 날짜 형식 변환기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | dutch-date-format-converter |
-| 166 | 베트남 전화번호 형식 변환기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | vietnam-phone-number-formatter |
-| 167 | 베트남 숫자 형식 변환기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | vietnam-number-format-converter |
-| 168 | 이탈리아 Codice Fiscale 형식 검증기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | italy-fiscal-code-format-validator |
-| 169 | 이탈리아 이탈리아 Partita IVA 형식 검증기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | italy-vat-number-validator |
-| 170 | 이탈리아 숫자 형식 변환기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | italy-number-format-converter |
-| 171 | 이탈리아 이탈리아 날짜 날짜 형식 변환기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | italian-date-format-converter |
-| 172 | 미국 미국 전화번호 전화번호 형식 변환기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | us-phone-number-formatter |
-| 173 | 미국 ZIP 코드 우편번호 형식 도구 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | us-zip-code-formatter |
-| 174 | 캐나다 캐나다 우편번호 우편번호 형식 도구 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | canada-postal-code-formatter |
-| 175 | 영국 영국 우편번호 우편번호 형식 도구 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | uk-postcode-formatter |
-| 176 | 호주 호주 우편번호 우편번호 형식 도구 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | australia-postcode-formatter |
-| 177 | 미국·영국 미국·영국 날짜 형식 날짜 형식 변환기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | english-date-format-converter |
+| 137 | 중국·대만 간체·번체 중국어 변환기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | simplified-traditional-chinese-converter |
+| 138 | 중국·대만 중국어 숫자 변환기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | chinese-number-kanji-converter |
+| 139 | 중국·대만 인민폐 대문자 금액 위안화 대문자 변환기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | rmb-uppercase-converter |
+| 140 | 중국·대만 띠 계산기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | chinese-zodiac-calculator |
+| 141 | 중국·대만 천간지지 간지 계산기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | chinese-sexagenary-cycle-calculator |
+| 142 | 중국·대만 전화번호 형식 변환기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | chinese-phone-number-formatter |
+| 143 | 대만 대만 전화번호 전화번호 형식 변환기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | taiwan-phone-number-formatter |
+| 144 | 인도 인도 숫자 자릿수 인도식 숫자 변환기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | indian-number-format-converter |
+| 145 | 인도 라크·크로르 인도식 숫자 변환기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | lakh-crore-converter |
+| 146 | 인도 PAN 형식 검증기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | pan-format-validator |
+| 147 | 인도 GSTIN 형식 검증기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | gstin-format-validator |
+| 148 | 인도 인도 전화번호 전화번호 형식 변환기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | india-phone-number-formatter |
+| 149 | 독일 독일 IBAN 형식 검증기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | germany-iban-validator |
+| 150 | 독일 숫자 형식 변환기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | german-number-format-converter |
+| 151 | 독일 날짜 형식 변환기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | german-date-format-converter |
+| 152 | 스페인 DNI 형식 검증기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | spain-dni-validator |
+| 153 | 스페인 NIE 형식 검증기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | spain-nie-validator |
+| 154 | 스페인 숫자 형식 변환기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | spanish-number-format-converter |
+| 155 | 스페인 스페인 날짜 날짜 형식 변환기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | spanish-date-format-converter |
+| 156 | 프랑스 전화번호 형식 변환기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | france-phone-number-formatter |
+| 157 | 프랑스 숫자 형식 변환기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | french-number-format-converter |
+| 158 | 프랑스 날짜 형식 변환기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | french-date-format-converter |
+| 159 | 브라질 CPF 형식 검증기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | brazil-cpf-validator |
+| 160 | 브라질 CNPJ 형식 검증기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | brazil-cnpj-validator |
+| 161 | 브라질 전화번호 형식 변환기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | brazil-phone-number-formatter |
+| 162 | 브라질 브라질 CEP 우편번호 우편번호 형식 도구 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | brazil-cep-formatter |
+| 163 | 네덜란드 네덜란드 IBAN 형식 검증기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | netherlands-iban-validator |
+| 164 | 네덜란드 숫자 형식 변환기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | dutch-number-format-converter |
+| 165 | 네덜란드 네덜란드 날짜 날짜 형식 변환기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | dutch-date-format-converter |
+| 166 | 베트남 전화번호 형식 변환기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | vietnam-phone-number-formatter |
+| 167 | 베트남 숫자 형식 변환기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | vietnam-number-format-converter |
+| 168 | 이탈리아 Codice Fiscale 형식 검증기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | italy-fiscal-code-format-validator |
+| 169 | 이탈리아 이탈리아 Partita IVA 형식 검증기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | italy-vat-number-validator |
+| 170 | 이탈리아 숫자 형식 변환기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | italy-number-format-converter |
+| 171 | 이탈리아 이탈리아 날짜 날짜 형식 변환기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | italian-date-format-converter |
+| 172 | 미국 미국 전화번호 전화번호 형식 변환기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | us-phone-number-formatter |
+| 173 | 미국 ZIP 코드 우편번호 형식 도구 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | us-zip-code-formatter |
+| 174 | 캐나다 캐나다 우편번호 우편번호 형식 도구 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | canada-postal-code-formatter |
+| 175 | 영국 영국 우편번호 우편번호 형식 도구 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | uk-postcode-formatter |
+| 176 | 호주 호주 우편번호 우편번호 형식 도구 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | australia-postcode-formatter |
+| 177 | 미국·영국 미국·영국 날짜 형식 날짜 형식 변환기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | english-date-format-converter |
 
 ## 중복 후보 검토
 

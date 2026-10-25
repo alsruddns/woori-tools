@@ -12,11 +12,14 @@ async function importTs(path, replacements = []) {
 
 const { locales, plannedLocaleConfig } = await importTs("../src/i18n/routing.ts");
 const { COUNTRY_TOOL_SLUGS } = await importTs("../src/lib/country-tool-slugs.ts");
+globalThis.__catalogCountrySlugs = COUNTRY_TOOL_SLUGS;
 const { targetLocalePublication } = await importTs("../src/registry/target-locale-publication.ts", [[
   'import { targetPolishToolSlugs } from "./target-pl-translations";',
   "const targetPolishToolSlugs = [];",
+], [
+  'import { COUNTRY_TOOL_SLUGS } from "@/lib/country-tool-slugs";',
+  "const COUNTRY_TOOL_SLUGS = globalThis.__catalogCountrySlugs;",
 ]]);
-globalThis.__catalogCountrySlugs = COUNTRY_TOOL_SLUGS;
 globalThis.__catalogPlannedLocales = plannedLocaleConfig;
 globalThis.__catalogTargetPublication = targetLocalePublication;
 const countryTranslations = await importTs("../src/registry/country-tool-translations.ts", [[

@@ -38,6 +38,9 @@ globalThis.__getToolRiskNote = (await importTs("../src/registry/tool-risk-notes.
 const { targetLocalePublication } = await importTs("../src/registry/target-locale-publication.ts", [[
   'import { targetPolishToolSlugs } from "./target-pl-translations";',
   "const targetPolishToolSlugs = [];",
+], [
+  'import { COUNTRY_TOOL_SLUGS } from "@/lib/country-tool-slugs";',
+  "const COUNTRY_TOOL_SLUGS = globalThis.__countryToolSlugs;",
 ]]);
 globalThis.__targetLocalePublication = targetLocalePublication;
 globalThis.__plannedLocaleConfig = plannedLocaleConfig;

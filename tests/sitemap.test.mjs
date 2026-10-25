@@ -226,12 +226,13 @@ const { getTargetSevenWorkflowTranslation } = await importTypeScript("../src/reg
   'import type { SevenTargetLocale, TargetSevenToolTranslation } from "./target-seven-tools-translations";',
   "",
 ]]);
-const { targetLocalePublication } = await importTypeScript("../src/registry/target-locale-publication.ts", [
-  ['import { targetPolishToolSlugs } from "./target-pl-translations";', "const targetPolishToolSlugs = [];"],
-]);
-globalThis.__sitemapTargetPublication = targetLocalePublication;
 const countrySlugSource = await readFile(new URL("../src/lib/country-tool-slugs.ts", import.meta.url), "utf8");
 const countrySlugs = [...countrySlugSource.matchAll(/"([a-z0-9-]+)"/g)].map((match) => match[1]);
+const { targetLocalePublication } = await importTypeScript("../src/registry/target-locale-publication.ts", [
+  ['import { targetPolishToolSlugs } from "./target-pl-translations";', "const targetPolishToolSlugs = [];"],
+  ['import { COUNTRY_TOOL_SLUGS } from "@/lib/country-tool-slugs";', `const COUNTRY_TOOL_SLUGS = ${JSON.stringify(countrySlugs)};`],
+]);
+globalThis.__sitemapTargetPublication = targetLocalePublication;
 const { tools: publicTools, filterPublicTools } = await importTypeScript("../src/registry/tools.ts", [
   ['import { locales, type PublishedTargetLocale } from "../i18n/routing";', `const locales = ${JSON.stringify(locales)};`],
   ['import { COUNTRY_TOOL_SLUGS } from "../lib/country-tool-slugs";', `const COUNTRY_TOOL_SLUGS = ${JSON.stringify(countrySlugs)};`],
@@ -397,11 +398,11 @@ test("private registry tools are excluded from sitemap entries", () => {
 test("new locale detail routes are included only when both workspace and SEO checks pass", () => {
   const expandedLocales = plannedLocaleConfig.slice(3).map(({ routeLocale }) => routeLocale);
   const expectedSlugs = [...targetLocalePublication.fil.publishedToolSlugs].sort();
-  const verifiedWorkspaceSamples = ["markdown-preview", "json-formatter", "text-compare", "jpg-to-png", "pdf-merge", "file-hash", "timestamp-converter", "random-number", "random-name-picker", "draw-lots", "random-team-maker", "dice-roller", "coin-flip", "random-order", "random-seat", "barcode-checker", "instagram-grid-split", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr", "timer", "pomodoro-timer", "world-clock", "stopwatch"];
+  const verifiedWorkspaceSamples = ["markdown-preview", "json-formatter", "text-compare", "jpg-to-png", "pdf-merge", "file-hash", "timestamp-converter", "random-number", "random-name-picker", "draw-lots", "random-team-maker", "dice-roller", "coin-flip", "random-order", "random-seat", "barcode-checker", "instagram-grid-split", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr", "timer", "pomodoro-timer", "world-clock", "stopwatch", "simplified-traditional-chinese-converter", "pan-format-validator", "germany-iban-validator", "italian-date-format-converter"];
   const expandedWorkspaceSamples = ["json-path-tester", "jwt-decoder", "pdf-page-size-checker"];
   const stillGatedSamples = ["random-wheel", "lotto-number-generator", "saju"];
   assert.deepEqual(expandedLocales, ["fil", "bn", "uk", "ms", "sv", "cs", "ro", "el"]);
-  assert.equal(expectedSlugs.length, 113);
+  assert.equal(expectedSlugs.length, 154);
   for (const slug of verifiedWorkspaceSamples) assert.ok(expectedSlugs.includes(slug), `${slug} has a verified workspace`);
   for (const slug of expandedWorkspaceSamples) assert.ok(expectedSlugs.includes(slug), `${slug} uses the translated browser developer workspace`);
   for (const slug of stillGatedSamples) assert.equal(expectedSlugs.includes(slug), false, `${slug} remains outside the verified shared workspace`);
