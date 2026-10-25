@@ -397,11 +397,11 @@ test("private registry tools are excluded from sitemap entries", () => {
 test("new locale detail routes are included only when both workspace and SEO checks pass", () => {
   const expandedLocales = plannedLocaleConfig.slice(3).map(({ routeLocale }) => routeLocale);
   const expectedSlugs = [...targetLocalePublication.fil.publishedToolSlugs].sort();
-  const verifiedWorkspaceSamples = ["markdown-preview", "json-formatter", "text-compare", "jpg-to-png", "pdf-merge", "file-hash", "timestamp-converter", "random-number", "random-name-picker", "draw-lots", "random-team-maker", "dice-roller", "coin-flip", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr"];
+  const verifiedWorkspaceSamples = ["markdown-preview", "json-formatter", "text-compare", "jpg-to-png", "pdf-merge", "file-hash", "timestamp-converter", "random-number", "random-name-picker", "draw-lots", "random-team-maker", "dice-roller", "coin-flip", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr", "timer", "pomodoro-timer", "world-clock", "stopwatch"];
   const expandedWorkspaceSamples = ["json-path-tester", "jwt-decoder", "pdf-page-size-checker"];
   const stillGatedSamples = ["random-wheel", "saju"];
   assert.deepEqual(expandedLocales, ["fil", "bn", "uk", "ms", "sv", "cs", "ro", "el"]);
-  assert.equal(expectedSlugs.length, 105);
+  assert.equal(expectedSlugs.length, 109);
   for (const slug of verifiedWorkspaceSamples) assert.ok(expectedSlugs.includes(slug), `${slug} has a verified workspace`);
   for (const slug of expandedWorkspaceSamples) assert.ok(expectedSlugs.includes(slug), `${slug} uses the translated browser developer workspace`);
   for (const slug of stillGatedSamples) assert.equal(expectedSlugs.includes(slug), false, `${slug} remains outside the verified shared workspace`);
@@ -1145,7 +1145,7 @@ test("Polish coin flip localizes count, sides, results, and range validation", (
 test("Polish stopwatch localizes controls, elapsed-time terms, and date-time routing", () => {
   assert.equal(targetLocalePublication.pl.publishedToolSlugs.includes("stopwatch"), true);
   assert.equal(entries.some(({ url }) => url === "https://www.woori.today/pl/tools/stopwatch"), true);
-  assert.match(toolWorkspaceSource, /tool\.slug === "stopwatch"\) return <DateTimeTool slug=\{tool\.slug\} locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
+  assert.match(toolWorkspaceSource, /tool\.slug === "stopwatch"\) return <DateTimeTool slug=\{tool\.slug\} locale=\{phaseLocale === "pl" \|\| isPlannedLocale\(phaseLocale\) \? phaseLocale : specializedLocale\}/);
   assert.match(toolWorkspaceSource, /pl:\{start:"Start",pause:"Wstrzymaj",resume:"Wzn\\u00F3w",reset:"Resetuj",lap:"Okr\\u0105\\u017Cenie"/);
 });
 
@@ -1157,7 +1157,18 @@ test("Polish timer and Pomodoro localize controls, phases, presets, and locale d
   assert.match(countdownWorkspaceSource, /pl:\{hours:"Godziny",minutes:"Minuty",seconds:"Sekundy",start:"Start",pause:"Wstrzymaj",resume:"Wzn\\u00F3w"/);
   assert.match(countdownWorkspaceSource, /phaseFocus:"Czas skupienia",phaseShort:"Kr\\u00F3tka przerwa",phaseLong:"D\\u0142uga przerwa"/);
   assert.match(countdownWorkspaceSource, /Object\.assign\(presetLabels,\{pl:\["1 min","3 min","5 min","10 min","30 min","1 godz\."\]\}\)/);
-  assert.match(toolWorkspaceSource, /CountdownWorkspace slug=\{tool\.slug\} locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
+  assert.match(toolWorkspaceSource, /CountdownWorkspace slug=\{tool\.slug\} locale=\{phaseLocale === "pl" \|\| isPlannedLocale\(phaseLocale\) \? phaseLocale : specializedLocale\}/);
+});
+
+test("expanded locales reach translated countdown, world clock, and stopwatch workspaces", () => {
+  assert.match(toolWorkspaceSource, /CountdownWorkspace slug=\{tool\.slug\} locale=\{phaseLocale === "pl" \|\| isPlannedLocale\(phaseLocale\) \? phaseLocale : specializedLocale\}/);
+  assert.match(toolWorkspaceSource, /WorldClockWorkspace locale=\{phaseLocale === "pl" \|\| isPlannedLocale\(phaseLocale\) \? phaseLocale : specializedLocale\}/);
+  assert.match(toolWorkspaceSource, /tool\.slug === "stopwatch"\) return <DateTimeTool slug=\{tool\.slug\} locale=\{phaseLocale === "pl" \|\| isPlannedLocale\(phaseLocale\) \? phaseLocale : specializedLocale\}/);
+  for (const locale of ["fil", "bn", "uk", "ms", "sv", "cs", "ro", "el"]) {
+    assert.match(countdownWorkspaceSource, new RegExp(`${locale}: \\{ hours:`));
+    assert.match(worldClockWorkspaceSource, new RegExp(`${locale}: \\{ title:`));
+    assert.match(toolWorkspaceSource, new RegExp(`${locale}: \\[`));
+  }
 });
 
 test("Polish world clock localizes city controls, zone names, and locale formatting", () => {
@@ -1165,7 +1176,7 @@ test("Polish world clock localizes city controls, zone names, and locale formatt
   assert.equal(entries.some(({ url }) => url === "https://www.woori.today/pl/tools/world-clock"), true);
   assert.match(worldClockWorkspaceSource, /pl: \{ title: "Zegar .wiatowy", add: "Dodaj miasto", remove: "Usu."/);
   assert.match(worldClockWorkspaceSource, /"Europe\/Paris": "Pary."/);
-  assert.match(toolWorkspaceSource, /tool\.slug === "world-clock"\) return <WorldClockWorkspace locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
+  assert.match(toolWorkspaceSource, /tool\.slug === "world-clock"\) return <WorldClockWorkspace locale=\{phaseLocale === "pl" \|\| isPlannedLocale\(phaseLocale\) \? phaseLocale : specializedLocale\}/);
 });
 
 test("Polish password and random string tools localize character settings and validation", () => {
