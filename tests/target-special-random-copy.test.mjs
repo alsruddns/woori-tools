@@ -26,6 +26,8 @@ test("random wheel and duty picker copy is complete in all expansion locales", (
 test("wheel and duty controls receive the page locale and enter the publication allowlist", () => {
   assert.match(workspaceSource, /getTargetWheelCopy\(locale\)/);
   assert.match(workspaceSource, /getTargetDutyPickerCopy\(locale\)/);
+  assert.match(workspaceSource, /targetCopy\?\.newEntry/);
+  assert.match(workspaceSource, /targetCopy\?\.countUnit/);
   assert.match(dispatcherSource, /tool\.slug === "random-wheel"\) return <RandomWheelWorkspace locale=\{phaseLocale\}/);
   assert.match(dispatcherSource, /tool\.slug === "duty-picker" && isPlannedLocale\(phaseLocale\).*RussianDutyPickerWorkspace locale=\{phaseLocale\}/);
   assert.ok(publicationSource.includes('expandedWheelDutyWorkspaceVerifiedSlugs = ["random-wheel", "duty-picker"]'));

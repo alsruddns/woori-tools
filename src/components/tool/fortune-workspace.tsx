@@ -5,7 +5,8 @@ import { fortuneIndices } from "@/lib/fortune/daily-fortune.mjs";
 import { pickUnique, randomInt } from "@/lib/random";
 import { tarotDeck, type TarotCard } from "@/lib/fortune/tarot-deck";
 import { getTarotInterpretation } from "@/lib/fortune/tarot-localization";
-import type { RouteLocale } from "@/i18n/routing";
+import { isPlannedLocale, type PlannedLocale, type RouteLocale } from "@/i18n/routing";
+import { getTargetDailyFortuneCopy, getTargetTarotCopy } from "@/i18n/target-fortune-copy";
 
 const tarotText: Record<string, {question:string;questionHint:string;yourQuestion:string;spread:string;one:string;three:string;topic:string;general:string;love:string;money:string;work:string;draw:string;again:string;upright:string;reversed:string;positions:string[];privacy:string;note:string}> = {
   ko:{question:"질문 (선택)",questionHint:"질문은 이 기기에서만 사용되며 저장되거나 전송되지 않습니다.",yourQuestion:"입력한 질문",spread:"카드 배열",one:"오늘의 카드 1장",three:"과거 · 현재 · 미래 3장",topic:"관심 주제",general:"종합",love:"연애",money:"금전",work:"직장 · 학업",draw:"카드 뽑기",again:"다시 뽑기",upright:"정방향",reversed:"역방향",positions:["과거","현재","미래"],privacy:"질문과 결과는 서버로 보내지 않으며 이 페이지를 벗어나면 입력 내용은 보관되지 않습니다.",note:"타로 해석은 오락과 자기성찰을 위한 참고용입니다. 미래를 확정하거나 중요한 재정·건강·법률 결정을 대신하지 않습니다."},
@@ -107,8 +108,9 @@ Object.assign(dailyPools, { tr: {
   colors:["Lacivert","Turkuaz","Yeşil","Mercan","Menekşe","Gümüş"],
 } });
 
-export function TarotWorkspace({ locale }: { locale:RouteLocale | "ru" | "tr" | "pl" }) {
-  const t = tarotText[locale];
+export function TarotWorkspace({ locale }: { locale:RouteLocale | PlannedLocale | "ru" | "tr" | "pl" }) {
+  const targetCopy = isPlannedLocale(locale) ? getTargetTarotCopy(locale) : undefined;
+  const t = targetCopy ?? tarotText[locale];
   const [question, setQuestion] = useState("");
   const [spread, setSpread] = useState<"one"|"three">("one");
   const [topic, setTopic] = useState<"general"|"love"|"money"|"work">("general");
@@ -120,7 +122,7 @@ export function TarotWorkspace({ locale }: { locale:RouteLocale | "ru" | "tr" | 
     <label htmlFor="tarot-question" className="block text-sm font-semibold">{t.question}</label><input id="tarot-question" value={question} onChange={(e)=>setQuestion(e.target.value)} maxLength={240} className="mt-2 w-full rounded-xl border border-slate-300 p-3" aria-describedby="tarot-question-hint"/><p id="tarot-question-hint" className="mt-1 text-xs text-slate-500">{t.questionHint}</p>
     <div className="mt-5 grid gap-4 sm:grid-cols-2"><label className="text-sm">{t.spread}<select value={spread} onChange={(e)=>setSpread(e.target.value as "one"|"three")} className="mt-1 block min-h-11 w-full rounded-lg border p-2"><option value="one">{t.one}</option><option value="three">{t.three}</option></select></label><label className="text-sm">{t.topic}<select value={topic} onChange={(e)=>setTopic(e.target.value as typeof topic)} className="mt-1 block min-h-11 w-full rounded-lg border p-2">{topicKeys.map((key,i)=><option key={key} value={key}>{labels[i]}</option>)}</select></label></div>
     <button type="button" onClick={deal} className="mt-5 min-h-12 rounded-xl bg-violet-700 px-6 py-3 font-semibold text-white hover:bg-violet-800">{draw.length?t.again:t.draw}</button>
-    {draw.length>0&&<div aria-live="polite" className="mt-6">{question.trim()&&<p className="mb-3 rounded-xl bg-violet-50 p-3 text-sm"><span className="font-semibold">{t.yourQuestion}: </span>{question.trim()}</p>}{spread==="three"&&<p className="mb-3 text-sm text-slate-600">{t.topic}: {t[topic]}</p>}<div className="grid gap-4 sm:grid-cols-3">{draw.map(({card,reversed},i)=>{const translated=locale in tarotNames;const cardName=translated?tarotNames[locale][tarotIds.indexOf(card.id)]:card.name[locale];return <article key={card.id} className="rounded-2xl border border-violet-200 bg-gradient-to-b from-violet-50 to-white p-5"><p className="text-xs font-semibold uppercase tracking-wide text-violet-700">{spread==="one"?t[topic]:t.positions[i]}</p><h2 className="mt-3 text-xl font-bold">{cardName}</h2><p className="mt-1 text-xs font-semibold text-slate-500">{reversed?t.reversed:t.upright}</p><p className="mt-4 leading-7 text-slate-700">{getTarotInterpretation(locale,card.id,reversed)??card[reversed?"reversed":"upright"][locale]}</p>{!translated&&<p className="mt-3 text-sm text-violet-800">{card.keywords[locale].join(" · ")}</p>}</article>})}</div></div>}
+    {draw.length>0&&<div aria-live="polite" className="mt-6">{question.trim()&&<p className="mb-3 rounded-xl bg-violet-50 p-3 text-sm"><span className="font-semibold">{t.yourQuestion}: </span>{question.trim()}</p>}{spread==="three"&&<p className="mb-3 text-sm text-slate-600">{t.topic}: {t[topic]}</p>}<div className="grid gap-4 sm:grid-cols-3">{draw.map(({card,reversed},i)=>{const translated=Boolean(targetCopy)||locale in tarotNames;const cardIndex=tarotIds.indexOf(card.id);const cardName=targetCopy?targetCopy.cardNames[cardIndex]:translated?tarotNames[locale][cardIndex]:card.name[locale];const meaning=targetCopy?`${reversed?targetCopy.reversedLead:targetCopy.uprightLead}${(reversed?targetCopy.reversedThemes:targetCopy.uprightThemes)[cardIndex]}${targetCopy.themeTail}`:getTarotInterpretation(locale,card.id,reversed)??card[reversed?"reversed":"upright"][locale];return <article key={card.id} className="rounded-2xl border border-violet-200 bg-gradient-to-b from-violet-50 to-white p-5"><p className="text-xs font-semibold uppercase tracking-wide text-violet-700">{spread==="one"?t[topic]:t.positions[i]}</p><h2 className="mt-3 text-xl font-bold">{cardName}</h2><p className="mt-1 text-xs font-semibold text-slate-500">{reversed?t.reversed:t.upright}</p><p className="mt-4 leading-7 text-slate-700">{meaning}</p>{!translated&&<p className="mt-3 text-sm text-violet-800">{card.keywords[locale].join(" · ")}</p>}</article>})}</div></div>}
     <p className="mt-5 rounded-xl bg-emerald-50 p-4 text-sm leading-6 text-emerald-900">{t.privacy}</p><p className="mt-3 text-sm leading-6 text-slate-600">{t.note}</p>
   </section>;
 }
@@ -139,8 +141,10 @@ Object.assign(dailyPools, { pl: {
   colors:["Granatowy","Turkusowy","Zielony","Koralowy","Fioletowy","Srebrny"],
 } });
 
-export function DailyFortuneWorkspace({ locale }: { locale:RouteLocale | "ru" | "tr" | "pl" }) {
-  const t = dailyText[locale]; const p = dailyPools[locale];
+export function DailyFortuneWorkspace({ locale }: { locale:RouteLocale | PlannedLocale | "ru" | "tr" | "pl" }) {
+  const targetCopy = isPlannedLocale(locale) ? getTargetDailyFortuneCopy(locale) : undefined;
+  const t = targetCopy ?? dailyText[locale];
+  const p = targetCopy ? { total:targetCopy.totalPool,money:targetCopy.moneyPool,love:targetCopy.lovePool,work:targetCopy.workPool,condition:targetCopy.conditionPool,line:targetCopy.linePool,colors:targetCopy.colors } : dailyPools[locale];
   const [today,setToday]=useState("");
   useEffect(()=>{const d=new Date();const value=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;const id=window.setTimeout(()=>setToday(value),0);return()=>window.clearTimeout(id);},[]);
   const [birth,setBirth]=useState(""); const [result,setResult]=useState<number[]|null>(null); const [error,setError]=useState("");

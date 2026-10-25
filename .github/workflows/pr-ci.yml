@@ -13,6 +13,41 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  production-compose-preflight:
+    if: github.event.pull_request.base.ref == 'main' && github.event.pull_request.head.ref == 'develop' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - name: Check remote Tools Compose configuration without changing services
+        env:
+          SERVER_HOST: ${{ secrets.SERVER_HOST }}
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+          SERVER_SSH_KEY: ${{ secrets.SERVER_SSH_KEY }}
+        run: |
+          set -euo pipefail
+          test -n "$SERVER_HOST"
+          test -n "$SERVER_USER"
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SERVER_SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H "$SERVER_HOST" >> ~/.ssh/known_hosts
+          ssh -o BatchMode=yes "$SERVER_USER@$SERVER_HOST" 'bash -s' <<'REMOTE'
+          set -euo pipefail
+          cd /opt/services/compose
+          config_output="$(docker compose --env-file .env.moneybook config --services 2>&1)"
+          printf '%s\n' "$config_output"
+          if printf '%s\n' "$config_output" | grep -Eiq 'defaulting to a blank string|variable .* is not set'; then
+            echo "Compose has unresolved environment variables; refusing the release preflight." >&2
+            exit 1
+          fi
+          printf '%s\n' "$config_output" | grep -qx tools
+          container_id="$(docker compose --env-file .env.moneybook ps -q tools)"
+          test -n "$container_id"
+          docker inspect --format 'Tools image={{.Config.Image}} id={{.Image}}' "$container_id"
+          REMOTE
+
   validate:
     runs-on: ubuntu-latest
     timeout-minutes: 25

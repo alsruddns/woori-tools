@@ -398,11 +398,11 @@ test("private registry tools are excluded from sitemap entries", () => {
 test("new locale detail routes are included only when both workspace and SEO checks pass", () => {
   const expandedLocales = plannedLocaleConfig.slice(3).map(({ routeLocale }) => routeLocale);
   const expectedSlugs = [...targetLocalePublication.fil.publishedToolSlugs].sort();
-  const verifiedWorkspaceSamples = ["markdown-preview", "json-formatter", "text-compare", "jpg-to-png", "pdf-merge", "file-hash", "timestamp-converter", "random-number", "random-name-picker", "draw-lots", "random-team-maker", "dice-roller", "coin-flip", "random-order", "random-seat", "random-wheel", "duty-picker", "image-collage", "barcode-checker", "instagram-grid-split", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr", "timer", "pomodoro-timer", "world-clock", "stopwatch", "simplified-traditional-chinese-converter", "pan-format-validator", "germany-iban-validator", "italian-date-format-converter", "wareki-converter", "numbers3-number-generator", "yakudoshi-calculator", "saju"];
+  const verifiedWorkspaceSamples = ["markdown-preview", "json-formatter", "text-compare", "jpg-to-png", "pdf-merge", "file-hash", "timestamp-converter", "random-number", "random-name-picker", "draw-lots", "random-team-maker", "dice-roller", "coin-flip", "random-order", "random-seat", "random-wheel", "duty-picker", "image-collage", "barcode-checker", "instagram-grid-split", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr", "timer", "pomodoro-timer", "world-clock", "stopwatch", "simplified-traditional-chinese-converter", "pan-format-validator", "germany-iban-validator", "italian-date-format-converter", "wareki-converter", "numbers3-number-generator", "yakudoshi-calculator", "saju", "tarot-card", "daily-fortune"];
   const expandedWorkspaceSamples = ["json-path-tester", "jwt-decoder", "pdf-page-size-checker"];
-  const stillGatedSamples = ["tarot-card", "daily-fortune"];
+  const stillGatedSamples = [];
   assert.deepEqual(expandedLocales, ["fil", "bn", "uk", "ms", "sv", "cs", "ro", "el"]);
-  assert.equal(expectedSlugs.length, 174);
+  assert.equal(expectedSlugs.length, 176);
   for (const slug of verifiedWorkspaceSamples) assert.ok(expectedSlugs.includes(slug), `${slug} has a verified workspace`);
   for (const slug of expandedWorkspaceSamples) assert.ok(expectedSlugs.includes(slug), `${slug} uses the translated browser developer workspace`);
   for (const slug of stillGatedSamples) assert.equal(expectedSlugs.includes(slug), false, `${slug} remains outside the verified shared workspace`);
@@ -1041,10 +1041,10 @@ test("Polish tarot workspace translates controls, all cards, and interpretations
   assert.equal(entries.some(({ url }) => url === "https://www.woori.today/pl/tools/tarot-card"), true);
   assert.match(fortuneWorkspaceSource, /Object\.assign\(tarotText, \{ pl:/);
   assert.match(fortuneWorkspaceSource, /tarotNames\.pl = \["G\\u0142upiec","Mag"[\s\S]*?"\\u015Awiat"\]/);
-  assert.match(fortuneWorkspaceSource, /locale:RouteLocale \| "ru" \| "tr" \| "pl"/);
+  assert.match(fortuneWorkspaceSource, /locale:RouteLocale \| PlannedLocale \| "ru" \| "tr" \| "pl"/);
   assert.match(tarotLocalizationSource, /const polishThemes: readonly Theme\[\] = \[[\s\S]*?const polishSentence/);
   assert.match(tarotLocalizationSource, /locale === "pl"\) return polishSentence/);
-  assert.match(toolWorkspaceSource, /tool\.slug === "tarot-card"\) return <TarotWorkspace locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
+  assert.match(toolWorkspaceSource, /tool\.slug === "tarot-card"\) return <TarotWorkspace locale=\{phaseLocale === "pl" \|\| isPlannedLocale\(phaseLocale\) \? phaseLocale : specializedLocale\}/);
 });
 
 test("Polish daily fortune localizes date validation, result groups, and privacy copy before publication", () => {
@@ -1052,8 +1052,8 @@ test("Polish daily fortune localizes date validation, result groups, and privacy
   assert.equal(entries.some(({ url }) => url === "https://www.woori.today/pl/tools/daily-fortune"), true);
   assert.match(fortuneWorkspaceSource, /Object\.assign\(dailyText, \{ pl:/);
   assert.match(fortuneWorkspaceSource, /Object\.assign\(dailyPools, \{ pl:/);
-  assert.match(fortuneWorkspaceSource, /locale:RouteLocale \| "ru" \| "tr" \| "pl"/);
-  assert.match(toolWorkspaceSource, /tool\.slug === "daily-fortune"\) return <DailyFortuneWorkspace locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
+  assert.match(fortuneWorkspaceSource, /locale:RouteLocale \| PlannedLocale \| "ru" \| "tr" \| "pl"/);
+  assert.match(toolWorkspaceSource, /tool\.slug === "daily-fortune"\) return <DailyFortuneWorkspace locale=\{phaseLocale === "pl" \|\| isPlannedLocale\(phaseLocale\) \? phaseLocale : specializedLocale\}/);
 });
 
 test("Polish saju localizes calendar inputs, five elements, methodology, and privacy before publication", () => {

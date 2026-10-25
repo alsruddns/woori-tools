@@ -20,8 +20,8 @@ registry와 번역 source를 기준으로 생성한 전체 Tool 목록입니다.
 | 4 | 일본 로또6 번호 추첨기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | japan-loto6-number-generator |
 | 5 | 일본 로또7 번호 추첨기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | japan-loto7-number-generator |
 | 6 | 일본 미니로또 번호 추첨기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | japan-mini-loto-number-generator |
-| 7 | 타로카드 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | tarot-card |
-| 8 | 오늘의 운세 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | daily-fortune |
+| 7 | 타로카드 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | tarot-card |
+| 8 | 오늘의 운세 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | daily-fortune |
 | 9 | 사주팔자 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | saju |
 | 10 | 랜덤 숫자 뽑기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | random-number |
 | 11 | 랜덤 이름 뽑기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | random-name-picker |

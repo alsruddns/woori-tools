@@ -18,12 +18,14 @@ test("image collage validation and dimensions are localized in every expansion l
     assert.match(copy.result(4, 984, 984), /4/);
     assert.notEqual(copy.countError(4), "Select 2–4 images for this layout.");
     assert.ok(copy.result(4, 984, 984).includes("984 × 984px"));
+    assert.ok(copy.invalidImage.trim(), `${locale}.invalidImage`);
   }
 });
 
 test("collage workspace uses localized expanded-locale validation and result copy before publication", () => {
   assert.match(workspaceSource, /getTargetImageCollageCopy\(phaseLocale\)/);
   assert.match(workspaceSource, /targetCollageCopy\?\.countError\(maximum\)/);
+  assert.match(workspaceSource, /targetCollageCopy\?\.invalidImage/);
   assert.match(workspaceSource, /targetCollageCopy\.result\(files\.length,canvas\.width,canvas\.height\)/);
   assert.ok(publicationSource.includes('"image-collage"'));
 });
