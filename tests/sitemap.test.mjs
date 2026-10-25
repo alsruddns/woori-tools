@@ -398,11 +398,11 @@ test("private registry tools are excluded from sitemap entries", () => {
 test("new locale detail routes are included only when both workspace and SEO checks pass", () => {
   const expandedLocales = plannedLocaleConfig.slice(3).map(({ routeLocale }) => routeLocale);
   const expectedSlugs = [...targetLocalePublication.fil.publishedToolSlugs].sort();
-  const verifiedWorkspaceSamples = ["markdown-preview", "json-formatter", "text-compare", "jpg-to-png", "pdf-merge", "file-hash", "timestamp-converter", "random-number", "random-name-picker", "draw-lots", "random-team-maker", "dice-roller", "coin-flip", "random-order", "random-seat", "barcode-checker", "instagram-grid-split", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr", "timer", "pomodoro-timer", "world-clock", "stopwatch", "simplified-traditional-chinese-converter", "pan-format-validator", "germany-iban-validator", "italian-date-format-converter"];
+  const verifiedWorkspaceSamples = ["markdown-preview", "json-formatter", "text-compare", "jpg-to-png", "pdf-merge", "file-hash", "timestamp-converter", "random-number", "random-name-picker", "draw-lots", "random-team-maker", "dice-roller", "coin-flip", "random-order", "random-seat", "barcode-checker", "instagram-grid-split", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr", "timer", "pomodoro-timer", "world-clock", "stopwatch", "simplified-traditional-chinese-converter", "pan-format-validator", "germany-iban-validator", "italian-date-format-converter", "wareki-converter", "numbers3-number-generator", "yakudoshi-calculator"];
   const expandedWorkspaceSamples = ["json-path-tester", "jwt-decoder", "pdf-page-size-checker"];
   const stillGatedSamples = ["random-wheel", "lotto-number-generator", "saju"];
   assert.deepEqual(expandedLocales, ["fil", "bn", "uk", "ms", "sv", "cs", "ro", "el"]);
-  assert.equal(expectedSlugs.length, 154);
+  assert.equal(expectedSlugs.length, 164);
   for (const slug of verifiedWorkspaceSamples) assert.ok(expectedSlugs.includes(slug), `${slug} has a verified workspace`);
   for (const slug of expandedWorkspaceSamples) assert.ok(expectedSlugs.includes(slug), `${slug} uses the translated browser developer workspace`);
   for (const slug of stillGatedSamples) assert.equal(expectedSlugs.includes(slug), false, `${slug} remains outside the verified shared workspace`);
@@ -1303,12 +1303,12 @@ test("Polish Japanese tool workspaces translate conversions, date inputs, and lo
     assert.equal(targetLocalePublication.pl.publishedToolSlugs.includes(slug), true);
     assert.equal(entries.some(({ url }) => url === `https://www.woori.today/pl/tools/${slug}`), true);
   }
-  assert.match(toolWorkspaceSource, /JapanToolsWorkspace slug=\{tool\.slug\} locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
+  assert.match(toolWorkspaceSource, /JapanToolsWorkspace slug=\{tool\.slug\} locale=\{isTargetPageMessageLocale\(phaseLocale\) \? phaseLocale : phaseLocale === "pl" \? "pl" : specializedLocale\}/);
   assert.match(japanToolsWorkspaceSource, /const polishCopy: Copy/);
   assert.match(japanToolsWorkspaceSource, /warekiForward:"Data gregoriańska/);
   assert.match(japanToolsWorkspaceSource, /yakudoshiWarning:"Tradycje yakudoshi różnią się/);
   assert.match(japanToolsWorkspaceSource, /numbers3Rules:"Wybierz 3 cyfry/);
-  assert.match(japanToolsWorkspaceSource, /locale === "pl" \? polishCopy : copy\[locale\]/);
+  assert.match(japanToolsWorkspaceSource, /targetCopy\?\.labels \?\? \(locale === "pl" \? polishCopy : copy\[locale as RouteLocale\]\)/);
 });
 
 test("Polish browser developer tools localize inputs, privacy, JWT status, and errors", () => {

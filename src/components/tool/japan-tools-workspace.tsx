@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import type { RouteLocale } from "@/i18n/routing";
+import type { RouteLocale, TargetLocale } from "@/i18n/routing";
 import { getMessages } from "@/i18n/messages";
+import { isTargetPageMessageLocale } from "@/i18n/target-page-messages";
+import { targetJapanWorkspaceCopy } from "@/i18n/target-japan-workspace-copy";
 import { copyText } from "@/lib/copy-to-clipboard";
 import { BINGO5_RANGES, convertKana, convertWidth, generateBingo5, generateNumbersGame, gregorianToWareki, japaneseZodiac, kanaToRomaji, kanjiToNumber, numberToKanji, warekiToGregorian, yakudoshi } from "@/lib/japanese-tools";
 
@@ -77,8 +79,10 @@ const generatorButtonLabels: Record<RouteLocale, Record<"numbers3-number-generat
 
 const ERAS = ["明治", "大正", "昭和", "平成", "令和"];
 
-export function JapanToolsWorkspace({ slug, locale }: { slug: string; locale: RouteLocale | "pl" }) {
-  const t = locale === "pl" ? polishCopy : copy[locale], m = getMessages(locale);
+export function JapanToolsWorkspace({ slug, locale }: { slug: string; locale: TargetLocale }) {
+  const targetCopy = isTargetPageMessageLocale(locale) ? targetJapanWorkspaceCopy[locale] : undefined;
+  const t: Copy = targetCopy?.labels ?? (locale === "pl" ? polishCopy : copy[locale as RouteLocale]);
+  const m = getMessages(locale);
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
   const [error, setError] = useState("");
@@ -147,8 +151,8 @@ export function JapanToolsWorkspace({ slug, locale }: { slug: string; locale: Ro
       {slug === "yakudoshi-calculator" || slug === "japanese-zodiac-calculator" ? <input type="number" min="1" max="9999" value={birthYear} onChange={(e) => setBirthYear(e.target.value)} className={field}/> : slug === "wareki-converter" ? <input type="date" value={input} onChange={(e) => setInput(e.target.value)} className={field}/> : slug === "japanese-number-kanji-converter" ? <input value={input} onChange={(e) => setInput(e.target.value)} placeholder={mode === "forward" ? "12345" : "一万二千三百四十五"} className={field}/> : slug.endsWith("number-generator") && !slug.includes("bingo5") ? <div className="mt-1 flex items-center gap-2"><span>{t.count}</span><input type="number" min="1" max="10" value={count} onChange={(e) => setCount(e.target.value)} className={field}/></div> : <textarea rows={6} value={input} onChange={(e) => setInput(e.target.value)} placeholder={t.placeholder} className={`${field} font-mono`}/>}</label>}
     {(slug === "yakudoshi-calculator") && <div className="mt-4 grid gap-3 sm:grid-cols-2"><label className="text-sm">{t.gender}<select value={gender} onChange={(e) => setGender(e.target.value as "male" | "female")} className={field}><option value="male">{t.male}</option><option value="female">{t.female}</option></select></label><label className="text-sm">{t.currentYear}<input type="number" min="1" max="9999" value={currentYear} onChange={(e) => setCurrentYear(e.target.value)} className={field}/></label></div>}
     {slug === "japanese-zodiac-calculator" && <p className="mt-2 text-sm text-slate-600">{t.branch} · {t.eto}</p>}
-    {slug === "japanese-number-kanji-converter" && <p className="mt-2 text-sm text-slate-600">{locale === "pl" ? t.integerNote : integerNote[locale]}</p>}
-    <div className="mt-4 flex flex-wrap gap-3"><button type="button" onClick={run} className="min-h-11 rounded-xl bg-indigo-600 px-5 font-semibold text-white">{lottery ? (output ? t.again : locale === "pl" ? t.generate : generatorButtonLabels[locale][slug as keyof typeof generatorButtonLabels[typeof locale]]) : t.convert}</button><button type="button" onClick={reset} className="min-h-11 rounded-xl border px-5">{m.reset}</button></div>
+    {slug === "japanese-number-kanji-converter" && <p className="mt-2 text-sm text-slate-600">{targetCopy?.labels.integerNote ?? (locale === "pl" ? t.integerNote : integerNote[locale as RouteLocale])}</p>}
+    <div className="mt-4 flex flex-wrap gap-3"><button type="button" onClick={run} className="min-h-11 rounded-xl bg-indigo-600 px-5 font-semibold text-white">{lottery ? (output ? t.again : targetCopy?.generatorButtons[slug as keyof typeof targetCopy.generatorButtons] ?? (locale === "pl" ? t.generate : generatorButtonLabels[locale as RouteLocale][slug as keyof typeof generatorButtonLabels[RouteLocale]])) : t.convert}</button><button type="button" onClick={reset} className="min-h-11 rounded-xl border px-5">{m.reset}</button></div>
     {error && <p role="alert" className="mt-3 text-sm text-rose-700">{error}</p>}
     {output && <section aria-live="polite" className="mt-5 rounded-2xl bg-slate-50 p-4"><h3 className="font-semibold">{t.result}</h3>{slug === "bingo5-number-generator" ? <div className="mt-3 grid max-w-sm grid-cols-3 gap-2">{BINGO5_RANGES.map((range, index) => <div key={index} aria-label={range ? `${t.result} ${index + 1}: ${range[0]}–${range[1]}, ${output.split(" · ")[index]}` : t.free} className={`grid aspect-square place-items-center rounded-xl border text-lg font-bold ${range ? "bg-white" : "bg-indigo-100"}`}>{range ? output.split(" · ")[index] : t.free}</div>)}</div> : <pre className="mt-2 whitespace-pre-wrap break-all font-mono text-lg">{output}</pre>}<button type="button" onClick={copyResult} className="mt-3 min-h-10 rounded-lg border px-4">{t.copy}</button></section>}
     {slug === "yakudoshi-calculator" && <p className="mt-4 text-sm text-amber-800">{t.yakudoshiWarning}</p>}

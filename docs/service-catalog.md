@@ -124,16 +124,16 @@ registry와 번역 source를 기준으로 생성한 전체 Tool 목록입니다.
 | 108 | URL 인코더·디코더 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | url-encode-decode |
 | 109 | UUID 생성기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | uuid-generator |
 | 110 | Timestamp 변환기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | timestamp-converter |
-| 111 | 일본 연호·서기 변환기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | wareki-converter |
-| 112 | 히라가나·가타카나 변환기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | hiragana-katakana-converter |
-| 113 | 전각·반각 변환기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | fullwidth-halfwidth-converter |
-| 114 | 일본어 로마자 변환기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | japanese-romaji-converter |
-| 115 | 일본 숫자·한자 숫자 변환기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | japanese-number-kanji-converter |
-| 116 | 일본 액년 계산기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | yakudoshi-calculator |
-| 117 | 일본 간지 계산기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | japanese-zodiac-calculator |
-| 118 | 일본 넘버즈3 번호 생성기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | numbers3-number-generator |
-| 119 | 일본 넘버즈4 번호 생성기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | numbers4-number-generator |
-| 120 | 일본 빙고5 번호 생성기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | bingo5-number-generator |
+| 111 | 일본 연호·서기 변환기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | wareki-converter |
+| 112 | 히라가나·가타카나 변환기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | hiragana-katakana-converter |
+| 113 | 전각·반각 변환기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | fullwidth-halfwidth-converter |
+| 114 | 일본어 로마자 변환기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | japanese-romaji-converter |
+| 115 | 일본 숫자·한자 숫자 변환기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | japanese-number-kanji-converter |
+| 116 | 일본 액년 계산기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | yakudoshi-calculator |
+| 117 | 일본 간지 계산기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | japanese-zodiac-calculator |
+| 118 | 일본 넘버즈3 번호 생성기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | numbers3-number-generator |
+| 119 | 일본 넘버즈4 번호 생성기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | numbers4-number-generator |
+| 120 | 일본 빙고5 번호 생성기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | bingo5-number-generator |
 | 121 | JWT 디코더 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | jwt-decoder |
 | 122 | URL 쿼리 파라미터 분석기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | url-query-parameter-parser |
 | 123 | User-Agent 분석기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | user-agent-parser |
