@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getLocaleConfig, hreflangs, locales, type Locale } from "@/i18n/routing";
+import { getPublishedTargetLocaleConfig, publishedTargetHreflangs, locales, type PublishedTargetLocale } from "@/i18n/routing";
 
 const siteOrigin = "https://www.woori.today";
 export const SITE_ORIGIN = siteOrigin;
@@ -10,14 +10,14 @@ export function absoluteUrl(path: string): string {
   return `${SITE_ORIGIN}${normalizedPath}`;
 }
 
-export function localizedUrl(locale: Locale, path: string): string {
+export function localizedUrl(locale: PublishedTargetLocale, path: string): string {
   const normalizedPath = path.startsWith("/") ? path : `/${path}`;
   return absoluteUrl(`/${locale}${normalizedPath}`);
 }
 
-export function languageAlternates(path: string, supportedLocales: readonly Locale[] = locales): Record<string, string> {
+export function languageAlternates(path: string, supportedLocales: readonly PublishedTargetLocale[] = locales): Record<string, string> {
   return {
-    ...Object.fromEntries(supportedLocales.map((locale) => [hreflangs[locale], localizedUrl(locale, path)])),
+    ...Object.fromEntries(supportedLocales.map((locale) => [publishedTargetHreflangs[locale], localizedUrl(locale, path)])),
     "x-default": localizedUrl("ko", path),
   };
 }
@@ -30,12 +30,12 @@ export function pageMetadata({
   keywords,
   supportedLocales,
 }: {
-  locale: Locale;
+  locale: PublishedTargetLocale;
   path: string;
   title: string;
   description: string;
   keywords?: string[];
-  supportedLocales?: readonly Locale[];
+  supportedLocales?: readonly PublishedTargetLocale[];
 }): Metadata {
   const url = localizedUrl(locale, path);
   const fullTitle = `${title} | ${SITE_NAME}`;
@@ -44,7 +44,7 @@ export function pageMetadata({
     description,
     keywords,
     alternates: { canonical: url, languages: languageAlternates(path, supportedLocales) },
-    openGraph: { siteName: SITE_NAME, locale: getLocaleConfig(locale)?.intlLocale.replace("-", "_") ?? "en_US", type: "website", title: fullTitle, description, url },
+    openGraph: { siteName: SITE_NAME, locale: getPublishedTargetLocaleConfig(locale)?.intlLocale.replace("-", "_") ?? "en_US", type: "website", title: fullTitle, description, url },
     twitter: { card: "summary", title: fullTitle, description },
   };
 }

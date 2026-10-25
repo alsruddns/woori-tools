@@ -10,18 +10,28 @@ async function importTs(path, replacements = []) {
   return import(`data:text/javascript;base64,${Buffer.from(outputText).toString("base64")}`);
 }
 
-const { locales } = await importTs("../src/i18n/routing.ts");
+const { locales, plannedLocaleConfig } = await importTs("../src/i18n/routing.ts");
 const { COUNTRY_TOOL_SLUGS } = await importTs("../src/lib/country-tool-slugs.ts");
 globalThis.__catalogCountrySlugs = COUNTRY_TOOL_SLUGS;
+const { targetLocalePublication } = await importTs("../src/registry/target-locale-publication.ts", [[
+  'import { targetPolishToolSlugs } from "./target-pl-translations";',
+  "const targetPolishToolSlugs = [];",
+], [
+  'import { COUNTRY_TOOL_SLUGS } from "@/lib/country-tool-slugs";',
+  "const COUNTRY_TOOL_SLUGS = globalThis.__catalogCountrySlugs;",
+]]);
+globalThis.__catalogPlannedLocales = plannedLocaleConfig;
+globalThis.__catalogTargetPublication = targetLocalePublication;
 const countryTranslations = await importTs("../src/registry/country-tool-translations.ts", [[
   'import { COUNTRY_TOOL_SLUGS } from "../lib/country-tool-slugs";',
   "const COUNTRY_TOOL_SLUGS = globalThis.__catalogCountrySlugs;",
 ]]);
 globalThis.__catalogCountryTranslations = countryTranslations.countryToolTranslations;
 const { registeredTools } = await importTs("../src/registry/tools.ts", [
-  ['import { locales, type RouteLocale as Locale } from "../i18n/routing";', `const locales = ${JSON.stringify(locales)};`],
+  ['import { locales, plannedLocaleConfig, type PublishedTargetLocale } from "../i18n/routing";', `const locales = ${JSON.stringify(locales)}; const plannedLocaleConfig = globalThis.__catalogPlannedLocales;`],
   ['import { COUNTRY_TOOL_SLUGS } from "../lib/country-tool-slugs";', "const COUNTRY_TOOL_SLUGS = globalThis.__catalogCountrySlugs;"],
   ['import { countryToolTranslations } from "./country-tool-translations";', "const countryToolTranslations = globalThis.__catalogCountryTranslations;"],
+  ['import { targetLocalePublication } from "./target-locale-publication";', 'const targetLocalePublication = globalThis.__catalogTargetPublication;'],
 ]);
 
 test("service catalog contains every registry tool once with matching publication and locale data", async () => {

@@ -1,0 +1,79 @@
+import type { SevenTargetLocale, TargetSevenToolTranslation } from "./target-seven-tools-translations";
+
+type Shared = { category: string; choose: string; review: string; caution: string; faq: string; privacy: string; tail: string };
+type Copy = [string, string, string, string, string, string];
+
+const shared: Record<SevenTargetLocale, Shared> = {
+  bn: { category: "ছবি রূপান্তর", choose: "আপনার ডিভাইস থেকে একটি ছবি বেছে নিন।", review: "রূপান্তরিত ছবির প্রিভিউ দেখে ডাউনলোড করুন।", caution: "ছবি আপনার ব্রাউজারেই প্রক্রিয়া হয় এবং সার্ভারে আপলোড করা হয় না।", faq: "আমার ছবি কি সার্ভারে পাঠানো হয়?", privacy: "না, রূপান্তর আপনার ব্রাউজারেই সম্পন্ন হয়।", tail: "ছবি ব্যক্তিগতভাবে সরাসরি ডিভাইসেই রূপান্তর করুন।" },
+  uk: { category: "Конвертація зображень", choose: "Виберіть зображення на своєму пристрої.", review: "Перегляньте результат і завантажте перетворене зображення.", caution: "Зображення обробляється у браузері й не завантажується на сервер.", faq: "Чи надсилається моє зображення на сервер?", privacy: "Ні, перетворення відбувається безпосередньо у браузері.", tail: "Конвертуйте зображення приватно на своєму пристрої." },
+  ms: { category: "Penukaran imej", choose: "Pilih imej daripada peranti anda.", review: "Pratonton hasil dan muat turun imej yang ditukar.", caution: "Imej diproses dalam pelayar dan tidak dimuat naik ke pelayan.", faq: "Adakah imej saya dihantar ke pelayan?", privacy: "Tidak, penukaran dilakukan terus dalam pelayar anda.", tail: "Tukar imej secara peribadi pada peranti anda." },
+  sv: { category: "Bildkonvertering", choose: "Välj en bild från enheten.", review: "Förhandsgranska resultatet och ladda ned den konverterade bilden.", caution: "Bilden bearbetas i webbläsaren och laddas inte upp till en server.", faq: "Skickas min bild till en server?", privacy: "Nej, konverteringen görs direkt i webbläsaren.", tail: "Konvertera bilder privat direkt på enheten." },
+  cs: { category: "Převod obrázků", choose: "Vyberte obrázek ze svého zařízení.", review: "Zobrazte náhled výsledku a stáhněte převedený obrázek.", caution: "Obrázek se zpracovává v prohlížeči a nenahrává se na server.", faq: "Odesílá se můj obrázek na server?", privacy: "Ne, převod probíhá přímo ve vašem prohlížeči.", tail: "Převádějte obrázky soukromě přímo ve svém zařízení." },
+  ro: { category: "Conversie imagini", choose: "Alegeți o imagine de pe dispozitiv.", review: "Previzualizați rezultatul și descărcați imaginea convertită.", caution: "Imaginea este prelucrată în browser și nu este încărcată pe un server.", faq: "Este trimisă imaginea mea la server?", privacy: "Nu, conversia are loc direct în browserul dvs.", tail: "Convertiți imaginile în mod privat, direct pe dispozitiv." },
+  el: { category: "Μετατροπή εικόνων", choose: "Επιλέξτε μια εικόνα από τη συσκευή σας.", review: "Δείτε προεπισκόπηση και κατεβάστε την εικόνα που μετατράπηκε.", caution: "Η εικόνα επεξεργάζεται στο πρόγραμμα περιήγησης και δεν μεταφορτώνεται σε διακομιστή.", faq: "Αποστέλλεται η εικόνα μου σε διακομιστή;", privacy: "Όχι, η μετατροπή γίνεται απευθείας στο πρόγραμμα περιήγησής σας.", tail: "Μετατρέψτε εικόνες ιδιωτικά, απευθείας στη συσκευή σας." },
+};
+
+const content: Record<SevenTargetLocale, Record<string, Copy>> = {
+  bn: {
+    "jpg-to-png": ["JPG থেকে PNG রূপান্তর", "JPG ছবি PNG ফরম্যাটে রূপান্তর করুন; ফলাফলটি আপনার ডিভাইসে ডাউনলোড করুন।", "JPG থেকে PNG রূপান্তর", "একটি JPG ছবি নির্বাচন করে PNG তৈরি করুন।", "স্ক্রিনশট বা গ্রাফিক্সকে PNG ফাইলে রূপান্তর করুন।", "JPG-তে না থাকা স্বচ্ছতা ফিরিয়ে আনা যায় না; রূপান্তরে ছবির আকার বাড়তে পারে।"],
+    "png-to-jpg": ["PNG থেকে JPG রূপান্তর", "PNG ছবিকে JPG ফরম্যাটে রূপান্তর করুন এবং স্বচ্ছ অংশের পটভূমির রঙ বেছে নিন।", "PNG থেকে JPG রূপান্তর", "PNG নির্বাচন করুন, পটভূমির রঙ ও JPG মান ঠিক করুন।", "স্বচ্ছ PNG-কে সাদা পটভূমিসহ JPG-তে রূপান্তর করুন।", "JPG স্বচ্ছতা সমর্থন করে না; স্বচ্ছ অংশ নির্বাচিত রঙে পূরণ হয়।"],
+    "webp-to-jpg": ["WebP থেকে JPG রূপান্তর", "WebP ছবি JPG-তে রূপান্তর করে প্রয়োজন অনুযায়ী ছবির গুণমান বেছে নিন।", "WebP থেকে JPG রূপান্তর", "WebP ছবি বেছে নিয়ে মান ও পটভূমি নির্বাচন করুন।", "ওয়েব ছবিকে JPG ফাইলে সংরক্ষণ করুন।", "স্বচ্ছতা নির্বাচিত পটভূমির রঙে রূপান্তরিত হয়; JPG-তে স্বচ্ছতা থাকে না।"],
+    "webp-to-png": ["WebP থেকে PNG রূপান্তর", "WebP ছবিকে PNG ফরম্যাটে রূপান্তর করুন এবং সমর্থিত স্বচ্ছতা বজায় রাখুন।", "WebP থেকে PNG রূপান্তর", "একটি WebP ছবি নির্বাচন করে PNG ডাউনলোড করুন।", "স্বচ্ছ আইকনকে PNG ফাইলে রূপান্তর করুন।", "PNG সাধারণত JPG-এর চেয়ে বড়; ফলাফলের আকার ও স্বচ্ছতা পরীক্ষা করুন।"],
+    "jpg-to-webp": ["JPG থেকে WebP রূপান্তর", "JPG ছবিকে WebP-তে রূপান্তর করুন এবং ফলাফলের গুণমান বেছে নিন।", "JPG থেকে WebP রূপান্তর", "JPG নির্বাচন করুন, WebP গুণমান ঠিক করুন এবং প্রিভিউ দেখুন।", "ওয়েব ব্যবহারের জন্য JPG ছবিকে WebP-তে রূপান্তর করুন।", "WebP গুণমান কমালে ফাইল ছোট হতে পারে; মূল JPG আলাদা থাকে।"],
+  },
+  uk: {
+    "jpg-to-png": ["Конвертер JPG у PNG", "Перетворіть зображення JPG на PNG і завантажте результат на свій пристрій.", "конвертер JPG у PNG", "Виберіть зображення JPG, щоб створити файл PNG.", "Перетворіть знімок екрана або графіку на PNG.", "Прозорість, якої не було у JPG, не відновлюється; файл може стати більшим."],
+    "png-to-jpg": ["Конвертер PNG у JPG", "Перетворіть PNG на JPG і виберіть колір тла для прозорих ділянок.", "конвертер PNG у JPG", "Виберіть PNG, колір тла та якість JPG.", "Перетворіть прозорий PNG на JPG із білим тлом.", "JPG не підтримує прозорість; прозорі ділянки заповнюються вибраним кольором."],
+    "webp-to-jpg": ["Конвертер WebP у JPG", "Перетворіть зображення WebP на JPG і виберіть потрібну якість результату.", "конвертер WebP у JPG", "Виберіть WebP та налаштуйте якість і колір тла.", "Збережіть зображення з вебсторінки у форматі JPG.", "Прозорі ділянки заповнюються вибраним тлом; JPG не підтримує прозорість."],
+    "webp-to-png": ["Конвертер WebP у PNG", "Перетворіть WebP на PNG і збережіть прозорість, якщо її підтримує вихідне зображення.", "конвертер WebP у PNG", "Виберіть зображення WebP і завантажте PNG.", "Перетворіть прозору піктограму WebP на PNG.", "PNG зазвичай більший за JPG; перевірте розмір файлу та прозорість."],
+    "jpg-to-webp": ["Конвертер JPG у WebP", "Перетворіть зображення JPG на WebP і налаштуйте якість результату.", "конвертер JPG у WebP", "Виберіть JPG, налаштуйте якість WebP і перегляньте результат.", "Перетворіть JPG на WebP для використання на вебсторінці.", "Нижча якість WebP може зменшити файл; вихідне зображення JPG залишається окремо."],
+  },
+  ms: {
+    "jpg-to-png": ["Penukar JPG kepada PNG", "Tukar imej JPG kepada format PNG dan muat turun hasilnya ke peranti anda.", "penukar JPG kepada PNG", "Pilih imej JPG untuk menghasilkan fail PNG.", "Tukar tangkapan skrin atau grafik kepada PNG.", "Ketelusan yang tiada dalam JPG tidak dapat dipulihkan; fail hasil mungkin lebih besar."],
+    "png-to-jpg": ["Penukar PNG kepada JPG", "Tukar PNG kepada JPG dan pilih warna latar bagi bahagian yang telus.", "penukar PNG kepada JPG", "Pilih PNG, warna latar dan kualiti JPG.", "Tukar PNG telus kepada JPG berlatar putih.", "JPG tidak menyokong ketelusan; bahagian telus diisi dengan warna yang dipilih."],
+    "webp-to-jpg": ["Penukar WebP kepada JPG", "Tukar imej WebP kepada JPG dan pilih kualiti hasil yang dikehendaki.", "penukar WebP kepada JPG", "Pilih WebP dan tetapkan kualiti serta warna latar.", "Simpan imej web sebagai fail JPG.", "Bahagian telus diisi dengan warna latar pilihan; JPG tidak menyokong ketelusan."],
+    "webp-to-png": ["Penukar WebP kepada PNG", "Tukar WebP kepada format PNG dan kekalkan ketelusan yang disokong oleh imej asal.", "penukar WebP kepada PNG", "Pilih imej WebP dan muat turun PNG.", "Tukar ikon WebP telus kepada PNG.", "PNG biasanya lebih besar daripada JPG; semak saiz fail dan ketelusannya."],
+    "jpg-to-webp": ["Penukar JPG kepada WebP", "Tukar imej JPG kepada WebP dan laraskan kualiti hasil.", "penukar JPG kepada WebP", "Pilih JPG, tetapkan kualiti WebP dan pratonton hasilnya.", "Tukar JPG kepada WebP untuk kegunaan laman web.", "Kualiti WebP yang lebih rendah boleh mengecilkan fail; imej JPG asal kekal berasingan."],
+  },
+  sv: {
+    "jpg-to-png": ["Konvertera JPG till PNG", "Konvertera en JPG-bild till PNG och ladda ned resultatet till enheten.", "konvertera JPG till PNG", "Välj en JPG-bild för att skapa en PNG-fil.", "Konvertera en skärmbild eller grafik till PNG.", "Transparens som saknas i JPG kan inte återskapas; resultatfilen kan bli större."],
+    "png-to-jpg": ["Konvertera PNG till JPG", "Konvertera PNG till JPG och välj bakgrundsfärg för genomskinliga delar.", "konvertera PNG till JPG", "Välj PNG, bakgrundsfärg och JPG-kvalitet.", "Konvertera en genomskinlig PNG med vit bakgrund till JPG.", "JPG stöder inte transparens; genomskinliga delar fylls med den valda färgen."],
+    "webp-to-jpg": ["Konvertera WebP till JPG", "Konvertera en WebP-bild till JPG och välj önskad kvalitet på resultatet.", "konvertera WebP till JPG", "Välj WebP och ställ in kvalitet och bakgrundsfärg.", "Spara en webbild som JPG-fil.", "Genomskinliga delar fylls med vald bakgrund; JPG stöder inte transparens."],
+    "webp-to-png": ["Konvertera WebP till PNG", "Konvertera WebP till PNG och behåll transparens som stöds av originalbilden.", "konvertera WebP till PNG", "Välj en WebP-bild och ladda ned PNG-filen.", "Konvertera en genomskinlig WebP-ikon till PNG.", "PNG blir ofta större än JPG; kontrollera filstorlek och transparens."],
+    "jpg-to-webp": ["Konvertera JPG till WebP", "Konvertera en JPG-bild till WebP och justera kvaliteten på resultatet.", "konvertera JPG till WebP", "Välj JPG, ange WebP-kvalitet och förhandsgranska resultatet.", "Konvertera JPG till WebP för användning på webben.", "Lägre WebP-kvalitet kan ge en mindre fil; originalbilden i JPG behålls separat."],
+  },
+  cs: {
+    "jpg-to-png": ["Převod JPG na PNG", "Převeďte obrázek JPG do formátu PNG a stáhněte si výsledek do zařízení.", "převod JPG na PNG", "Vyberte obrázek JPG a vytvořte soubor PNG.", "Převeďte snímek obrazovky nebo grafiku do PNG.", "Průhlednost, která v JPG není, nelze obnovit; výsledný soubor může být větší."],
+    "png-to-jpg": ["Převod PNG na JPG", "Převeďte PNG na JPG a vyberte barvu pozadí pro průhledné části.", "převod PNG na JPG", "Vyberte PNG, barvu pozadí a kvalitu JPG.", "Převeďte průhledný PNG na JPG s bílým pozadím.", "JPG nepodporuje průhlednost; průhledné části se vyplní zvolenou barvou."],
+    "webp-to-jpg": ["Převod WebP na JPG", "Převeďte obrázek WebP na JPG a nastavte požadovanou kvalitu výsledku.", "převod WebP na JPG", "Vyberte WebP a nastavte kvalitu a barvu pozadí.", "Uložte webový obrázek jako soubor JPG.", "Průhledné části se vyplní zvoleným pozadím; JPG průhlednost nepodporuje."],
+    "webp-to-png": ["Převod WebP na PNG", "Převeďte WebP do PNG a zachovejte průhlednost podporovanou původním obrázkem.", "převod WebP na PNG", "Vyberte obrázek WebP a stáhněte PNG.", "Převeďte průhlednou ikonu WebP do PNG.", "PNG bývá větší než JPG; zkontrolujte velikost souboru a průhlednost."],
+    "jpg-to-webp": ["Převod JPG na WebP", "Převeďte obrázek JPG do WebP a nastavte kvalitu výsledku.", "převod JPG na WebP", "Vyberte JPG, nastavte kvalitu WebP a zobrazte náhled.", "Převeďte JPG na WebP pro použití na webu.", "Nižší kvalita WebP může zmenšit soubor; původní JPG zůstane samostatně."],
+  },
+  ro: {
+    "jpg-to-png": ["Convertor JPG în PNG", "Convertiți o imagine JPG în format PNG și descărcați rezultatul pe dispozitiv.", "convertor JPG în PNG", "Alegeți o imagine JPG pentru a crea un fișier PNG.", "Convertiți o captură de ecran sau o grafică în PNG.", "Transparența care nu există în JPG nu poate fi recuperată; fișierul rezultat poate fi mai mare."],
+    "png-to-jpg": ["Convertor PNG în JPG", "Convertiți PNG în JPG și alegeți culoarea de fundal pentru zonele transparente.", "convertor PNG în JPG", "Alegeți PNG, culoarea de fundal și calitatea JPG.", "Convertiți un PNG transparent în JPG cu fundal alb.", "JPG nu acceptă transparență; zonele transparente sunt completate cu culoarea aleasă."],
+    "webp-to-jpg": ["Convertor WebP în JPG", "Convertiți o imagine WebP în JPG și alegeți calitatea dorită pentru rezultat.", "convertor WebP în JPG", "Alegeți WebP și setați calitatea și culoarea de fundal.", "Salvați o imagine web ca fișier JPG.", "Zonele transparente sunt completate cu fundalul ales; JPG nu acceptă transparență."],
+    "webp-to-png": ["Convertor WebP în PNG", "Convertiți WebP în PNG și păstrați transparența acceptată de imaginea originală.", "convertor WebP în PNG", "Alegeți o imagine WebP și descărcați fișierul PNG.", "Convertiți o pictogramă WebP transparentă în PNG.", "PNG este adesea mai mare decât JPG; verificați dimensiunea și transparența."],
+    "jpg-to-webp": ["Convertor JPG în WebP", "Convertiți o imagine JPG în WebP și reglați calitatea rezultatului.", "convertor JPG în WebP", "Alegeți JPG, setați calitatea WebP și previzualizați rezultatul.", "Convertiți JPG în WebP pentru utilizarea pe site.", "O calitate WebP mai mică poate reduce fișierul; imaginea JPG originală rămâne separată."],
+  },
+  el: {
+    "jpg-to-png": ["Μετατροπή JPG σε PNG", "Μετατρέψτε εικόνα JPG σε PNG και κατεβάστε το αποτέλεσμα στη συσκευή σας.", "μετατροπέας JPG σε PNG", "Επιλέξτε εικόνα JPG για να δημιουργήσετε αρχείο PNG.", "Μετατρέψτε στιγμιότυπο οθόνης ή γραφικό σε PNG.", "Η διαφάνεια που δεν υπάρχει στο JPG δεν μπορεί να αποκατασταθεί· το αρχείο μπορεί να γίνει μεγαλύτερο."],
+    "png-to-jpg": ["Μετατροπή PNG σε JPG", "Μετατρέψτε PNG σε JPG και επιλέξτε χρώμα φόντου για τις διαφανείς περιοχές.", "μετατροπέας PNG σε JPG", "Επιλέξτε PNG, χρώμα φόντου και ποιότητα JPG.", "Μετατρέψτε διαφανές PNG σε JPG με λευκό φόντο.", "Το JPG δεν υποστηρίζει διαφάνεια· οι διαφανείς περιοχές γεμίζουν με το επιλεγμένο χρώμα."],
+    "webp-to-jpg": ["Μετατροπή WebP σε JPG", "Μετατρέψτε εικόνα WebP σε JPG και επιλέξτε την ποιότητα του αποτελέσματος.", "μετατροπέας WebP σε JPG", "Επιλέξτε WebP και ορίστε ποιότητα και χρώμα φόντου.", "Αποθηκεύστε εικόνα ιστού ως αρχείο JPG.", "Οι διαφανείς περιοχές γεμίζουν με το επιλεγμένο φόντο· το JPG δεν υποστηρίζει διαφάνεια."],
+    "webp-to-png": ["Μετατροπή WebP σε PNG", "Μετατρέψτε WebP σε PNG και διατηρήστε τη διαφάνεια που υποστηρίζει η αρχική εικόνα.", "μετατροπέας WebP σε PNG", "Επιλέξτε εικόνα WebP και κατεβάστε PNG.", "Μετατρέψτε διαφανές εικονίδιο WebP σε PNG.", "Το PNG είναι συνήθως μεγαλύτερο από το JPG· ελέγξτε το μέγεθος και τη διαφάνεια."],
+    "jpg-to-webp": ["Μετατροπή JPG σε WebP", "Μετατρέψτε εικόνα JPG σε WebP και ρυθμίστε την ποιότητα του αποτελέσματος.", "μετατροπέας JPG σε WebP", "Επιλέξτε JPG, ορίστε ποιότητα WebP και δείτε προεπισκόπηση.", "Μετατρέψτε JPG σε WebP για χρήση σε ιστοσελίδα.", "Χαμηλότερη ποιότητα WebP μπορεί να μειώσει το αρχείο· το αρχικό JPG παραμένει ξεχωριστό."],
+  },
+};
+
+function build(locale: SevenTargetLocale, slug: string, [title, description, keyword, action, example, options]: Copy): TargetSevenToolTranslation {
+  const ui = shared[locale];
+  return { title, description, seoTitle: `${title} | Woori Tools`, seoDescription: `${description} ${ui.tail}`, category: ui.category, keywords: [keyword, title, slug], steps: [ui.choose, action, ui.review], example, options, caution: ui.caution, faq: { example: ui.faq, caution: ui.privacy } };
+}
+
+const translations = Object.fromEntries((Object.keys(content) as SevenTargetLocale[]).map((locale) => [locale, Object.fromEntries(Object.entries(content[locale]).map(([slug, value]) => [slug, build(locale, slug, value)]))])) as Record<SevenTargetLocale, Record<string, TargetSevenToolTranslation>>;
+
+export const targetSevenImageBatchSixSlugs = ["jpg-to-png", "png-to-jpg", "webp-to-jpg", "webp-to-png", "jpg-to-webp"] as const;
+
+export function getTargetSevenImageBatchSixTranslation(locale: SevenTargetLocale, slug: string): TargetSevenToolTranslation | undefined {
+  return translations[locale][slug];
+}

@@ -1,8 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import type { RouteLocale } from "@/i18n/routing";
+import type { PlannedLocale, RouteLocale, TargetLocale } from "@/i18n/routing";
 import { getMessages } from "@/i18n/messages";
+import { isTargetPageMessageLocale } from "@/i18n/target-page-messages";
+import { targetCountryWorkspaceCopy } from "@/i18n/target-country-workspace-copy";
+import { targetCoreMessages } from "@/i18n/target-locale-copy";
 import { copyText } from "@/lib/copy-to-clipboard";
 import { runCountryTool } from "@/lib/country-tools";
 import { COUNTRY_TOOL_SLUGS, type CountryToolSlug } from "@/lib/country-tool-slugs";
@@ -66,9 +69,17 @@ const cycleNotes: Record<RouteLocale,string> = {
 const isPhoneTool = (slug: string) => slug.includes("phone-number-formatter");
 const isPostalTool = (slug: string) => slug.includes("postcode-formatter") || slug.includes("postal-code-formatter") || slug.includes("zip-code-formatter") || slug.includes("cep-formatter");
 
-export function CountryToolsWorkspace({ slug, locale }: { slug: CountryToolSlug; locale: RouteLocale }) {
-  const labels = [...ui[locale], ...extraUi[locale]];
+export function CountryToolsWorkspace({ slug, locale }: { slug: CountryToolSlug; locale: TargetLocale }) {
   const messages = getMessages(locale);
+  const targetCopy = isTargetPageMessageLocale(locale) ? targetCountryWorkspaceCopy[locale] : undefined;
+  const labels = targetCopy
+    ? [messages.input, messages.result, messages.run, messages.reset, messages.copy, targetCoreMessages[locale as PlannedLocale].copySuccess,
+      targetCopy.example, targetCopy.privacyNotice, targetCopy.conventions, targetCopy.checkInput, targetCopy.validFormat,
+      targetCopy.validChecksum, targetCopy.formatDisclaimer, targetCopy.direction, targetCopy.simplifiedToTraditional,
+      targetCopy.traditionalToSimplified, targetCopy.arabicToChinese, targetCopy.chineseToArabic, targetCopy.year,
+      targetCopy.checkFormat, targetCopy.formatOrChecksumInvalid, targetCopy.formatDisclaimer, targetCopy.isoToLocal, targetCopy.localToIso,
+      targetCopy.usDateFormat, targetCopy.ukDateFormat, targetCopy.ambiguousDate, targetCopy.phonePostalDisclaimer]
+    : [...ui[locale as RouteLocale], ...extraUi[locale as RouteLocale]];
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
   const [error, setError] = useState("");
@@ -81,7 +92,7 @@ export function CountryToolsWorkspace({ slug, locale }: { slug: CountryToolSlug;
       if (result.valid) {
         const status = result.level === "checksum" ? labels[11] : labels[10];
         setOutput(`${status}\n${labels[12]}`);
-      } else setError(result.level === "format" ? formatErrors[locale] : labels[20]);
+      } else setError(result.level === "format" ? (targetCopy?.formatOrChecksumInvalid ?? formatErrors[locale as RouteLocale]) : labels[20]);
     } catch { setError(labels[9]); }
   }
   function reset() { setInput(""); setOutput(""); setError(""); setMode(slug === "english-date-format-converter" ? "us" : "forward"); }
@@ -105,7 +116,7 @@ export function CountryToolsWorkspace({ slug, locale }: { slug: CountryToolSlug;
   return <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7">
     <p className="rounded-xl bg-sky-50 p-3 text-sm text-sky-900">{labels[7]}</p>
     <p className="mt-3 text-sm text-slate-600">{labels[8]}</p>
-    {yearTool && <p className="mt-2 text-sm text-amber-800">{cycleNotes[locale]}</p>}
+    {yearTool && <p className="mt-2 text-sm text-amber-800">{targetCopy?.cycleNote ?? cycleNotes[locale as RouteLocale]}</p>}
     {isDirectional && <fieldset className="mt-4 flex flex-wrap gap-2"><legend className="mb-2 text-sm font-medium">{labels[13]}</legend><button type="button" aria-pressed={mode === "forward"} onClick={() => setMode("forward")} className="min-h-10 rounded-lg border px-3">{slug.includes("simplified-traditional") ? labels[14] : labels[16]}</button><button type="button" aria-pressed={mode === "reverse"} onClick={() => setMode("reverse")} className="min-h-10 rounded-lg border px-3">{slug.includes("simplified-traditional") ? labels[15] : labels[17]}</button></fieldset>}
     {isDateTool && <fieldset className="mt-4 flex flex-wrap gap-2"><legend className="mb-2 text-sm font-medium">{labels[13]}</legend>{(isEnglishDate ? [["us", labels[24]],["uk", labels[25]],["us-reverse", `${labels[24]} → ISO`],["uk-reverse", `${labels[25]} → ISO`]] : [["forward", labels[22]],["reverse", labels[23]]]).map(([value, label]) => <button key={value} type="button" aria-pressed={mode === value} onClick={() => setMode(value)} className="min-h-10 rounded-lg border px-3">{label}</button>)}</fieldset>}
     {isEnglishDate && <p className="mt-2 text-sm text-amber-800">{labels[26]}</p>}

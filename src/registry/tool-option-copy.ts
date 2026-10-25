@@ -1,7 +1,11 @@
-import type { RouteLocale } from "@/i18n/routing";
+import type { PlannedLocale, RouteLocale } from "@/i18n/routing";
+import { targetRenameCopy, targetSelectionLimitMessages, targetToolOptionLabels, type TargetToolOptionLabels, type ToolOptionLabelKey } from "./target-tool-option-copy";
+export { targetSelectionLimitMessages };
+export type ToolOptionLocale = RouteLocale | PlannedLocale;
+type LegacyToolOptionLocale = RouteLocale | "pl";
 
 type RenameCopy = { prefix: string; suffix: string; find: string; replace: string; start: string; padding: string; before: string; after: string; empty: string };
-export const renameCopy: Record<RouteLocale, RenameCopy> = {
+const legacyRenameCopy: Record<LegacyToolOptionLocale, RenameCopy> = {
   ko: { prefix:"접두사",suffix:"접미사",find:"찾을 문자열",replace:"바꿀 문자열",start:"시작 번호",padding:"번호 자릿수",before:"변경 전",after:"변경 후",empty:"파일을 선택하면 이름 미리보기가 표시됩니다." },
   en: { prefix:"Prefix",suffix:"Suffix",find:"Find",replace:"Replace",start:"Start number",padding:"Number padding",before:"Before",after:"After",empty:"Select files to preview their new names." },
   ja: { prefix:"接頭辞",suffix:"接尾辞",find:"検索文字列",replace:"置換文字列",start:"開始番号",padding:"番号の桁数",before:"変更前",after:"変更後",empty:"ファイルを選択すると新しい名前を表示します。" },
@@ -17,10 +21,11 @@ export const renameCopy: Record<RouteLocale, RenameCopy> = {
   it: { prefix:"Prefisso",suffix:"Suffisso",find:"Trova",replace:"Sostituisci",start:"Numero iniziale",padding:"Cifre del numero",before:"Prima",after:"Dopo",empty:"Seleziona file per vedere i nuovi nomi in anteprima." },
   nl: { prefix:"Voorvoegsel",suffix:"Achtervoegsel",find:"Zoeken",replace:"Vervangen",start:"Startnummer",padding:"Aantal cijfers",before:"Voor",after:"Na",empty:"Selecteer bestanden om de nieuwe namen te bekijken." },
   hi: { prefix:"उपसर्ग",suffix:"प्रत्यय",find:"खोजें",replace:"बदलें",start:"प्रारंभिक संख्या",padding:"अंकों की संख्या",before:"पहले",after:"बाद",empty:"नए नामों का पूर्वावलोकन देखने के लिए फ़ाइलें चुनें।" },
+  pl: { prefix:"Prefiks",suffix:"Sufiks",find:"Szukany tekst",replace:"Tekst zastępczy",start:"Numer początkowy",padding:"Liczba cyfr",before:"Przed zmianą",after:"Po zmianie",empty:"Wybierz pliki, aby zobaczyć podgląd nowych nazw." },
 };
 
 type SelectionCopy = { noRepeat: string; repeat: string; digits: string; latin: string; hangul: string; special: string; custom: string };
-export const selectionCopy: Record<RouteLocale, SelectionCopy> = {
+const legacySelectionCopy: Record<LegacyToolOptionLocale, SelectionCopy> = {
   ko: { noRepeat:"중복 없이",repeat:"중복 허용",digits:"숫자",latin:"영문",hangul:"한글",special:"특수문자",custom:"사용자 지정" },
   en: { noRepeat:"Without repeats",repeat:"Allow repeats",digits:"Digits",latin:"Latin letters",hangul:"Korean characters",special:"Special characters",custom:"Custom string" },
   ja: { noRepeat:"重複なし",repeat:"重複あり",digits:"数字",latin:"英字",hangul:"ハングル",special:"記号",custom:"指定文字列" },
@@ -36,4 +41,38 @@ export const selectionCopy: Record<RouteLocale, SelectionCopy> = {
   it: { noRepeat:"Senza ripetizioni",repeat:"Consenti ripetizioni",digits:"Cifre",latin:"Lettere latine",hangul:"Caratteri coreani",special:"Simboli",custom:"Testo personalizzato" },
   nl: { noRepeat:"Zonder herhaling",repeat:"Herhaling toestaan",digits:"Cijfers",latin:"Latijnse letters",hangul:"Koreaanse tekens",special:"Speciale tekens",custom:"Aangepaste tekst" },
   hi: { noRepeat:"बिना दोहराव",repeat:"दोहराव की अनुमति",digits:"अंक",latin:"लैटिन अक्षर",hangul:"कोरियाई अक्षर",special:"विशेष वर्ण",custom:"अपना पाठ" },
+  pl: { noRepeat:"Bez powtórzeń",repeat:"Z powtórzeniami",digits:"Cyfry",latin:"Litery łacińskie",hangul:"Znaki koreańskie",special:"Znaki specjalne",custom:"Własny tekst" },
+};
+
+export function isPlannedToolOptionLocale(locale: ToolOptionLocale): locale is PlannedLocale {
+  return !Object.hasOwn(legacyRenameCopy, locale);
+}
+
+export function getRenameCopy(locale: ToolOptionLocale): RenameCopy {
+  if (isPlannedToolOptionLocale(locale)) {
+    return targetRenameCopy[locale];
+  }
+  return legacyRenameCopy[locale];
+}
+
+export const renameCopy: Record<LegacyToolOptionLocale, RenameCopy> = legacyRenameCopy;
+
+export function getSelectionCopy(locale: ToolOptionLocale): SelectionCopy {
+  if (isPlannedToolOptionLocale(locale)) {
+    const copy = targetToolOptionLabels[locale];
+    return { noRepeat: copy.noRepeat, repeat: copy.repeat, digits: copy.digits, latin: copy.latin, hangul: copy.hangul, special: copy.special, custom: copy.custom };
+  }
+  return legacySelectionCopy[locale];
+}
+
+export function getTargetToolOptionLabel(locale: PlannedLocale, key: string): string | undefined {
+  const labels: TargetToolOptionLabels = targetToolOptionLabels[locale];
+  if (!(key in labels)) return undefined;
+  return labels[key as ToolOptionLabelKey];
+}
+
+export const selectionCopy: Record<ToolOptionLocale, Record<string, string>> = {
+  ...legacySelectionCopy,
+  ...targetToolOptionLabels,
+  pl: legacySelectionCopy.pl,
 };

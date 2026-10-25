@@ -10,7 +10,9 @@
     "test": "node --test",
     "catalog:generate": "tsx scripts/generate-service-catalog.ts",
     "check:service-catalog": "node --test tests/service-catalog.test.mjs",
-    "check:content-quality": "tsx scripts/check-content-quality.ts"
+    "check:content-quality": "tsx scripts/check-content-quality.ts",
+    "check:target-locale-tools": "tsx scripts/check-target-locale-tools.ts",
+    "i18n:progress": "tsx scripts/update-i18n-expansion-progress.ts"
   },
   "dependencies": {
     "cron-parser": "^5.10.1",

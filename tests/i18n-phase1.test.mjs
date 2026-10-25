@@ -10,7 +10,20 @@ async function importTs(path, replacements = []) {
   return import(`data:text/javascript;base64,${Buffer.from(outputText).toString("base64")}`);
 }
 
-const { locales } = await importTs("../src/i18n/routing.ts");
+const { locales, plannedLocaleConfig, isPublishedTargetLocale } = await importTs("../src/i18n/routing.ts");
+globalThis.__targetToolOptionCopy = await importTs("../src/registry/target-tool-option-copy.ts");
+const { renameCopy, selectionCopy } = await importTs("../src/registry/tool-option-copy.ts", [[
+  'import { targetRenameCopy, targetSelectionLimitMessages, targetToolOptionLabels, type TargetToolOptionLabels, type ToolOptionLabelKey } from "./target-tool-option-copy";',
+  'const { targetRenameCopy, targetSelectionLimitMessages, targetToolOptionLabels } = globalThis.__targetToolOptionCopy;',
+]]);
+const { targetToolOptionLabels, targetRenameCopy, targetSelectionLimitMessages } = globalThis.__targetToolOptionCopy;
+globalThis.__targetCoreMessages = (await importTs("../src/i18n/target-locale-copy.ts")).targetCoreMessages;
+globalThis.__targetCoreMessagesModule = { targetCoreMessages: globalThis.__targetCoreMessages };
+globalThis.__targetExpandedModule = await importTs("../src/i18n/target-expanded-messages.ts", [[
+  'import { targetCoreMessages } from "./target-locale-copy";',
+  "const { targetCoreMessages } = globalThis.__targetCoreMessagesModule;",
+]]);
+globalThis.__targetPageModule = await importTs("../src/i18n/target-page-messages.ts");
 const { COUNTRY_TOOL_SLUGS } = await importTs("../src/lib/country-tool-slugs.ts");
 globalThis.__countryToolSlugs = COUNTRY_TOOL_SLUGS;
 const countryTranslationModule = await importTs("../src/registry/country-tool-translations.ts", [[
@@ -22,10 +35,20 @@ globalThis.__countryToolKeywords = countryTranslationModule.countryToolKeywords;
 globalThis.__newToolTranslations = await importTs("../src/registry/new-tool-translations.ts");
 globalThis.__toolExampleInputs = (await importTs("../src/registry/tool-example-inputs.ts")).toolExampleInputs;
 globalThis.__getToolRiskNote = (await importTs("../src/registry/tool-risk-notes.ts")).getToolRiskNote;
+const { targetLocalePublication } = await importTs("../src/registry/target-locale-publication.ts", [[
+  'import { targetPolishToolSlugs } from "./target-pl-translations";',
+  "const targetPolishToolSlugs = [];",
+], [
+  'import { COUNTRY_TOOL_SLUGS } from "@/lib/country-tool-slugs";',
+  "const COUNTRY_TOOL_SLUGS = globalThis.__countryToolSlugs;",
+]]);
+globalThis.__targetLocalePublication = targetLocalePublication;
+globalThis.__plannedLocaleConfig = plannedLocaleConfig;
 const { tools } = await importTs("../src/registry/tools.ts", [
-  ['import { locales, type RouteLocale as Locale } from "../i18n/routing";', `const locales = ${JSON.stringify(locales)};`],
+  ['import { locales, plannedLocaleConfig, type PublishedTargetLocale } from "../i18n/routing";', `const locales = ${JSON.stringify(locales)}; const plannedLocaleConfig = globalThis.__plannedLocaleConfig;`],
   ['import { COUNTRY_TOOL_SLUGS } from "../lib/country-tool-slugs";', `const COUNTRY_TOOL_SLUGS = globalThis.__countryToolSlugs;`],
   ['import { countryToolTranslations } from "./country-tool-translations";', `const countryToolTranslations = globalThis.__countryToolTranslations;`],
+  ['import { targetLocalePublication } from "./target-locale-publication";', 'const targetLocalePublication = globalThis.__targetLocalePublication;'],
 ]);
 const japanTranslationModule = await importTs("../src/registry/japan-tool-translations.ts");
 globalThis.__japanToolTranslations = japanTranslationModule.japanToolTranslations;
@@ -64,22 +87,50 @@ const { getToolContent } = await importTs("../src/registry/tool-content.ts", [[
   'import { getToolRiskNote } from "@/registry/tool-risk-notes";',
   'const getToolRiskNote = globalThis.__getToolRiskNote;',
 ]]);
-const expandedModule = await importTs("../src/i18n/expanded-messages.ts");
+const polishExpandedMessages = (await importTs("../src/i18n/polish-expanded-messages.ts")).polishExpandedMessages;
+const expandedModule = await importTs("../src/i18n/expanded-messages.ts", [[
+  'import { polishExpandedMessages } from "./polish-expanded-messages";',
+  `const polishExpandedMessages = ${JSON.stringify(polishExpandedMessages)};`,
+], [
+  'import { getTargetExpandedMessages, isExpandedTargetLocale } from "./target-expanded-messages";',
+  "const { getTargetExpandedMessages, isExpandedTargetLocale } = globalThis.__targetExpandedModule;",
+]]);
 globalThis.__getExpandedMessages = expandedModule.getExpandedMessages;
+globalThis.__isPublishedTargetLocale = isPublishedTargetLocale;
 const { getMessages } = await importTs("../src/i18n/messages.ts", [[
   'import { getExpandedMessages } from "./expanded-messages";',
   'const getExpandedMessages = globalThis.__getExpandedMessages;',
+], [
+  'import { isExpandedTargetLocale } from "./target-expanded-messages";',
+  'const isExpandedTargetLocale = globalThis.__targetExpandedModule.isExpandedTargetLocale;',
+], [
+  'import { targetCoreMessages } from "./target-locale-copy";',
+  'const targetCoreMessages = globalThis.__targetCoreMessages;',
+], [
+  'import { isPublishedTargetLocale, type TargetLocale } from "./routing";',
+  'const isPublishedTargetLocale = globalThis.__isPublishedTargetLocale;',
+], [
+  'import { getTargetPageMessages, isTargetPageMessageLocale } from "./target-page-messages";',
+  'const { getTargetPageMessages, isTargetPageMessageLocale } = globalThis.__targetPageModule;',
 ]]);
 const { getTarotInterpretation } = await importTs("../src/lib/fortune/tarot-localization.ts");
+const { getTargetFileProcessorCopy } = await importTs("../src/i18n/target-file-processor-copy.ts");
+const { getTargetBrowserDeveloperCopy } = await importTs("../src/i18n/target-browser-developer-copy.ts");
 
-test("all published registry tools support all 15 route locales", () => {
+test("legacy registry tools retain all 15 route locales and RU is limited to verified publication", () => {
   assert.equal(locales.length, 15);
   assert.ok(tools.length >= 160);
   assert.equal(tools.some(({ slug }) => slug === "ladder-game"), false);
   const omissions = [];
   for (const tool of tools) {
-    if (JSON.stringify(tool.supportedLocales) !== JSON.stringify(locales)) omissions.push(`${tool.slug}: ${tool.supportedLocales.join(",")}`);
-    for (const locale of tool.supportedLocales) {
+    const expectedLocales = [
+      ...locales,
+      ...plannedLocaleConfig
+        .filter(({ routeLocale }) => targetLocalePublication[routeLocale].publishedToolSlugs.includes(tool.slug))
+        .map(({ routeLocale }) => routeLocale),
+    ];
+    if (JSON.stringify(tool.supportedLocales) !== JSON.stringify(expectedLocales)) omissions.push(`${tool.slug}: ${tool.supportedLocales.join(",")}`);
+    for (const locale of locales) {
       const localized = localizeTool(tool, locale);
       if (!localized.title?.trim()) omissions.push(`${tool.slug}/${locale}: missing name`);
       if (!localized.description?.trim()) omissions.push(`${tool.slug}/${locale}: missing description`);
@@ -91,6 +142,120 @@ test("all published registry tools support all 15 route locales", () => {
     }
   }
   assert.deepEqual(omissions, [], `Localization omissions:\n${omissions.join("\n")}`);
+  for (const { routeLocale } of plannedLocaleConfig) {
+    assert.deepEqual(
+      tools.filter(({ supportedLocales }) => supportedLocales.includes(routeLocale)).map(({ slug }) => slug).sort(),
+      [...targetLocalePublication[routeLocale].publishedToolSlugs].sort(),
+      `${routeLocale} registry routes must match the verified publication list`,
+    );
+  }
+});
+
+test("the eight expansion locales provide every expanded shared UI key without English fallback", () => {
+  const source = getMessages("en");
+  const keys = expandedModule.expandedMessageKeys;
+  const locales = ["fil", "bn", "uk", "ms", "sv", "cs", "ro", "el"];
+  const allowedExactMatches = new Set(["sv/rotation", "ro/contrast"]);
+  const placeholders = (value) => [...value.matchAll(/\{[a-zA-Z][a-zA-Z0-9]*\}/g)].map(([token]) => token).sort().join("|");
+
+  assert.equal(keys.length, 117);
+  for (const locale of locales) {
+    const messages = expandedModule.getExpandedMessages(locale);
+    assert.deepEqual(Object.keys(messages).sort(), [...keys].sort(), `${locale} must include the exact shared key set`);
+    for (const key of keys) {
+      const value = messages[key];
+      let original = source;
+      for (const part of key.split(".")) original = original[part];
+      assert.equal(typeof value, "string", `${locale}/${key} must be a string`);
+      assert.ok(value.trim(), `${locale}/${key} must not be empty`);
+      assert.equal(placeholders(value), placeholders(original), `${locale}/${key} must preserve interpolation variables`);
+      assert.ok(value !== original || allowedExactMatches.has(`${locale}/${key}`), `${locale}/${key} must not fall back to English`);
+    }
+  }
+});
+
+test("newly published generic workspaces have every referenced message in their locale dictionary", async () => {
+  const workspaceSource = await readFile(new URL("../src/components/tool/tool-workspace.tsx", import.meta.url), "utf8");
+  const sourceFile = ts.createSourceFile("tool-workspace.tsx", workspaceSource, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+  const paths = new Set();
+  const readMessagePath = (node) => {
+    if (ts.isIdentifier(node) && node.text === "messages") return [];
+    if (ts.isPropertyAccessExpression(node)) {
+      const parent = readMessagePath(node.expression);
+      return parent ? [...parent, node.name.text] : null;
+    }
+    return null;
+  };
+  const visit = (node) => {
+    if (ts.isPropertyAccessExpression(node)) {
+      const path = readMessagePath(node);
+      if (path?.length) {
+        while (["replace", "trim", "toLowerCase", "toUpperCase"].includes(path.at(-1))) path.pop();
+        if (path.length) paths.add(path.join("."));
+      }
+    }
+    ts.forEachChild(node, visit);
+  };
+  visit(sourceFile);
+
+  const locales = ["fil", "bn", "uk", "ms", "sv", "cs", "ro", "el"];
+  const english = getMessages("en");
+  const omissions = [];
+  for (const locale of locales) {
+    const messages = getMessages(locale);
+    for (const path of paths) {
+      const valueAt = (dictionary) => path.split(".").reduce((value, part) => value?.[part], dictionary);
+      const value = valueAt(messages);
+      const englishValue = valueAt(english);
+      if (value && typeof value === "object") continue;
+      if (typeof value !== "string" || !value.trim()) omissions.push(`${locale}/${path}: missing or empty`);
+      else if (typeof englishValue === "string" && value === englishValue && !new Set(["sv/rotation", "ro/contrast"]).has(`${locale}/${path}`) && !/^(copy|download|upload|JSON|PDF|URL|MIME|SHA-256|UUID|UTC|PNG|JPG|WebP|HEIC|CSV|YAML|HTML|CSS|SQL|JPEG|GIF|SVG|Base64|Unix|D4|D6|D8|D10|D12|D20)$/u.test(value)) {
+        omissions.push(`${locale}/${path}: English fallback`);
+      }
+    }
+  }
+  assert.ok(paths.size > 0, "the coverage test must find Workspace message references");
+  assert.deepEqual(omissions, [], omissions.join("\n"));
+});
+
+test("expanded file inspection workspaces use translated processor status and result labels", async () => {
+  const workspaceComponentSource = await readFile(new URL("../src/components/tool/tool-workspace.tsx", import.meta.url), "utf8");
+  const locales = ["fil", "bn", "uk", "ms", "sv", "cs", "ro", "el"];
+  for (const locale of locales) {
+    const copy = getTargetFileProcessorCopy(locale);
+    assert.ok(copy, `${locale} must have file processor copy`);
+    assert.equal(typeof copy.duplicateGroup(1), "string");
+    assert.ok(copy.duplicateGroup(1).includes("1"));
+    assert.ok(copy.noDuplicates.trim());
+    assert.ok(copy.unknownMime.trim());
+    assert.notEqual(copy.noDuplicates, "No identical file contents found.");
+    assert.notEqual(copy.unknownMime, "unknown MIME");
+  }
+  assert.match(workspaceComponentSource, /getTargetFileProcessorCopy\(phaseLocale\)/);
+  assert.match(workspaceComponentSource, /targetFileCopy\?\.noDuplicates/);
+  assert.match(workspaceComponentSource, /targetFileCopy\?\.unknownMime/);
+});
+
+test("expanded browser developer workspaces localize fields, guidance, errors, and JWT expiry", async () => {
+  const locales = ["fil", "bn", "uk", "ms", "sv", "cs", "ro", "el"];
+  const workspaceSource = await readFile(new URL("../src/components/tool/browser-developer-tools-workspace.tsx", import.meta.url), "utf8");
+  const englishCopy = new Set(["Decodes the payload and checks exp only. It does not verify the signature or establish token validity.", "Uses local heuristics; browser identification is not guaranteed.", "IPv4 CIDR example: 192.168.1.15/24", "The file is read in your browser. Page sizes are shown in PDF points and millimeters.", "This tool runs in your browser. Inputs are not sent to a server.", "Done", "Check the input format.", "Encode", "Decode", "Expiry status", "No exp claim", "Not expired", "Expired"]);
+  for (const locale of locales) {
+    const copy = getTargetBrowserDeveloperCopy(locale);
+    assert.ok(copy, `${locale} must have browser developer workspace copy`);
+    assert.equal(copy.fields.length, 4);
+    assert.ok(copy.fields.every((value) => value.trim()));
+    for (const [key, value] of Object.entries(copy.helper)) {
+      assert.ok(value.trim(), `${locale}/helper.${key} must not be empty`);
+      assert.equal(englishCopy.has(value), false, `${locale}/helper.${key} must not fall back to English`);
+    }
+    for (const [key, value] of Object.entries(copy.expiry)) {
+      assert.ok(value.trim(), `${locale}/expiry.${key} must not be empty`);
+      assert.equal(englishCopy.has(value), false, `${locale}/expiry.${key} must not fall back to English`);
+    }
+  }
+  assert.match(workspaceSource, /getTargetBrowserDeveloperCopy\(locale\)/);
+  assert.match(workspaceSource, /targetCopy\?\.expiry/);
 });
 
 test("Japan-specific tools have translated metadata, complete page content, and related links", () => {
@@ -251,7 +416,7 @@ test("Phase 1 keeps the locale route and hreflang spellings distinct", async () 
 test("all Major Arcana have locale-specific upright and reversed interpretations", () => {
   const ids = ["fool","magician","priestess","empress","emperor","hierophant","lovers","chariot","strength","hermit","wheel","justice","hanged-man","death","temperance","devil","tower","star","moon","sun","judgement","world"];
   const omissions = [];
-  for (const locale of locales.slice(4)) for (const id of ids) {
+  for (const locale of [...locales.slice(4), "ru", "tr"]) for (const id of ids) {
     const upright = getTarotInterpretation(locale, id, false);
     const reversed = getTarotInterpretation(locale, id, true);
     if (!upright || !reversed) omissions.push(`${locale}/${id}: missing interpretation`);
@@ -281,7 +446,9 @@ test("common navigation, privacy, search, and action labels are translated in ev
   assert.deepEqual(omissions, [], `Common UI translation omissions:\n${omissions.join("\n")}`);
 });
 
-test("expanded shared dictionaries are complete and do not silently reuse English copy", () => {
+test("expanded shared dictionaries contain the canonical 117 UI, error, and policy keys", () => {
+  assert.equal(expandedModule.expandedMessageKeys.length, 117);
+  assert.equal(new Set(expandedModule.expandedMessageKeys).size, 117, "shared message keys must be unique");
   const omissions = [];
   const validSharedTerms = new Set(["es/horizontal","es/vertical","pt-br/horizontal","pt-br/vertical","de/horizontal","fr/rotation","fr/horizontal","fr/vertical","fr/portrait","fr/pageCount","id/horizontal","it/input","nl/contrast"]);
   for (const locale of locales.slice(4)) {
@@ -289,12 +456,46 @@ test("expanded shared dictionaries are complete and do not silently reuse Englis
     try { entries = expandedModule.getExpandedMessages(locale); }
     catch (error) { omissions.push(`${locale}: ${error.message}`); continue; }
     if (Object.keys(entries).length !== 117) omissions.push(`${locale}: expected 117 shared keys, got ${Object.keys(entries).length}`);
+    if (JSON.stringify(Object.keys(entries).sort()) !== JSON.stringify([...expandedModule.expandedMessageKeys].sort())) omissions.push(`${locale}: shared key set differs from canonical keys`);
     for (const [key, value] of Object.entries(entries)) {
       if (!value?.trim()) omissions.push(`${locale}/${key}: empty translation`);
       if (value === getMessages("en")[key] && !validSharedTerms.has(`${locale}/${key}`)) omissions.push(`${locale}/${key}: English fallback`);
     }
   }
   assert.deepEqual(omissions, [], `Expanded shared dictionary omissions:\n${omissions.join("\n")}`);
+});
+
+test("eight new locales resolve every shared page and workspace message without English fallback", () => {
+  const english = getMessages("en");
+  const flatten = (value, prefix = "") => Object.entries(value).flatMap(([key, item]) => {
+    const path = prefix ? `${prefix}.${key}` : key;
+    return typeof item === "string" ? [[path, item]] : item && typeof item === "object" ? flatten(item, path) : [];
+  });
+  const source = new Map(flatten(english));
+  const allowedExactMatches = new Set(["sv/rotation", "ro/contrast"]);
+  const placeholders = (value) => [...value.matchAll(/\{[a-zA-Z][a-zA-Z0-9]*\}/g)].map(([token]) => token).sort().join("|");
+  for (const { routeLocale: locale } of plannedLocaleConfig.slice(3)) {
+    assert.equal(Object.keys(expandedModule.getExpandedMessages(locale)).length, 117);
+    const messages = getMessages(locale);
+    const translated = new Map(flatten(messages));
+    for (const key of source.keys()) assert.ok(translated.has(key), `${locale}/${key} is missing`);
+    for (const [key, value] of translated) {
+      assert.ok(value.trim(), `${locale}/${key} must not be empty`);
+      if (!source.has(key)) continue;
+      const original = source.get(key);
+      assert.equal(placeholders(value), placeholders(original), `${locale}/${key} must preserve placeholders`);
+      assert.ok(value !== original || allowedExactMatches.has(`${locale}/${key}`), `${locale}/${key} must not fall back to English`);
+    }
+  }
+});
+
+test("Polish generic tool options and file rename fields are translated", () => {
+  assert.deepEqual(Object.keys(selectionCopy.pl).sort(), ["custom", "digits", "hangul", "latin", "noRepeat", "repeat", "special"].sort());
+  assert.deepEqual(Object.keys(renameCopy.pl).sort(), ["after", "before", "empty", "find", "padding", "prefix", "replace", "start", "suffix"].sort());
+  for (const [key, value] of Object.entries({ ...selectionCopy.pl, ...renameCopy.pl })) {
+    assert.ok(value.trim(), `Missing Polish option translation: ${key}`);
+    assert.notEqual(value, selectionCopy.en[key] ?? renameCopy.en[key], `English fallback in Polish option ${key}`);
+  }
 });
 
 function unwrapObject(node) {
@@ -335,7 +536,7 @@ test("interactive workspace dictionaries cover all locales with complete transla
     ["../src/components/tool/world-clock-workspace.tsx", ["labels", "zoneNames"]],
     ["../src/components/tool/countdown-workspace.tsx", ["labels"]],
     ["../src/components/tool/japan-tools-workspace.tsx", ["copy"]],
-    ["../src/components/tool/special-random-workspaces.tsx", ["copy", "lottoLabels", "selectionConflict", "specialPrompt", "specialRequired", "officialNotice", "translations", "wheelCopy", "starterByLocale", "teamPrefix", "labels"]],
+    ["../src/components/tool/special-random-workspaces.tsx", ["copy", "lottoLocaleLabels", "translations", "wheelCopy", "starterByLocale", "teamPrefix", "labels"]],
     ["../src/components/tool/fortune-workspace.tsx", ["tarotText", "dailyText", "dailyPools", "tarotNames"]],
     ["../src/components/tool/saju-workspace.tsx", ["labels"]],
   ];
@@ -363,4 +564,27 @@ test("interactive workspace dictionaries cover all locales with complete transla
     }
   }
   assert.deepEqual(omissions, [], `Workspace localization omissions:\n${omissions.join("\n")}`);
+});
+
+test("planned workspace option, rename, and file-limit copy is complete without English fallback", async () => {
+  const omissions = [];
+  const optionKeys = ["noRepeat", "repeat", "digits", "latin", "hangul", "special", "custom", "square", "portraitPreset", "story", "youtube", "xpost", "facebook", "grid3", "grid6", "grid9", "collage4", "collage6", "renameRules", "renameHint"];
+  for (const { routeLocale: locale } of plannedLocaleConfig) {
+    const options = targetToolOptionLabels[locale];
+    const rename = targetRenameCopy[locale];
+    const limits = targetSelectionLimitMessages[locale];
+    for (const key of optionKeys) {
+      if (!options?.[key]?.trim()) omissions.push(`${locale}.${key}: missing workspace option`);
+    }
+    for (const key of ["prefix", "suffix", "find", "replace", "start", "padding", "before", "after", "empty"]) {
+      if (!rename?.[key]?.trim()) omissions.push(`${locale}.${key}: missing rename label`);
+    }
+    for (const key of ["files", "images"]) {
+      if (!limits?.[key]?.trim()) omissions.push(`${locale}.${key}: missing selection limit`);
+    }
+  }
+  const workspaceSource = await readFile(new URL("../src/components/tool/tool-workspace.tsx", import.meta.url), "utf8");
+  assert.match(workspaceSource, /Record<ToolOptionLocale, \{ files: string; images: string \}>/);
+  assert.match(workspaceSource, /\.\.\.targetSelectionLimitMessages/);
+  assert.deepEqual(omissions, []);
 });

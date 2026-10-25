@@ -1,0 +1,97 @@
+name: PR CI
+
+on:
+  pull_request:
+    branches: [develop, main]
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pr-ci-tools-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  production-compose-preflight:
+    if: github.event.pull_request.base.ref == 'main' && github.event.pull_request.head.ref == 'develop' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - name: Check remote Tools Compose configuration without changing services
+        env:
+          SERVER_HOST: ${{ secrets.SERVER_HOST }}
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+          SERVER_SSH_KEY: ${{ secrets.SERVER_SSH_KEY }}
+        run: |
+          set -euo pipefail
+          test -n "$SERVER_HOST"
+          test -n "$SERVER_USER"
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SERVER_SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H "$SERVER_HOST" >> ~/.ssh/known_hosts
+          ssh -o BatchMode=yes "$SERVER_USER@$SERVER_HOST" 'bash -s' <<'REMOTE'
+          set -euo pipefail
+          cd /opt/services/compose
+          printf 'Environment file names: '
+          find . -maxdepth 1 -type f -name '.env*' -printf '%f '
+          printf '\nExisting Portal variable names (values are not read):\n'
+          for env_file in .env.moneybook .env.portal; do
+            if [ ! -r "$env_file" ]; then
+              echo "Required Compose environment file is missing or unreadable: $env_file" >&2
+              exit 1
+            fi
+            awk -F= -v file="$env_file" '$1 ~ /^(DATABASE_URL|DB_TARGET|PRODUCTION_DB_ALLOWED_HOSTS|WORLD_BANK_DATA_SOURCE|WORLD_BANK_DB_PRODUCTION_ENABLED)$/ { print file ":" $1 }' "$env_file"
+          done
+          set +e
+          config_output="$(docker compose --env-file .env.moneybook --env-file .env.portal config --services 2>&1)"
+          config_status=$?
+          set -e
+          printf '%s\n' "$config_output"
+          if [ "$config_status" -ne 0 ]; then
+            echo "Compose configuration validation failed with exit code $config_status." >&2
+            exit "$config_status"
+          fi
+          if printf '%s\n' "$config_output" | grep -Eiq 'defaulting to a blank string|variable .* is not set'; then
+            echo "Compose has unresolved environment variables; refusing the release preflight." >&2
+            exit 1
+          fi
+          printf '%s\n' "$config_output" | grep -qx tools
+          container_id="$(docker inspect --format '{{.Id}}' tools 2>/dev/null || true)"
+          test -n "$container_id"
+          docker inspect --format 'Tools image={{.Config.Image}} id={{.Image}}' "$container_id"
+          test "$(docker inspect --format '{{.State.Running}}' "$container_id")" = true
+          REMOTE
+
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout pull request
+        uses: actions/checkout@v6
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+      - name: Activate locked pnpm version
+        run: corepack enable && corepack prepare pnpm@9.12.1 --activate
+      - name: Configure pnpm dependency cache
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: "Run pnpm lint"
+        run: pnpm lint
+      - name: "Run pnpm test"
+        run: pnpm test
+      - name: "Run pnpm check:service-catalog"
+        run: pnpm check:service-catalog
+      - name: "Run pnpm build"
+        run: pnpm build

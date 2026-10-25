@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import type { RouteLocale } from "@/i18n/routing";
+import { isPlannedLocale, type RouteLocale, type TargetLocale } from "@/i18n/routing";
 import { getMessages } from "@/i18n/messages";
+import { getTargetBrowserDeveloperCopy } from "@/i18n/target-browser-developer-copy";
 import { copyText } from "@/lib/copy-to-clipboard";
 import { calculateChmod, calculateIpv4Cidr, compareHashes, convertCsvTsv, createUlid, createUrlSlug, createUuidV7, decodeBase32, decodeHtmlEntities, decodeJwt, encodeBase32, encodeHtmlEntities, evaluateJsonPath, inspectCodePoints, inspectUserAgent, parseUrlQuery, replaceWithRegex } from "@/lib/browser-developer-tools";
 
@@ -51,15 +52,20 @@ const expiryLabels: Record<RouteLocale, { label: string; absent: string; active:
   ko:{label:"만료 상태",absent:"exp 클레임 없음",active:"만료되지 않음",expired:"만료됨"},en:{label:"Expiry status",absent:"No exp claim",active:"Not expired",expired:"Expired"},ja:{label:"有効期限",absent:"expクレームなし",active:"有効期限内",expired:"期限切れ"},zh:{label:"过期状态",absent:"没有 exp 声明",active:"尚未过期",expired:"已过期"},es:{label:"Estado de expiración",absent:"Sin claim exp",active:"No ha caducado",expired:"Caducado"},"pt-br":{label:"Estado de expiração",absent:"Sem claim exp",active:"Não expirado",expired:"Expirado"},de:{label:"Ablaufstatus",absent:"Kein exp-Claim",active:"Nicht abgelaufen",expired:"Abgelaufen"},fr:{label:"État d’expiration",absent:"Aucune claim exp",active:"Non expiré",expired:"Expiré"},vi:{label:"Trạng thái hết hạn",absent:"Không có claim exp",active:"Chưa hết hạn",expired:"Đã hết hạn"},id:{label:"Status kedaluwarsa",absent:"Tidak ada klaim exp",active:"Belum kedaluwarsa",expired:"Kedaluwarsa"},th:{label:"สถานะหมดอายุ",absent:"ไม่มี exp claim",active:"ยังไม่หมดอายุ",expired:"หมดอายุแล้ว"},"zh-tw":{label:"到期狀態",absent:"沒有 exp 宣告",active:"尚未到期",expired:"已到期"},it:{label:"Stato di scadenza",absent:"Nessun claim exp",active:"Non scaduto",expired:"Scaduto"},nl:{label:"Verloopstatus",absent:"Geen exp-claim",active:"Niet verlopen",expired:"Verlopen"},hi:{label:"समाप्ति स्थिति",absent:"exp क्लेम नहीं है",active:"समाप्त नहीं हुआ",expired:"समाप्त हो गया"},
 };
 
-export function BrowserDeveloperToolsWorkspace({ slug, locale, title }: { slug: string; locale: RouteLocale; title: string }) {
+const polishFieldNames = ["Wartość wejściowa", "Druga wartość", "Wzorzec lub JSONPath", "Wybierz plik PDF"] as const;
+const polishHelper = { jwt:"Narzędzie dekoduje treść tokenu i sprawdza wyłącznie pole exp. Nie weryfikuje podpisu ani ważności tokenu.", ua:"Wynik opiera się na lokalnych heurystykach i nie gwarantuje prawidłowego rozpoznania przeglądarki.", cidr:"Przykład IPv4 CIDR: 192.168.1.15/24", pdf:"Plik jest odczytywany w przeglądarce. Rozmiary stron podajemy w punktach PDF i milimetrach.", unsupported:"Narzędzie działa w przeglądarce. Wprowadzone dane nie są wysyłane na serwer.", success:"Gotowe", failure:"Sprawdź format danych wejściowych.", directionA:"Koduj", directionB:"Dekoduj" } as const;
+const polishExpiry = { label:"Stan wygaśnięcia", absent:"Brak pola exp", active:"Token nie wygasł", expired:"Token wygasł" } as const;
+
+export function BrowserDeveloperToolsWorkspace({ slug, locale, title }: { slug: string; locale: TargetLocale; title: string }) {
   if (!supportedSlugs.has(slug)) return null;
   return <Workspace slug={slug} locale={locale} title={title} />;
 }
 
-function Workspace({ slug, locale, title }: { slug: string; locale: RouteLocale; title: string }) {
+function Workspace({ slug, locale, title }: { slug: string; locale: TargetLocale; title: string }) {
   const messages = getMessages(locale);
-  const labels = fieldNames[locale];
-  const helper = helperText[locale];
+  const targetCopy = isPlannedLocale(locale) ? getTargetBrowserDeveloperCopy(locale) : undefined;
+  const labels = targetCopy?.fields ?? (locale === "pl" ? polishFieldNames : fieldNames[locale as RouteLocale]);
+  const helper = targetCopy?.helper ?? (locale === "pl" ? polishHelper : helperText[locale as RouteLocale]);
   const [first, setFirst] = useState("");
   const [second, setSecond] = useState("");
   const [third, setThird] = useState("");
@@ -79,7 +85,7 @@ function Workspace({ slug, locale, title }: { slug: string; locale: RouteLocale;
       switch (slug) {
         case "jwt-decoder": {
           const decoded = decodeJwt(first);
-          const expiry = expiryLabels[locale];
+          const expiry = targetCopy?.expiry ?? (locale === "pl" ? polishExpiry : expiryLabels[locale as RouteLocale]);
           const expText = decoded.expiry === null ? expiry.absent : `${decoded.status === "active" ? expiry.active : expiry.expired}: ${new Date(decoded.expiry).toISOString()}`;
           value = `${JSON.stringify(decoded.payload, null, 2)}\n\n${expiry.label}: ${expText}`;
           break;

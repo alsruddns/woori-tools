@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import type { RouteLocale } from "@/i18n/routing";
+import type { PublishedTargetLocale } from "@/i18n/routing";
 
 const labels: Record<string, Record<string, string>> = {
   ko: { hours: "시", minutes: "분", seconds: "초", start: "시작", pause: "일시정지", resume: "계속", reset: "초기화", focus: "집중", short: "짧은 휴식", long: "긴 휴식", cycles: "긴 휴식까지 세션 수", session: "세션", presets: "빠른 설정", complete: "시간이 끝났습니다.", next: "다음 세션 시작", cyclesDone: "완료한 집중 세션", phaseFocus: "집중 시간", phaseShort: "짧은 휴식", phaseLong: "긴 휴식" },
@@ -28,7 +28,34 @@ Object.assign(presetLabels, {es:["1 min","3 min","5 min","10 min","30 min","1 h"
 type Phase = "focus" | "short" | "long";
 type Settings = { focus: number; short: number; long: number; cycleLength: number };
 
-export function CountdownWorkspace({ slug, locale }: { slug: "timer" | "pomodoro-timer"; locale:RouteLocale }) {
+Object.assign(labels, {
+  ru: {
+    hours: "Часы", minutes: "Минуты", seconds: "Секунды", start: "Запустить", pause: "Пауза", resume: "Продолжить", reset: "Сбросить",
+    focus: "Работа", short: "Короткий перерыв", long: "Длинный перерыв", cycles: "Рабочих сессий до длинного перерыва", session: "Сессия",
+    presets: "Быстрые интервалы", complete: "Время вышло.", next: "Начать следующую сессию", cyclesDone: "Завершено рабочих сессий",
+    phaseFocus: "Время работы", phaseShort: "Короткий перерыв", phaseLong: "Длинный перерыв",
+  },
+});
+Object.assign(presetLabels, { ru: ["1 мин", "3 мин", "5 мин", "10 мин", "30 мин", "1 ч"] });
+
+Object.assign(labels,{tr:{hours:"Saat",minutes:"Dakika",seconds:"Saniye",start:"Başlat",pause:"Duraklat",resume:"Sürdür",reset:"Sıfırla",focus:"Odaklanma",short:"Kısa mola",long:"Uzun mola",cycles:"Uzun molaya kadar odaklanma oturumu",session:"Oturum",presets:"Hızlı süreler",complete:"Süre doldu.",next:"Sonraki oturumu başlat",cyclesDone:"Tamamlanan odaklanma oturumu",phaseFocus:"Odaklanma süresi",phaseShort:"Kısa mola",phaseLong:"Uzun mola"}});
+Object.assign(labels,{pl:{hours:"Godziny",minutes:"Minuty",seconds:"Sekundy",start:"Start",pause:"Wstrzymaj",resume:"Wzn\u00F3w",reset:"Resetuj",focus:"Skupienie",short:"Kr\u00F3tka przerwa",long:"D\u0142uga przerwa",cycles:"Sesje skupienia przed d\u0142ug\u0105 przerw\u0105",session:"Sesja",presets:"Szybkie ustawienia",complete:"Czas min\u0105\u0142.",next:"Rozpocznij nast\u0119pn\u0105 sesj\u0119",cyclesDone:"Uko\u0144czone sesje skupienia",phaseFocus:"Czas skupienia",phaseShort:"Kr\u00F3tka przerwa",phaseLong:"D\u0142uga przerwa"}});
+Object.assign(presetLabels,{tr:["1 dk","3 dk","5 dk","10 dk","30 dk","1 sa"]});
+Object.assign(presetLabels,{pl:["1 min","3 min","5 min","10 min","30 min","1 godz."]});
+Object.assign(labels, {
+  fil: { hours: "Oras", minutes: "Minuto", seconds: "Segundo", start: "Simulan", pause: "I-pause", resume: "Ipagpatuloy", reset: "I-reset", focus: "Pokus", short: "Maikling pahinga", long: "Mahabang pahinga", cycles: "Mga sesyon bago ang mahabang pahinga", session: "Sesyon", presets: "Mabilis na tagal", complete: "Tapos na ang oras.", next: "Simulan ang susunod na sesyon", cyclesDone: "Nakumpletong sesyon ng pokus", phaseFocus: "Oras ng pokus", phaseShort: "Maikling pahinga", phaseLong: "Mahabang pahinga" },
+  bn: { hours: "ঘণ্টা", minutes: "মিনিট", seconds: "সেকেন্ড", start: "শুরু করুন", pause: "বিরতি দিন", resume: "চালিয়ে যান", reset: "রিসেট করুন", focus: "মনোযোগ", short: "ছোট বিরতি", long: "দীর্ঘ বিরতি", cycles: "দীর্ঘ বিরতির আগে কাজের সেশন", session: "সেশন", presets: "দ্রুত সময়", complete: "সময় শেষ।", next: "পরের সেশন শুরু করুন", cyclesDone: "সম্পন্ন মনোযোগের সেশন", phaseFocus: "মনোযোগের সময়", phaseShort: "ছোট বিরতি", phaseLong: "দীর্ঘ বিরতি" },
+  uk: { hours: "Години", minutes: "Хвилини", seconds: "Секунди", start: "Почати", pause: "Пауза", resume: "Продовжити", reset: "Скинути", focus: "Зосередження", short: "Коротка перерва", long: "Довга перерва", cycles: "Сеанси до довгої перерви", session: "Сеанс", presets: "Швидкий вибір часу", complete: "Час вийшов.", next: "Почати наступний сеанс", cyclesDone: "Завершені сеанси зосередження", phaseFocus: "Час зосередження", phaseShort: "Коротка перерва", phaseLong: "Довга перерва" },
+  ms: { hours: "Jam", minutes: "Minit", seconds: "Saat", start: "Mula", pause: "Jeda", resume: "Sambung", reset: "Tetapkan semula", focus: "Fokus", short: "Rehat pendek", long: "Rehat panjang", cycles: "Sesi sebelum rehat panjang", session: "Sesi", presets: "Tempoh pantas", complete: "Masa tamat.", next: "Mulakan sesi seterusnya", cyclesDone: "Sesi fokus selesai", phaseFocus: "Masa fokus", phaseShort: "Rehat pendek", phaseLong: "Rehat panjang" },
+  sv: { hours: "Timmar", minutes: "Minuter", seconds: "Sekunder", start: "Starta", pause: "Pausa", resume: "Fortsätt", reset: "Återställ", focus: "Fokus", short: "Kort paus", long: "Lång paus", cycles: "Fokussessioner före lång paus", session: "Session", presets: "Snabba tider", complete: "Tiden är ute.", next: "Starta nästa session", cyclesDone: "Avslutade fokussessioner", phaseFocus: "Fokustid", phaseShort: "Kort paus", phaseLong: "Lång paus" },
+  cs: { hours: "Hodiny", minutes: "Minuty", seconds: "Sekundy", start: "Spustit", pause: "Pozastavit", resume: "Pokračovat", reset: "Vynulovat", focus: "Soustředění", short: "Krátká přestávka", long: "Dlouhá přestávka", cycles: "Počet bloků před dlouhou přestávkou", session: "Blok", presets: "Rychlé časy", complete: "Čas vypršel.", next: "Spustit další blok", cyclesDone: "Dokončené bloky soustředění", phaseFocus: "Čas na soustředění", phaseShort: "Krátká přestávka", phaseLong: "Dlouhá přestávka" },
+  ro: { hours: "Ore", minutes: "Minute", seconds: "Secunde", start: "Pornește", pause: "Pauză", resume: "Continuă", reset: "Resetează", focus: "Concentrare", short: "Pauză scurtă", long: "Pauză lungă", cycles: "Sesiuni până la pauza lungă", session: "Sesiune", presets: "Durate rapide", complete: "Timpul a expirat.", next: "Pornește sesiunea următoare", cyclesDone: "Sesiuni de concentrare încheiate", phaseFocus: "Timp de concentrare", phaseShort: "Pauză scurtă", phaseLong: "Pauză lungă" },
+  el: { hours: "Ώρες", minutes: "Λεπτά", seconds: "Δευτερόλεπτα", start: "Έναρξη", pause: "Παύση", resume: "Συνέχεια", reset: "Επαναφορά", focus: "Συγκέντρωση", short: "Σύντομο διάλειμμα", long: "Μεγάλο διάλειμμα", cycles: "Συνεδρίες πριν από το μεγάλο διάλειμμα", session: "Συνεδρία", presets: "Γρήγορες διάρκειες", complete: "Ο χρόνος έληξε.", next: "Έναρξη επόμενης συνεδρίας", cyclesDone: "Ολοκληρωμένες συνεδρίες συγκέντρωσης", phaseFocus: "Χρόνος συγκέντρωσης", phaseShort: "Σύντομο διάλειμμα", phaseLong: "Μεγάλο διάλειμμα" },
+});
+Object.assign(presetLabels, {
+  fil: ["1 min", "3 min", "5 min", "10 min", "30 min", "1 oras"], bn: ["১ মিনিট", "৩ মিনিট", "৫ মিনিট", "১০ মিনিট", "৩০ মিনিট", "১ ঘণ্টা"], uk: ["1 хв", "3 хв", "5 хв", "10 хв", "30 хв", "1 год"], ms: ["1 min", "3 min", "5 min", "10 min", "30 min", "1 jam"], sv: ["1 min", "3 min", "5 min", "10 min", "30 min", "1 tim"], cs: ["1 min", "3 min", "5 min", "10 min", "30 min", "1 hod"], ro: ["1 min", "3 min", "5 min", "10 min", "30 min", "1 oră"], el: ["1 λεπτό", "3 λεπτά", "5 λεπτά", "10 λεπτά", "30 λεπτά", "1 ώρα"],
+});
+export function CountdownWorkspace({ slug, locale }: { slug: "timer" | "pomodoro-timer"; locale:PublishedTargetLocale }) {
   const t = labels[locale];
   const [settings, setSettings] = useState<Settings>({ focus: 25, short: 5, long: 15, cycleLength: 4 });
   const [settingsLoaded, setSettingsLoaded] = useState(false);

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import type { RouteLocale } from "@/i18n/routing";
+import type { PublishedTargetLocale } from "@/i18n/routing";
 
 const fallbackZones = ["Asia/Seoul", "Asia/Tokyo", "Asia/Shanghai", "Asia/Singapore", "Europe/London", "Europe/Paris", "America/New_York", "America/Los_Angeles", "Australia/Sydney", "Pacific/Auckland"];
 const defaultZones = ["Asia/Seoul", "Asia/Tokyo", "America/New_York", "America/Los_Angeles", "Europe/London", "Europe/Paris", "Asia/Singapore", "Australia/Sydney"];
@@ -23,6 +23,16 @@ Object.assign(labels, {
   it:{title:"Orologio mondiale",add:"Aggiungi città",remove:"Rimuovi",search:"Cerca fusi orari",none:"Nessuna città da visualizzare."},
   nl:{title:"Wereldklok",add:"Stad toevoegen",remove:"Verwijderen",search:"Tijdzones zoeken",none:"Geen steden om weer te geven."},
   hi:{title:"विश्व घड़ी",add:"शहर जोड़ें",remove:"हटाएँ",search:"समय क्षेत्र खोजें",none:"दिखाने के लिए कोई शहर नहीं है।"},
+});
+Object.assign(labels, {
+  fil: { title: "Orasan sa mundo", add: "Magdagdag ng lungsod", remove: "Alisin", search: "Maghanap ng time zone", none: "Walang lungsod na ipapakita." },
+  bn: { title: "বিশ্ব ঘড়ি", add: "শহর যোগ করুন", remove: "সরান", search: "সময় অঞ্চল খুঁজুন", none: "দেখানোর মতো কোনো শহর নেই।" },
+  uk: { title: "Світовий годинник", add: "Додати місто", remove: "Вилучити", search: "Шукати часовий пояс", none: "Немає міст для відображення." },
+  ms: { title: "Jam dunia", add: "Tambah bandar", remove: "Buang", search: "Cari zon waktu", none: "Tiada bandar untuk dipaparkan." },
+  sv: { title: "Världsklocka", add: "Lägg till stad", remove: "Ta bort", search: "Sök tidszoner", none: "Det finns inga städer att visa." },
+  cs: { title: "Světové hodiny", add: "Přidat město", remove: "Odebrat", search: "Hledat časová pásma", none: "Žádná města k zobrazení." },
+  ro: { title: "Ceas mondial", add: "Adaugă un oraș", remove: "Elimină", search: "Caută fusuri orare", none: "Nu există orașe de afișat." },
+  el: { title: "Παγκόσμιο ρολόι", add: "Προσθήκη πόλης", remove: "Αφαίρεση", search: "Αναζήτηση ζωνών ώρας", none: "Δεν υπάρχουν πόλεις για εμφάνιση." },
 });
 
 const zoneNames: Record<string, Record<string, string>> = {
@@ -46,7 +56,25 @@ Object.assign(zoneNames, {
   hi:{"Asia/Seoul":"सियोल","Asia/Tokyo":"टोक्यो","Asia/Shanghai":"शंघाई","Asia/Singapore":"सिंगापुर","Europe/London":"लंदन","Europe/Paris":"पेरिस","America/New_York":"न्यूयॉर्क","America/Los_Angeles":"लॉस एंजिलिस","Australia/Sydney":"सिडनी","Pacific/Auckland":"ऑकलैंड"},
 });
 
-export function WorldClockWorkspace({ locale }: { locale:RouteLocale }) {
+Object.assign(labels, { ru: { title: "Мировые часы", add: "Добавить город", remove: "Удалить", search: "Поиск часовых поясов", none: "Нет городов для отображения." } });
+Object.assign(zoneNames, { ru: { "Asia/Seoul": "Сеул", "Asia/Tokyo": "Токио", "Asia/Shanghai": "Шанхай", "Asia/Singapore": "Сингапур", "Europe/London": "Лондон", "Europe/Paris": "Париж", "America/New_York": "Нью-Йорк", "America/Los_Angeles": "Лос-Анджелес", "Australia/Sydney": "Сидней", "Pacific/Auckland": "Окленд" } });
+
+Object.assign(labels, { tr: { title: "Dünya saati", add: "Şehir ekle", remove: "Kaldır", search: "Saat dilimlerini ara", none: "Gösterilecek şehir yok." } });
+Object.assign(zoneNames, { tr: { "Asia/Seoul": "Seul", "Asia/Tokyo": "Tokyo", "Asia/Shanghai": "Şanghay", "Asia/Singapore": "Singapur", "Europe/London": "Londra", "Europe/Paris": "Paris", "America/New_York": "New York", "America/Los_Angeles": "Los Angeles", "Australia/Sydney": "Sidney", "Pacific/Auckland": "Auckland" } });
+Object.assign(labels, { pl: { title: "Zegar światowy", add: "Dodaj miasto", remove: "Usuń", search: "Wyszukaj strefy czasowe", none: "Brak miast do wyświetlenia." } });
+Object.assign(zoneNames, { pl: { "Asia/Seoul": "Seul", "Asia/Tokyo": "Tokio", "Asia/Shanghai": "Szanghaj", "Asia/Singapore": "Singapur", "Europe/London": "Londyn", "Europe/Paris": "Paryż", "America/New_York": "Nowy Jork", "America/Los_Angeles": "Los Angeles", "Australia/Sydney": "Sydney", "Pacific/Auckland": "Auckland" } });
+Object.assign(zoneNames, {
+  fil: { "Asia/Seoul": "Seoul", "Asia/Tokyo": "Tokyo", "Asia/Shanghai": "Shanghai", "Asia/Singapore": "Singapore", "Europe/London": "London", "Europe/Paris": "Paris", "America/New_York": "New York", "America/Los_Angeles": "Los Angeles", "Australia/Sydney": "Sydney", "Pacific/Auckland": "Auckland" },
+  bn: { "Asia/Seoul": "সিউল", "Asia/Tokyo": "টোকিও", "Asia/Shanghai": "সাংহাই", "Asia/Singapore": "সিঙ্গাপুর", "Europe/London": "লন্ডন", "Europe/Paris": "প্যারিস", "America/New_York": "নিউ ইয়র্ক", "America/Los_Angeles": "লস অ্যাঞ্জেলেস", "Australia/Sydney": "সিডনি", "Pacific/Auckland": "অকল্যান্ড" },
+  uk: { "Asia/Seoul": "Сеул", "Asia/Tokyo": "Токіо", "Asia/Shanghai": "Шанхай", "Asia/Singapore": "Сінгапур", "Europe/London": "Лондон", "Europe/Paris": "Париж", "America/New_York": "Нью-Йорк", "America/Los_Angeles": "Лос-Анджелес", "Australia/Sydney": "Сідней", "Pacific/Auckland": "Окленд" },
+  ms: { "Asia/Seoul": "Seoul", "Asia/Tokyo": "Tokyo", "Asia/Shanghai": "Shanghai", "Asia/Singapore": "Singapura", "Europe/London": "London", "Europe/Paris": "Paris", "America/New_York": "New York", "America/Los_Angeles": "Los Angeles", "Australia/Sydney": "Sydney", "Pacific/Auckland": "Auckland" },
+  sv: { "Asia/Seoul": "Seoul", "Asia/Tokyo": "Tokyo", "Asia/Shanghai": "Shanghai", "Asia/Singapore": "Singapore", "Europe/London": "London", "Europe/Paris": "Paris", "America/New_York": "New York", "America/Los_Angeles": "Los Angeles", "Australia/Sydney": "Sydney", "Pacific/Auckland": "Auckland" },
+  cs: { "Asia/Seoul": "Soul", "Asia/Tokyo": "Tokio", "Asia/Shanghai": "Šanghaj", "Asia/Singapore": "Singapur", "Europe/London": "Londýn", "Europe/Paris": "Paříž", "America/New_York": "New York", "America/Los_Angeles": "Los Angeles", "Australia/Sydney": "Sydney", "Pacific/Auckland": "Auckland" },
+  ro: { "Asia/Seoul": "Seul", "Asia/Tokyo": "Tokyo", "Asia/Shanghai": "Shanghai", "Asia/Singapore": "Singapore", "Europe/London": "Londra", "Europe/Paris": "Paris", "America/New_York": "New York", "America/Los_Angeles": "Los Angeles", "Australia/Sydney": "Sydney", "Pacific/Auckland": "Auckland" },
+  el: { "Asia/Seoul": "Σεούλ", "Asia/Tokyo": "Τόκιο", "Asia/Shanghai": "Σαγκάη", "Asia/Singapore": "Σιγκαπούρη", "Europe/London": "Λονδίνο", "Europe/Paris": "Παρίσι", "America/New_York": "Νέα Υόρκη", "America/Los_Angeles": "Λος Άντζελες", "Australia/Sydney": "Σίδνεϊ", "Pacific/Auckland": "Όκλαντ" },
+});
+
+export function WorldClockWorkspace({ locale }: { locale:PublishedTargetLocale }) {
   const t = labels[locale];
   const zones = useMemo(() => {
     try { return typeof Intl.supportedValuesOf === "function" ? Intl.supportedValuesOf("timeZone") : fallbackZones; } catch { return fallbackZones; }

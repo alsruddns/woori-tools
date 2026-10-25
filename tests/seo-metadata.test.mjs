@@ -16,14 +16,16 @@ test("SEO URLs use the production www origin and locale first", () => {
   assert.doesNotMatch(source + layout + toolPage, /localhost|https:\/\/www\.woori\.today\/tools\//);
 });
 
-test("all 15 route locales have canonical hreflang alternates", async () => {
+test("legacy locales keep canonical hreflang and RU remains limited to published pages", async () => {
   const routing = await readFile(new URL("../src/i18n/routing.ts", import.meta.url), "utf8");
   for (const locale of ["ko", "en", "ja", "zh", "es", "pt-br", "de", "fr", "vi", "id", "th", "zh-tw", "it", "nl", "hi"]) {
     assert.ok(routing.includes(`routeLocale: "${locale}"`));
   }
   assert.match(routing, /routeLocale: "pt-br", hreflang: "pt-BR"/);
   assert.match(routing, /routeLocale: "zh-tw", hreflang: "zh-TW"/);
-  assert.match(source, /hreflangs\[locale\], localizedUrl\(locale, path\)/);
+  assert.match(routing, /routeLocale: "ru", hreflang: "ru"/);
+  assert.match(source, /publishedTargetHreflangs\[locale\], localizedUrl\(locale, path\)/);
+  assert.match(toolPage, /targetLocalePublication\.ru\.publishedToolSlugs\.includes\(slug\)/);
 });
 
 test("Google AdSense account verification is configured in the shared locale metadata", () => {

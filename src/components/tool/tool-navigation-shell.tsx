@@ -3,14 +3,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
-import { localizePath, type Locale } from "@/i18n/routing";
+import { localizePath, type PublishedTargetLocale } from "@/i18n/routing";
 import { matchesToolSearch } from "@/lib/tool-navigation";
 
 export type NavigationTool = { slug: string; title: string; keywords: string[]; description: string };
 export type NavigationSection = { id: string; name: string; tools: NavigationTool[] };
 
 type Props = {
-  locale: Locale;
+  locale: PublishedTargetLocale;
   sections: NavigationSection[];
   children: React.ReactNode;
   searchLabel: string;

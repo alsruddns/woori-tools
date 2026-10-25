@@ -1,0 +1,74 @@
+import type { SevenTargetLocale, TargetSevenToolTranslation } from "./target-seven-tools-translations";
+
+type Copy = readonly [string, string, string, string, string, string];
+type Shared = { category: string; steps: [string, string, string]; caution: string; faq: { example: string; caution: string }; privacy: string };
+const shared: Record<SevenTargetLocale, Shared> = {
+  bn: { category: "ডেভেলপার ও নেটওয়ার্ক সরঞ্জাম", steps: ["ইনপুটে মান বা টেক্সট দিন।", "প্রয়োজনীয় ফরম্যাট বা বিকল্প বেছে নিন।", "ফল পরীক্ষা করে কপি করুন।"], caution: "ফলাফলটি নিজে যাচাই করুন। ডিকোড করা JWT-এর দাবি স্বাক্ষর যাচাই ছাড়া বিশ্বাসযোগ্য নয়।", faq: { example: "আমি কি ফলাফলটি কপি করতে পারি?", caution: "এই টুল কি কোনো তথ্য সার্ভারে পাঠায়?" }, privacy: "প্রক্রিয়াকরণ আপনার ব্রাউজারেই হয়; ইনপুট সার্ভারে পাঠানো হয় না।" },
+  uk: { category: "Інструменти для розробників і мереж", steps: ["Введіть значення або текст.", "Оберіть потрібний формат чи параметри.", "Перевірте й скопіюйте результат."], caution: "Перевіряйте результат самостійно. Даним декодованого JWT не можна довіряти без перевірки підпису.", faq: { example: "Чи можна скопіювати результат?", caution: "Чи надсилає інструмент дані на сервер?" }, privacy: "Обробка відбувається у браузері; введені дані не надсилаються на сервер." },
+  ms: { category: "Alat pembangun dan rangkaian", steps: ["Masukkan nilai atau teks.", "Pilih format atau pilihan yang diperlukan.", "Semak dan salin hasil."], caution: "Semak hasil sendiri. Tuntutan dalam JWT yang dinyahkod tidak boleh dipercayai tanpa pengesahan tandatangan.", faq: { example: "Bolehkah saya menyalin hasilnya?", caution: "Adakah alat ini menghantar data ke pelayan?" }, privacy: "Pemprosesan berlaku dalam pelayar; input tidak dihantar ke pelayan." },
+  sv: { category: "Utvecklar- och nätverksverktyg", steps: ["Ange ett värde eller en text.", "Välj önskat format eller alternativ.", "Granska och kopiera resultatet."], caution: "Kontrollera resultatet själv. Påståenden i en avkodad JWT är inte tillförlitliga utan verifierad signatur.", faq: { example: "Kan jag kopiera resultatet?", caution: "Skickar verktyget data till en server?" }, privacy: "Bearbetningen sker i webbläsaren; indata skickas inte till en server." },
+  cs: { category: "Nástroje pro vývojáře a sítě", steps: ["Zadejte hodnotu nebo text.", "Vyberte požadovaný formát či možnosti.", "Zkontrolujte a zkopírujte výsledek."], caution: "Výsledek si ověřte. Dekódovaným údajům JWT nelze důvěřovat bez ověření podpisu.", faq: { example: "Mohu výsledek zkopírovat?", caution: "Odesílá nástroj data na server?" }, privacy: "Zpracování probíhá v prohlížeči; vstup se na server neodesílá." },
+  ro: { category: "Instrumente pentru dezvoltare și rețea", steps: ["Introduceți o valoare sau un text.", "Alegeți formatul sau opțiunile dorite.", "Verificați și copiați rezultatul."], caution: "Verificați rezultatul. Informațiile dintr-un JWT decodat nu sunt de încredere fără verificarea semnăturii.", faq: { example: "Pot copia rezultatul?", caution: "Instrumentul trimite date la server?" }, privacy: "Prelucrarea are loc în browser; datele introduse nu sunt trimise la server." },
+  el: { category: "Εργαλεία προγραμματιστών και δικτύου", steps: ["Εισαγάγετε μια τιμή ή κείμενο.", "Επιλέξτε τη μορφή ή τις ρυθμίσεις.", "Ελέγξτε και αντιγράψτε το αποτέλεσμα."], caution: "Ελέγξτε μόνοι σας το αποτέλεσμα. Οι ισχυρισμοί ενός αποκωδικοποιημένου JWT δεν είναι αξιόπιστοι χωρίς επαλήθευση υπογραφής.", faq: { example: "Μπορώ να αντιγράψω το αποτέλεσμα;", caution: "Στέλνει το εργαλείο δεδομένα σε διακομιστή;" }, privacy: "Η επεξεργασία γίνεται στο πρόγραμμα περιήγησης· τα δεδομένα εισόδου δεν αποστέλλονται σε διακομιστή." },
+};
+
+const content: Record<SevenTargetLocale, Record<string, Copy>> = {
+  bn: {
+    "jwt-decoder": ["JWT ডিকোডার", "JSON Web Token-এর header ও payload পড়ুন। এই টুল স্বাক্ষর যাচাই করে না।", "JWT ডিকোড", "JWT পেস্ট করে ডিকোড করুন।", "একটি JWT-এর header ও payload দেখুন।", "ডিকোড করা অংশগুলো আলাদাভাবে পরীক্ষা করুন।"],
+    "url-query-parameter-parser": ["URL কুয়েরি প্যারামিটার পার্সার", "URL-এর query string বিশ্লেষণ করে প্যারামিটার ও মান আলাদা করে দেখুন।", "URL query পার্সার", "URL বা query string পেস্ট করুন।", "একটি URL থেকে প্রতিটি query মান বের করুন।", "ডুপ্লিকেট কী ও URL encoding পরীক্ষা করুন।"],
+    "user-agent-parser": ["User-Agent পার্সার", "User-Agent স্ট্রিং থেকে ব্রাউজার, অপারেটিং সিস্টেম ও ডিভাইসের সংকেত শনাক্ত করুন।", "User-Agent বিশ্লেষণ", "User-Agent স্ট্রিং পেস্ট করুন।", "User-Agent স্ট্রিংয়ের শনাক্তযোগ্য তথ্য দেখুন।", "ফলাফল স্ট্রিংয়ের তথ্যের ওপর নির্ভরশীল।"],
+    "ip-cidr-calculator": ["IPv4 CIDR ক্যালকুলেটর", "IPv4 ঠিকানা ও CIDR prefix থেকে নেটওয়ার্ক পরিসর এবং সংশ্লিষ্ট মান হিসাব করুন।", "IPv4 CIDR ক্যালকুলেটর", "IPv4 CIDR মান লিখুন।", "একটি IPv4 নেটওয়ার্কের পরিসর হিসাব করুন।", "ঠিকানা ও prefix দৈর্ঘ্য দিন।"],
+    "hash-compare": ["হ্যাশ তুলনা টুল", "দুটি হ্যাশ স্ট্রিং তুলনা করে একই কি না দেখুন।", "হ্যাশ তুলনা", "দুটি হ্যাশ পেস্ট করুন।", "দুটি হ্যাশ মান মিলিয়ে দেখুন।", "তুলনার আগে অপ্রয়োজনীয় ফাঁক সরান।"],
+  },
+  uk: {
+    "jwt-decoder": ["Декодер JWT", "Перегляньте заголовок і дані JSON Web Token. Інструмент не перевіряє підпис.", "декодування JWT", "Вставте JWT і декодуйте його.", "Перегляньте заголовок і дані токена JWT.", "Перевірте декодовані частини окремо."],
+    "url-query-parameter-parser": ["Парсер параметрів URL", "Розберіть рядок запиту URL, щоб переглянути окремі параметри та їхні значення.", "парсер параметрів URL", "Вставте URL або рядок запиту.", "Отримайте значення параметрів з URL.", "Перевірте повторювані ключі та URL-кодування."],
+    "user-agent-parser": ["Парсер User-Agent", "Визначте відомості про браузер, операційну систему та пристрій із рядка User-Agent.", "аналіз User-Agent", "Вставте рядок User-Agent.", "Перегляньте дані, визначені з рядка User-Agent.", "Результат залежить від відомостей у самому рядку."],
+    "ip-cidr-calculator": ["Калькулятор IPv4 CIDR", "Обчисліть діапазон мережі та пов’язані значення за адресою IPv4 і префіксом CIDR.", "калькулятор IPv4 CIDR", "Введіть адресу IPv4 і префікс.", "Обчисліть діапазон мережі IPv4.", "Вкажіть адресу та довжину префікса."],
+    "hash-compare": ["Інструмент порівняння хешів", "Порівняйте два рядки хешів і перевірте, чи збігаються вони.", "порівняння хешів", "Вставте два хеші.", "Порівняйте два значення хешу.", "За потреби приберіть зайві пробіли перед порівнянням."],
+  },
+  ms: {
+    "jwt-decoder": ["Penyahkod JWT", "Lihat pengepala dan muatan JSON Web Token. Alat ini tidak mengesahkan tandatangan.", "penyahkod JWT", "Tampal dan nyahkod JWT.", "Lihat pengepala serta muatan token JWT.", "Semak bahagian yang dinyahkod secara berasingan."],
+    "url-query-parameter-parser": ["Penghurai parameter pertanyaan URL", "Huraikan rentetan pertanyaan URL untuk melihat parameter dan nilainya satu demi satu.", "penghurai pertanyaan URL", "Tampal URL atau rentetan pertanyaan.", "Ekstrak setiap nilai pertanyaan daripada URL.", "Semak kunci berulang dan pengekodan URL."],
+    "user-agent-parser": ["Penghurai User-Agent", "Kenal pasti petunjuk pelayar, sistem pengendalian dan peranti daripada rentetan User-Agent.", "analisis User-Agent", "Tampal rentetan User-Agent.", "Lihat maklumat yang dapat dikenal pasti daripada rentetan itu.", "Hasil bergantung pada maklumat dalam rentetan asal."],
+    "ip-cidr-calculator": ["Kalkulator IPv4 CIDR", "Kira julat rangkaian dan nilai berkaitan daripada alamat IPv4 serta awalan CIDR.", "kalkulator IPv4 CIDR", "Masukkan alamat IPv4 dan awalan.", "Kira julat rangkaian IPv4.", "Berikan alamat dan panjang awalan."],
+    "hash-compare": ["Alat perbandingan hash", "Bandingkan dua rentetan hash untuk mengetahui sama ada nilainya sepadan.", "perbandingan hash", "Tampal dua hash.", "Bandingkan dua nilai hash.", "Buang ruang yang tidak diperlukan sebelum membandingkan jika sesuai."],
+  },
+  sv: {
+    "jwt-decoder": ["JWT-avkodare", "Visa en JSON Web Tokens header och nyttolast. Verktyget verifierar inte signaturen.", "avkoda JWT", "Klistra in och avkoda en JWT.", "Visa en JWT:s header och nyttolast.", "Granska de avkodade delarna separat."],
+    "url-query-parameter-parser": ["Parser för URL-parametrar", "Dela upp en URL-frågesträng för att visa enskilda parametrar och deras värden.", "URL-parameterparser", "Klistra in en URL eller frågesträng.", "Hämta varje frågevärde från en URL.", "Kontrollera upprepade nycklar och URL-kodning."],
+    "user-agent-parser": ["User-Agent-parser", "Identifiera webbläsar-, operativsystems- och enhetsuppgifter från en User-Agent-sträng.", "analysera User-Agent", "Klistra in en User-Agent-sträng.", "Visa information som kan utläsas ur strängen.", "Resultatet beror på uppgifterna i den ursprungliga strängen."],
+    "ip-cidr-calculator": ["IPv4 CIDR-kalkylator", "Beräkna nätverksintervall och tillhörande värden från en IPv4-adress och ett CIDR-prefix.", "IPv4 CIDR-kalkylator", "Ange IPv4-adress och prefix.", "Beräkna intervallet för ett IPv4-nätverk.", "Ange adressen och prefixlängden."],
+    "hash-compare": ["Verktyg för hashjämförelse", "Jämför två hashsträngar och se om värdena matchar.", "jämför hash", "Klistra in två hashvärden.", "Jämför två hashvärden.", "Ta vid behov bort extra blanksteg före jämförelsen."],
+  },
+  cs: {
+    "jwt-decoder": ["Dekodér JWT", "Zobrazte hlavičku a obsah JSON Web Tokenu. Nástroj neověřuje podpis.", "dekodér JWT", "Vložte JWT a dekódujte jej.", "Zobrazte hlavičku a obsah tokenu JWT.", "Dekódované části zkontrolujte samostatně."],
+    "url-query-parameter-parser": ["Analyzátor parametrů URL", "Rozložte query string URL a zobrazte jednotlivé parametry a jejich hodnoty.", "analyzátor parametrů URL", "Vložte URL nebo query string.", "Získejte jednotlivé hodnoty parametrů z URL.", "Zkontrolujte opakované klíče a URL kódování."],
+    "user-agent-parser": ["Analyzátor User-Agent", "Zjistěte informace o prohlížeči, operačním systému a zařízení z řetězce User-Agent.", "analýza User-Agent", "Vložte řetězec User-Agent.", "Zobrazte rozpoznatelné údaje z řetězce User-Agent.", "Výsledek závisí na informacích v původním řetězci."],
+    "ip-cidr-calculator": ["Kalkulačka IPv4 CIDR", "Vypočítejte rozsah sítě a související hodnoty z adresy IPv4 a prefixu CIDR.", "kalkulačka IPv4 CIDR", "Zadejte adresu IPv4 a prefix.", "Vypočítejte rozsah sítě IPv4.", "Zadejte adresu a délku prefixu."],
+    "hash-compare": ["Nástroj pro porovnání hashů", "Porovnejte dva řetězce hashů a zjistěte, zda se jejich hodnoty shodují.", "porovnání hashů", "Vložte dva hashe.", "Porovnejte dvě hodnoty hashů.", "Před porovnáním případně odstraňte nadbytečné mezery."],
+  },
+  ro: {
+    "jwt-decoder": ["Decodor JWT", "Vizualizați antetul și conținutul unui JSON Web Token. Instrumentul nu verifică semnătura.", "decodare JWT", "Lipiți și decodați un JWT.", "Vizualizați antetul și conținutul unui token JWT.", "Verificați separat secțiunile decodate."],
+    "url-query-parameter-parser": ["Parser de parametri URL", "Analizați șirul de interogare al unui URL pentru a vedea parametrii și valorile separat.", "parser de parametri URL", "Lipiți un URL sau un șir de interogare.", "Extrageți fiecare valoare de interogare dintr-un URL.", "Verificați cheile duplicate și codificarea URL."],
+    "user-agent-parser": ["Parser User-Agent", "Identificați indicii despre browser, sistemul de operare și dispozitiv dintr-un șir User-Agent.", "analiză User-Agent", "Lipiți șirul User-Agent.", "Vizualizați informațiile identificabile din șir.", "Rezultatul depinde de informațiile din șirul original."],
+    "ip-cidr-calculator": ["Calculator IPv4 CIDR", "Calculați intervalul rețelei și valorile asociate dintr-o adresă IPv4 și un prefix CIDR.", "calculator IPv4 CIDR", "Introduceți adresa IPv4 și prefixul.", "Calculați intervalul unei rețele IPv4.", "Furnizați adresa și lungimea prefixului."],
+    "hash-compare": ["Instrument de comparare a hashurilor", "Comparați două șiruri hash pentru a vedea dacă valorile coincid.", "comparare hashuri", "Lipiți două hashuri.", "Comparați două valori hash.", "Eliminați spațiile suplimentare înainte de comparație, dacă este cazul."],
+  },
+  el: {
+    "jwt-decoder": ["Αποκωδικοποιητής JWT", "Δείτε την κεφαλίδα και το περιεχόμενο ενός JSON Web Token. Το εργαλείο δεν επαληθεύει την υπογραφή.", "αποκωδικοποίηση JWT", "Επικολλήστε και αποκωδικοποιήστε ένα JWT.", "Δείτε την κεφαλίδα και το περιεχόμενο ενός JWT.", "Ελέγξτε ξεχωριστά τα αποκωδικοποιημένα τμήματα."],
+    "url-query-parameter-parser": ["Αναλυτής παραμέτρων URL", "Αναλύστε τη συμβολοσειρά ερωτήματος ενός URL για να δείτε κάθε παράμετρο και τιμή.", "αναλυτής παραμέτρων URL", "Επικολλήστε URL ή συμβολοσειρά ερωτήματος.", "Εξαγάγετε κάθε τιμή ερωτήματος από ένα URL.", "Ελέγξτε διπλά κλειδιά και κωδικοποίηση URL."],
+    "user-agent-parser": ["Αναλυτής User-Agent", "Εντοπίστε στοιχεία προγράμματος περιήγησης, λειτουργικού συστήματος και συσκευής από συμβολοσειρά User-Agent.", "ανάλυση User-Agent", "Επικολλήστε μια συμβολοσειρά User-Agent.", "Δείτε τα αναγνωρίσιμα στοιχεία της συμβολοσειράς.", "Το αποτέλεσμα εξαρτάται από τις πληροφορίες της αρχικής συμβολοσειράς."],
+    "ip-cidr-calculator": ["Υπολογιστής IPv4 CIDR", "Υπολογίστε το εύρος δικτύου και συναφείς τιμές από διεύθυνση IPv4 και πρόθεμα CIDR.", "υπολογιστής IPv4 CIDR", "Εισαγάγετε διεύθυνση IPv4 και πρόθεμα.", "Υπολογίστε το εύρος ενός δικτύου IPv4.", "Καθορίστε τη διεύθυνση και το μήκος προθέματος."],
+    "hash-compare": ["Εργαλείο σύγκρισης hash", "Συγκρίνετε δύο συμβολοσειρές hash για να δείτε αν οι τιμές ταιριάζουν.", "σύγκριση hash", "Επικολλήστε δύο hash.", "Συγκρίνετε δύο τιμές hash.", "Αφαιρέστε περιττά κενά πριν από τη σύγκριση, αν χρειάζεται."],
+  },
+};
+
+function build(locale: SevenTargetLocale, slug: string, [title, description, keyword, action, example, options]: Copy): TargetSevenToolTranslation {
+  const ui = shared[locale];
+  return { title, description, seoTitle: `${title} | Woori Tools`, seoDescription: `${description} ${ui.privacy}`, category: ui.category, keywords: [keyword, title, slug], steps: [ui.steps[0], action, ui.steps[2]], example, options, caution: ui.caution, faq: { example: ui.faq.example, caution: ui.faq.caution } };
+}
+
+const translations = Object.fromEntries((Object.keys(content) as SevenTargetLocale[]).map((locale) => [locale, Object.fromEntries(Object.entries(content[locale]).map(([slug, copy]) => [slug, build(locale, slug, copy)]))])) as Record<SevenTargetLocale, Record<string, TargetSevenToolTranslation>>;
+export const targetSevenDeveloperBatchEighteenSlugs = ["jwt-decoder", "url-query-parameter-parser", "user-agent-parser", "ip-cidr-calculator", "hash-compare"] as const;
+export function getTargetSevenDeveloperBatchEighteenTranslation(locale: SevenTargetLocale, slug: string): TargetSevenToolTranslation | undefined { return translations[locale][slug]; }

@@ -21,9 +21,9 @@ const {
 
 test("IndexNow imports the actual registry and submits all public tools in every supported locale", () => {
   assert.ok(registryTools.length >= 160);
-  assert.equal(LOCALES.length, 15);
+  assert.equal(LOCALES.length, 26);
   const urls = createIndexNowUrls([...registryTools, { slug: "private-tool", isPublic: false }]);
-  const expectedDetailCount = registryTools.reduce((sum, tool) => sum + (tool.isPublic ? LOCALES.length : 0), 0);
+  const expectedDetailCount = registryTools.reduce((sum, tool) => sum + (tool.isPublic ? tool.supportedLocales.length : 0), 0);
   assert.equal(urls.length, expectedDetailCount + LOCALES.length);
   assert.equal(new Set(urls).size, urls.length);
   assert.ok(!urls.some((url) => url.includes("private-tool")));

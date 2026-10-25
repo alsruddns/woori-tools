@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import type { Locale } from "@/i18n/routing";
+import { isPlannedLocale, type TargetLocale } from "@/i18n/routing";
+import { targetCoreMessages } from "@/i18n/target-locale-copy";
 
 const copyMessages: Record<string, { success: string; failure: string }> = {
   ko: { success: "복사됐습니다.", failure: "복사에 실패했습니다." },
@@ -21,7 +22,7 @@ const copyMessages: Record<string, { success: string; failure: string }> = {
   hi: { success: "कॉपी किया गया।", failure: "कॉपी नहीं हो सका।" },
 };
 
-export function CopyToast({ locale }: { locale: Locale }) {
+export function CopyToast({ locale }: { locale: TargetLocale }) {
   const [success, setSuccess] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -40,7 +41,10 @@ export function CopyToast({ locale }: { locale: Locale }) {
   }, []);
 
   if (success === null) return null;
+  const message = isPlannedLocale(locale)
+    ? success ? targetCoreMessages[locale].copySuccess : targetCoreMessages[locale].copyFailure
+    : success ? copyMessages[locale].success : copyMessages[locale].failure;
   return <div role={success ? "status" : "alert"} aria-live={success ? "polite" : "assertive"} className="fixed bottom-5 left-1/2 z-[100] -translate-x-1/2 rounded-xl bg-slate-900 px-4 py-3 text-sm font-medium text-white shadow-lg">
-    {success ? copyMessages[locale].success : copyMessages[locale].failure}
+    {message}
   </div>;
 }
