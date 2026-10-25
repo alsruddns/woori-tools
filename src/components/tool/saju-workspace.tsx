@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { isPlannedLocale } from "@/i18n/routing";
+import { getTargetSajuCopy } from "@/i18n/target-saju-copy";
 
 type PillarKey = "year"|"month"|"day"|"hour";
 type ElementKey = "wood"|"fire"|"earth"|"metal"|"water";
@@ -29,12 +31,12 @@ Object.assign(labels, { pl: { birth:"Data urodzenia",time:"Godzina urodzenia",ca
 const pillarKeys:PillarKey[]=["year","month","day","hour"];
 const elementKeys:ElementKey[]=["wood","fire","earth","metal","water"];
 const elementMap:Record<"목"|"화"|"토"|"금"|"수",ElementKey>={"목":"wood","화":"fire","토":"earth","금":"metal","수":"water"};
-const elementNames:Record<string,typeof elementMap>=Object.fromEntries(["ko","en","ja","zh","es","pt-br","de","fr","vi","id","th","zh-tw","it","nl","hi","ru"].map((locale)=>[locale,elementMap]));
+const elementNames:Record<string,typeof elementMap>=Object.fromEntries(["ko","en","ja","zh","es","pt-br","de","fr","vi","id","th","zh-tw","it","nl","hi","ru","tr","pl","fil","bn","uk","ms","sv","cs","ro","el"].map((locale)=>[locale,elementMap]));
 elementNames.tr=elementMap;
 elementNames.pl=elementMap;
 
 export function SajuWorkspace({locale}:{locale:string}) {
- const t=labels[locale]; const [birth,setBirth]=useState(""); const [time,setTime]=useState("12:00"); const [calendar,setCalendar]=useState<"solar"|"lunar">("solar"); const [leap,setLeap]=useState(false); const [chart,setChart]=useState<Chart|null>(null); const [error,setError]=useState(""); const [busy,setBusy]=useState(false);
+ const t=(isPlannedLocale(locale)?getTargetSajuCopy(locale):undefined)??labels[locale]; const [birth,setBirth]=useState(""); const [time,setTime]=useState("12:00"); const [calendar,setCalendar]=useState<"solar"|"lunar">("solar"); const [leap,setLeap]=useState(false); const [chart,setChart]=useState<Chart|null>(null); const [error,setError]=useState(""); const [busy,setBusy]=useState(false);
  async function calculate(){ if(!birth||!time){setError(t.error);return;} setBusy(true);setError(""); try{
   const {calculateFourPillars}=await import("manseryeok");
   const [year,month,day]=birth.split("-").map(Number); const [hour,minute]=time.split(":").map(Number);

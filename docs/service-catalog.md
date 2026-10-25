@@ -14,24 +14,24 @@ registry와 번역 source를 기준으로 생성한 전체 Tool 목록입니다.
 
 | 순서 | 서비스명 | 서비스현황 및 사유 | 정책확인필요 | 다국어 적용 현황 | 경로 |
 |---:|---|---|:---:|---|---|
-| 1 | 로또 번호 추첨기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | lotto-number-generator |
-| 2 | 파워볼 번호 추첨기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | powerball-number-generator |
-| 3 | 메가밀리언 번호 추첨기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | mega-millions-number-generator |
-| 4 | 일본 로또6 번호 추첨기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | japan-loto6-number-generator |
-| 5 | 일본 로또7 번호 추첨기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | japan-loto7-number-generator |
-| 6 | 일본 미니로또 번호 추첨기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | japan-mini-loto-number-generator |
+| 1 | 로또 번호 추첨기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | lotto-number-generator |
+| 2 | 파워볼 번호 추첨기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | powerball-number-generator |
+| 3 | 메가밀리언 번호 추첨기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | mega-millions-number-generator |
+| 4 | 일본 로또6 번호 추첨기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | japan-loto6-number-generator |
+| 5 | 일본 로또7 번호 추첨기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | japan-loto7-number-generator |
+| 6 | 일본 미니로또 번호 추첨기 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | japan-mini-loto-number-generator |
 | 7 | 타로카드 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | tarot-card |
 | 8 | 오늘의 운세 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | daily-fortune |
-| 9 | 사주팔자 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | saju |
+| 9 | 사주팔자 | open | true | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | saju |
 | 10 | 랜덤 숫자 뽑기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | random-number |
 | 11 | 랜덤 이름 뽑기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | random-name-picker |
-| 12 | 룰렛 돌리기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | random-wheel |
+| 12 | 룰렛 돌리기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | random-wheel |
 | 13 | 사다리타기 | close - 공개 비활성화 (registry에서 isPublic=false; 별도 사유는 source에 기록되지 않음) | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi | ladder-game |
 | 14 | 제비뽑기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | draw-lots |
 | 15 | 랜덤 팀 나누기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | random-team-maker |
 | 16 | 랜덤 순서 정하기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | random-order |
 | 17 | 랜덤 자리 배치 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | random-seat |
-| 18 | 당번 정하기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | duty-picker |
+| 18 | 당번 정하기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | duty-picker |
 | 19 | 주사위 굴리기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | dice-roller |
 | 20 | 동전 던지기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | coin-flip |
 | 21 | 스톱워치 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | stopwatch |
@@ -49,7 +49,7 @@ registry와 번역 source를 기준으로 생성한 전체 Tool 목록입니다.
 | 33 | SNS 이미지 크기 변경 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | social-image-resize |
 | 34 | 이미지에 텍스트 추가 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | add-text-to-image |
 | 35 | Instagram 사진 격자 분할 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | instagram-grid-split |
-| 36 | 사진 콜라주 만들기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl | image-collage |
+| 36 | 사진 콜라주 만들기 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | image-collage |
 | 37 | 파일 해시 계산 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | file-hash |
 | 38 | MIME 타입 확인 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | mime-type-checker |
 | 39 | 파일 확장자 확인 | open | false | ko,en,ja,zh,es,pt-br,de,fr,vi,id,th,zh-tw,it,nl,hi,ru,tr,pl,fil,bn,uk,ms,sv,cs,ro,el | file-extension-checker |

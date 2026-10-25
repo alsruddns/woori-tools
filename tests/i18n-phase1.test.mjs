@@ -536,7 +536,7 @@ test("interactive workspace dictionaries cover all locales with complete transla
     ["../src/components/tool/world-clock-workspace.tsx", ["labels", "zoneNames"]],
     ["../src/components/tool/countdown-workspace.tsx", ["labels"]],
     ["../src/components/tool/japan-tools-workspace.tsx", ["copy"]],
-    ["../src/components/tool/special-random-workspaces.tsx", ["copy", "lottoLabels", "selectionConflict", "specialPrompt", "specialRequired", "officialNotice", "translations", "wheelCopy", "starterByLocale", "teamPrefix", "labels"]],
+    ["../src/components/tool/special-random-workspaces.tsx", ["copy", "lottoLocaleLabels", "translations", "wheelCopy", "starterByLocale", "teamPrefix", "labels"]],
     ["../src/components/tool/fortune-workspace.tsx", ["tarotText", "dailyText", "dailyPools", "tarotNames"]],
     ["../src/components/tool/saju-workspace.tsx", ["labels"]],
   ];
