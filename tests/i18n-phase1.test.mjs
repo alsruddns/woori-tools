@@ -35,11 +35,17 @@ globalThis.__countryToolKeywords = countryTranslationModule.countryToolKeywords;
 globalThis.__newToolTranslations = await importTs("../src/registry/new-tool-translations.ts");
 globalThis.__toolExampleInputs = (await importTs("../src/registry/tool-example-inputs.ts")).toolExampleInputs;
 globalThis.__getToolRiskNote = (await importTs("../src/registry/tool-risk-notes.ts")).getToolRiskNote;
+const { targetLocalePublication } = await importTs("../src/registry/target-locale-publication.ts", [[
+  'import { targetPolishToolSlugs } from "./target-pl-translations";',
+  "const targetPolishToolSlugs = [];",
+]]);
+globalThis.__targetLocalePublication = targetLocalePublication;
+globalThis.__plannedLocaleConfig = plannedLocaleConfig;
 const { tools } = await importTs("../src/registry/tools.ts", [
-  ['import { locales, type PublishedTargetLocale } from "../i18n/routing";', `const locales = ${JSON.stringify(locales)};`],
+  ['import { locales, plannedLocaleConfig, type PublishedTargetLocale } from "../i18n/routing";', `const locales = ${JSON.stringify(locales)}; const plannedLocaleConfig = globalThis.__plannedLocaleConfig;`],
   ['import { COUNTRY_TOOL_SLUGS } from "../lib/country-tool-slugs";', `const COUNTRY_TOOL_SLUGS = globalThis.__countryToolSlugs;`],
   ['import { countryToolTranslations } from "./country-tool-translations";', `const countryToolTranslations = globalThis.__countryToolTranslations;`],
-  ['import { targetLocalePublication } from "./target-locale-publication";', 'const targetLocalePublication = { ru: { publishedToolSlugs: ["barcode-generator"] } };'],
+  ['import { targetLocalePublication } from "./target-locale-publication";', 'const targetLocalePublication = globalThis.__targetLocalePublication;'],
 ]);
 const japanTranslationModule = await importTs("../src/registry/japan-tool-translations.ts");
 globalThis.__japanToolTranslations = japanTranslationModule.japanToolTranslations;
@@ -112,7 +118,12 @@ test("legacy registry tools retain all 15 route locales and RU is limited to ver
   assert.equal(tools.some(({ slug }) => slug === "ladder-game"), false);
   const omissions = [];
   for (const tool of tools) {
-    const expectedLocales = tool.slug === "barcode-generator" ? [...locales, "ru"] : locales;
+    const expectedLocales = [
+      ...locales,
+      ...plannedLocaleConfig
+        .filter(({ routeLocale }) => targetLocalePublication[routeLocale].publishedToolSlugs.includes(tool.slug))
+        .map(({ routeLocale }) => routeLocale),
+    ];
     if (JSON.stringify(tool.supportedLocales) !== JSON.stringify(expectedLocales)) omissions.push(`${tool.slug}: ${tool.supportedLocales.join(",")}`);
     for (const locale of locales) {
       const localized = localizeTool(tool, locale);
@@ -126,7 +137,13 @@ test("legacy registry tools retain all 15 route locales and RU is limited to ver
     }
   }
   assert.deepEqual(omissions, [], `Localization omissions:\n${omissions.join("\n")}`);
-  assert.deepEqual(tools.filter(({ supportedLocales }) => supportedLocales.includes("ru")).map(({ slug }) => slug), ["barcode-generator"]);
+  for (const { routeLocale } of plannedLocaleConfig) {
+    assert.deepEqual(
+      tools.filter(({ supportedLocales }) => supportedLocales.includes(routeLocale)).map(({ slug }) => slug).sort(),
+      [...targetLocalePublication[routeLocale].publishedToolSlugs].sort(),
+      `${routeLocale} registry routes must match the verified publication list`,
+    );
+  }
 });
 
 test("the eight expansion locales provide every expanded shared UI key without English fallback", () => {

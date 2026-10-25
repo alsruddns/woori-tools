@@ -1,5 +1,5 @@
 import type { ToolCategory } from "./categories";
-import { locales, type PublishedTargetLocale } from "../i18n/routing";
+import { locales, plannedLocaleConfig, type PublishedTargetLocale } from "../i18n/routing";
 import { COUNTRY_TOOL_SLUGS } from "../lib/country-tool-slugs";
 import { targetLocalePublication } from "./target-locale-publication";
 
@@ -155,7 +155,8 @@ const fileToolSlugs = new Set(["file-hash", "mime-type-checker", "file-extension
 const russianPublishedToolSet = new Set<string>(targetLocalePublication.ru.publishedToolSlugs);
 const turkishPublishedToolSet = new Set<string>(targetLocalePublication.tr?.publishedToolSlugs ?? []);
 const polishPublishedToolSet = new Set<string>(targetLocalePublication.pl?.publishedToolSlugs ?? []);
-export const registeredTools: ToolDefinition[] = entries.map(([slug, category, title, description, keywords, isPublic]) => ({ id: slug, slug, category, title, shortTitle: title, description, keywords, clientOnly: true, isPublic, supportedLocales: [...locales, ...(russianPublishedToolSet.has(slug) ? ["ru" as const] : []), ...(turkishPublishedToolSet.has(slug) ? ["tr" as const] : []), ...(polishPublishedToolSet.has(slug) ? ["pl" as const] : [])], usesFileInput: category === "image" || category === "pdf" || fileToolSlugs.has(slug), acceptedTypes: category === "image" ? ["image/*"] : category === "pdf" ? ["application/pdf"] : undefined }));
+const expandedPublishedLocales = plannedLocaleConfig.slice(3);
+export const registeredTools: ToolDefinition[] = entries.map(([slug, category, title, description, keywords, isPublic]) => ({ id: slug, slug, category, title, shortTitle: title, description, keywords, clientOnly: true, isPublic, supportedLocales: [...locales, ...(russianPublishedToolSet.has(slug) ? ["ru" as const] : []), ...(turkishPublishedToolSet.has(slug) ? ["tr" as const] : []), ...(polishPublishedToolSet.has(slug) ? ["pl" as const] : []), ...expandedPublishedLocales.filter(({ routeLocale }) => targetLocalePublication[routeLocale].publishedToolSlugs.includes(slug)).map(({ routeLocale }) => routeLocale)], usesFileInput: category === "image" || category === "pdf" || fileToolSlugs.has(slug), acceptedTypes: category === "image" ? ["image/*"] : category === "pdf" ? ["application/pdf"] : undefined }));
 const featuredSlugs = new Set([
   "lotto-number-generator", "random-number", "random-name-picker", "random-wheel",
   "random-team-maker", "stopwatch", "timer", "pomodoro-timer",

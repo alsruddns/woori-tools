@@ -18,6 +18,11 @@ const { outputText: processorCopyOutput } = ts.transpileModule(processorCopySour
   compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
 });
 const processorCopyModule = await import(`data:text/javascript;base64,${Buffer.from(processorCopyOutput).toString("base64")}`);
+const workspaceCopySource = await readFile(new URL("../src/registry/target-workspace-copy.ts", import.meta.url), "utf8");
+const { outputText: workspaceCopyOutput } = ts.transpileModule(workspaceCopySource, {
+  compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
+});
+const workspaceCopyModule = await import(`data:text/javascript;base64,${Buffer.from(workspaceCopyOutput).toString("base64")}`);
 const lotterySource = await readFile(new URL("../src/registry/target-lottery-translations.ts", import.meta.url), "utf8");
 const { outputText: lotteryOutput } = ts.transpileModule(lotterySource, {
   compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
@@ -34,7 +39,7 @@ const { outputText: polishOutput } = ts.transpileModule(polishSource, {
 });
 const polishTranslations = await import(`data:text/javascript;base64,${Buffer.from(polishOutput).toString("base64")}`);
 
-test("target locales are distinct from published locales until translations are complete", () => {
+test("planned locale routing expands independently from legacy content locale types", () => {
   const expected = ["ru", "tr", "pl", "fil", "bn", "uk", "ms", "sv", "cs", "ro", "el"];
   assert.equal(routing.locales.length, 15);
   assert.equal(routing.targetLocales.length, 26);
@@ -44,8 +49,27 @@ test("target locales are distinct from published locales until translations are 
   for (const locale of expected) {
     assert.equal(routing.isTargetLocale(locale), true);
     assert.equal(routing.isLocale(locale), false);
+    assert.equal(routing.isPublishedTargetLocale(locale), true);
     assert.equal(routing.targetLocaleLabels[locale].length > 0, true);
   }
+});
+
+test("expanded barcode workspace controls are translated for every newly exposed locale", async () => {
+  const locales = ["fil", "bn", "uk", "ms", "sv", "cs", "ro", "el"];
+  const expectedKeys = ["value", "format", "run", "error", "result", "download"].sort();
+  const component = await readFile(new URL("../src/components/tool/barcode-workspace.tsx", import.meta.url), "utf8");
+  assert.deepEqual(Object.keys(workspaceCopyModule.targetBarcodeWorkspaceCopy).sort(), locales.sort());
+  for (const locale of locales) {
+    const copy = workspaceCopyModule.getTargetBarcodeWorkspaceCopy(locale);
+    assert.deepEqual(Object.keys(copy).sort(), expectedKeys, `${locale} barcode workspace keys`);
+    for (const [key, value] of Object.entries(copy)) {
+      assert.ok(value.trim(), `${locale}.${key} must be translated`);
+      assert.notEqual(value, key, `${locale}.${key} cannot be an untranslated key`);
+    }
+  }
+  assert.match(component, /getTargetBarcodeWorkspaceCopy\(locale\)/);
+  assert.match(component, /expandedCopy\?\.error/);
+  assert.match(component, /expandedCopy\?\.download/);
 });
 
 test("each planned locale has the complete translated core UI message set", () => {
@@ -111,7 +135,7 @@ test("text, image, and PDF processors accept all target locales while workspace 
     assert.match(source, /\bTargetLocale\b[^;]*from ["']@\/i18n\/routing["']/s, `${name} processor uses the target locale type`);
     assert.doesNotMatch(source, /PublishedTargetLocale/, `${name} processor must not narrow to published routes`);
   }
-  assert.match(workspace, /if \(!isPublishedTargetLocale\(phaseLocale\)\) return/, "unverified workspace locales remain blocked from publication");
+  assert.match(workspace, /if \(!isPublishedTargetLocale\(phaseLocale\) \|\| \(isPlannedLocale\(phaseLocale\) && !targetLocalePublication\[phaseLocale\]\.uiVerifiedToolSlugs\.includes\(tool\.slug\)\)\) return/, "unverified workspaces remain blocked by the per-tool publication gate");
 });
 
 test("copy toast has authored success and failure messages for every planned locale", async () => {

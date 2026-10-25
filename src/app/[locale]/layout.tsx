@@ -8,10 +8,11 @@ import { SiteFooter } from "@/components/layout/site-footer";
 import { RussianPublishedShell } from "@/components/layout/russian-published-shell";
 import { TurkishPublishedShell } from "@/components/layout/turkish-published-shell";
 import { PolishPublishedShell } from "@/components/layout/polish-published-shell";
+import { TargetLocaleShell } from "@/components/layout/target-locale-shell";
 import { CopyToast } from "@/components/copy-toast";
 import { GoogleAnalytics } from "@/components/analytics/google-analytics";
 import { getMessages } from "@/i18n/messages";
-import { getLocaleConfig, getPublishedTargetLocaleConfig, isLocale, isPublishedTargetLocale, type Locale, publishedTargetLocales } from "@/i18n/routing";
+import { getLocaleConfig, getPublishedTargetLocaleConfig, isLocale, isPlannedLocale, isPublishedTargetLocale, type Locale, publishedTargetLocales } from "@/i18n/routing";
 import { SITE_NAME, SITE_ORIGIN } from "@/lib/seo";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
@@ -61,6 +62,9 @@ export default async function LocaleLayout({
     const config = getPublishedTargetLocaleConfig(rawLocale);
     if (!config) notFound();
     return <html lang={config.intlLocale} className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}><body className="min-h-full bg-slate-50 text-slate-900"><PolishPublishedShell>{children}</PolishPublishedShell><GoogleAnalytics /></body></html>;
+  }
+  if (isPlannedLocale(rawLocale)) {
+    return <html lang={getPublishedTargetLocaleConfig(rawLocale)?.intlLocale ?? "en"} className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}><body className="flex min-h-full flex-col bg-slate-50 text-slate-900"><TargetLocaleShell locale={rawLocale}>{children}</TargetLocaleShell></body></html>;
   }
   if (!isLocale(rawLocale)) notFound();
   const locale: Locale = rawLocale;

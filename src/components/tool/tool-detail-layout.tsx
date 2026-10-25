@@ -1,14 +1,30 @@
 import { ToolNavigationShell, type NavigationSection } from "@/components/tool/tool-navigation-shell";
 import { getMessages } from "@/i18n/messages";
-import type { Locale } from "@/i18n/routing";
+import { isPlannedLocale, type PublishedTargetLocale } from "@/i18n/routing";
 import { getLocalizedCategories } from "@/registry/category-translations";
 import { localizeTools } from "@/registry/tool-translations";
-import { tools } from "@/registry/tools";
+import { getTool, tools } from "@/registry/tools";
+import { targetLocalePublication } from "@/registry/target-locale-publication";
+import { isExpandedLocale, getTargetCategories } from "@/registry/target-category-translations";
+import { localizeTargetTool } from "@/registry/target-tool-translation";
+import { localizePublishedTool } from "@/registry/published-tool-translations";
+import { isLocale } from "@/i18n/routing";
 
-export function ToolDetailLayout({ children, locale }: { children: React.ReactNode; locale: Locale }) {
+export function ToolDetailLayout({ children, locale }: { children: React.ReactNode; locale: PublishedTargetLocale }) {
   const messages = getMessages(locale);
-  const localizedTools = localizeTools(tools.filter((tool) => tool.supportedLocales.includes(locale)), locale);
-  const sections: NavigationSection[] = getLocalizedCategories(locale)
+  const targetLocale = isPlannedLocale(locale) ? locale : undefined;
+  const visibleTools = targetLocale
+    ? targetLocalePublication[targetLocale].publishedToolSlugs.map((slug) => getTool(slug)).filter((tool): tool is (typeof tools)[number] => tool !== undefined)
+    : tools.filter((tool) => tool.supportedLocales.includes(locale));
+  const localizedTools = targetLocale
+    ? isExpandedLocale(targetLocale)
+      ? visibleTools.map((tool) => localizeTargetTool(tool, targetLocale))
+      : visibleTools.map((tool) => localizePublishedTool(tool, targetLocale))
+    : isLocale(locale) ? localizeTools(visibleTools, locale) : [];
+  const categories = targetLocale && isExpandedLocale(targetLocale)
+    ? getTargetCategories(targetLocale, [...new Set(localizedTools.map((tool) => tool.category))])
+    : getLocalizedCategories(locale);
+  const sections: NavigationSection[] = categories
     .map((category) => ({
       id: category.id,
       name: category.name,

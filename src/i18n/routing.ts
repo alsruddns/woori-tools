@@ -33,7 +33,7 @@ export const plannedLocaleConfig = [
 ] as const;
 
 export const targetLocaleConfig = [...localeConfig, ...plannedLocaleConfig] as const;
-export const publishedTargetLocaleConfig = [...localeConfig, plannedLocaleConfig[0], plannedLocaleConfig[1], plannedLocaleConfig[2]] as const;
+export const publishedTargetLocaleConfig = [...localeConfig, ...plannedLocaleConfig] as const;
 export type RouteLocale = (typeof localeConfig)[number]["routeLocale"];
 export type Locale = RouteLocale;
 // Published target locales use a dedicated route shell and per-tool allowlist.

@@ -5,7 +5,13 @@ import ts from "typescript";
 import { createSitemapEntries } from "../src/lib/sitemap-entries.mjs";
 
 async function importTypeScript(path, replacements = []) {
-  let source = await readFile(new URL(path, import.meta.url), "utf8");
+  let source = (await readFile(new URL(path, import.meta.url), "utf8")).replace(/\r\n/g, "\n");
+  if (path === "../src/registry/tools.ts") {
+    source = source.replace(
+      'import { locales, plannedLocaleConfig, type PublishedTargetLocale } from "../i18n/routing";\nimport { COUNTRY_TOOL_SLUGS } from "../lib/country-tool-slugs";\nimport { targetLocalePublication } from "./target-locale-publication";',
+      `const locales = ${JSON.stringify(locales)}; const plannedLocaleConfig = ${JSON.stringify(plannedLocaleConfig)}; const targetLocalePublication = globalThis.__sitemapTargetPublication;\nimport { COUNTRY_TOOL_SLUGS } from "../lib/country-tool-slugs";`,
+    );
+  }
   for (const [search, replacement] of replacements) source = source.replace(search, replacement);
   const { outputText } = ts.transpileModule(source, {
     compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022 },
@@ -13,7 +19,7 @@ async function importTypeScript(path, replacements = []) {
   return import(`data:text/javascript;base64,${Buffer.from(outputText).toString("base64")}`);
 }
 
-const { locales, publishedTargetLocales, localeConfig, publishedTargetHreflangs } = await importTypeScript("../src/i18n/routing.ts");
+const { locales, plannedLocaleConfig, publishedTargetLocales, localeConfig, publishedTargetHreflangs } = await importTypeScript("../src/i18n/routing.ts");
 const { getTargetTurkishToolTranslation, targetTurkishToolSlugs } = await importTypeScript("../src/registry/target-tr-translations.ts");
 const { getTargetFilipinoToolTranslation, targetFilipinoToolSlugs } = await importTypeScript("../src/registry/target-fil-translations.ts");
 const { getTargetSevenToolTranslation, targetSevenToolSlugs } = await importTypeScript("../src/registry/target-seven-tools-translations.ts", [[
@@ -223,6 +229,7 @@ const { getTargetSevenWorkflowTranslation } = await importTypeScript("../src/reg
 const { targetLocalePublication } = await importTypeScript("../src/registry/target-locale-publication.ts", [
   ['import { targetPolishToolSlugs } from "./target-pl-translations";', "const targetPolishToolSlugs = [];"],
 ]);
+globalThis.__sitemapTargetPublication = targetLocalePublication;
 const countrySlugSource = await readFile(new URL("../src/lib/country-tool-slugs.ts", import.meta.url), "utf8");
 const countrySlugs = [...countrySlugSource.matchAll(/"([a-z0-9-]+)"/g)].map((match) => match[1]);
 const { tools: publicTools, filterPublicTools } = await importTypeScript("../src/registry/tools.ts", [
@@ -311,7 +318,7 @@ const turkishPublishedSlugs = ["lotto-number-generator", "powerball-number-gener
 const polishPublishedSlugs = new Set(targetLocalePublication.pl.publishedToolSlugs);
 const sitemapTools = publicTools.map((tool) => ({
   ...tool,
-  supportedLocales: [...tool.supportedLocales, ...(turkishPublishedSlugs.includes(tool.slug) ? ["tr"] : []), ...(polishPublishedSlugs.has(tool.slug) ? ["pl"] : [])],
+  supportedLocales: [...new Set([...tool.supportedLocales, ...(turkishPublishedSlugs.includes(tool.slug) ? ["tr"] : []), ...(polishPublishedSlugs.has(tool.slug) ? ["pl"] : [])])],
 }));
 const entries = createSitemapEntries({
   tools: sitemapTools,
@@ -333,12 +340,12 @@ test("sitemap is generated from the public registry and includes every locale", 
   const listingEntries = entries.filter(({ url }) => /\/tools$/.test(url));
   const detailEntries = entries.filter(({ url }) => /\/tools\/[^/]+$/.test(url));
   assert.equal(locales.length, 15);
-  assert.equal(publishedTargetLocales.length, 18);
+  assert.equal(publishedTargetLocales.length, 26);
   assert.equal(publishedTargetLocales.includes("pl"), true);
-  assert.equal(listingEntries.length, 18);
+  assert.equal(listingEntries.length, 26);
   const expectedDetailCount = sitemapTools.reduce((sum, tool) => sum + tool.supportedLocales.length, 0);
   assert.equal(detailEntries.length, expectedDetailCount);
-  assert.equal(entries.length, expectedDetailCount + 18);
+  assert.equal(entries.length, expectedDetailCount + 26);
   assert.equal(new Set(entries.map(({ url }) => url)).size, entries.length);
   assert.equal(entries.filter(({ url }) => new URL(url).pathname.startsWith("/pl/tools/")).length, targetLocalePublication.pl.publishedToolSlugs.length);
 
@@ -356,7 +363,7 @@ test("sitemap is generated from the public registry and includes every locale", 
 
   for (const entry of entries) {
     assert.ok(entry.url.startsWith(`${siteOrigin}/`));
-    assert.match(entry.url, /^https:\/\/www\.woori\.today\/(ko|en|ja|zh|es|pt-br|de|fr|vi|id|th|zh-tw|it|nl|hi|ru|tr|pl)\/tools(?:\/[^/]+)?$/);
+    assert.match(entry.url, new RegExp(`^https://www\\.woori\\.today/(${publishedTargetLocales.join("|")})/tools(?:/[^/]+)?$`));
     assert.equal(entry.alternates.languages["x-default"], entry.alternates.languages.ko);
     const segments = new URL(entry.url).pathname.split("/").filter(Boolean);
     const slug = segments[2];
@@ -385,6 +392,24 @@ test("private registry tools are excluded from sitemap entries", () => {
   assert.equal(filteredTools.some(({ slug }) => slug === privateTool.slug), false);
   assert.equal(filteredEntries.length, entries.length);
   assert.equal(filteredEntries.some(({ url }) => url.includes(privateTool.slug)), false);
+});
+
+test("new locale detail routes are included only when both workspace and SEO checks pass", () => {
+  const expandedLocales = plannedLocaleConfig.slice(3).map(({ routeLocale }) => routeLocale);
+  const expectedSlugs = ["barcode-generator", "markdown-preview"].sort();
+  assert.deepEqual(expandedLocales, ["fil", "bn", "uk", "ms", "sv", "cs", "ro", "el"]);
+  for (const locale of expandedLocales) {
+    const publication = targetLocalePublication[locale];
+    assert.deepEqual([...publication.uiVerifiedToolSlugs].sort(), expectedSlugs, `${locale} UI allowlist`);
+    assert.deepEqual([...publication.seoVerifiedToolSlugs].sort(), expectedSlugs, `${locale} SEO allowlist`);
+    assert.deepEqual([...publication.publishedToolSlugs].sort(), expectedSlugs, `${locale} sitemap allowlist`);
+    for (const slug of expectedSlugs) {
+      assert.ok(entries.some(({ url }) => url === `${siteOrigin}/${locale}/tools/${slug}`), `${locale}/${slug} is in the sitemap`);
+    }
+    assert.equal(entries.some(({ url }) => url === `${siteOrigin}/${locale}/tools/json-formatter`), false, `${locale} unverified workspace stays unpublished`);
+  }
+  assert.match(toolPageSource, /uiVerifiedToolSlugs\.includes\(slug\)[\s\S]*?seoVerifiedToolSlugs\.includes\(slug\)[\s\S]*?publishedToolSlugs\.includes\(slug\)/);
+  assert.match(toolPageSource, /pageMetadata/);
 });
 
 test("sitemap and SEO use the same language alternate helper", () => {
@@ -1165,7 +1190,7 @@ test("Polish barcode generator localizes input, format, generation, and failure 
   assert.equal(entries.some(({ url }) => url === "https://www.woori.today/pl/tools/barcode-generator"), true);
   assert.match(barcodeWorkspaceSource, /locale==="pl"\?\{\.\.\.messages,input:"Warto\u015B\u0107",mime:"Tekst lub numer",option:"Format kodu kreskowego",run:"Generuj kod kreskowy"/);
   assert.match(barcodeWorkspaceSource, /Nie uda\u0142o si\u0119 utworzy\u0107 kodu kreskowego/);
-  assert.match(toolWorkspaceSource, /tool\.slug === "barcode-generator"\) return <BarcodeWorkspace locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
+  assert.match(toolWorkspaceSource, /tool\.slug === "barcode-generator"\) return <BarcodeWorkspace locale=\{phaseLocale\}/);
 });
 
 test("Polish shuffle lines page uses the translated workspace and is published with SEO", () => {
@@ -1210,9 +1235,9 @@ test("Polish Markdown preview loads Polish shared messages and example text", ()
   assert.equal(targetLocalePublication.pl.seoVerifiedToolSlugs.includes("markdown-preview"), true);
   assert.equal(targetLocalePublication.pl.publishedToolSlugs.includes("markdown-preview"), true);
   assert.equal(entries.some(({ url }) => url === "https://www.woori.today/pl/tools/markdown-preview"), true);
-  assert.match(toolWorkspaceSource, /MarkdownWorkspace locale=\{phaseLocale === "pl" \? "pl" : specializedLocale\}/);
+  assert.match(toolWorkspaceSource, /MarkdownWorkspace locale=\{phaseLocale\}/);
   assert.match(sharedMarkdownWorkspaceSource, /const t=getMessages\(locale\)/);
-  assert.match(sharedMarkdownWorkspaceSource, /Nag\\u0142\\u00F3wek/);
+  assert.match(sharedMarkdownWorkspaceSource, /# Nagłówek/);
 });
 
 test("Polish image conversion pages publish through the localized browser workspace", () => {

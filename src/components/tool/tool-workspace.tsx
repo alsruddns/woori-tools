@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import NextImage from "next/image";
 import type { ToolDefinition } from "@/registry/tools";
+import { targetLocalePublication } from "@/registry/target-locale-publication";
 import type { Dictionary } from "@/i18n/messages";
 import { isLocale, isPlannedLocale, isPublishedTargetLocale, isTargetLocale, type RouteLocale, type TargetLocale } from "@/i18n/routing";
 import { targetCoreMessages } from "@/i18n/target-locale-copy";
@@ -104,7 +105,7 @@ export function ToolWorkspace({ tool, phaseLocale, optionLocale = phaseLocale, m
     const stem = files[0].name.replace(/\.[^.]+$/, "").replace(/[\\/:*?"<>|]/g, "-");
     return stem || "download";
   }, [files]);
-  if (!isPublishedTargetLocale(phaseLocale)) return <p role="status">{getWorkspaceUnavailableMessage(phaseLocale)}</p>;
+  if (!isPublishedTargetLocale(phaseLocale) || (isPlannedLocale(phaseLocale) && !targetLocalePublication[phaseLocale].uiVerifiedToolSlugs.includes(tool.slug))) return <p role="status">{getWorkspaceUnavailableMessage(phaseLocale)}</p>;
   if (tool.slug.startsWith("jwt-") || ["url-query-parameter-parser","user-agent-parser","ip-cidr-calculator","base32-encoder-decoder","ulid-generator","uuid-v7-generator","hash-compare","regex-replace","html-entity-encoder-decoder","chmod-calculator","json-path-tester","csv-tsv-converter","url-slug-generator","unicode-code-point-checker","pdf-page-size-checker"].includes(tool.slug)) return <BrowserDeveloperToolsWorkspace slug={tool.slug} locale={phaseLocale === "pl" ? "pl" : specializedLocale} title={tool.title} />;
   if ((COUNTRY_TOOL_SLUGS as readonly string[]).includes(tool.slug)) return <CountryToolsWorkspace slug={tool.slug as (typeof COUNTRY_TOOL_SLUGS)[number]} locale={specializedLocale} />;
   if (["wareki-converter", "hiragana-katakana-converter", "fullwidth-halfwidth-converter", "japanese-romaji-converter", "japanese-number-kanji-converter", "yakudoshi-calculator", "japanese-zodiac-calculator", "numbers3-number-generator", "numbers4-number-generator", "bingo5-number-generator"].includes(tool.slug)) return <JapanToolsWorkspace slug={tool.slug} locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;
@@ -127,8 +128,8 @@ export function ToolWorkspace({ tool, phaseLocale, optionLocale = phaseLocale, m
   if (tool.slug === "duty-picker" && phaseLocale === "pl") return <RussianDutyPickerWorkspace locale="pl" />;
   if (["password-generator","random-string-generator"].includes(tool.slug)) return <RandomStringWorkspace slug={tool.slug} locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;
   if (tool.slug === "ladder-game") return <LadderWorkspace locale={specializedLocale} />;
-  if (tool.slug === "markdown-preview") return <MarkdownWorkspace locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;
-  if (tool.slug === "barcode-generator") return <BarcodeWorkspace locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;
+  if (tool.slug === "markdown-preview") return <MarkdownWorkspace locale={phaseLocale} />;
+  if (tool.slug === "barcode-generator") return <BarcodeWorkspace locale={phaseLocale} title={tool.title} />;
   if (tool.slug === "regex-tester" && phaseLocale === "pl") return <PolishRegexWorkspace />;
   if (phaseLocale === "pl" && isPolishChinaSlug(tool.slug)) return <PolishChinaToolsWorkspace slug={tool.slug} />;
   if (phaseLocale === "pl" && isPolishIndiaSlug(tool.slug)) return <PolishIndiaToolsWorkspace slug={tool.slug} />;

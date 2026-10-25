@@ -5,6 +5,7 @@ import { getTargetPolishToolTranslation } from "./target-pl-translations";
 import { getTargetRussianToolTranslation } from "./target-ru-translations";
 import { getTargetSevenToolTranslation, isSevenTargetLocale } from "./target-seven-tools-translations";
 import { getTargetTurkishToolTranslation } from "./target-tr-translations";
+import type { ToolDefinition } from "./tools";
 
 export type TargetToolTranslation = {
   title: string;
@@ -35,4 +36,17 @@ export function getTargetToolTranslation(locale: PlannedLocale, slug: string): T
             : undefined;
 
   return translation;
+}
+
+export function localizeTargetTool(tool: ToolDefinition, locale: PlannedLocale): ToolDefinition {
+  const translation = getTargetToolTranslation(locale, tool.slug);
+  if (!translation) throw new Error(`Missing ${locale} tool translation for ${tool.slug}`);
+  return {
+    ...tool,
+    title: translation.title,
+    shortTitle: translation.title,
+    description: translation.description,
+    keywords: [...translation.keywords],
+    supportedLocales: [...tool.supportedLocales, locale],
+  };
 }
