@@ -39,8 +39,8 @@ jobs:
           nginx_conf=/opt/services/nginx/conf.d/default.conf
           test -r "$nginx_conf"
           printf 'Live Nginx Tools locale map and route matcher (routing rules only):\n'
-          grep -nE 'map[[:space:]]+\$uri[[:space:]]+\$valid_locale|location[[:space:]]+~.*tools' "$nginx_conf"
-          docker inspect nginx --format 'Nginx config mount={{range .Mounts}}{{if eq .Source "/opt/services/nginx/conf.d/default.conf"}}{{.Source}} -> {{.Destination}}{{end}}{{end}}'
+          awk '/^map \$uri \$valid_locale \{/ { in_map = 1 } in_map { print } in_map && /^}/ { in_map = 0 } /^[[:space:]]*location ~ .*\/tools/ { print }' "$nginx_conf"
+          docker inspect nginx --format 'Nginx mount={{range .Mounts}}{{.Source}} -> {{.Destination}}; {{end}}'
           docker exec nginx nginx -t
           printf 'Environment file names: '
           find . -maxdepth 1 -type f -name '.env*' -printf '%f '
