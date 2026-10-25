@@ -5,7 +5,8 @@ import dynamic from "next/dynamic";
 import NextImage from "next/image";
 import type { ToolDefinition } from "@/registry/tools";
 import type { Dictionary } from "@/i18n/messages";
-import { isLocale, isPublishedTargetLocale, type PlannedLocale, type RouteLocale } from "@/i18n/routing";
+import { isLocale, isPlannedLocale, isPublishedTargetLocale, type RouteLocale, type TargetLocale } from "@/i18n/routing";
+import { targetCoreMessages } from "@/i18n/target-locale-copy";
 import { processImage as processImageFile } from "@/lib/image/process-image";
 import { processPdf as processPdfFile } from "@/lib/pdf/process-pdf";
 import { processText as processTextTool } from "@/lib/text/process-text";
@@ -43,23 +44,14 @@ import { CoinFlipWorkspace, DiceWorkspace, LottoWorkspace, RandomNameWorkspace, 
 
 const MAX_IMAGE = 30 * 1024 * 1024;
 const MAX_PDF = 50 * 1024 * 1024;
-type ToolWorkspaceLocale = RouteLocale | PlannedLocale;
-const workspaceUnavailable: Record<PlannedLocale, string> = {
-  ru: "Эта рабочая область ещё не переведена полностью.",
-  tr: "Bu çalışma alanının çevirisi henüz tamamlanmadı.",
-  pl: "Tłumaczenie tego obszaru roboczego nie jest jeszcze kompletne.",
-  fil: "Hindi pa kumpleto ang salin ng workspace na ito.",
-  bn: "এই কাজের অংশটির অনুবাদ এখনও সম্পূর্ণ হয়নি।",
-  uk: "Переклад цієї робочої області ще не завершено.",
-  ms: "Terjemahan ruang kerja ini belum selesai.",
-  sv: "Översättningen av den här arbetsytan är inte klar ännu.",
-  cs: "Překlad tohoto pracovního prostoru ještě není dokončen.",
-  ro: "Traducerea acestui spațiu de lucru nu este încă finalizată.",
-  el: "Η μετάφραση αυτού του χώρου εργασίας δεν έχει ολοκληρωθεί ακόμη.",
-};
+type ToolWorkspaceLocale = TargetLocale;
+function getWorkspaceUnavailableMessage(locale: ToolWorkspaceLocale): string {
+  if (!isPlannedLocale(locale)) throw new Error(`Workspace locale ${locale} must be publishable or planned`);
+  return targetCoreMessages[locale].workspaceUnavailable;
+}
 function getWorkspaceProcessorLocale(locale: ToolWorkspaceLocale) {
   if (isPublishedTargetLocale(locale)) return locale;
-  throw new Error(workspaceUnavailable[locale]);
+  throw new Error(getWorkspaceUnavailableMessage(locale));
 }
 const CountryToolsWorkspace = dynamic(() => import("@/components/tool/country-tools-workspace").then((module) => module.CountryToolsWorkspace));
 const selectionLimitMessages: Record<RouteLocale, { files: string; images: string }> = {
@@ -111,7 +103,7 @@ export function ToolWorkspace({ tool, phaseLocale, optionLocale = phaseLocale, m
     const stem = files[0].name.replace(/\.[^.]+$/, "").replace(/[\\/:*?"<>|]/g, "-");
     return stem || "download";
   }, [files]);
-  if (!isPublishedTargetLocale(phaseLocale)) return <p role="status">{workspaceUnavailable[phaseLocale]}</p>;
+  if (!isPublishedTargetLocale(phaseLocale)) return <p role="status">{getWorkspaceUnavailableMessage(phaseLocale)}</p>;
   if (tool.slug.startsWith("jwt-") || ["url-query-parameter-parser","user-agent-parser","ip-cidr-calculator","base32-encoder-decoder","ulid-generator","uuid-v7-generator","hash-compare","regex-replace","html-entity-encoder-decoder","chmod-calculator","json-path-tester","csv-tsv-converter","url-slug-generator","unicode-code-point-checker","pdf-page-size-checker"].includes(tool.slug)) return <BrowserDeveloperToolsWorkspace slug={tool.slug} locale={phaseLocale === "pl" ? "pl" : specializedLocale} title={tool.title} />;
   if ((COUNTRY_TOOL_SLUGS as readonly string[]).includes(tool.slug)) return <CountryToolsWorkspace slug={tool.slug as (typeof COUNTRY_TOOL_SLUGS)[number]} locale={specializedLocale} />;
   if (["wareki-converter", "hiragana-katakana-converter", "fullwidth-halfwidth-converter", "japanese-romaji-converter", "japanese-number-kanji-converter", "yakudoshi-calculator", "japanese-zodiac-calculator", "numbers3-number-generator", "numbers4-number-generator", "bingo5-number-generator"].includes(tool.slug)) return <JapanToolsWorkspace slug={tool.slug} locale={phaseLocale === "pl" ? "pl" : specializedLocale} />;

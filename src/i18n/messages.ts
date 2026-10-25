@@ -1,6 +1,6 @@
 import { getExpandedMessages } from "./expanded-messages";
 import { targetCoreMessages } from "./target-locale-copy";
-import type { PublishedTargetLocale } from "./routing";
+import { isPublishedTargetLocale, type TargetLocale } from "./routing";
 
 const messages = {
   ko: {
@@ -278,7 +278,10 @@ const phaseOneNavigationExtra: Record<string,Record<string,string>>={
  ru:{toolCount:"{count} инструментов",openToolMenu:"Показать все инструменты",closeToolMenu:"Закрыть меню"},
 };
 
-export function getMessages(locale: PublishedTargetLocale): Dictionary {
+export function getMessages(locale: TargetLocale): Dictionary {
+  if (!isPublishedTargetLocale(locale)) {
+    throw new Error(`Complete page UI messages are not registered for ${locale}`);
+  }
   const existing = messages[locale as keyof typeof messages];
   if (existing) return existing;
   const merged = { ...messages.en, ...phaseOneCommon[locale], ...phaseOneVisibleExtra[locale], ...phaseOneNavigationExtra[locale], ...(locale === "ru" || locale === "tr" || locale === "pl" ? targetCoreMessages[locale] : {}) } as Record<string, unknown>;

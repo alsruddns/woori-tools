@@ -47,7 +47,7 @@ test("each planned locale has the complete translated core UI message set", () =
   const expectedKeys = [
     "language", "tools", "categories", "privacy", "terms", "allTools", "search", "searchPlaceholder",
     "howTo", "introduction", "faq", "relatedTools", "result", "download", "process", "run", "processing",
-    "reset", "copy", "clear", "chooseOrDrop", "selectFile", "filePrivacy", "error", "copySuccess", "copyFailure",
+    "reset", "copy", "clear", "chooseOrDrop", "selectFile", "filePrivacy", "error", "copySuccess", "copyFailure", "workspaceUnavailable",
   ].sort();
   assert.deepEqual(Object.keys(targetCoreMessages).sort(), routing.plannedLocaleConfig.map(({ routeLocale }) => routeLocale).sort());
   for (const [locale, messages] of Object.entries(targetCoreMessages)) {
@@ -73,6 +73,12 @@ test("copy toast has authored success and failure messages for every planned loc
   assert.match(source, /targetCoreMessages\[locale\]\.copySuccess/);
   assert.match(source, /targetCoreMessages\[locale\]\.copyFailure/);
   assert.deepEqual(omissions, []);
+});
+
+test("workspace-unavailable status comes from the shared locale dictionary", async () => {
+  const source = await readFile(new URL("../src/components/tool/tool-workspace.tsx", import.meta.url), "utf8");
+  assert.match(source, /targetCoreMessages\[locale\]\.workspaceUnavailable/);
+  assert.doesNotMatch(source, /const workspaceUnavailable\s*:/);
 });
 
 test("the six lottery tools have complete authored copy in every planned locale", () => {

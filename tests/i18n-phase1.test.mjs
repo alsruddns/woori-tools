@@ -10,7 +10,7 @@ async function importTs(path, replacements = []) {
   return import(`data:text/javascript;base64,${Buffer.from(outputText).toString("base64")}`);
 }
 
-const { locales, plannedLocaleConfig } = await importTs("../src/i18n/routing.ts");
+const { locales, plannedLocaleConfig, isPublishedTargetLocale } = await importTs("../src/i18n/routing.ts");
 globalThis.__targetToolOptionCopy = await importTs("../src/registry/target-tool-option-copy.ts");
 const { renameCopy, selectionCopy } = await importTs("../src/registry/tool-option-copy.ts", [[
   'import { targetRenameCopy, targetSelectionLimitMessages, targetToolOptionLabels, type TargetToolOptionLabels, type ToolOptionLabelKey } from "./target-tool-option-copy";',
@@ -18,6 +18,11 @@ const { renameCopy, selectionCopy } = await importTs("../src/registry/tool-optio
 ]]);
 const { targetToolOptionLabels, targetRenameCopy, targetSelectionLimitMessages } = globalThis.__targetToolOptionCopy;
 globalThis.__targetCoreMessages = (await importTs("../src/i18n/target-locale-copy.ts")).targetCoreMessages;
+globalThis.__targetCoreMessagesModule = { targetCoreMessages: globalThis.__targetCoreMessages };
+globalThis.__targetExpandedModule = await importTs("../src/i18n/target-expanded-messages.ts", [[
+  'import { targetCoreMessages } from "./target-locale-copy";',
+  "const { targetCoreMessages } = globalThis.__targetCoreMessagesModule;",
+]]);
 const { COUNTRY_TOOL_SLUGS } = await importTs("../src/lib/country-tool-slugs.ts");
 globalThis.__countryToolSlugs = COUNTRY_TOOL_SLUGS;
 const countryTranslationModule = await importTs("../src/registry/country-tool-translations.ts", [[
@@ -76,14 +81,21 @@ const polishExpandedMessages = (await importTs("../src/i18n/polish-expanded-mess
 const expandedModule = await importTs("../src/i18n/expanded-messages.ts", [[
   'import { polishExpandedMessages } from "./polish-expanded-messages";',
   `const polishExpandedMessages = ${JSON.stringify(polishExpandedMessages)};`,
+], [
+  'import { getTargetExpandedMessages, isExpandedTargetLocale } from "./target-expanded-messages";',
+  "const { getTargetExpandedMessages, isExpandedTargetLocale } = globalThis.__targetExpandedModule;",
 ]]);
 globalThis.__getExpandedMessages = expandedModule.getExpandedMessages;
+globalThis.__isPublishedTargetLocale = isPublishedTargetLocale;
 const { getMessages } = await importTs("../src/i18n/messages.ts", [[
   'import { getExpandedMessages } from "./expanded-messages";',
   'const getExpandedMessages = globalThis.__getExpandedMessages;',
 ], [
   'import { targetCoreMessages } from "./target-locale-copy";',
   'const targetCoreMessages = globalThis.__targetCoreMessages;',
+], [
+  'import { isPublishedTargetLocale, type TargetLocale } from "./routing";',
+  'const isPublishedTargetLocale = globalThis.__isPublishedTargetLocale;',
 ]]);
 const { getTarotInterpretation } = await importTs("../src/lib/fortune/tarot-localization.ts");
 
@@ -108,6 +120,29 @@ test("legacy registry tools retain all 15 route locales and RU is limited to ver
   }
   assert.deepEqual(omissions, [], `Localization omissions:\n${omissions.join("\n")}`);
   assert.deepEqual(tools.filter(({ supportedLocales }) => supportedLocales.includes("ru")).map(({ slug }) => slug), ["barcode-generator"]);
+});
+
+test("the eight expansion locales provide every expanded shared UI key without English fallback", () => {
+  const source = getMessages("en");
+  const keys = expandedModule.expandedMessageKeys;
+  const locales = ["fil", "bn", "uk", "ms", "sv", "cs", "ro", "el"];
+  const allowedExactMatches = new Set(["sv/rotation", "ro/contrast"]);
+  const placeholders = (value) => [...value.matchAll(/\{[a-zA-Z][a-zA-Z0-9]*\}/g)].map(([token]) => token).sort().join("|");
+
+  assert.equal(keys.length, 117);
+  for (const locale of locales) {
+    const messages = expandedModule.getExpandedMessages(locale);
+    assert.deepEqual(Object.keys(messages).sort(), [...keys].sort(), `${locale} must include the exact shared key set`);
+    for (const key of keys) {
+      const value = messages[key];
+      let original = source;
+      for (const part of key.split(".")) original = original[part];
+      assert.equal(typeof value, "string", `${locale}/${key} must be a string`);
+      assert.ok(value.trim(), `${locale}/${key} must not be empty`);
+      assert.equal(placeholders(value), placeholders(original), `${locale}/${key} must preserve interpolation variables`);
+      assert.ok(value !== original || allowedExactMatches.has(`${locale}/${key}`), `${locale}/${key} must not fall back to English`);
+    }
+  }
 });
 
 test("Japan-specific tools have translated metadata, complete page content, and related links", () => {
@@ -317,16 +352,13 @@ test("expanded shared dictionaries contain the canonical 117 UI, error, and poli
   assert.deepEqual(omissions, [], `Expanded shared dictionary omissions:\n${omissions.join("\n")}`);
 });
 
-test("eight new locales without complete shared UI dictionaries fail closed", () => {
+test("eight new locales resolve their expanded dictionary and page messages fail closed", () => {
   for (const { routeLocale: locale } of plannedLocaleConfig.slice(3)) {
-    assert.throws(
-      () => expandedModule.getExpandedMessages(locale),
-      new RegExp(`Shared UI translations are not registered for ${locale}`),
-    );
+    assert.equal(Object.keys(expandedModule.getExpandedMessages(locale)).length, 117);
     assert.throws(
       () => getMessages(locale),
-      new RegExp(`Shared UI translations are not registered for ${locale}`),
-      "incomplete locales must not receive the English base dictionary",
+      new RegExp(`Complete page UI messages are not registered for ${locale}`),
+      "incomplete page dictionaries must not receive the English base dictionary",
     );
   }
 });
