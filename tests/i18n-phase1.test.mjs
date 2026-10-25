@@ -111,6 +111,7 @@ const { getMessages } = await importTs("../src/i18n/messages.ts", [[
   'const { getTargetPageMessages, isTargetPageMessageLocale } = globalThis.__targetPageModule;',
 ]]);
 const { getTarotInterpretation } = await importTs("../src/lib/fortune/tarot-localization.ts");
+const { getTargetFileProcessorCopy } = await importTs("../src/i18n/target-file-processor-copy.ts");
 
 test("legacy registry tools retain all 15 route locales and RU is limited to verified publication", () => {
   assert.equal(locales.length, 15);
@@ -167,6 +168,68 @@ test("the eight expansion locales provide every expanded shared UI key without E
       assert.ok(value !== original || allowedExactMatches.has(`${locale}/${key}`), `${locale}/${key} must not fall back to English`);
     }
   }
+});
+
+test("newly published generic workspaces have every referenced message in their locale dictionary", async () => {
+  const workspaceSource = await readFile(new URL("../src/components/tool/tool-workspace.tsx", import.meta.url), "utf8");
+  const sourceFile = ts.createSourceFile("tool-workspace.tsx", workspaceSource, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+  const paths = new Set();
+  const readMessagePath = (node) => {
+    if (ts.isIdentifier(node) && node.text === "messages") return [];
+    if (ts.isPropertyAccessExpression(node)) {
+      const parent = readMessagePath(node.expression);
+      return parent ? [...parent, node.name.text] : null;
+    }
+    return null;
+  };
+  const visit = (node) => {
+    if (ts.isPropertyAccessExpression(node)) {
+      const path = readMessagePath(node);
+      if (path?.length) {
+        while (["replace", "trim", "toLowerCase", "toUpperCase"].includes(path.at(-1))) path.pop();
+        if (path.length) paths.add(path.join("."));
+      }
+    }
+    ts.forEachChild(node, visit);
+  };
+  visit(sourceFile);
+
+  const locales = ["fil", "bn", "uk", "ms", "sv", "cs", "ro", "el"];
+  const english = getMessages("en");
+  const omissions = [];
+  for (const locale of locales) {
+    const messages = getMessages(locale);
+    for (const path of paths) {
+      const valueAt = (dictionary) => path.split(".").reduce((value, part) => value?.[part], dictionary);
+      const value = valueAt(messages);
+      const englishValue = valueAt(english);
+      if (value && typeof value === "object") continue;
+      if (typeof value !== "string" || !value.trim()) omissions.push(`${locale}/${path}: missing or empty`);
+      else if (typeof englishValue === "string" && value === englishValue && !new Set(["sv/rotation", "ro/contrast"]).has(`${locale}/${path}`) && !/^(copy|download|upload|JSON|PDF|URL|MIME|SHA-256|UUID|UTC|PNG|JPG|WebP|HEIC|CSV|YAML|HTML|CSS|SQL|JPEG|GIF|SVG|Base64|Unix|D4|D6|D8|D10|D12|D20)$/u.test(value)) {
+        omissions.push(`${locale}/${path}: English fallback`);
+      }
+    }
+  }
+  assert.ok(paths.size > 0, "the coverage test must find Workspace message references");
+  assert.deepEqual(omissions, [], omissions.join("\n"));
+});
+
+test("expanded file inspection workspaces use translated processor status and result labels", async () => {
+  const workspaceComponentSource = await readFile(new URL("../src/components/tool/tool-workspace.tsx", import.meta.url), "utf8");
+  const locales = ["fil", "bn", "uk", "ms", "sv", "cs", "ro", "el"];
+  for (const locale of locales) {
+    const copy = getTargetFileProcessorCopy(locale);
+    assert.ok(copy, `${locale} must have file processor copy`);
+    assert.equal(typeof copy.duplicateGroup(1), "string");
+    assert.ok(copy.duplicateGroup(1).includes("1"));
+    assert.ok(copy.noDuplicates.trim());
+    assert.ok(copy.unknownMime.trim());
+    assert.notEqual(copy.noDuplicates, "No identical file contents found.");
+    assert.notEqual(copy.unknownMime, "unknown MIME");
+  }
+  assert.match(workspaceComponentSource, /getTargetFileProcessorCopy\(phaseLocale\)/);
+  assert.match(workspaceComponentSource, /targetFileCopy\?\.noDuplicates/);
+  assert.match(workspaceComponentSource, /targetFileCopy\?\.unknownMime/);
 });
 
 test("Japan-specific tools have translated metadata, complete page content, and related links", () => {

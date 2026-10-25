@@ -396,8 +396,13 @@ test("private registry tools are excluded from sitemap entries", () => {
 
 test("new locale detail routes are included only when both workspace and SEO checks pass", () => {
   const expandedLocales = plannedLocaleConfig.slice(3).map(({ routeLocale }) => routeLocale);
-  const expectedSlugs = ["barcode-generator", "markdown-preview"].sort();
+  const expectedSlugs = [...targetLocalePublication.fil.publishedToolSlugs].sort();
+  const genericWorkspaceSamples = ["markdown-preview", "json-formatter", "text-compare", "jpg-to-png", "pdf-merge", "file-hash", "timestamp-converter"];
+  const stillGatedSamples = ["random-number", "json-path-tester", "saju", "pdf-page-size-checker"];
   assert.deepEqual(expandedLocales, ["fil", "bn", "uk", "ms", "sv", "cs", "ro", "el"]);
+  assert.equal(expectedSlugs.length, 77);
+  for (const slug of genericWorkspaceSamples) assert.ok(expectedSlugs.includes(slug), `${slug} uses the shared workspace`);
+  for (const slug of stillGatedSamples) assert.equal(expectedSlugs.includes(slug), false, `${slug} remains outside the verified shared workspace`);
   for (const locale of expandedLocales) {
     const publication = targetLocalePublication[locale];
     assert.deepEqual([...publication.uiVerifiedToolSlugs].sort(), expectedSlugs, `${locale} UI allowlist`);
@@ -406,7 +411,7 @@ test("new locale detail routes are included only when both workspace and SEO che
     for (const slug of expectedSlugs) {
       assert.ok(entries.some(({ url }) => url === `${siteOrigin}/${locale}/tools/${slug}`), `${locale}/${slug} is in the sitemap`);
     }
-    assert.equal(entries.some(({ url }) => url === `${siteOrigin}/${locale}/tools/json-formatter`), false, `${locale} unverified workspace stays unpublished`);
+    for (const slug of stillGatedSamples) assert.equal(entries.some(({ url }) => url === `${siteOrigin}/${locale}/tools/${slug}`), false, `${locale}/${slug} stays unpublished`);
   }
   assert.match(toolPageSource, /uiVerifiedToolSlugs\.includes\(slug\)[\s\S]*?seoVerifiedToolSlugs\.includes\(slug\)[\s\S]*?publishedToolSlugs\.includes\(slug\)/);
   assert.match(toolPageSource, /pageMetadata/);
