@@ -36,8 +36,15 @@ jobs:
           ssh -o BatchMode=yes "$SERVER_USER@$SERVER_HOST" 'bash -s' <<'REMOTE'
           set -euo pipefail
           cd /opt/services/compose
+          set +e
           config_output="$(docker compose --env-file .env.moneybook config --services 2>&1)"
+          config_status=$?
+          set -e
           printf '%s\n' "$config_output"
+          if [ "$config_status" -ne 0 ]; then
+            echo "Compose configuration validation failed with exit code $config_status." >&2
+            exit "$config_status"
+          fi
           if printf '%s\n' "$config_output" | grep -Eiq 'defaulting to a blank string|variable .* is not set'; then
             echo "Compose has unresolved environment variables; refusing the release preflight." >&2
             exit 1
