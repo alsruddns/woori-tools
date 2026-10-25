@@ -298,7 +298,9 @@ test("common navigation, privacy, search, and action labels are translated in ev
   assert.deepEqual(omissions, [], `Common UI translation omissions:\n${omissions.join("\n")}`);
 });
 
-test("expanded shared dictionaries are complete and do not silently reuse English copy", () => {
+test("expanded shared dictionaries contain the canonical 117 UI, error, and policy keys", () => {
+  assert.equal(expandedModule.expandedMessageKeys.length, 117);
+  assert.equal(new Set(expandedModule.expandedMessageKeys).size, 117, "shared message keys must be unique");
   const omissions = [];
   const validSharedTerms = new Set(["es/horizontal","es/vertical","pt-br/horizontal","pt-br/vertical","de/horizontal","fr/rotation","fr/horizontal","fr/vertical","fr/portrait","fr/pageCount","id/horizontal","it/input","nl/contrast"]);
   for (const locale of locales.slice(4)) {
@@ -306,6 +308,7 @@ test("expanded shared dictionaries are complete and do not silently reuse Englis
     try { entries = expandedModule.getExpandedMessages(locale); }
     catch (error) { omissions.push(`${locale}: ${error.message}`); continue; }
     if (Object.keys(entries).length !== 117) omissions.push(`${locale}: expected 117 shared keys, got ${Object.keys(entries).length}`);
+    if (JSON.stringify(Object.keys(entries).sort()) !== JSON.stringify([...expandedModule.expandedMessageKeys].sort())) omissions.push(`${locale}: shared key set differs from canonical keys`);
     for (const [key, value] of Object.entries(entries)) {
       if (!value?.trim()) omissions.push(`${locale}/${key}: empty translation`);
       if (value === getMessages("en")[key] && !validSharedTerms.has(`${locale}/${key}`)) omissions.push(`${locale}/${key}: English fallback`);
