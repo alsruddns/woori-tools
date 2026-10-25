@@ -39,12 +39,15 @@ jobs:
           printf 'Environment file names: '
           find . -maxdepth 1 -type f -name '.env*' -printf '%f '
           printf '\nExisting Portal variable names (values are not read):\n'
-          for env_file in .env*; do
-            [ -f "$env_file" ] || continue
+          for env_file in .env.moneybook .env.portal; do
+            if [ ! -r "$env_file" ]; then
+              echo "Required Compose environment file is missing or unreadable: $env_file" >&2
+              exit 1
+            fi
             awk -F= -v file="$env_file" '$1 ~ /^(DATABASE_URL|DB_TARGET|PRODUCTION_DB_ALLOWED_HOSTS|WORLD_BANK_DATA_SOURCE|WORLD_BANK_DB_PRODUCTION_ENABLED)$/ { print file ":" $1 }' "$env_file"
           done
           set +e
-          config_output="$(docker compose --env-file .env.moneybook config --services 2>&1)"
+          config_output="$(docker compose --env-file .env.moneybook --env-file .env.portal config --services 2>&1)"
           config_status=$?
           set -e
           printf '%s\n' "$config_output"
@@ -57,9 +60,10 @@ jobs:
             exit 1
           fi
           printf '%s\n' "$config_output" | grep -qx tools
-          container_id="$(docker compose --env-file .env.moneybook ps -q tools)"
+          container_id="$(docker inspect --format '{{.Id}}' tools 2>/dev/null || true)"
           test -n "$container_id"
           docker inspect --format 'Tools image={{.Config.Image}} id={{.Image}}' "$container_id"
+          test "$(docker inspect --format '{{.State.Running}}' "$container_id")" = true
           REMOTE
 
   validate:

@@ -65,7 +65,7 @@ jobs:
           ssh-keyscan -H "$SERVER_HOST" >> ~/.ssh/known_hosts
           OLD_IMAGE_ID="$(ssh "$SERVER_USER@$SERVER_HOST" 'docker inspect --format "{{.Image}}" tools')"
           echo "old_image_id=$OLD_IMAGE_ID" >> "$GITHUB_OUTPUT"
-          ssh "$SERVER_USER@$SERVER_HOST" 'cd /opt/services/compose && docker compose --env-file .env.moneybook pull tools && docker compose --env-file .env.moneybook up -d --no-deps tools'
+          ssh "$SERVER_USER@$SERVER_HOST" 'cd /opt/services/compose && docker compose --env-file .env.moneybook --env-file .env.portal pull tools && docker compose --env-file .env.moneybook --env-file .env.portal up -d --no-deps tools'
 
       - name: Check production health
         id: health
@@ -84,7 +84,7 @@ jobs:
           OLD_IMAGE_ID: ${{ steps.deploy.outputs.old_image_id }}
         run: |
           set -euo pipefail
-          ssh "$SERVER_USER@$SERVER_HOST" "cd /opt/services/compose && docker image tag '$OLD_IMAGE_ID' ghcr.io/alsruddns/woori-tools:latest && docker compose --env-file .env.moneybook up -d --no-deps tools"
+          ssh "$SERVER_USER@$SERVER_HOST" "cd /opt/services/compose && docker image tag '$OLD_IMAGE_ID' ghcr.io/alsruddns/woori-tools:latest && docker compose --env-file .env.moneybook --env-file .env.portal up -d --no-deps tools"
           curl --fail --silent --show-error --retry 12 --retry-delay 5 --retry-connrefused https://www.woori.today/robots.txt
           curl --fail --silent --show-error --retry 12 --retry-delay 5 --retry-connrefused https://www.woori.today/fil/tools/tarot-card
 
