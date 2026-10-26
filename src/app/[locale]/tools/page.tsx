@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
   if (!isLocale(rawLocale)) return {};
   const messages = getMessages(rawLocale);
-  return pageMetadata({ locale: rawLocale, path: "/tools", title: messages.homeEyebrow, description: messages.homeDescription, keywords: ["online tools", "image", "PDF", "text"] });
+  return pageMetadata({ locale: rawLocale, path: "/tools", title: messages.homeEyebrow, description: messages.homeDescription, keywords: ["online tools", "image", "PDF", "text"], supportedLocales: publishedTargetLocales });
 }
 
 export default async function ToolsHomePage({ params }: Props) {

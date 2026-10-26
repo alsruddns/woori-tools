@@ -62,7 +62,8 @@ jobs:
             NEXT_PUBLIC_GA_ID=G-ZJSJW06SCX
 
       - name: Record immutable Tools image digest
-        run: echo "Tools image digest: ${{ steps.image.outputs.digest }}" >> "$GITHUB_STEP_SUMMARY"
+        run: |
+          echo "Tools image digest: ${{ steps.image.outputs.digest }}" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Deploy on iwinv
         id: deploy
