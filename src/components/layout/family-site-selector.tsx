@@ -1,22 +1,21 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { additionalFamilySiteCopy, familySiteCopy } from "@/i18n/family-site-copy";
+import { additionalFamilySiteCopy, enabledFamilyServices, familySiteCopy } from "@/i18n/family-site-copy";
 import { localizePath, type Locale } from "@/i18n/routing";
 
 export function FamilySiteSelector({ locale }: { locale: Locale }) {
   const pathname = usePathname() ?? `/${locale}`;
   const family = familySiteCopy[locale];
   const additional = additionalFamilySiteCopy[locale];
-  const sites = [
-    { href: `/${locale}`, label: family.portal, portal: true },
-    { href: localizePath(locale, "/calculators"), label: family.calculator },
-    { href: localizePath(locale, "/tools"), label: family.tools },
-    { href: localizePath(locale, "/money"), label: family.moneyBook },
-    { href: localizePath(locale, "/docs"), label: additional.documents },
-    { href: localizePath(locale, "/quiz"), label: additional.quiz },
-  ];
-
+  const siteDefinitions = {
+    portal: { href: `/${locale}`, label: family.portal, portal: true },
+    calculator: { href: localizePath(locale, "/calculators"), label: family.calculator, portal: false },
+    tools: { href: localizePath(locale, "/tools"), label: family.tools, portal: false },
+    documents: { href: localizePath(locale, "/docs"), label: additional.documents, portal: false },
+    quiz: { href: localizePath(locale, "/quiz"), label: additional.quiz, portal: false },
+  };
+  const sites = enabledFamilyServices.map((service) => siteDefinitions[service]);
   const renderLinks = (mobile = false) => sites.map((site) => {
     const active = isFamilySiteActive(pathname, site.href, site.portal ?? false);
     return (
