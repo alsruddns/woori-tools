@@ -1,3 +1,4 @@
+export const enabledFamilyServices = ["portal", "calculator", "tools", "documents", "quiz"] as const;
 export type FamilySiteCopy = { label: string; portal: string; calculator: string; tools: string; moneyBook: string; newTab: string };
 export const familySiteCopy: Record<import("@/i18n/routing").Locale, FamilySiteCopy> = {
   ko: { label: "\ud328\ubc00\ub9ac\uc0ac\uc774\ud2b8", portal: "\ud3ec\ud0c8", calculator: "\uacc4\uc0b0\uae30", tools: "\uc628\ub77c\uc778 \ub3c4\uad6c", moneyBook: "\ubb34\ub8cc \uacf5\uc720 \uac00\uacc4\ubd80", newTab: "\uc120\ud0dd\ud55c \uc11c\ube44\uc2a4\uac00 \uc0c8 \ud0ed\uc5d0\uc11c \uc5f4\ub9bd\ub2c8\ub2e4." },

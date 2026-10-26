@@ -26,7 +26,7 @@ export function generateStaticParams() {
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_ORIGIN),
-  title: { default: "Woori Tools", template: "%s | Woori Tools" },
+  title: { default: "Woori Tools", template: "%s" },
   applicationName: SITE_NAME,
   verification: {
     other: {
