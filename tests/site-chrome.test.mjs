@@ -56,9 +56,9 @@ test("desktop and mobile Family Sites navigation has five enabled locale-first l
   assert.match(selector, /rel="noopener noreferrer"/);
   assert.match(selector, /aria-current=\{active \? "page" : undefined\}/);
   assert.match(selector, /family\.label/);
-  const orderedRoutes = ["/calculators", "/tools", "/money", "/docs", "/quiz"].map((path) => selector.indexOf(`"${path}"`));
-  assert.ok(orderedRoutes.every((index) => index >= 0));
-  assert.deepEqual([...orderedRoutes].sort((a, b) => a - b), orderedRoutes);
+  assert.match(selector, /enabledFamilyServices\.map/);
+  for (const path of ["/calculators", "/tools", "/docs", "/quiz"]) assert.ok(selector.includes(path));
+  assert.doesNotMatch(selector, /href: localizePath\(locale, "\/money"\)/);
   assert.doesNotMatch(selector, /\/(?:docs|quiz)\/\$\{locale\}/);
   assert.doesNotMatch(selector, /<select/);
 });
