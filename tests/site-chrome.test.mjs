@@ -36,7 +36,7 @@ test("language selector exposes native language names while retaining locale rou
   });
 });
 
-test("desktop and mobile Family Sites navigation has six locale-first links and a fixed trigger", async () => {
+test("desktop and mobile Family Sites navigation has five enabled locale-first links and a fixed trigger", async () => {
   const [selector, { isFamilySiteActive }] = await Promise.all([
     readFile(new URL("../src/components/layout/family-site-selector.tsx", import.meta.url), "utf8"),
     tsImport("../src/components/layout/family-site-selector.tsx", import.meta.url),
