@@ -4,10 +4,16 @@ on:
   push:
     branches:
       - main
+    paths-ignore:
+      - .github/workflows/deploy.yml
 
 permissions:
   contents: read
   packages: write
+
+concurrency:
+  group: tools-production-deploy
+  cancel-in-progress: false
 
 jobs:
   build-and-deploy:
@@ -49,9 +55,14 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/alsruddns/woori-tools:latest
+          tags: |
+            ghcr.io/alsruddns/woori-tools:latest
+            ghcr.io/alsruddns/woori-tools:sha-${{ github.sha }}
           build-args: |
             NEXT_PUBLIC_GA_ID=G-ZJSJW06SCX
+
+      - name: Record immutable Tools image digest
+        run: echo "Tools image digest: ${{ steps.image.outputs.digest }}" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Deploy on iwinv
         id: deploy
@@ -59,6 +70,7 @@ jobs:
           SERVER_HOST: ${{ secrets.SERVER_HOST }}
           SERVER_USER: ${{ secrets.SERVER_USER }}
           SERVER_SSH_KEY: ${{ secrets.SERVER_SSH_KEY }}
+          IMAGE_SHA: ${{ github.sha }}
         run: |
           install -m 700 -d ~/.ssh
           printf '%s\n' "$SERVER_SSH_KEY" > ~/.ssh/id_ed25519
@@ -66,7 +78,25 @@ jobs:
           ssh-keyscan -H "$SERVER_HOST" >> ~/.ssh/known_hosts
           OLD_IMAGE_ID="$(ssh "$SERVER_USER@$SERVER_HOST" 'docker inspect --format "{{.Image}}" tools')"
           echo "old_image_id=$OLD_IMAGE_ID" >> "$GITHUB_OUTPUT"
-          ssh "$SERVER_USER@$SERVER_HOST" 'cd /opt/services/compose && docker compose --env-file .env.moneybook --env-file .env.portal pull tools && docker compose --env-file .env.moneybook --env-file .env.portal up -d --no-deps tools'
+          ssh "$SERVER_USER@$SERVER_HOST" "bash -s -- '$IMAGE_SHA'" <<'REMOTE'
+            set -euo pipefail
+            image_sha="$1"
+            cd /opt/services/compose
+            compose=(docker compose --env-file .env.moneybook --env-file .env.portal)
+            image="ghcr.io/alsruddns/woori-tools:sha-${image_sha}"
+            latest="ghcr.io/alsruddns/woori-tools:latest"
+            docker exec nginx nginx -t
+            "${compose[@]}" config --quiet
+            docker pull "$image"
+            docker image tag "$image" "$latest"
+            "${compose[@]}" up -d --no-deps --pull never --wait --wait-timeout 120 tools
+            expected="$(docker image inspect "$image" --format '{{.Id}}')"
+            running="$(docker inspect tools --format '{{.Image}}')"
+            test "$running" = "$expected"
+            docker exec nginx nginx -t
+            docker exec nginx nginx -s reload
+            echo "Tools image verified at $running; Nginx validated and gracefully reloaded."
+          REMOTE
 
       - name: Verify deployed Tools image routes and sitemap
         id: image_verify
@@ -121,7 +151,17 @@ jobs:
           OLD_IMAGE_ID: ${{ steps.deploy.outputs.old_image_id }}
         run: |
           set -euo pipefail
-          ssh "$SERVER_USER@$SERVER_HOST" "cd /opt/services/compose && docker image tag '$OLD_IMAGE_ID' ghcr.io/alsruddns/woori-tools:latest && docker compose --env-file .env.moneybook --env-file .env.portal up -d --no-deps tools"
+          ssh "$SERVER_USER@$SERVER_HOST" "bash -s -- '$OLD_IMAGE_ID'" <<'REMOTE'
+            set -euo pipefail
+            old_image_id="$1"
+            cd /opt/services/compose
+            compose=(docker compose --env-file .env.moneybook --env-file .env.portal)
+            docker image tag "$old_image_id" ghcr.io/alsruddns/woori-tools:latest
+            "${compose[@]}" up -d --no-deps --pull never --wait --wait-timeout 120 tools
+            test "$(docker inspect tools --format '{{.Image}}')" = "$old_image_id"
+            docker exec nginx nginx -t
+            docker exec nginx nginx -s reload
+          REMOTE
           test "$(ssh "$SERVER_USER@$SERVER_HOST" 'docker inspect --format "{{.Image}}" tools')" = "$OLD_IMAGE_ID"
           ssh "$SERVER_USER@$SERVER_HOST" 'docker exec -i tools node -' <<'NODE'
           (async () => {
