@@ -105,6 +105,9 @@ test("postal formatters normalize valid ZIP, Canadian, UK, Brazilian, and Austra
 });
 
 test("localized dates round trip with leap-day validation and explicit US or UK order", () => {
+  assert.equal(tools.convertLocalizedDate("2026-10-13", "ES"), "13/10/2026");
+  assert.equal(tools.convertLocalizedDate("13/10/2026", "ES", "to-iso"), "2026-10-13");
+  assert.equal(tools.convertDate("2026-10-13", "FR"), "13/10/2026");
   assert.equal(tools.convertLocalizedDate("2024-02-29", "ES"), "29/02/2024");
   assert.equal(tools.convertLocalizedDate("29/02/2024", "NL", "to-iso"), "2024-02-29");
   assert.equal(tools.convertLocalizedDate("31/12/2026", "IT", "to-iso"), "2026-12-31");

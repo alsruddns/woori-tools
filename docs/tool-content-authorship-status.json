@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
   "publicToolCount": 176,
-  "completeCount": 153,
+  "completeCount": 158,
   "nextBatch": [
-    "spanish-date-format-converter",
-    "france-phone-number-formatter",
-    "french-number-format-converter",
-    "french-date-format-converter",
-    "brazil-cpf-validator"
+    "brazil-cnpj-validator",
+    "brazil-phone-number-formatter",
+    "brazil-cep-formatter",
+    "netherlands-iban-validator",
+    "dutch-number-format-converter"
   ],
   "tools": [
     {
@@ -777,28 +777,28 @@
     },
     {
       "slug": "spanish-date-format-converter",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": 32
     },
     {
       "slug": "france-phone-number-formatter",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": 32
     },
     {
       "slug": "french-number-format-converter",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": 32
     },
     {
       "slug": "french-date-format-converter",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": 32
     },
     {
       "slug": "brazil-cpf-validator",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": 32
     },
     {
       "slug": "brazil-cnpj-validator",

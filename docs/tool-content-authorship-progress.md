@@ -561,3 +561,10 @@ Checkpoint at batch start: selected german-number-format-converter, german-date-
 All five have original content in 26 locales, distinct FAQ questions/use cases per locale, and no English fallback. Content audit reports 176 tools, 4,576 localized detail URLs, zero noindex candidates, and 26 locales. Country processor tests passed (14), TypeScript, ESLint, content audit, git diff --check, and production build (4,866 static pages). Playwright passed 3/3: SSR/SEO across 50 routes, five browser workflows, and 320px/390px mobile checks. No native-speaker review was performed. The batch 30 audit's global duplicate counts remain at 171 repeated FAQ-question groups and 52 exact how-to sets pending a cross-tool editorial review.
 
 The ledger records **153/176 COMPLETE** (23 remaining). Continue with the next PENDING tools in the ledger.
+
+
+## Batch 32 COMPLETE - 2026-10-28
+
+Completed spanish-date-format-converter, france-phone-number-formatter, french-number-format-converter, french-date-format-converter, and brazil-cpf-validator. All five have original content in 26 locales with feature-specific examples and FAQs; no native-speaker review was performed. Processor examples were verified in unit and browser workflows, including Spanish date round trip, French national phone grouping, French narrow-space decimal grouping, French date output, and CPF checksum acceptance. Content audit reports all 26 locales and 4,576 localized detail URLs with no new fallback or noindex candidate. Country tests passed (14), content audit, TypeScript, ESLint, diff check, production build (4,866 pages), and Playwright (3/3: SSR/SEO across 50 routes, browser examples, and 320px/390px mobile widths). Global duplicate counts remain at 171 repeated FAQ-question groups and 52 exact how-to sets pending broader editorial review.
+
+The ledger records **158/176 COMPLETE** (18 remaining). Continue with brazil-cnpj-validator, brazil-phone-number-formatter, brazil-cep-formatter, netherlands-iban-validator, and dutch-number-format-converter.
