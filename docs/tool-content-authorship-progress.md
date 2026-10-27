@@ -274,3 +274,8 @@ The ledger records **68/176 COMPLETE** (108 remaining). Next PENDING batch: `col
 Batch 15 quality audit passed for all five tools and 26 locales: populated fields, distinct FAQs/use cases, and no English field fallback. Audit totals remain 176 public tools, 4,576 detail/sitemap URLs, and zero noindex candidates. All 216 unit tests, TypeScript, ESLint, `git diff --check`, and production build passed; build generated 4,866 static pages. Batch Playwright passed 3/3 tests: five processor examples, SSR/canonical/hreflang/x-default on five tools across nine representative locales (45 routes), and viewport overflow checks at 320px and 390px. Existing global duplicate audit remains 171 repeated FAQ-question groups and 52 exact how-to sets. No native-speaker review was performed.
 
 The ledger records **73/176 COMPLETE** (103 remaining). Next PENDING batch: `javascript-formatter`, `markdown-preview`, `jpg-to-png`, `png-to-jpg`, and `webp-to-jpg`. Continue without reauthoring verified editorials.
+## Batch 16 checkpoint - 2026-10-27
+
+- Selected `javascript-formatter`, `markdown-preview`, `jpg-to-png`, `png-to-jpg`, and `webp-to-jpg` from the PENDING ledger.
+- Inspected the Prettier Babel/ESTree formatter, Marked plus DOMPurify local preview, and Canvas conversion path. Image conversions keep decoded dimensions; inputs are limited to 30 MB and 40 million pixels. JPEG outputs use the configured quality and PNG-to-JPEG/WebP-to-JPEG paths fill white before encoding.
+- Korean drafts are recorded in `docs/tool-content-authorship-batch-16-ko-draft.md`. The ledger marks all five `KO_DRAFT`; verified completion remains **73/176**. Next: author all locale cards, exercise the code examples with actual browser processing, and run the batch checks.

@@ -297,28 +297,28 @@
     },
     {
       "slug": "javascript-formatter",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-16"
     },
     {
       "slug": "markdown-preview",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-16"
     },
     {
       "slug": "jpg-to-png",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-16"
     },
     {
       "slug": "png-to-jpg",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-16"
     },
     {
       "slug": "webp-to-jpg",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-16"
     },
     {
       "slug": "webp-to-png",
