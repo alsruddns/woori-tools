@@ -1,0 +1,894 @@
+{
+  "schemaVersion": 1,
+  "publicToolCount": 176,
+  "completeCount": 18,
+  "nextBatch": [
+    "hiragana-katakana-converter",
+    "fullwidth-halfwidth-converter",
+    "japanese-romaji-converter",
+    "japanese-number-kanji-converter",
+    "simplified-traditional-chinese-converter"
+  ],
+  "tools": [
+    {
+      "slug": "lotto-number-generator",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "powerball-number-generator",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "mega-millions-number-generator",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "japan-loto6-number-generator",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "japan-loto7-number-generator",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "japan-mini-loto-number-generator",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "tarot-card",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "daily-fortune",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "saju",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "random-number",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "random-name-picker",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "random-wheel",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "draw-lots",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "random-team-maker",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "random-order",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "random-seat",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "duty-picker",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "dice-roller",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "coin-flip",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "stopwatch",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "timer",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "pomodoro-timer",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "world-clock",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "password-generator",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "random-string-generator",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "wifi-qr",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "contact-qr",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "phone-qr",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "email-qr",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "barcode-checker",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "barcode-generator",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "social-image-resize",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "add-text-to-image",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "instagram-grid-split",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "image-collage",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "file-hash",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "mime-type-checker",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "file-extension-checker",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "file-size-checker",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "duplicate-file-checker",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "zip-files",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "bulk-file-renamer",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "filename-cleaner",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "shuffle-lines",
+      "status": "COMPLETE",
+      "batch": "batch-4"
+    },
+    {
+      "slug": "add-line-numbers",
+      "status": "COMPLETE",
+      "batch": "prior-verified"
+    },
+    {
+      "slug": "remove-line-numbers",
+      "status": "COMPLETE",
+      "batch": "prior-verified"
+    },
+    {
+      "slug": "remove-empty-lines",
+      "status": "COMPLETE",
+      "batch": "prior-verified"
+    },
+    {
+      "slug": "remove-characters",
+      "status": "COMPLETE",
+      "batch": "prior-verified"
+    },
+    {
+      "slug": "text-repeater",
+      "status": "COMPLETE",
+      "batch": "prior-verified"
+    },
+    {
+      "slug": "text-to-file",
+      "status": "COMPLETE",
+      "batch": "batch-4"
+    },
+    {
+      "slug": "lorem-ipsum",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "regex-tester",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "color-converter",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "cron-parser",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "sql-formatter",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "html-formatter",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "css-formatter",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "javascript-formatter",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "markdown-preview",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "jpg-to-png",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "png-to-jpg",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "webp-to-jpg",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "webp-to-png",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "jpg-to-webp",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "png-to-webp",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "heic-to-jpg",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "image-compress",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "image-resize",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "image-crop",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "image-rotate",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "image-flip",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "image-grayscale",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "image-brightness",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "image-contrast",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "image-blur",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "image-pixelate",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "remove-image-metadata",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "image-info",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "favicon-generator",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "image-color-picker",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "images-to-pdf",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "pdf-merge",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "pdf-split",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "pdf-delete-pages",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "pdf-reorder-pages",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "pdf-rotate-pages",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "pdf-add-page-numbers",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "pdf-watermark",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "pdf-metadata-viewer",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "pdf-remove-metadata",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "character-count",
+      "status": "COMPLETE",
+      "batch": "prior-verified"
+    },
+    {
+      "slug": "remove-spaces",
+      "status": "COMPLETE",
+      "batch": "prior-verified"
+    },
+    {
+      "slug": "remove-line-breaks",
+      "status": "COMPLETE",
+      "batch": "prior-verified"
+    },
+    {
+      "slug": "remove-duplicate-lines",
+      "status": "COMPLETE",
+      "batch": "prior-verified"
+    },
+    {
+      "slug": "sort-lines",
+      "status": "COMPLETE",
+      "batch": "batch-3"
+    },
+    {
+      "slug": "text-case-converter",
+      "status": "COMPLETE",
+      "batch": "batch-4"
+    },
+    {
+      "slug": "text-compare",
+      "status": "COMPLETE",
+      "batch": "batch-4"
+    },
+    {
+      "slug": "reverse-text",
+      "status": "COMPLETE",
+      "batch": "prior-verified"
+    },
+    {
+      "slug": "remove-duplicate-words",
+      "status": "COMPLETE",
+      "batch": "batch-4"
+    },
+    {
+      "slug": "json-formatter",
+      "status": "COMPLETE",
+      "batch": "prior-verified"
+    },
+    {
+      "slug": "json-validator",
+      "status": "COMPLETE",
+      "batch": "prior-verified"
+    },
+    {
+      "slug": "json-to-yaml",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "yaml-to-json",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "csv-to-json",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "json-to-csv",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "base64",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "url-encode-decode",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "uuid-generator",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "timestamp-converter",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "wareki-converter",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "hiragana-katakana-converter",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "fullwidth-halfwidth-converter",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "japanese-romaji-converter",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "japanese-number-kanji-converter",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "yakudoshi-calculator",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "japanese-zodiac-calculator",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "numbers3-number-generator",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "numbers4-number-generator",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "bingo5-number-generator",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "jwt-decoder",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "url-query-parameter-parser",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "user-agent-parser",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "ip-cidr-calculator",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "base32-encoder-decoder",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "ulid-generator",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "uuid-v7-generator",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "hash-compare",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "regex-replace",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "html-entity-encoder-decoder",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "chmod-calculator",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "json-path-tester",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "csv-tsv-converter",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "url-slug-generator",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "unicode-code-point-checker",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "pdf-page-size-checker",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "simplified-traditional-chinese-converter",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "chinese-number-kanji-converter",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "rmb-uppercase-converter",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "chinese-zodiac-calculator",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "chinese-sexagenary-cycle-calculator",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "chinese-phone-number-formatter",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "taiwan-phone-number-formatter",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "indian-number-format-converter",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "lakh-crore-converter",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "pan-format-validator",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "gstin-format-validator",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "india-phone-number-formatter",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "germany-iban-validator",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "german-number-format-converter",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "german-date-format-converter",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "spain-dni-validator",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "spain-nie-validator",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "spanish-number-format-converter",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "spanish-date-format-converter",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "france-phone-number-formatter",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "french-number-format-converter",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "french-date-format-converter",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "brazil-cpf-validator",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "brazil-cnpj-validator",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "brazil-phone-number-formatter",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "brazil-cep-formatter",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "netherlands-iban-validator",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "dutch-number-format-converter",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "dutch-date-format-converter",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "vietnam-phone-number-formatter",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "vietnam-number-format-converter",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "italy-fiscal-code-format-validator",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "italy-vat-number-validator",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "italy-number-format-converter",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "italian-date-format-converter",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "us-phone-number-formatter",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "us-zip-code-formatter",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "canada-postal-code-formatter",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "uk-postcode-formatter",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "australia-postcode-formatter",
+      "status": "PENDING",
+      "batch": null
+    },
+    {
+      "slug": "english-date-format-converter",
+      "status": "PENDING",
+      "batch": null
+    }
+  ]
+}

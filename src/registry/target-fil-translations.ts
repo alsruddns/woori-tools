@@ -527,11 +527,11 @@ const translations = {
     seoDescription: "Ilagay ang teksto at i-download ito bilang file sa iyong device nang hindi ina-upload sa server.",
     category: "Mga tool sa teksto",
     keywords: ["text to file", "download txt", "save text as file", "text file creator"],
-    steps: ["Ilagay o i-paste ang nilalaman.", "Pumili ng filename kung may ganitong opsyon.", "Gumawa at i-download ang text file."],
+    steps: ["Ilagay o i-paste ang nilalaman.", "Gumawa ng TXT file mula sa teksto.", "I-download ang inihandang text file."],
     example: "I-save ang mga tala bilang .txt para magamit sa ibang app.",
     options: "Tiyaking ang extension at encoding ay angkop sa gagamit na programa.",
     caution: "Suriin ang nilalaman bago i-download at ibahagi ang file.",
-    faq: { example: "Maaari ba akong pumili ng filename?", caution: "Ipinapadala ba sa server ang nilalaman?" },
+    faq: { example: "Anong format ang dina-download?", caution: "Ipinapadala ba sa server ang nilalaman?" },
   },
   "remove-spaces": {
     title: "Alisin ang mga espasyo sa teksto",

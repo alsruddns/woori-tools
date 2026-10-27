@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { access, readdir, readFile } from "node:fs/promises";
+import { readFileSync } from "node:fs";
 import path from "node:path";
 import { locales, publishedTargetLocales, type PlannedLocale, type PublishedTargetLocale } from "../src/i18n/routing";
 import { getMessages } from "../src/i18n/messages";
@@ -23,6 +24,14 @@ import { formatPhone } from "../src/lib/country-tools";
 
 const slugs = new Set(tools.map((tool) => tool.slug));
 assert.equal(slugs.size, tools.length, "duplicate public slug");
+const authorshipStatus = JSON.parse(readFileSync("docs/tool-content-authorship-status.json", "utf8")) as { publicToolCount: number; completeCount: number; nextBatch: string[]; tools: Array<{ slug: string; status: string }> };
+assert.equal(authorshipStatus.publicToolCount, tools.length, "authorship status must cover every public tool");
+assert.deepEqual(new Set(authorshipStatus.tools.map((tool) => tool.slug)), slugs, "authorship status slugs must match the public registry");
+assert.equal(authorshipStatus.tools.length, tools.length, "authorship status must not contain duplicate tools");
+assert.equal(authorshipStatus.completeCount, authorshipStatus.tools.filter((tool) => tool.status === "COMPLETE").length, "authorship status complete count must match its entries");
+for (const slug of authoredEditorialSlugs) assert.equal(authorshipStatus.tools.find((tool) => tool.slug === slug)?.status, "COMPLETE", `${slug}: authored editorial must be COMPLETE in the status record`);
+for (const { slug, status } of authorshipStatus.tools) if (status === "COMPLETE") assert.ok(authoredEditorialSlugs.includes(slug), `${slug}: status cannot be COMPLETE without authored editorial coverage`);
+for (const slug of authorshipStatus.nextBatch) assert.equal(authorshipStatus.tools.find((tool) => tool.slug === slug)?.status, "PENDING", `${slug}: next batch must contain PENDING tools`);
 assert.deepEqual(new Set(Object.keys(toolExampleInputs)), slugs, "sample inputs must match public tools exactly");
 assert.ok(Object.keys(verifiedTextExamples).every((slug) => slugs.has(slug)), "verified runtime examples must belong to public tools");
 for (const locale of publishedTargetLocales) {
@@ -253,6 +262,8 @@ assert.match((await processText("json-to-yaml", exampleInput("json-to-yaml"), ""
 assert.deepEqual(JSON.parse((await processText("yaml-to-json", exampleInput("yaml-to-json"), "", "", 1, "en")).result), { name: "A" });
 assert.equal((await processText("remove-duplicate-lines", exampleInput("remove-duplicate-lines"), "", "", 1, "en")).result, "A\nB");
 assert.equal((await processText("reverse-text", exampleInput("reverse-text"), "", "", 1, "en")).result, "cba");
+assert.equal((await processText("text-case-converter", "istanbul", "", "upper", 1, "tr")).result, "İSTANBUL", "case conversion must follow the selected locale");
+assert.equal((await processText("remove-duplicate-words", "I ı İ i", "", "", 1, "tr")).result, "I İ", "duplicate-word matching must follow locale-specific casing");
 assert.equal(formatPhone("france-phone-number-formatter", "0612345678"), "+33 6 12 34 56 78");
 assert.equal(formatPhone("us-phone-number-formatter", "2025550123"), "+1 (202) 555-0123");
 for (const [slug, example] of Object.entries(verifiedTextExamples)) {
@@ -267,7 +278,15 @@ for (const [slug, example] of Object.entries(verifiedTextExamples)) {
     assert.equal(failure instanceof Error ? failure.message : "", getMessages("en").errors.invalidJson, `${slug}: displayed error text must match the real processor`);
   } else {
     const actual = await runExample();
-    assert.equal(actual.result, example.output, `${slug}: displayed input/output example must match the real processor`);
+    if (example.outputPermutationOfInput) {
+      assert.deepEqual(actual.result.split("\n").sort(), example.input.split(/\r?\n/).filter((line) => line.length > 0).sort(), `${slug}: output must contain each non-empty input line exactly once`);
+    } else {
+      assert.equal(actual.result, example.output, `${slug}: displayed input/output example must match the real processor`);
+    }
+    if (example.downloadContent !== undefined) {
+      assert.equal(await actual.download?.text(), example.downloadContent, `${slug}: downloaded file contents must match the input`);
+      assert.equal(actual.download?.type, "text/plain;charset=utf-8", `${slug}: downloaded text file must be UTF-8 plain text`);
+    }
   }
 }
 

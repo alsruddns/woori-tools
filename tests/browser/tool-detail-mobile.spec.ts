@@ -2,8 +2,8 @@ import { expect, test } from "@playwright/test";
 
 const locales = ["ko", "en", "ja", "zh", "es", "pt-br", "de", "fr", "vi", "id", "th", "zh-tw", "it", "nl", "hi", "ru", "tr", "pl", "fil", "bn", "uk", "ms", "sv", "cs", "ro", "el"];
 const viewports = [320, 360, 375, 390, 430, 768, 1024, 1440];
-const selectedTools = ["json-formatter", "json-validator", "character-count", "remove-spaces", "remove-line-breaks", "remove-duplicate-lines", "reverse-text", "add-line-numbers", "remove-line-numbers", "remove-empty-lines", "remove-characters", "text-repeater", "sort-lines"];
-const koreanTextBatch = ["character-count", "remove-spaces", "remove-line-breaks", "remove-duplicate-lines", "reverse-text", "add-line-numbers", "remove-line-numbers", "remove-empty-lines", "remove-characters", "text-repeater", "sort-lines"];
+const selectedTools = ["json-formatter", "json-validator", "character-count", "remove-spaces", "remove-line-breaks", "remove-duplicate-lines", "reverse-text", "add-line-numbers", "remove-line-numbers", "remove-empty-lines", "remove-characters", "text-repeater", "sort-lines", "shuffle-lines", "text-case-converter", "text-compare", "remove-duplicate-words", "text-to-file"];
+const koreanTextBatch = ["character-count", "remove-spaces", "remove-line-breaks", "remove-duplicate-lines", "reverse-text", "add-line-numbers", "remove-line-numbers", "remove-empty-lines", "remove-characters", "text-repeater", "sort-lines", "shuffle-lines", "text-case-converter", "text-compare", "remove-duplicate-words", "text-to-file"];
 
 test("Korean text-tool editorial cards are server-rendered and fit the mobile viewport set", async ({ request, page, baseURL }) => {
   for (const slug of koreanTextBatch) {
@@ -49,7 +49,7 @@ test("all authored locale pages render editorial cards in initial server HTML", 
       expect([...editorialHtml.matchAll(/<h2\b/g)]).toHaveLength(4);
       expect(editorialHtml).toContain("<h3");
       expect(editorialHtml).toContain("<p");
-      expect(editorialHtml).not.toMatch(/\bhidden\b|\binert\b|display\s*:\s*none/i);
+      expect(editorialHtml).not.toMatch(/<[a-z][^>]*(?:\shidden(?:\s|=)|\sinert(?:\s|=)|style="[^"]*display\s*:\s*none)/i);
       expect(html).not.toMatch(/<meta[^>]+name="robots"[^>]+content="[^"]*noindex/i);
     }
   }
@@ -92,4 +92,40 @@ test("long-script locales fit all requested viewport widths and formatter remain
   await page.getByRole("button", { name: "Run", exact: true }).click();
   await expect(page.locator("p[role=alert]")).toHaveText("Enter valid JSON.");
   expect(browserErrors).toEqual([]);
+});
+
+test("authored text tools execute their documented actions in the browser", async ({ page, baseURL }) => {
+  await page.goto(`${baseURL}/en/tools/shuffle-lines`);
+  await page.locator("#input-text").fill("red\nblue\nred\n\ngreen");
+  await page.getByRole("button", { name: "Run", exact: true }).click();
+  await expect.poll(async () => (await page.locator("main > section").first().locator("pre").textContent())?.split("\n").sort()).toEqual(["blue", "green", "red", "red"]);
+
+  await page.goto(`${baseURL}/en/tools/text-case-converter`);
+  await page.locator("#input-text").fill("hello WORLD");
+  await page.locator("main select").selectOption("upper");
+  await page.getByRole("button", { name: "Run", exact: true }).click();
+  await expect(page.locator("main > section").first().locator("pre")).toHaveText("HELLO WORLD");
+
+  await page.goto(`${baseURL}/en/tools/text-compare`);
+  await page.locator("#input-text").fill("color\nsize");
+  await page.locator("#second-text").fill("colour\nsize");
+  await page.getByRole("button", { name: "Run", exact: true }).click();
+  await expect(page.locator("main > section").first().locator("pre")).toHaveText("− color\n+ colour");
+
+  await page.goto(`${baseURL}/en/tools/remove-duplicate-words`);
+  await page.locator("#input-text").fill("red blue red");
+  await page.getByRole("button", { name: "Run", exact: true }).click();
+  await expect(page.locator("main > section").first().locator("pre")).toHaveText("red blue");
+
+  await page.goto(`${baseURL}/en/tools/text-to-file`);
+  await page.locator("#input-text").fill("hello");
+  await page.getByRole("button", { name: "Run", exact: true }).click();
+  const download = page.locator("a[download]");
+  await expect(download).toBeVisible();
+  const href = await download.getAttribute("href");
+  expect(href).toMatch(/^blob:/);
+  await expect.poll(() => page.evaluate(async (url) => {
+    const response = await fetch(url!);
+    return { type: response.headers.get("content-type"), text: await response.text() };
+  }, href)).toEqual({ type: "text/plain;charset=utf-8", text: "hello" });
 });

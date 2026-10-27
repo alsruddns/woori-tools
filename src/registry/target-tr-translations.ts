@@ -347,11 +347,11 @@ const translations = {
   },
   "text-to-file": {
     title: "Metni Dosyaya Kaydet", description: "Yazdığınız veya yapıştırdığınız metni düz metin dosyası olarak cihazınıza indirin.",
-    seoTitle: "Metni Dosyaya Kaydet | TXT Dosyası Oluştur", seoDescription: "Metninizi girip dosya adı belirleyin ve içeriği tarayıcınızda TXT dosyası olarak kaydedin.",
+    seoTitle: "Metni Dosyaya Kaydet | TXT Dosyası Oluştur", seoDescription: "Metninizi girin ve tarayıcınızda UTF-8 TXT dosyası olarak indirin.",
     category: "Metin araçları", keywords: ["metni txt dosyasına kaydet", "metin dosyası oluşturucu", "TXT indir"],
-    steps: ["Dosyaya kaydetmek istediğiniz metni girin.", "İsteğe bağlı olarak dosya adını düzenleyin.", "İndir düğmesine basıp metin dosyasını kaydedin."],
+    steps: ["Dosyaya kaydetmek istediğiniz metni girin.", "TXT dosyasını oluşturma düğmesine basın.", "Tarayıcının indirdiği metin dosyasını kaydedin."],
     example: "Notları veya kısa bir metin parçasını .txt dosyası olarak dışa aktarın.", options: "İndirmeden önce metni ve sunulan dosya adı alanını düzenleyebilirsiniz.",
-    caution: "Dosya indirme işlemi tarayıcınızda gerçekleşir; indirme konumu cihaz ayarlarınıza bağlıdır.", faq: { example: "Dosya adını değiştirebilir miyim?", caution: "Metnim sunucuya gönderiliyor mu?" },
+    caution: "Dosya UTF-8 düz metin olarak .txt uzantısıyla hazırlanır; ad veya biçim seçeneği yoktur. İndirme konumu cihaz ayarlarınıza bağlıdır.", faq: { example: "Dosya biçimini seçebilir miyim?", caution: "Metnim sunucuya gönderiliyor mu?" },
   },
   "remove-characters": {
     title: "Metinden Karakter Sil", description: "Metindeki seçtiğiniz karakterleri veya karakter kümelerini bulup kaldırın.",

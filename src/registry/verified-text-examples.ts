@@ -6,6 +6,8 @@ export type VerifiedTextExample = {
   option?: string;
   amount?: number;
   resultIsError?: boolean;
+  outputPermutationOfInput?: boolean;
+  downloadContent?: string;
 };
 
 export const verifiedTextExamples: Record<string, VerifiedTextExample> = {
@@ -22,10 +24,12 @@ export const verifiedTextExamples: Record<string, VerifiedTextExample> = {
   "remove-line-breaks": { input: "first\nsecond", output: "first second" },
   "remove-duplicate-lines": { input: "apple\npear\napple", output: "apple\npear" },
   "sort-lines": { input: "pear\napple\nbanana", output: "apple\nbanana\npear" },
+  "shuffle-lines": { input: "red\nblue\nred\n\ngreen", output: "", outputPermutationOfInput: true },
   "text-case-converter": { input: "hello Woori", option: "upper", output: "HELLO WOORI" },
   "text-compare": { input: "color\nsize", secondText: "colour\nsize", output: "− color\n+ colour" },
   "reverse-text": { input: "Woori", output: "irooW" },
   "remove-duplicate-words": { input: "red blue red", output: "red blue" },
+  "text-to-file": { input: "hello", output: "5 characters ready to download.", downloadContent: "hello" },
   "add-line-numbers": { input: "alpha\nbeta", output: "1. alpha\n2. beta" },
   "remove-line-numbers": { input: "1. alpha\n2. beta", output: "alpha\nbeta" },
   "remove-empty-lines": { input: "alpha\n\nbeta", output: "alpha\nbeta" },

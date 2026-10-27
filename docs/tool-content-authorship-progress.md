@@ -32,4 +32,16 @@ Current evidence: 216 unit tests pass; content check reports 176 tools, 26 local
 
 Batch evidence: 216 unit tests, content quality audit (176 tools, 26 locales, 4,576 detail pages and sitemap URLs, 28 executable examples, zero noindex candidates), TypeScript, lint, production build (4,866 static pages), and Playwright (3 tests) passed. The content audit still reports repeated FAQ-question and near-duplicate candidates elsewhere; those require review of the actual text and are not treated as this tool's completion blockers.
 
-The cumulative editorial completion is 13/176, with 163 tools remaining. Next selected batch (all `PENDING`): `shuffle-lines`, `text-case-converter`, `text-compare`, `remove-duplicate-words`, and `text-to-file`. Continue from the first PENDING tool; do not rewrite the existing COMPLETE tools. Native-speaker review has not been performed for the authored batches.
+## Batch 4: line randomization, text transformation, comparison, deduplication, and download
+
+| Tool | Status | Evidence and remaining work |
+|---|---|---|
+| `shuffle-lines` | COMPLETE | Original copy in all 26 locales explains randomized order, duplicate entries, omission of exactly empty lines, and non-deterministic reruns. The checker ran the actual processor and verified its output is a permutation of all non-empty input lines, including duplicates. |
+| `text-case-converter` | COMPLETE | Original copy in all 26 locales describes lower, upper, and title modes and their locale rules. Registered output and Turkish-specific casing were checked against `processText`. |
+| `text-compare` | COMPLETE | Original copy in all 26 locales describes exact whole-line comparison, `−`/`+` output, and whitespace sensitivity. The registered two-input example matched `processText`. |
+| `remove-duplicate-words` | COMPLETE | Original copy in all 26 locales describes first-occurrence retention, locale-aware case-insensitive matching, punctuation, and whitespace normalization. Registered output and Turkish casing behavior matched `processText`. |
+| `text-to-file` | COMPLETE | Original copy in all 26 locales describes the actual browser-created UTF-8 `.txt` Blob. The checker verified status text, MIME, and downloaded contents. Existing metadata that claimed CSV or user-selectable filenames/formats was corrected for affected locales. |
+
+Batch evidence: all 216 unit tests, content audit (176 public tools, 26 locales, 4,576 detail/sitemap URLs, 30 executable examples, zero noindex candidates), TypeScript, lint, production build (4,866 static pages), and four Playwright tests passed. SSR checks covered all 26 locales for 18 authored tools (468 pages) with canonical, hreflang, x-default, visible content, and noindex assertions. Sixteen Korean text tools passed the eight-width viewport check; browser interactions executed all five tools. The audit still reports 171 repeated FAQ-question sets and 1,060 near-duplicate candidates elsewhere for later review. Native-speaker review was not performed.
+
+The machine-readable [tool status ledger](tool-content-authorship-status.json) covers all 176 public tools and is checked by the content audit. Cumulative editorial completion is 18/176, with 158 remaining. Next selected batch (all `PENDING`): `hiragana-katakana-converter`, `fullwidth-halfwidth-converter`, `japanese-romaji-converter`, `japanese-number-kanji-converter`, and `simplified-traditional-chinese-converter`. Continue from the first PENDING tool and preserve all COMPLETE content. Native-speaker review has not been performed for authored batches.
