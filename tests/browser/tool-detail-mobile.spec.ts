@@ -345,10 +345,10 @@ test("Batch 10 workspaces honor their documented countdown, timezone, and genera
   await expect(clocks).toHaveCount(9);
 
   await page.goto(`${baseURL}/en/tools/password-generator`);
-  await page.getByLabel("Length").fill("16");
+  await page.getByLabel("Length").fill("4");
   await page.getByRole("button", { name: "Generate", exact: true }).click();
   const password = (await page.locator("main > section").first().locator("pre").textContent())!.trim();
-  expect(password).toHaveLength(16);
+  expect(password).toHaveLength(4);
   expect(password).toMatch(/[A-Z]/);
   expect(password).toMatch(/[a-z]/);
   expect(password).toMatch(/[0-9]/);
@@ -356,13 +356,13 @@ test("Batch 10 workspaces honor their documented countdown, timezone, and genera
   expect(password).not.toMatch(/[O0Il1]/);
 
   await page.goto(`${baseURL}/en/tools/random-string-generator`);
-  await page.getByLabel("Length").fill("12");
+  await page.getByLabel("Length").fill("4");
   await page.getByLabel("Number to generate").fill("3");
   await page.getByRole("button", { name: "Generate", exact: true }).click();
   const strings = (await page.locator("main > section").first().locator("pre").textContent())!.trim().split("\n");
   expect(strings).toHaveLength(3);
   for (const value of strings) {
-    expect(value).toHaveLength(12);
+    expect(value).toHaveLength(4);
     expect(value).toMatch(/[A-Z]/);
     expect(value).toMatch(/[a-z]/);
     expect(value).toMatch(/[0-9]/);
