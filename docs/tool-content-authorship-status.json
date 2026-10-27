@@ -187,28 +187,28 @@
     },
     {
       "slug": "file-hash",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-13"
     },
     {
       "slug": "mime-type-checker",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-13"
     },
     {
       "slug": "file-extension-checker",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-13"
     },
     {
       "slug": "file-size-checker",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-13"
     },
     {
       "slug": "duplicate-file-checker",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-13"
     },
     {
       "slug": "zip-files",

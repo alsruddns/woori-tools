@@ -216,3 +216,9 @@ The ledger records **53/176 COMPLETE** (123 remaining). Next PENDING batch: `bar
 Batch 12 verification: content audit passed for 176 tools, 26 locales, and 4,576 localized detail/sitemap URLs; every batch locale has all five populated entries, distinct use cases and FAQ questions, and no English field fallback. All 216 unit tests, TypeScript, ESLint, `git diff --check`, and production build passed; 4,866 static pages were generated. Playwright passed 12/12 tests, including SSR and canonical/hreflang/x-default checks across authored locale pages, eight-width Korean mobile checks, and browser execution for all five Batch 12 examples. Existing overall duplicate audit totals remain 171 repeated FAQ-question groups and 52 exact how-to sets. No native-speaker review was performed.
 
 The ledger records **58/176 COMPLETE** (118 remaining). Next PENDING batch: `file-hash`, `mime-type-checker`, `file-extension-checker`, `file-size-checker`, and `duplicate-file-checker`. Continue without reauthoring verified editorials.
+
+## Batch 13 checkpoint - 2026-10-27
+
+- Selected the next five PENDING file-inspection tools: `file-hash`, `mime-type-checker`, `file-extension-checker`, `file-size-checker`, and `duplicate-file-checker`.
+- Inspected `processFileTool`, file selection limits, MIME signature detection, and browser hashing. Drafts distinguish browser-provided MIME from the small set of recognized byte signatures, report filename extension without validating content, display per-file sizes only, and group exact content matches by SHA-256 without deleting files.
+- Korean originals are recorded in `docs/tool-content-authorship-batch-13-ko-draft.md`. All five remain `KO_DRAFT`; verified completion remains **58/176**. Next: author all 26 locale versions, exercise the documented examples with synthetic local files, and run the usual content, SSR, browser, unit, TypeScript, lint and build checks.
