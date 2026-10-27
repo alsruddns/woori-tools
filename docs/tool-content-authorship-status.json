@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
   "publicToolCount": 176,
-  "completeCount": 123,
+  "completeCount": 128,
   "nextBatch": [
-    "ip-cidr-calculator",
-    "base32-encoder-decoder",
-    "ulid-generator",
-    "uuid-v7-generator",
-    "hash-compare"
+    "regex-replace",
+    "html-entity-encoder-decoder",
+    "chmod-calculator",
+    "json-path-tester",
+    "csv-tsv-converter"
   ],
   "tools": [
     {
@@ -622,28 +622,28 @@
     },
     {
       "slug": "ip-cidr-calculator",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-26"
     },
     {
       "slug": "base32-encoder-decoder",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-26"
     },
     {
       "slug": "ulid-generator",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-26"
     },
     {
       "slug": "uuid-v7-generator",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-26"
     },
     {
       "slug": "hash-compare",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-26"
     },
     {
       "slug": "regex-replace",
