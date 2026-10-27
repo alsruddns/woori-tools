@@ -279,3 +279,16 @@ The ledger records **73/176 COMPLETE** (103 remaining). Next PENDING batch: `jav
 - Selected `javascript-formatter`, `markdown-preview`, `jpg-to-png`, `png-to-jpg`, and `webp-to-jpg` from the PENDING ledger.
 - Inspected the Prettier Babel/ESTree formatter, Marked plus DOMPurify local preview, and Canvas conversion path. Image conversions keep decoded dimensions; inputs are limited to 30 MB and 40 million pixels. JPEG outputs use the configured quality and PNG-to-JPEG/WebP-to-JPEG paths fill white before encoding.
 - Korean drafts are recorded in `docs/tool-content-authorship-batch-16-ko-draft.md`. The ledger marks all five `KO_DRAFT`; verified completion remains **73/176**. Next: author all locale cards, exercise the code examples with actual browser processing, and run the batch checks.
+## Batch 16 COMPLETE - 2026-10-27
+
+| Tool | Verified content and behavior |
+|---|---|
+| `javascript-formatter` | 26 locale cards describe Prettier Babel/ESTree formatting at 100 columns and no execution. Browser formatted `const x=1;` as `const x = 1;`. |
+| `markdown-preview` | Cards describe Marked conversion and DOMPurify HTML-profile cleaning. Browser rendered a heading and bold text and confirmed an `onerror` attribute is removed from supplied HTML. |
+| `jpg-to-png` | Cards document local Canvas PNG re-encoding, retained dimensions, and 30 MB/40 million-pixel limits. Browser output MIME was `image/png`, dimensions 12×8, and the download ended in `.png`. |
+| `png-to-jpg` | Cards document white background flattening, retained dimensions, and the same safe limits. Browser verified JPEG MIME and correct `.jpg` download. A prior output-type/name mismatch was fixed in the shared conversion mappings. |
+| `webp-to-jpg` | Cards describe Canvas JPEG re-encoding and white fill for transparent areas. Browser verified JPEG output, 12×8 dimensions, and `.jpg` download. |
+
+Batch 16 audit passed: all five tools have distinct authored cards in 26 locales, distinct use cases and FAQs, and no English field fallback. Totals remain 176 public tools, 4,576 detail/sitemap URLs, and no noindex candidates. All 216 unit tests, TypeScript, ESLint, `git diff --check`, and production build passed; 4,866 static pages generated. Batch Playwright passed 3/3 tests, covering five processor examples and Markdown sanitization, SSR/canonical/hreflang/x-default on 50 routes (five tools × ten representative locales), and 320px/390px overflow checks. Existing global duplicate audit remains 171 repeated FAQ-question groups and 52 exact how-to sets. No native-speaker review was performed.
+
+The ledger records **78/176 COMPLETE** (98 remaining). Next PENDING batch is recorded in the ledger; continue without reauthoring verified editorials.

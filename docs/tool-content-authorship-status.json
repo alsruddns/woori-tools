@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
   "publicToolCount": 176,
-  "completeCount": 73,
+  "completeCount": 78,
   "nextBatch": [
-    "javascript-formatter",
-    "markdown-preview",
-    "jpg-to-png",
-    "png-to-jpg",
-    "webp-to-jpg"
+    "webp-to-png",
+    "jpg-to-webp",
+    "png-to-webp",
+    "heic-to-jpg",
+    "image-compress"
   ],
   "tools": [
     {
@@ -297,27 +297,27 @@
     },
     {
       "slug": "javascript-formatter",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-16"
     },
     {
       "slug": "markdown-preview",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-16"
     },
     {
       "slug": "jpg-to-png",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-16"
     },
     {
       "slug": "png-to-jpg",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-16"
     },
     {
       "slug": "webp-to-jpg",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-16"
     },
     {
