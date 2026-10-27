@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
   "publicToolCount": 176,
-  "completeCount": 18,
+  "completeCount": 23,
   "nextBatch": [
-    "hiragana-katakana-converter",
-    "fullwidth-halfwidth-converter",
-    "japanese-romaji-converter",
-    "japanese-number-kanji-converter",
-    "simplified-traditional-chinese-converter"
+    "lotto-number-generator",
+    "powerball-number-generator",
+    "mega-millions-number-generator",
+    "japan-loto6-number-generator",
+    "japan-loto7-number-generator"
   ],
   "tools": [
     {
@@ -562,23 +562,23 @@
     },
     {
       "slug": "hiragana-katakana-converter",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-5"
     },
     {
       "slug": "fullwidth-halfwidth-converter",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-5"
     },
     {
       "slug": "japanese-romaji-converter",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-5"
     },
     {
       "slug": "japanese-number-kanji-converter",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-5"
     },
     {
       "slug": "yakudoshi-calculator",
@@ -687,8 +687,8 @@
     },
     {
       "slug": "simplified-traditional-chinese-converter",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-5"
     },
     {
       "slug": "chinese-number-kanji-converter",

@@ -2,8 +2,8 @@ import { expect, test } from "@playwright/test";
 
 const locales = ["ko", "en", "ja", "zh", "es", "pt-br", "de", "fr", "vi", "id", "th", "zh-tw", "it", "nl", "hi", "ru", "tr", "pl", "fil", "bn", "uk", "ms", "sv", "cs", "ro", "el"];
 const viewports = [320, 360, 375, 390, 430, 768, 1024, 1440];
-const selectedTools = ["json-formatter", "json-validator", "character-count", "remove-spaces", "remove-line-breaks", "remove-duplicate-lines", "reverse-text", "add-line-numbers", "remove-line-numbers", "remove-empty-lines", "remove-characters", "text-repeater", "sort-lines", "shuffle-lines", "text-case-converter", "text-compare", "remove-duplicate-words", "text-to-file"];
-const koreanTextBatch = ["character-count", "remove-spaces", "remove-line-breaks", "remove-duplicate-lines", "reverse-text", "add-line-numbers", "remove-line-numbers", "remove-empty-lines", "remove-characters", "text-repeater", "sort-lines", "shuffle-lines", "text-case-converter", "text-compare", "remove-duplicate-words", "text-to-file"];
+const selectedTools = ["json-formatter", "json-validator", "character-count", "remove-spaces", "remove-line-breaks", "remove-duplicate-lines", "reverse-text", "add-line-numbers", "remove-line-numbers", "remove-empty-lines", "remove-characters", "text-repeater", "sort-lines", "shuffle-lines", "text-case-converter", "text-compare", "remove-duplicate-words", "text-to-file", "hiragana-katakana-converter", "fullwidth-halfwidth-converter", "japanese-romaji-converter", "japanese-number-kanji-converter", "simplified-traditional-chinese-converter"];
+const koreanTextBatch = ["character-count", "remove-spaces", "remove-line-breaks", "remove-duplicate-lines", "reverse-text", "add-line-numbers", "remove-line-numbers", "remove-empty-lines", "remove-characters", "text-repeater", "sort-lines", "shuffle-lines", "text-case-converter", "text-compare", "remove-duplicate-words", "text-to-file", "hiragana-katakana-converter", "fullwidth-halfwidth-converter", "japanese-romaji-converter", "japanese-number-kanji-converter", "simplified-traditional-chinese-converter"];
 
 test("Korean text-tool editorial cards are server-rendered and fit the mobile viewport set", async ({ request, page, baseURL }) => {
   for (const slug of koreanTextBatch) {
@@ -128,4 +128,35 @@ test("authored text tools execute their documented actions in the browser", asyn
     const response = await fetch(url!);
     return { type: response.headers.get("content-type"), text: await response.text() };
   }, href)).toEqual({ type: "text/plain;charset=utf-8", text: "hello" });
+});
+
+test("Japanese and Chinese conversion examples run in the browser", async ({ page, baseURL }) => {
+  await page.goto(`${baseURL}/en/tools/hiragana-katakana-converter`);
+  await page.getByRole("textbox").fill("ひらがな");
+  await page.getByRole("button", { name: "Hiragana → katakana", exact: true }).click();
+  await page.getByRole("button", { name: "Convert", exact: true }).click();
+  await expect(page.locator("main > section").first().locator("pre")).toHaveText("ヒラガナ");
+
+  await page.goto(`${baseURL}/en/tools/fullwidth-halfwidth-converter`);
+  await page.getByRole("textbox").fill("ＡＢＣ１２３");
+  await page.getByRole("button", { name: "Full-width → half-width", exact: true }).click();
+  await page.getByRole("button", { name: "Convert", exact: true }).click();
+  await expect(page.locator("main > section").first().locator("pre")).toHaveText("ABC123");
+
+  await page.goto(`${baseURL}/en/tools/japanese-romaji-converter`);
+  await page.getByRole("textbox").fill("こんにちは");
+  await page.getByRole("button", { name: "Convert", exact: true }).click();
+  await expect(page.locator("main > section").first().locator("pre")).toHaveText("konnichiha");
+
+  await page.goto(`${baseURL}/en/tools/japanese-number-kanji-converter`);
+  await page.getByRole("textbox").fill("123");
+  await page.getByRole("button", { name: "Number → kanji", exact: true }).click();
+  await page.getByRole("button", { name: "Convert", exact: true }).click();
+  await expect(page.locator("main > section").first().locator("pre")).toHaveText("百二十三");
+
+  await page.goto(`${baseURL}/en/tools/simplified-traditional-chinese-converter`);
+  await page.getByRole("textbox").fill("简体中文");
+  await page.locator("fieldset button").first().click();
+  await page.getByRole("button", { name: "Run", exact: true }).click();
+  await expect(page.locator("main > section").first().locator("pre")).toHaveText("簡體中文");
 });

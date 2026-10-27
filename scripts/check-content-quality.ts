@@ -20,7 +20,8 @@ import { tools } from "../src/registry/tools";
 import { languageAlternates, SITE_ORIGIN } from "../src/lib/seo";
 import { createSitemapEntries } from "../src/lib/sitemap-entries.mjs";
 import { processText } from "../src/lib/text/process-text";
-import { formatPhone } from "../src/lib/country-tools";
+import { formatPhone, runCountryTool } from "../src/lib/country-tools";
+import { convertKana, convertWidth, kanaToRomaji, numberToKanji } from "../src/lib/japanese-tools";
 
 const slugs = new Set(tools.map((tool) => tool.slug));
 assert.equal(slugs.size, tools.length, "duplicate public slug");
@@ -266,6 +267,11 @@ assert.equal((await processText("text-case-converter", "istanbul", "", "upper", 
 assert.equal((await processText("remove-duplicate-words", "I ı İ i", "", "", 1, "tr")).result, "I İ", "duplicate-word matching must follow locale-specific casing");
 assert.equal(formatPhone("france-phone-number-formatter", "0612345678"), "+33 6 12 34 56 78");
 assert.equal(formatPhone("us-phone-number-formatter", "2025550123"), "+1 (202) 555-0123");
+assert.equal(convertKana("ひらがな", "to-katakana"), "ヒラガナ", "kana example must match the real converter");
+assert.equal(convertWidth("ＡＢＣ１２３", "to-half"), "ABC123", "width example must match the real converter");
+assert.equal(kanaToRomaji("こんにちは"), "konnichiha", "romaji example must match the real converter");
+assert.equal(numberToKanji("123"), "百二十三", "Japanese number example must match the real converter");
+assert.equal(runCountryTool("simplified-traditional-chinese-converter", "简体中文"), "簡體中文", "Chinese conversion example must match OpenCC");
 for (const [slug, example] of Object.entries(verifiedTextExamples)) {
   const runExample = () => processText(slug, example.input, example.secondText ?? "", example.option ?? "", example.amount ?? 1, "en");
   if (example.resultIsError) {
@@ -344,6 +350,7 @@ console.log(JSON.stringify({
   fileInputTools: tools.filter((tool) => tool.usesFileInput).length,
   verifiedInputOutputExamples: Object.keys(verifiedTextExamples).length,
   verifiedPhoneFormatterExamples: 2,
+  verifiedSpecializedExamples: 5,
   duplicateTotals,
   expandedLocaleQuality,
   repeatedUsagePatterns,
