@@ -87,27 +87,27 @@
     },
     {
       "slug": "random-seat",
-      "status": "KO_DRAFT",
+      "status": "TRANSLATING",
       "batch": "batch-9"
     },
     {
       "slug": "duty-picker",
-      "status": "KO_DRAFT",
+      "status": "TRANSLATING",
       "batch": "batch-9"
     },
     {
       "slug": "dice-roller",
-      "status": "KO_DRAFT",
+      "status": "TRANSLATING",
       "batch": "batch-9"
     },
     {
       "slug": "coin-flip",
-      "status": "KO_DRAFT",
+      "status": "TRANSLATING",
       "batch": "batch-9"
     },
     {
       "slug": "stopwatch",
-      "status": "KO_DRAFT",
+      "status": "TRANSLATING",
       "batch": "batch-9"
     },
     {

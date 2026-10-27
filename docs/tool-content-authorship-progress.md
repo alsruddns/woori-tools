@@ -133,3 +133,8 @@ The ledger now records 38/176 COMPLETE (138 remaining). Next selected PENDING ba
 
 - 한국어 원고 초안을 docs/tool-content-authorship-batch-9-ko-draft.md에 기록했습니다. 좌석 용량/중복 이름, 당번 순환 배정, 주사위 화면별 개수 제한, 동전 앞면 비율, 스톱워치 랩 동작을 소스 기준으로 구분했습니다.
 - 원장은 다섯 도구를 KO_DRAFT로 표시하며 검증 완료 수는 **38/176** 그대로입니다. 다음 단계는 26개 locale 원고, processor 예제, SSR/SEO 및 브라우저 검증입니다.
+
+### Translation checkpoint
+
+- `src/registry/tool-detail-editorials-batch-9.ts` contains direct editorial drafts for `ko`, `en`, `ja`, `zh`, `es`, `pt-br`, `de`, `fr`, `vi`, and `id` (10/26 locales). The module is not connected to page rendering, so incomplete locale coverage is not published.
+- The ledger records these five tools as `TRANSLATING`; verified completion remains 38/176. Native-speaker review has not been performed.
