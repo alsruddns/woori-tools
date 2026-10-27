@@ -568,3 +568,8 @@ The ledger records **153/176 COMPLETE** (23 remaining). Continue with the next P
 Completed spanish-date-format-converter, france-phone-number-formatter, french-number-format-converter, french-date-format-converter, and brazil-cpf-validator. All five have original content in 26 locales with feature-specific examples and FAQs; no native-speaker review was performed. Processor examples were verified in unit and browser workflows, including Spanish date round trip, French national phone grouping, French narrow-space decimal grouping, French date output, and CPF checksum acceptance. Content audit reports all 26 locales and 4,576 localized detail URLs with no new fallback or noindex candidate. Country tests passed (14), content audit, TypeScript, ESLint, diff check, production build (4,866 pages), and Playwright (3/3: SSR/SEO across 50 routes, browser examples, and 320px/390px mobile widths). Global duplicate counts remain at 171 repeated FAQ-question groups and 52 exact how-to sets pending broader editorial review.
 
 The ledger records **158/176 COMPLETE** (18 remaining). Continue with brazil-cnpj-validator, brazil-phone-number-formatter, brazil-cep-formatter, netherlands-iban-validator, and dutch-number-format-converter.
+
+
+## Batch 33 IN PROGRESS - 2026-10-28
+
+Selected brazil-cnpj-validator, brazil-phone-number-formatter, brazil-cep-formatter, netherlands-iban-validator, and dutch-number-format-converter. Processor-specific behavior and valid/invalid examples are recorded in docs/tool-content-authorship-batch-33-ko-draft.md. Locale authorship and all validation remain pending; these tools are not counted COMPLETE. The ledger remains 158/176 COMPLETE.
