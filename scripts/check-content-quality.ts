@@ -44,6 +44,7 @@ import { batch20EditorialDrafts } from "../src/registry/tool-detail-editorials-b
 import { batch21EditorialDrafts } from "../src/registry/tool-detail-editorials-batch-21";
 import { batch22EditorialDrafts } from "../src/registry/tool-detail-editorials-batch-22";
 import { batch23EditorialDrafts } from "../src/registry/tool-detail-editorials-batch-23";
+import { batch24EditorialDrafts } from "../src/registry/tool-detail-editorials-batch-24";
 import { batch10PomodoroCorrections } from "../src/registry/tool-detail-editorials-batch-10-corrections";
 import { pickUnique, secureShuffle } from "../src/lib/random";
 import { divideEvenly, normalizeWheelItems, rollDice } from "../src/lib/random-tools.mjs";
@@ -523,6 +524,18 @@ for (const [locale, drafts] of Object.entries(batch23EditorialDrafts)) {
     if (locale !== "en") for (const field of ["principle", "useCase", "troubleshooting", "faqQuestion", "faqAnswer"] as const) assert.notEqual(editorial[field], batch23EditorialDrafts.en?.[slug]?.[field], `${locale}/${slug}: ${field} must not fall back to English`);
   }
 }
+const batch24Slugs = ["timestamp-converter", "wareki-converter", "yakudoshi-calculator", "japanese-zodiac-calculator", "numbers3-number-generator"];
+assert.deepEqual(new Set(Object.keys(batch24EditorialDrafts)), new Set(publishedTargetLocales), "batch 24 editorial drafts must cover every published locale");
+for (const [locale, drafts] of Object.entries(batch24EditorialDrafts)) {
+  assert.deepEqual(new Set(Object.keys(drafts ?? {})), new Set(batch24Slugs), `${locale}: batch 24 drafts must cover all five selected tools`);
+  assert.equal(new Set(batch24Slugs.map((slug) => drafts?.[slug]?.faqQuestion)).size, batch24Slugs.length, `${locale}: batch 24 FAQ questions must be distinct by tool`);
+  assert.equal(new Set(batch24Slugs.map((slug) => drafts?.[slug]?.useCase)).size, batch24Slugs.length, `${locale}: batch 24 use cases must be distinct by tool`);
+  for (const slug of batch24Slugs) {
+    const editorial = drafts?.[slug];
+    assert.ok(editorial && Object.values(editorial).every((field) => field.trim().length > 0), `${locale}/${slug}: editorial fields must be populated`);
+    if (locale !== "en") for (const field of ["principle", "useCase", "troubleshooting", "faqQuestion", "faqAnswer"] as const) assert.notEqual(editorial[field], batch24EditorialDrafts.en?.[slug]?.[field], `${locale}/${slug}: ${field} must not fall back to English`);
+  }
+}
 const exampleNames = ["Mina", "Joon", "Kai", "Lina", "Bo", "Ari"];
 const pickedNames = pickUnique(exampleNames, 2);
 assert.equal(pickedNames.length, 2, "random-name-picker must return the requested number of entries");
@@ -659,6 +672,7 @@ console.log(JSON.stringify({
    batch21DraftLocales: Object.keys(batch21EditorialDrafts).length,
    batch22DraftLocales: Object.keys(batch22EditorialDrafts).length,
    batch23DraftLocales: Object.keys(batch23EditorialDrafts).length,
+   batch24DraftLocales: Object.keys(batch24EditorialDrafts).length,
   duplicateTotals,
   expandedLocaleQuality,
   repeatedUsagePatterns,

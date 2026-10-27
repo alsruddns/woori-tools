@@ -432,3 +432,23 @@ The ledger records **108/176 COMPLETE** (68 remaining). Next PENDING batch: csv-
 All five have unique cards across 26 locales, distinct use cases and FAQs, and no English field fallback. Content audit remains at 176 public tools, 4,576 localized detail URLs, and zero noindex candidates. All 216 unit tests, TypeScript, ESLint, content checks, git diff --check, and production build passed; build generated 4,866 static pages. Playwright passed 3/3 tests: SSR/SEO on 50 routes, real data conversions, and 320px/390px mobile checks. No native-speaker review was performed. The global duplicate audit remains 171 repeated FAQ-question groups and 52 exact how-to sets.
 
 The ledger records **113/176 COMPLETE** (63 remaining). Next PENDING batch: timestamp-converter, wareki-converter, yakudoshi-calculator, japanese-zodiac-calculator, numbers3-number-generator. Continue without reauthoring verified editorials.
+
+## Batch 24 checkpoint - 2026-10-28
+
+- Selected timestamp-converter, wareki-converter, yakudoshi-calculator, japanese-zodiac-calculator, and numbers3-number-generator from PENDING.
+- Verified timestamp mode semantics; Wareki era start boundary validation; yakudoshi count-year ages and one-year-before/main/one-year-after phases; Japanese zodiac 10-stem/12-branch cycle; Numbers 3 three random digits with leading zero/repeats and 1-10 entries.
+- Korean drafts in progress; completion remains **113/176**.
+
+## Batch 24 COMPLETE - 2026-10-28
+
+| Tool | Verified behavior |
+|---|---|
+| timestamp-converter | Browser converted Unix seconds 0 to the Unix epoch and checked blank seconds mode returns a current timestamp; fixed blank input handling to use the current time. |
+| wareki-converter | Browser converted 2019-05-01 using the Reiwa first-year boundary; existing unit tests verify adjacent era boundaries and reject dates outside an era. |
+| yakudoshi-calculator | Browser verified count-year phases for a man born in 2000 with 2024 reference year; unit tests cover both genders and adjacent-year cases. |
+| japanese-zodiac-calculator | Browser verified 2024 maps to ??; unit tests cover known years and both cycles. |
+| numbers3-number-generator | Browser forced deterministic random output and verified leading-zero result 000; unit tests cover fixed-width output and BINGO5 ranges. |
+
+All five tools have unique cards in 26 locales; content audit verified full locale coverage, unique FAQ questions and use cases, and no English field fallbacks. The audit reports 176 public tools, 4,576 localized detail URLs, zero noindex candidates, and 26 batch locales. The eight Japanese-tool unit tests passed, TypeScript, ESLint, content audit, and git diff --check passed, and production build generated 4,866 static pages. Playwright passed 3/3 tests: SSR/SEO across 50 routes, actual workflows for all five tools, and 320px/390px mobile checks. No native-speaker review was performed. Global audit still reports 171 repeated FAQ-question groups and 52 exact how-to sets.
+
+The ledger records **118/176 COMPLETE** (58 remaining). Next PENDING batch: numbers4-number-generator, bingo5-number-generator, jwt-decoder, url-query-parameter-parser, user-agent-parser. Continue without reauthoring verified editorials.

@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
   "publicToolCount": 176,
-  "completeCount": 113,
+  "completeCount": 118,
   "nextBatch": [
-    "timestamp-converter",
-    "wareki-converter",
-    "yakudoshi-calculator",
-    "japanese-zodiac-calculator",
-    "numbers3-number-generator"
+    "numbers4-number-generator",
+    "bingo5-number-generator",
+    "jwt-decoder",
+    "url-query-parameter-parser",
+    "user-agent-parser"
   ],
   "tools": [
     {
@@ -552,13 +552,13 @@
     },
     {
       "slug": "timestamp-converter",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-24"
     },
     {
       "slug": "wareki-converter",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-24"
     },
     {
       "slug": "hiragana-katakana-converter",
@@ -582,18 +582,18 @@
     },
     {
       "slug": "yakudoshi-calculator",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-24"
     },
     {
       "slug": "japanese-zodiac-calculator",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-24"
     },
     {
       "slug": "numbers3-number-generator",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-24"
     },
     {
       "slug": "numbers4-number-generator",
