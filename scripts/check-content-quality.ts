@@ -31,6 +31,7 @@ import { batch7EditorialDrafts } from "../src/registry/tool-detail-editorials-ba
 import { batch8EditorialDrafts } from "../src/registry/tool-detail-editorials-batch-8";
 import { batch9EditorialDrafts } from "../src/registry/tool-detail-editorials-batch-9";
 import { batch10EditorialDrafts } from "../src/registry/tool-detail-editorials-batch-10";
+import { batch11EditorialDrafts } from "../src/registry/tool-detail-editorials-batch-11";
 import { batch10PomodoroCorrections } from "../src/registry/tool-detail-editorials-batch-10-corrections";
 import { pickUnique, secureShuffle } from "../src/lib/random";
 import { divideEvenly, normalizeWheelItems, rollDice } from "../src/lib/random-tools.mjs";
@@ -359,6 +360,15 @@ for (const [locale, editorial] of Object.entries(batch10PomodoroCorrections)) {
   assert.ok([editorial.principle, editorial.useCase, editorial.troubleshooting, editorial.faqQuestion, editorial.faqAnswer].every((value) => value.trim()), `${locale}/pomodoro-timer: corrected fields must be populated`);
   if (locale !== "en") for (const field of ["principle", "useCase", "troubleshooting", "faqQuestion", "faqAnswer"] as const) assert.notEqual(editorial[field], batch10PomodoroCorrections.en?.[field], `${locale}/pomodoro-timer: ${field} must be authored in locale`);
 }
+const batch11Slugs = ["wifi-qr", "contact-qr", "phone-qr", "email-qr", "barcode-checker"];
+assert.deepEqual(new Set(Object.keys(batch11EditorialDrafts)), new Set(publishedTargetLocales), "batch 11 editorial drafts must cover every published locale");
+for (const [locale, drafts] of Object.entries(batch11EditorialDrafts)) {
+  assert.deepEqual(new Set(Object.keys(drafts ?? {})), new Set(batch11Slugs), `${locale}: batch 11 drafts must cover all five selected tools`);
+  for (const [slug, editorial] of Object.entries(drafts ?? {})) {
+    assert.ok([editorial.principle, editorial.useCase, editorial.troubleshooting, editorial.faqQuestion, editorial.faqAnswer].every((value) => value.trim()), `${locale}/${slug}: draft fields must be populated`);
+    if (locale !== "en") for (const field of ["principle", "useCase", "troubleshooting", "faqQuestion", "faqAnswer"] as const) assert.notEqual(editorial[field], batch11EditorialDrafts.en?.[slug][field], `${locale}/${slug}: ${field} must not fall back to English`);
+  }
+}
 const exampleNames = ["Mina", "Joon", "Kai", "Lina", "Bo", "Ari"];
 const pickedNames = pickUnique(exampleNames, 2);
 assert.equal(pickedNames.length, 2, "random-name-picker must return the requested number of entries");
@@ -482,6 +492,7 @@ console.log(JSON.stringify({
    verifiedBatch9RandomExamples: 5,
    batch10DraftLocales: Object.keys(batch10EditorialDrafts).length,
    batch10PomodoroCorrectionLocales: Object.keys(batch10PomodoroCorrections).length,
+   batch11DraftLocales: Object.keys(batch11EditorialDrafts).length,
   duplicateTotals,
   expandedLocaleQuality,
   repeatedUsagePatterns,

@@ -182,3 +182,17 @@ The ledger now records **43/176 COMPLETE** (133 remaining). Next selected PENDIN
 - Read the QR payload builder, barcode processor, and Russian/Turkish barcode UI. Drafts document actual formats: escaped Wi-Fi payload fields, vCard 3.0, `tel:` normalization, `mailto:` query encoding, and UPC-A/EAN-13 check-digit limits.
 - Browser execution matched the documented Wi-Fi, vCard, phone, and email payload examples, including delimiter escaping and `mailto:` parameter encoding. EAN-13 `4006381333931` returned check digit 1 as valid; changing the final digit to 2 returned invalid with expected digit 1.
 - Added Korean content drafts to `docs/tool-content-authorship-batch-11-ko-draft.md`. All five ledger entries are `KO_DRAFT`; verified completion remains **48/176**. Next: validate the sample payloads against the browser workspaces and barcode engine, then author all 26 locales.
+
+## Batch 11 COMPLETE - 2026-10-27
+
+| Tool | Verified content and behavior |
+|---|---|
+| `wifi-qr` | 26 localized cards explain SSID, WPA/WEP/open modes, hidden-network flag, escaped payload delimiters and browser PNG generation. Browser output matched the sample including escaped comma, colon, and semicolon. |
+| `contact-qr` | Cards document vCard 3.0, required name, optional phone/email/company/site, and what scanners can read. Browser payload contained the expected name, telephone, and email fields. |
+| `phone-qr` | Cards explain that digits and plus signs become a `tel:` link, with no validation or automatic call. Browser normalized `+82 10 1234 5678` to `tel:+821012345678`. |
+| `email-qr` | Cards explain recipient-required `mailto:` links and optional subject/body; the QR opens a draft and never sends it. Browser output matched `mailto:hello@example.com?subject=Hi+there&body=Thanks`. |
+| `barcode-checker` | Cards describe UPC-A/EAN-13 check digits and the limit that a matching digit does not identify/authenticate a product. Browser confirmed `4006381333931` as valid with expected digit 1 and rejected the variant ending in 2. |
+
+Batch 11 verification: the content audit passed for 176 tools, 26 locales and 4,576 localized detail/sitemap URLs; all five entries have populated locale-specific fields with no English field fallback. The 216-test unit suite, TypeScript, ESLint, `git diff --check`, and production build passed; build generated 4,866 static pages. Playwright passed 11/11 tests, including SSR and canonical/hreflang/x-default checks for all selected authored pages, eight-width Korean page checks, workspace examples for all five tools, and the QR/barcode behavior test. No native-speaker review was performed. Existing global duplicate audit totals remain 171 repeated FAQ-question groups and 52 exact how-to sets; this batch did not add repeated FAQ questions or identical how-to wording among its own five tools in any locale.
+
+The ledger records **53/176 COMPLETE** (123 remaining). Next PENDING batch: `barcode-generator`, `social-image-resize`, `add-text-to-image`, `instagram-grid-split`, and `image-collage`. Continue without reauthoring verified editorials.
