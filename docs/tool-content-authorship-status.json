@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
   "publicToolCount": 176,
-  "completeCount": 98,
+  "completeCount": 103,
   "nextBatch": [
-    "pdf-split",
-    "pdf-delete-pages",
-    "pdf-reorder-pages",
-    "pdf-rotate-pages",
-    "pdf-add-page-numbers"
+    "pdf-watermark",
+    "pdf-metadata-viewer",
+    "pdf-remove-metadata",
+    "json-to-yaml",
+    "yaml-to-json"
   ],
   "tools": [
     {
@@ -422,28 +422,28 @@
     },
     {
       "slug": "pdf-split",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-21"
     },
     {
       "slug": "pdf-delete-pages",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-21"
     },
     {
       "slug": "pdf-reorder-pages",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-21"
     },
     {
       "slug": "pdf-rotate-pages",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-21"
     },
     {
       "slug": "pdf-add-page-numbers",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-21"
     },
     {
       "slug": "pdf-watermark",

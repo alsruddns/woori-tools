@@ -21,7 +21,7 @@ export async function processPdf(slug:string,files:File[],option:string,text:str
   }else{
     output=docs[0];const count=output.getPageCount();
     if(slug==="pdf-split"||slug==="pdf-delete-pages"){
-      const selected=parsePageList(option,count,messages.errors.invalidPage);const keep=slug==="pdf-split"?selected:output.getPageIndices().filter((index)=>!selected.includes(index+1));
+      const selected=parsePageList(option,count,messages.errors.invalidPage);const keep=slug==="pdf-split"?selected.map((page)=>page-1):output.getPageIndices().filter((index)=>!selected.includes(index+1));
       if(!keep.length)throw new Error(messages.errors.emptyPdf);
       const next=await PDFDocument.create();for(const page of await next.copyPages(output,keep))next.addPage(page);output=next;
     }else if(slug==="pdf-reorder-pages"){

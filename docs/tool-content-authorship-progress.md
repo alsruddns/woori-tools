@@ -372,3 +372,23 @@ The ledger records **93/176 COMPLETE** (83 remaining). Next PENDING batch: `imag
 All five have distinct authored content in 26 locales with no English fallback. The content audit reports 176 public tools, 4,576 localized detail URLs, zero noindex candidates, and 26 locale drafts for this batch. All 216 unit tests, TypeScript, ESLint, content audit, and git diff --check passed. Production build generated all 4,866 static pages. Batch Playwright passed 3/3 tests: SSR cards and SEO across 50 routes, real image/PDF workflows, and 320px/390px mobile widths. No native-speaker review was performed. Existing global duplicate audit remains 171 repeated FAQ-question groups and 52 exact how-to sets.
 
 The ledger records **98/176 COMPLETE** (78 remaining). Next PENDING batch: pdf-split, pdf-delete-pages, pdf-reorder-pages, pdf-rotate-pages, pdf-add-page-numbers. Continue without reauthoring verified editorials.
+
+## Batch 21 checkpoint - 2026-10-27
+
+- Selected pdf-split, pdf-delete-pages, pdf-reorder-pages, pdf-rotate-pages, and pdf-add-page-numbers from PENDING.
+- Confirmed processor behavior: split follows listed page/range order; delete removes listed pages and retains the rest in original order; reorder requires a complete page permutation; rotate adds 90/180/270 degrees to every page; page numbering draws a gray, semi-transparent number near the bottom of each page. All accept one PDF up to 50 MB and create a separate PDF in the browser.
+- Korean drafts are in progress; ledger status is KO_DRAFT for all five. Verified completion remains **98/176**.
+
+## Batch 21 COMPLETE - 2026-10-27
+
+| Tool | Verified behavior |
+|---|---|
+| pdf-split | Extracted pages 3, 1-2 from a three-page fixture and confirmed output dimensions follow the requested order. Fixed a processor indexing defect: user-facing 1-based page numbers are converted to PDF 0-based indices. |
+| pdf-delete-pages | Removed page 2 and confirmed pages 1 and 3 remain in their original order. |
+| pdf-reorder-pages | Reordered all three fixture pages and verified their dimensions in output order. |
+| pdf-rotate-pages | Applied the default 90-degree increment and verified rotation metadata on every output page. |
+| pdf-add-page-numbers | Confirmed all pages have generated content streams after numbering is added. |
+
+All five have unique content in 26 locales with distinct use cases and FAQ questions and no English field fallback. Content audit reports 176 public tools, 4,576 localized detail URLs, zero noindex candidates, and 26 locales for this batch. All 216 unit tests, TypeScript, ESLint, and git diff --check passed. Production build generated 4,866 static pages. Playwright passed 3/3 tests: SSR and SEO across 50 routes, all five real PDF operations, and 320px/390px mobile checks. No native-speaker review was performed. Existing global duplicate audit remains 171 repeated FAQ-question groups and 52 exact how-to sets.
+
+The ledger records **103/176 COMPLETE** (73 remaining). Next PENDING batch: pdf-watermark, pdf-metadata-viewer, pdf-remove-metadata, json-to-yaml, yaml-to-json. Continue without reauthoring verified editorials.
