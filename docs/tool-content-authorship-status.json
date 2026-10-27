@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
   "publicToolCount": 176,
-  "completeCount": 83,
+  "completeCount": 88,
   "nextBatch": [
-    "image-resize",
-    "image-crop",
-    "image-rotate",
-    "image-flip",
-    "image-grayscale"
+    "image-brightness",
+    "image-contrast",
+    "image-blur",
+    "image-pixelate",
+    "remove-image-metadata"
   ],
   "tools": [
     {
@@ -347,27 +347,27 @@
     },
     {
       "slug": "image-resize",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-18"
     },
     {
       "slug": "image-crop",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-18"
     },
     {
       "slug": "image-rotate",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-18"
     },
     {
       "slug": "image-flip",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-18"
     },
     {
       "slug": "image-grayscale",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-18"
     },
     {

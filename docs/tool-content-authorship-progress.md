@@ -318,3 +318,17 @@ The ledger records **83/176 COMPLETE** (93 remaining). Next PENDING batch: `imag
 - Selected `image-resize`, `image-crop`, `image-rotate`, `image-flip`, and `image-grayscale` from the PENDING ledger.
 - Inspected Canvas implementation and controls: resize dimensions clamp to 1–12,000 px and optional ratio lock derives height from width; crop uses a centered 1:1, 16:9, or 3:4 rectangle; rotate selects 90/180/270 degrees; flip selects horizontal/vertical; grayscale applies Canvas `grayscale(1)`. These tools export a separate JPEG. Input limits remain 30 MB and 40 million decoded pixels.
 - Korean drafts are in `docs/tool-content-authorship-batch-18-ko-draft.md`. Ledger status is `KO_DRAFT` for all five; verified completion remains **83/176**. Next: author all locales and verify dimensions, selected crop, rotation/flip orientation, grayscale pixels, and download output.
+
+## Batch 18 COMPLETE - 2026-10-27
+
+| Tool | Verified content and behavior |
+|---|---|
+| `image-resize` | Browser test resized a 12×8 PNG to 6×4 with ratio lock; JPEG MIME and `.jpg` download matched. Cards describe 1–12,000 px bounds and ratio behavior. |
+| `image-crop` | Browser test selected centered 1:1 crop from 12×8, produced 8×8 JPEG, and checked left/right colors confirm the central crop. |
+| `image-rotate` | Browser test rotated a 12×8 asymmetric image 90° to 8×12 and checked output orientation. |
+| `image-flip` | Browser test flipped an asymmetric image horizontally, retained 12×8 dimensions, and checked swapped color positions. |
+| `image-grayscale` | Browser test confirmed a color sample became grayscale, retained 12×8 dimensions, and exported JPEG. |
+
+All five have authored cards in 26 locales, distinct use cases and FAQs, and no English field fallback. Content audit totals: 176 public tools, 4,576 localized detail/sitemap URLs, and zero noindex candidates. All 216 unit tests, TypeScript, ESLint, `git diff --check`, and production build passed; build generated 4,866 static pages. Batch Playwright passed 3/3 tests: SSR/editorials/SEO across 50 routes, all five actual image edits, and 320px/390px overflow checks. Existing global duplicate audit remains 171 repeated FAQ-question groups and 52 exact how-to sets. No native-speaker review was performed.
+
+The ledger records **88/176 COMPLETE** (88 remaining). Next PENDING batch: `image-brightness`, `image-contrast`, `image-blur`, `image-pixelate`, and `remove-image-metadata`. Continue without reauthoring verified editorials.
