@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
   "publicToolCount": 176,
-  "completeCount": 163,
+  "completeCount": 168,
   "nextBatch": [
-    "dutch-date-format-converter",
-    "vietnam-phone-number-formatter",
-    "vietnam-number-format-converter",
-    "italy-fiscal-code-format-validator",
-    "italy-vat-number-validator"
+    "italy-number-format-converter",
+    "italian-date-format-converter",
+    "us-phone-number-formatter",
+    "us-zip-code-formatter",
+    "canada-postal-code-formatter"
   ],
   "tools": [
     {
@@ -827,28 +827,28 @@
     },
     {
       "slug": "dutch-date-format-converter",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": 34
     },
     {
       "slug": "vietnam-phone-number-formatter",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": 34
     },
     {
       "slug": "vietnam-number-format-converter",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": 34
     },
     {
       "slug": "italy-fiscal-code-format-validator",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": 34
     },
     {
       "slug": "italy-vat-number-validator",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": 34
     },
     {
       "slug": "italy-number-format-converter",

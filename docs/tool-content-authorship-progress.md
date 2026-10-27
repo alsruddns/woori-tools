@@ -580,3 +580,15 @@ Selected brazil-cnpj-validator, brazil-phone-number-formatter, brazil-cep-format
 Completed brazil-cnpj-validator, brazil-phone-number-formatter, brazil-cep-formatter, netherlands-iban-validator, and dutch-number-format-converter. All five now have original content in 26 locales. CNPJ alphanumeric-base checksum, Brazilian phone grouping, CEP grouping, Dutch IBAN format/checksum, and Dutch number separators were checked against the browser processor. Country tests passed (15), content quality audit, TypeScript, ESLint, diff check, production build (4,866 static pages), and Playwright (3/3: initial SSR/SEO across 50 routes, all five browser examples, and 320px/390px mobile widths). No native-speaker review was performed. Existing cross-tool repeat counts remain 171 FAQ-question groups and 52 identical how-to sets; batch 33 entries have distinct FAQs and use cases by locale.
 
 The ledger records 163/176 COMPLETE (13 remaining). Continue with the next PENDING tools listed in the ledger.
+
+
+## Batch 34 IN PROGRESS - 2026-10-28
+
+Selected dutch-date-format-converter, vietnam-phone-number-formatter, vietnam-number-format-converter, italy-fiscal-code-format-validator, and italy-vat-number-validator. Processor examples and content drafts are recorded in docs/tool-content-authorship-batch-34-ko-draft.md. Translation records and validation have been added; verification is underway, so these tools remain outside the COMPLETE count.
+
+
+## Batch 34 COMPLETE - 2026-10-28
+
+Completed dutch-date-format-converter, vietnam-phone-number-formatter, vietnam-number-format-converter, italy-fiscal-code-format-validator, and italy-vat-number-validator. All five have original content in 26 locales, specific verified examples, limits, troubleshooting, and FAQs. Processor tests passed (16); content audit, TypeScript, ESLint, diff check, production build (4,866 static pages), and Playwright (3/3: SSR/SEO across 50 routes, five browser workflows, 320px/390px mobile widths) passed. No native-speaker review was performed. Global historical repetition counts remain recorded for editorial review.
+
+The ledger records 168/176 COMPLETE (8 remaining). Continue with the next PENDING tools in the ledger.

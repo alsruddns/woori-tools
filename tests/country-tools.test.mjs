@@ -116,8 +116,19 @@ test("Dutch IBAN structure and MOD 97 and Dutch number notation match their exam
   assert.equal(tools.formatNumber("1234567.89", "dutch-number-format-converter"), "1.234.567,89");
 });
 
+test("Vietnamese phone and number examples and Italian identifier checks match their processors", () => {
+  assert.equal(tools.formatPhone("vietnam-phone-number-formatter", "0912345678"), "+84 0912 345678");
+  assert.equal(tools.formatNumber("1234567.89", "vietnam-number-format-converter"), "1.234.567,89");
+  assert.deepEqual(tools.validateCodiceFiscale("RSSMRA85T10A562S"), { valid:true, level:"checksum" });
+  assert.deepEqual(tools.validateCodiceFiscale("RSSMRA85T10A562A"), { valid:false, level:"checksum" });
+  assert.deepEqual(tools.validateItalianVat("01114601006"), { valid:true, level:"checksum" });
+  assert.deepEqual(tools.validateItalianVat("01114601007"), { valid:false, level:"checksum" });
+});
+
 test("localized dates round trip with leap-day validation and explicit US or UK order", () => {
   assert.equal(tools.convertLocalizedDate("2026-10-13", "ES"), "13/10/2026");
+  assert.equal(tools.convertLocalizedDate("2026-10-13", "NL"), "13-10-2026");
+  assert.equal(tools.convertLocalizedDate("13-10-2026", "NL", "to-iso"), "2026-10-13");
   assert.equal(tools.convertLocalizedDate("13/10/2026", "ES", "to-iso"), "2026-10-13");
   assert.equal(tools.convertDate("2026-10-13", "FR"), "13/10/2026");
   assert.equal(tools.convertLocalizedDate("2024-02-29", "ES"), "29/02/2024");
