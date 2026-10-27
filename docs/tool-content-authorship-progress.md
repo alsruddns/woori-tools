@@ -236,3 +236,9 @@ The ledger records **58/176 COMPLETE** (118 remaining). Next PENDING batch: `fil
 Batch 13 verification: content audit passed for 176 tools, 26 locales and 4,576 localized detail/sitemap URLs; all five tools have populated locale-specific content, distinct FAQ questions and use cases, and no English field fallback. All 216 unit tests, TypeScript, ESLint, `git diff --check`, and production build passed; 4,866 static pages were generated. Playwright passed 13/13 tests, including SSR plus canonical/hreflang/x-default checks for selected authored locale pages, eight-width Korean viewport checks, and browser examples for the five local file tools. No file was uploaded. Existing global duplicate audit totals remain 171 repeated FAQ-question groups and 52 exact how-to sets. No native-speaker review was performed.
 
 The ledger records **63/176 COMPLETE** (113 remaining). Next PENDING batch: `zip-files`, `bulk-file-renamer`, `filename-cleaner`, `lorem-ipsum`, and `regex-tester`. Continue without reauthoring verified editorials.
+
+## Batch 14 checkpoint - 2026-10-27
+
+- Selected `zip-files`, `bulk-file-renamer`, `filename-cleaner`, `lorem-ipsum`, and `regex-tester` from the next PENDING entries.
+- Inspected archive naming/collision handling, the six rename options and preview, NFKC filename cleanup, the fixed Lorem ipsum paragraph generator, and the regex worker's input caps, safety rejects, match indexing, and timeout.
+- Korean originals are recorded in `docs/tool-content-authorship-batch-14-ko-draft.md`. All five remain `KO_DRAFT`; verified completion remains **63/176**. The Lorem ipsum control advertises 100 while its processor clamps output to 20, so the UI limit will be aligned to the processor before the example is validated. Next: author 26 locales and verify archive, renaming, generator and regex examples.

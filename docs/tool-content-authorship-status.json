@@ -212,18 +212,18 @@
     },
     {
       "slug": "zip-files",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-14"
     },
     {
       "slug": "bulk-file-renamer",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-14"
     },
     {
       "slug": "filename-cleaner",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-14"
     },
     {
       "slug": "shuffle-lines",
@@ -262,13 +262,13 @@
     },
     {
       "slug": "lorem-ipsum",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-14"
     },
     {
       "slug": "regex-tester",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-14"
     },
     {
       "slug": "color-converter",
