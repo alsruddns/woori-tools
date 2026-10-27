@@ -202,3 +202,17 @@ The ledger records **53/176 COMPLETE** (123 remaining). Next PENDING batch: `bar
 - Selected the five PENDING tools `barcode-generator`, `social-image-resize`, `add-text-to-image`, `instagram-grid-split`, and `image-collage`.
 - Read `BarcodeWorkspace`, `processImage`, the shared image workspace and collage path. Drafts document CODE128/EAN-13 SVG generation, six fixed social-image JPEG presets with center crop, single-line bottom caption rendering, 3/6/9-tile ZIP output, and 2×2/3×2 JPEG collage layouts with file/pixel limits.
 - Korean drafts are in `docs/tool-content-authorship-batch-12-ko-draft.md`. The five tools remain `KO_DRAFT`; verified completion remains **53/176**. Next: verify sample dimensions/payloads against the real processors, write all 26 locale editorials, then run SSR, SEO, browser, unit, type, lint, and build checks.
+
+## Batch 12 COMPLETE - 2026-10-27
+
+| Tool | Verified content and behavior |
+|---|---|
+| `barcode-generator` | 26 locale cards describe CODE128 and EAN-13 SVG output and the lack of product lookup/authenticity checks. Browser generation succeeded with CODE128 `ABC123` and EAN-13 `4006381333931`. |
+| `social-image-resize` | Cards enumerate all six fixed JPEG presets and center-crop behavior. Browser output for a 160×120 fixture using Facebook preset was 1200×630. |
+| `add-text-to-image` | Cards describe one fixed bottom-center bold white caption with black outline, the 160-character limit, and separate JPEG output. Browser processed a fixture with `Weekend market` and exposed a separate download. |
+| `instagram-grid-split` | Cards explain one source image, central crop, three-column 3/6/9 tile grids, ZIP output, and manual posting order. Browser generated the nine-tile PNG ZIP from a 3×3 preset. |
+| `image-collage` | Cards describe 2×2 and 3×2 grids, square center crops, 12px gaps, JPEG quality, and limits. Browser confirmed four fixture images produce a 996×996 JPEG. The result separator was corrected to display dimensions clearly. |
+
+Batch 12 verification: content audit passed for 176 tools, 26 locales, and 4,576 localized detail/sitemap URLs; every batch locale has all five populated entries, distinct use cases and FAQ questions, and no English field fallback. All 216 unit tests, TypeScript, ESLint, `git diff --check`, and production build passed; 4,866 static pages were generated. Playwright passed 12/12 tests, including SSR and canonical/hreflang/x-default checks across authored locale pages, eight-width Korean mobile checks, and browser execution for all five Batch 12 examples. Existing overall duplicate audit totals remain 171 repeated FAQ-question groups and 52 exact how-to sets. No native-speaker review was performed.
+
+The ledger records **58/176 COMPLETE** (118 remaining). Next PENDING batch: `file-hash`, `mime-type-checker`, `file-extension-checker`, `file-size-checker`, and `duplicate-file-checker`. Continue without reauthoring verified editorials.

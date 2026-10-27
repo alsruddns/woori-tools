@@ -2,8 +2,8 @@ import { expect, test } from "@playwright/test";
 
 const locales = ["ko", "en", "ja", "zh", "es", "pt-br", "de", "fr", "vi", "id", "th", "zh-tw", "it", "nl", "hi", "ru", "tr", "pl", "fil", "bn", "uk", "ms", "sv", "cs", "ro", "el"];
 const viewports = [320, 360, 375, 390, 430, 768, 1024, 1440];
-const selectedTools = ["json-formatter", "json-validator", "character-count", "remove-spaces", "remove-line-breaks", "remove-duplicate-lines", "reverse-text", "add-line-numbers", "remove-line-numbers", "remove-empty-lines", "remove-characters", "text-repeater", "sort-lines", "shuffle-lines", "text-case-converter", "text-compare", "remove-duplicate-words", "text-to-file", "hiragana-katakana-converter", "fullwidth-halfwidth-converter", "japanese-romaji-converter", "japanese-number-kanji-converter", "simplified-traditional-chinese-converter", "lotto-number-generator", "powerball-number-generator", "mega-millions-number-generator", "japan-loto6-number-generator", "japan-loto7-number-generator", "japan-mini-loto-number-generator", "tarot-card", "daily-fortune", "saju", "random-number", "random-name-picker", "random-wheel", "draw-lots", "random-team-maker", "random-order", "random-seat", "duty-picker", "dice-roller", "coin-flip", "stopwatch", "timer", "pomodoro-timer", "world-clock", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr", "barcode-checker"];
-const koreanTextBatch = ["character-count", "remove-spaces", "remove-line-breaks", "remove-duplicate-lines", "reverse-text", "add-line-numbers", "remove-line-numbers", "remove-empty-lines", "remove-characters", "text-repeater", "sort-lines", "shuffle-lines", "text-case-converter", "text-compare", "remove-duplicate-words", "text-to-file", "hiragana-katakana-converter", "fullwidth-halfwidth-converter", "japanese-romaji-converter", "japanese-number-kanji-converter", "simplified-traditional-chinese-converter", "lotto-number-generator", "powerball-number-generator", "mega-millions-number-generator", "japan-loto6-number-generator", "japan-loto7-number-generator", "japan-mini-loto-number-generator", "tarot-card", "daily-fortune", "saju", "random-number", "random-name-picker", "random-wheel", "draw-lots", "random-team-maker", "random-order", "random-seat", "duty-picker", "dice-roller", "coin-flip", "stopwatch", "timer", "pomodoro-timer", "world-clock", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr", "barcode-checker"];
+const selectedTools = ["json-formatter", "json-validator", "character-count", "remove-spaces", "remove-line-breaks", "remove-duplicate-lines", "reverse-text", "add-line-numbers", "remove-line-numbers", "remove-empty-lines", "remove-characters", "text-repeater", "sort-lines", "shuffle-lines", "text-case-converter", "text-compare", "remove-duplicate-words", "text-to-file", "hiragana-katakana-converter", "fullwidth-halfwidth-converter", "japanese-romaji-converter", "japanese-number-kanji-converter", "simplified-traditional-chinese-converter", "lotto-number-generator", "powerball-number-generator", "mega-millions-number-generator", "japan-loto6-number-generator", "japan-loto7-number-generator", "japan-mini-loto-number-generator", "tarot-card", "daily-fortune", "saju", "random-number", "random-name-picker", "random-wheel", "draw-lots", "random-team-maker", "random-order", "random-seat", "duty-picker", "dice-roller", "coin-flip", "stopwatch", "timer", "pomodoro-timer", "world-clock", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr", "barcode-checker", "barcode-generator", "social-image-resize", "add-text-to-image", "instagram-grid-split", "image-collage"];
+const koreanTextBatch = ["character-count", "remove-spaces", "remove-line-breaks", "remove-duplicate-lines", "reverse-text", "add-line-numbers", "remove-line-numbers", "remove-empty-lines", "remove-characters", "text-repeater", "sort-lines", "shuffle-lines", "text-case-converter", "text-compare", "remove-duplicate-words", "text-to-file", "hiragana-katakana-converter", "fullwidth-halfwidth-converter", "japanese-romaji-converter", "japanese-number-kanji-converter", "simplified-traditional-chinese-converter", "lotto-number-generator", "powerball-number-generator", "mega-millions-number-generator", "japan-loto6-number-generator", "japan-loto7-number-generator", "japan-mini-loto-number-generator", "tarot-card", "daily-fortune", "saju", "random-number", "random-name-picker", "random-wheel", "draw-lots", "random-team-maker", "random-order", "random-seat", "duty-picker", "dice-roller", "coin-flip", "stopwatch", "timer", "pomodoro-timer", "world-clock", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr", "barcode-checker", "barcode-generator", "social-image-resize", "add-text-to-image", "instagram-grid-split", "image-collage"];
 
 test("Korean text-tool editorial cards are server-rendered and fit the mobile viewport set", async ({ request, page, baseURL }) => {
   for (const slug of koreanTextBatch) {
@@ -415,4 +415,57 @@ test("Batch 11 QR payloads stay local and barcode checks report the calculated d
   await page.locator("#input-text").fill("4006381333932");
   await page.getByRole("button", { name: "Run", exact: true }).click();
   await expect(page.locator("main > section").first().locator("pre")).toHaveText("EAN-13: Invalid\nExpected check digit: 1");
+});
+
+test("Batch 12 barcode and image examples match their documented formats and dimensions", async ({ page, baseURL }) => {
+  await page.goto(`${baseURL}/en/tools/barcode-generator`);
+  await page.locator("#barcode-value").fill("ABC123");
+  await page.locator("#barcode-format").selectOption("CODE128");
+  await page.getByRole("button", { name: "Run", exact: true }).click();
+  await expect(page.locator("main > section svg")).toBeVisible();
+  await expect(page.locator("main > section a[download='barcode.svg']")).toBeVisible();
+  await page.locator("#barcode-value").fill("4006381333931");
+  await page.locator("#barcode-format").selectOption("EAN13");
+  await page.getByRole("button", { name: "Run", exact: true }).click();
+  await expect(page.locator("main > section svg")).toBeVisible();
+
+  const pngBase64 = await page.evaluate(() => {
+    const canvas = document.createElement("canvas");
+    canvas.width = 160;
+    canvas.height = 120;
+    const context = canvas.getContext("2d")!;
+    context.fillStyle = "#3478c7";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.fillStyle = "#f5b800";
+    context.fillRect(110, 20, 40, 80);
+    return canvas.toDataURL("image/png").split(",")[1];
+  });
+  const imageFile = { name: "fixture.png", mimeType: "image/png", buffer: Buffer.from(pngBase64, "base64") };
+
+  await page.goto(`${baseURL}/en/tools/social-image-resize`);
+  await page.locator("#tool-files").setInputFiles(imageFile);
+  await page.locator("main > section select").selectOption("facebook");
+  await page.getByRole("button", { name: "Process", exact: true }).click();
+  await expect(page.locator("main > section pre")).toContainText(/1200\s*[×x]\s*630px/);
+  await expect(page.locator("main > section a[download]")).toBeVisible();
+
+  await page.goto(`${baseURL}/en/tools/add-text-to-image`);
+  await page.locator("#tool-files").setInputFiles(imageFile);
+  await page.locator("main > section label input").last().fill("Weekend market");
+  await page.getByRole("button", { name: "Process", exact: true }).click();
+  await expect(page.locator("main > section a[download]")).toBeVisible();
+
+  await page.goto(`${baseURL}/en/tools/instagram-grid-split`);
+  await page.locator("#tool-files").setInputFiles(imageFile);
+  await page.locator("main > section select").selectOption("9");
+  await page.getByRole("button", { name: "Process", exact: true }).click();
+  await expect(page.locator("main > section pre")).toContainText("9 square PNG tiles");
+  await expect(page.locator("main > section a[download]")).toHaveAttribute("download", "instagram-grid-split.zip");
+
+  await page.goto(`${baseURL}/en/tools/image-collage`);
+  await page.locator("#tool-files").setInputFiles(["a.png", "b.png", "c.png", "d.png"].map((name) => ({ ...imageFile, name })));
+  await page.locator("main > section select").selectOption("4");
+  await page.getByRole("button", { name: "Process", exact: true }).click();
+  await expect(page.locator("main > section pre")).toContainText(/996\D+996px/);
+  await expect(page.locator("main > section a[download]")).toBeVisible();
 });

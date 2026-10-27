@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
   "publicToolCount": 176,
-  "completeCount": 53,
+  "completeCount": 58,
   "nextBatch": [
-    "barcode-generator",
-    "social-image-resize",
-    "add-text-to-image",
-    "instagram-grid-split",
-    "image-collage"
+    "file-hash",
+    "mime-type-checker",
+    "file-extension-checker",
+    "file-size-checker",
+    "duplicate-file-checker"
   ],
   "tools": [
     {
@@ -162,27 +162,27 @@
     },
     {
       "slug": "barcode-generator",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-12"
     },
     {
       "slug": "social-image-resize",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-12"
     },
     {
       "slug": "add-text-to-image",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-12"
     },
     {
       "slug": "instagram-grid-split",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-12"
     },
     {
       "slug": "image-collage",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-12"
     },
     {
