@@ -528,3 +528,17 @@ Checkpoint at batch start: selected chinese-zodiac-calculator, chinese-sexagenar
 All five have original cards in 26 locales, unique FAQ questions and use cases per locale, and no English fallback. Content audit reports 176 tools, 4,576 localized detail URLs, zero noindex candidates, and 26 locales. Country processor tests passed (14), along with TypeScript, ESLint, content audit, git diff --check, and production build (4,866 static pages). Playwright passed 3/3: SSR/SEO across 50 routes, all five processor flows, and 320px/390px mobile checks. No native-speaker review was performed. The global audit still reports 171 repeated FAQ-question groups and 52 exact how-to sets.
 
 The ledger records **143/176 COMPLETE** (33 remaining). Continue with the next PENDING tools recorded in `docs/tool-content-authorship-status.json`.
+
+## Batch 30 COMPLETE - 2026-10-28
+
+| Tool | Verified behavior |
+|---|---|
+| lakh-crore-converter | Browser and unit tests converted `2 crore` to `20000000` and `100000` to `1 lakh`. |
+| pan-format-validator | Browser accepted the PAN structure `ABCPA1234F`; unit tests verify the structure-only result. |
+| gstin-format-validator | Browser accepted `27AAPFU0939F1ZV`; unit tests cover checksum success and a changed check character. |
+| india-phone-number-formatter | Browser and unit tests formatted `9876543210` as `+91 98765 43210`. |
+| germany-iban-validator | Browser and unit tests accepted `DE89370400440532013000` by structure and MOD 97 checksum. |
+
+All five have original content in 26 locales, distinct FAQ questions and use cases per locale, and no English fallback. Content audit reports 176 tools, 4,576 localized detail URLs, zero noindex candidates, and 26 locales. Country processor tests passed (14), along with TypeScript, ESLint, content audit, git diff --check, and production build (4,866 static pages). Playwright passed 3/3: SSR/SEO across 50 routes, all five real workflows, and 320px/390px mobile checks. During browser validation, the shared country workspace's English validation action was found using the wrong label-array index; the action now displays the normal Run label in English and the localized check label when available. No native-speaker review was performed. The global audit still reports 171 repeated FAQ-question groups and 52 exact how-to sets.
+
+The ledger records **148/176 COMPLETE** (28 remaining). Continue with the next PENDING tools in the ledger.

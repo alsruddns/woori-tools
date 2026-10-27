@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
   "publicToolCount": 176,
-  "completeCount": 143,
+  "completeCount": 148,
   "nextBatch": [
-    "lakh-crore-converter",
-    "pan-format-validator",
-    "gstin-format-validator",
-    "india-phone-number-formatter",
-    "germany-iban-validator"
+    "german-number-format-converter",
+    "german-date-format-converter",
+    "spain-dni-validator",
+    "spain-nie-validator",
+    "spanish-number-format-converter"
   ],
   "tools": [
     {
@@ -727,28 +727,28 @@
     },
     {
       "slug": "lakh-crore-converter",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-30"
     },
     {
       "slug": "pan-format-validator",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-30"
     },
     {
       "slug": "gstin-format-validator",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-30"
     },
     {
       "slug": "india-phone-number-formatter",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-30"
     },
     {
       "slug": "germany-iban-validator",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-30"
     },
     {
       "slug": "german-number-format-converter",

@@ -28,6 +28,11 @@ test("Indian digit grouping and lakh/crore conversions use the Indian scale", ()
   assert.equal(tools.indianNumber("100000"), "1,00,000");
   assert.equal(tools.lakhCrore("100000"), "1 lakh");
   assert.equal(tools.lakhCrore("2 crore"), "20000000");
+  assert.deepEqual(tools.validatePan("ABCPA1234F"), { valid:true, level:"format" });
+  assert.deepEqual(tools.validateGstin("27AAPFU0939F1ZV"), { valid:true, level:"checksum" });
+  assert.deepEqual(tools.validateGstin("27AAPFU0939F1ZA"), { valid:false, level:"checksum" });
+  assert.deepEqual(tools.validateIban("DE", "DE89370400440532013000"), { valid:true, level:"checksum" });
+  assert.equal(tools.lakhCrore("2 crore"), "20000000");
   assert.equal(tools.formatNumber("1.234,56", "german-number-format-converter"), "1.234,56");
   assert.equal(tools.formatNumber("1 234 567,89", "french-number-format-converter"), "1 234 567,89");
 });
@@ -79,6 +84,7 @@ test("new country phone formats normalize local and international numbers withou
   assert.equal(tools.formatPhone("chinese-phone-number-formatter", "+86 13800138000"), "+86 138 0013 8000");
   assert.equal(tools.formatPhone("taiwan-phone-number-formatter", "0912345678"), "+886 0912 345 678");
   assert.equal(tools.formatPhone("india-phone-number-formatter", "+91 9876543210"), "+91 98765 43210");
+  assert.equal(tools.formatPhone("india-phone-number-formatter", "9876543210"), "+91 98765 43210");
   assert.equal(tools.formatPhone("us-phone-number-formatter", "2125550123"), "+1 (212) 555-0123");
   assert.throws(() => tools.formatPhone("us-phone-number-formatter", "1125550123"));
 });
