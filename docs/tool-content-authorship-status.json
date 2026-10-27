@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
   "publicToolCount": 176,
-  "completeCount": 68,
+  "completeCount": 73,
   "nextBatch": [
-    "color-converter",
-    "cron-parser",
-    "sql-formatter",
-    "html-formatter",
-    "css-formatter"
+    "javascript-formatter",
+    "markdown-preview",
+    "jpg-to-png",
+    "png-to-jpg",
+    "webp-to-jpg"
   ],
   "tools": [
     {
@@ -272,27 +272,27 @@
     },
     {
       "slug": "color-converter",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-15"
     },
     {
       "slug": "cron-parser",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-15"
     },
     {
       "slug": "sql-formatter",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-15"
     },
     {
       "slug": "html-formatter",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-15"
     },
     {
       "slug": "css-formatter",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-15"
     },
     {

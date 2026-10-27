@@ -261,3 +261,16 @@ The ledger records **68/176 COMPLETE** (108 remaining). Next PENDING batch: `col
 - Selected the next five PENDING developer tools: `color-converter`, `cron-parser`, `sql-formatter`, `html-formatter`, and `css-formatter`.
 - Inspected `processText`: color parsing accepts 3/6-digit HEX, integer RGB channels, and HSL percent channels, returning HEX/RGB/HSL; cron parsing lists five next run times in the browser locale and local timezone without scheduling; SQL uses the default `sql` formatter dialect; HTML and CSS use Prettier plugins with a 100-column print width and do not execute the input.
 - Korean originals are in `docs/tool-content-authorship-batch-15-ko-draft.md`. The ledger marks all five `KO_DRAFT`; verified completion remains **68/176**. Next: author every locale and verify examples against the actual processors.
+## Batch 15 COMPLETE - 2026-10-27
+
+| Tool | Verified content and behavior |
+|---|---|
+| `color-converter` | 26 locale cards document accepted HEX/RGB/HSL forms, range limits, and unsupported names/alpha. Browser conversion of `#ff0000` returned `#FF0000`, RGB 255/0/0, and HSL 0/100/50. |
+| `cron-parser` | Cards explain five/six-field parsing, five upcoming times, device-local time zone, and no scheduling. Browser checked `0 9 * * 1` and all five listed results. |
+| `sql-formatter` | Cards describe default SQL dialect formatting and no execution/database connection. Browser formatted `select id from users` into structured SQL. |
+| `html-formatter` | Cards describe Prettier HTML formatting, 100-column width, and no rendering/validation. Browser verified nested paragraphs are placed on separate indented lines. |
+| `css-formatter` | Cards explain PostCSS formatting, 100-column width, and no preview/validation. Browser formatted `h1{color:red}` into a readable rule. |
+
+Batch 15 quality audit passed for all five tools and 26 locales: populated fields, distinct FAQs/use cases, and no English field fallback. Audit totals remain 176 public tools, 4,576 detail/sitemap URLs, and zero noindex candidates. All 216 unit tests, TypeScript, ESLint, `git diff --check`, and production build passed; build generated 4,866 static pages. Batch Playwright passed 3/3 tests: five processor examples, SSR/canonical/hreflang/x-default on five tools across nine representative locales (45 routes), and viewport overflow checks at 320px and 390px. Existing global duplicate audit remains 171 repeated FAQ-question groups and 52 exact how-to sets. No native-speaker review was performed.
+
+The ledger records **73/176 COMPLETE** (103 remaining). Next PENDING batch: `javascript-formatter`, `jpg-to-png`, `png-to-jpg`, `webp-to-jpg`, and `webp-to-png`. Continue without reauthoring verified editorials.
