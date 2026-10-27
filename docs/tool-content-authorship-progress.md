@@ -392,3 +392,23 @@ The ledger records **98/176 COMPLETE** (78 remaining). Next PENDING batch: pdf-s
 All five have unique content in 26 locales with distinct use cases and FAQ questions and no English field fallback. Content audit reports 176 public tools, 4,576 localized detail URLs, zero noindex candidates, and 26 locales for this batch. All 216 unit tests, TypeScript, ESLint, and git diff --check passed. Production build generated 4,866 static pages. Playwright passed 3/3 tests: SSR and SEO across 50 routes, all five real PDF operations, and 320px/390px mobile checks. No native-speaker review was performed. Existing global duplicate audit remains 171 repeated FAQ-question groups and 52 exact how-to sets.
 
 The ledger records **103/176 COMPLETE** (73 remaining). Next PENDING batch: pdf-watermark, pdf-metadata-viewer, pdf-remove-metadata, json-to-yaml, yaml-to-json. Continue without reauthoring verified editorials.
+
+## Batch 22 checkpoint - 2026-10-27
+
+- Selected pdf-watermark, pdf-metadata-viewer, pdf-remove-metadata, json-to-yaml, and yaml-to-json from PENDING.
+- Processor facts: watermark draws one centered 30 pt Helvetica string on each page at -30 degrees and 35% opacity; blank text falls back to Woori Tools. Viewer reports title, author, subject, keywords, page count, and creator. Removal clears title, author, subject, keywords, creator, and producer fields. JSON/YAML processors parse one document and serialize the converted value; JSON output is pretty-printed with two spaces.
+- Korean drafts are in progress. All five are KO_DRAFT; completion remains **103/176**.
+
+## Batch 22 COMPLETE - 2026-10-27
+
+| Tool | Verified behavior |
+|---|---|
+| pdf-watermark | Browser generated a separate PDF with page content after applying a custom watermark. The default text remains Woori Tools when blank. |
+| pdf-metadata-viewer | A fixture PDF returned its title, author, subject, keywords, page count, and creator. |
+| pdf-remove-metadata | Browser reloaded output without metadata auto-updates and verified the six documented standard information fields are empty. Updated PDF loading to avoid pdf-lib reintroducing its producer value. Page count remained intact. |
+| json-to-yaml | Browser converted service/api and a boolean to corresponding YAML fields. |
+| yaml-to-json | Browser converted YAML values to the matching JSON object. |
+
+All five have authored cards in 26 locales, distinct use cases and FAQ questions, and no English field fallback. Content audit reports 176 public tools, 4,576 localized detail URLs, zero noindex candidates, and 26 batch locales. All 216 unit tests, TypeScript, ESLint, git diff --check, and production build passed; build generated 4,866 static pages. Playwright passed 3/3 tests: SSR/SEO on 50 routes, actual PDF and text conversion workflows, and 320px/390px mobile checks. No native-speaker review was performed. The audit still reports 171 repeated FAQ-question groups and 52 exact how-to sets globally.
+
+The ledger records **108/176 COMPLETE** (68 remaining). Next PENDING batch: csv-to-json, json-to-csv, base64, url-encode-decode, uuid-generator. Continue without reauthoring verified editorials.

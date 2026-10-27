@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
   "publicToolCount": 176,
-  "completeCount": 103,
+  "completeCount": 108,
   "nextBatch": [
-    "pdf-watermark",
-    "pdf-metadata-viewer",
-    "pdf-remove-metadata",
-    "json-to-yaml",
-    "yaml-to-json"
+    "csv-to-json",
+    "json-to-csv",
+    "base64",
+    "url-encode-decode",
+    "uuid-generator"
   ],
   "tools": [
     {
@@ -447,18 +447,18 @@
     },
     {
       "slug": "pdf-watermark",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-22"
     },
     {
       "slug": "pdf-metadata-viewer",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-22"
     },
     {
       "slug": "pdf-remove-metadata",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-22"
     },
     {
       "slug": "character-count",
@@ -517,13 +517,13 @@
     },
     {
       "slug": "json-to-yaml",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-22"
     },
     {
       "slug": "yaml-to-json",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-22"
     },
     {
       "slug": "csv-to-json",
