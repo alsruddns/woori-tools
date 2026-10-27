@@ -196,3 +196,9 @@ The ledger now records **43/176 COMPLETE** (133 remaining). Next selected PENDIN
 Batch 11 verification: the content audit passed for 176 tools, 26 locales and 4,576 localized detail/sitemap URLs; all five entries have populated locale-specific fields with no English field fallback. The 216-test unit suite, TypeScript, ESLint, `git diff --check`, and production build passed; build generated 4,866 static pages. Playwright passed 11/11 tests, including SSR and canonical/hreflang/x-default checks for all selected authored pages, eight-width Korean page checks, workspace examples for all five tools, and the QR/barcode behavior test. No native-speaker review was performed. Existing global duplicate audit totals remain 171 repeated FAQ-question groups and 52 exact how-to sets; this batch did not add repeated FAQ questions or identical how-to wording among its own five tools in any locale.
 
 The ledger records **53/176 COMPLETE** (123 remaining). Next PENDING batch: `barcode-generator`, `social-image-resize`, `add-text-to-image`, `instagram-grid-split`, and `image-collage`. Continue without reauthoring verified editorials.
+
+## Batch 12 checkpoint - 2026-10-27
+
+- Selected the five PENDING tools `barcode-generator`, `social-image-resize`, `add-text-to-image`, `instagram-grid-split`, and `image-collage`.
+- Read `BarcodeWorkspace`, `processImage`, the shared image workspace and collage path. Drafts document CODE128/EAN-13 SVG generation, six fixed social-image JPEG presets with center crop, single-line bottom caption rendering, 3/6/9-tile ZIP output, and 2×2/3×2 JPEG collage layouts with file/pixel limits.
+- Korean drafts are in `docs/tool-content-authorship-batch-12-ko-draft.md`. The five tools remain `KO_DRAFT`; verified completion remains **53/176**. Next: verify sample dimensions/payloads against the real processors, write all 26 locale editorials, then run SSR, SEO, browser, unit, type, lint, and build checks.

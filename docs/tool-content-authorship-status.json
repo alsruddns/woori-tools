@@ -162,28 +162,28 @@
     },
     {
       "slug": "barcode-generator",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-12"
     },
     {
       "slug": "social-image-resize",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-12"
     },
     {
       "slug": "add-text-to-image",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-12"
     },
     {
       "slug": "instagram-grid-split",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-12"
     },
     {
       "slug": "image-collage",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-12"
     },
     {
       "slug": "file-hash",
