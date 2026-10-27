@@ -28,6 +28,9 @@ import { tarotDeck } from "../src/lib/fortune/tarot-deck";
 import { calculateFourPillars } from "manseryeok";
 import { pickUniqueRange } from "../src/lib/random";
 import { batch7EditorialDrafts } from "../src/registry/tool-detail-editorials-batch-7";
+import { batch8EditorialDrafts } from "../src/registry/tool-detail-editorials-batch-8";
+import { pickUnique, secureShuffle } from "../src/lib/random";
+import { divideEvenly, normalizeWheelItems } from "../src/lib/random-tools.mjs";
 
 const slugs = new Set(tools.map((tool) => tool.slug));
 assert.equal(slugs.size, tools.length, "duplicate public slug");
@@ -321,6 +324,29 @@ assert.equal(randomNumberOutput.length, 3, "random-number example must return th
 assert.equal(new Set(randomNumberOutput).size, 3, "random-number unique example must not repeat");
 assert.ok(randomNumberOutput.every((number) => number >= 10 && number <= 20), "random-number example must stay within the inclusive range");
 assert.deepEqual(randomNumberOutput, [...randomNumberOutput].sort((left, right) => left - right), "random-number sorted example must be ascending");
+assert.deepEqual(new Set(Object.keys(batch8EditorialDrafts)), new Set(publishedTargetLocales), "batch 8 drafts must cover all published locales before integration");
+const batch8Slugs = ["random-name-picker", "random-wheel", "draw-lots", "random-team-maker", "random-order"];
+for (const [locale, drafts] of Object.entries(batch8EditorialDrafts)) {
+  assert.deepEqual(new Set(Object.keys(drafts)), new Set(batch8Slugs), `${locale}: batch 8 drafts must cover all five selected tools`);
+  for (const [slug, editorial] of Object.entries(drafts)) {
+    assert.ok([editorial.principle, editorial.useCase, editorial.troubleshooting, editorial.faqQuestion, editorial.faqAnswer].every((value) => value.trim()), `${locale}/${slug}: draft fields must be populated`);
+    if (locale !== "en") for (const field of ["principle", "useCase", "troubleshooting", "faqQuestion", "faqAnswer"] as const) assert.notEqual(editorial[field], batch8EditorialDrafts.en?.[slug][field], `${locale}/${slug}: ${field} must not fall back to English`);
+  }
+}
+const exampleNames = ["Mina", "Joon", "Kai", "Lina", "Bo", "Ari"];
+const pickedNames = pickUnique(exampleNames, 2);
+assert.equal(pickedNames.length, 2, "random-name-picker must return the requested number of entries");
+assert.equal(new Set(pickedNames).size, 2, "random-name-picker must draw distinct entries when repeats are off");
+const drawnLots = pickUnique(exampleNames, 3);
+assert.equal(drawnLots.length, 3, "draw-lots must select the requested number of distinct entries");
+assert.equal(new Set(drawnLots).size, 3, "draw-lots must not repeat entries when repeats are off");
+assert.deepEqual(normalizeWheelItems("A\nA\n\nB", { allowDuplicates: false, limit: 50 }), ["A", "B"], "random-wheel must trim blanks and deduplicate when repeat choices are disabled");
+assert.deepEqual(normalizeWheelItems("A\nA\nB", { allowDuplicates: true, limit: 50 }), ["A", "A", "B"], "random-wheel must retain weighted duplicate choices when enabled");
+const balancedTeams = divideEvenly(exampleNames, 2);
+assert.equal(balancedTeams.flat().length, exampleNames.length, "random-team-maker must assign every participant");
+assert.ok(Math.max(...balancedTeams.map((team) => team.length)) - Math.min(...balancedTeams.map((team) => team.length)) <= 1, "random-team-maker team sizes must differ by at most one");
+const shuffledOrder = secureShuffle(exampleNames);
+assert.deepEqual([...shuffledOrder].sort(), [...exampleNames].sort(), "random-order must preserve every participant entry");
 for (const [slug, example] of Object.entries(verifiedTextExamples)) {
   const runExample = () => processText(slug, example.input, example.secondText ?? "", example.option ?? "", example.amount ?? 1, "en");
   if (example.resultIsError) {
@@ -403,6 +429,8 @@ console.log(JSON.stringify({
   verifiedLotteryExamples: lotteryEditorialSamples.length,
    batch7DraftLocales: Object.keys(batch7EditorialDrafts).length,
    verifiedBatch7SpecializedExamples: 4,
+   batch8DraftLocales: Object.keys(batch8EditorialDrafts).length,
+   verifiedBatch8RandomExamples: 5,
   duplicateTotals,
   expandedLocaleQuality,
   repeatedUsagePatterns,

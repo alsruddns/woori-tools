@@ -2,8 +2,8 @@ import { expect, test } from "@playwright/test";
 
 const locales = ["ko", "en", "ja", "zh", "es", "pt-br", "de", "fr", "vi", "id", "th", "zh-tw", "it", "nl", "hi", "ru", "tr", "pl", "fil", "bn", "uk", "ms", "sv", "cs", "ro", "el"];
 const viewports = [320, 360, 375, 390, 430, 768, 1024, 1440];
-const selectedTools = ["json-formatter", "json-validator", "character-count", "remove-spaces", "remove-line-breaks", "remove-duplicate-lines", "reverse-text", "add-line-numbers", "remove-line-numbers", "remove-empty-lines", "remove-characters", "text-repeater", "sort-lines", "shuffle-lines", "text-case-converter", "text-compare", "remove-duplicate-words", "text-to-file", "hiragana-katakana-converter", "fullwidth-halfwidth-converter", "japanese-romaji-converter", "japanese-number-kanji-converter", "simplified-traditional-chinese-converter", "lotto-number-generator", "powerball-number-generator", "mega-millions-number-generator", "japan-loto6-number-generator", "japan-loto7-number-generator", "japan-mini-loto-number-generator", "tarot-card", "daily-fortune", "saju", "random-number"];
-const koreanTextBatch = ["character-count", "remove-spaces", "remove-line-breaks", "remove-duplicate-lines", "reverse-text", "add-line-numbers", "remove-line-numbers", "remove-empty-lines", "remove-characters", "text-repeater", "sort-lines", "shuffle-lines", "text-case-converter", "text-compare", "remove-duplicate-words", "text-to-file", "hiragana-katakana-converter", "fullwidth-halfwidth-converter", "japanese-romaji-converter", "japanese-number-kanji-converter", "simplified-traditional-chinese-converter", "lotto-number-generator", "powerball-number-generator", "mega-millions-number-generator", "japan-loto6-number-generator", "japan-loto7-number-generator", "japan-mini-loto-number-generator", "tarot-card", "daily-fortune", "saju", "random-number"];
+const selectedTools = ["json-formatter", "json-validator", "character-count", "remove-spaces", "remove-line-breaks", "remove-duplicate-lines", "reverse-text", "add-line-numbers", "remove-line-numbers", "remove-empty-lines", "remove-characters", "text-repeater", "sort-lines", "shuffle-lines", "text-case-converter", "text-compare", "remove-duplicate-words", "text-to-file", "hiragana-katakana-converter", "fullwidth-halfwidth-converter", "japanese-romaji-converter", "japanese-number-kanji-converter", "simplified-traditional-chinese-converter", "lotto-number-generator", "powerball-number-generator", "mega-millions-number-generator", "japan-loto6-number-generator", "japan-loto7-number-generator", "japan-mini-loto-number-generator", "tarot-card", "daily-fortune", "saju", "random-number", "random-name-picker", "random-wheel", "draw-lots", "random-team-maker", "random-order"];
+const koreanTextBatch = ["character-count", "remove-spaces", "remove-line-breaks", "remove-duplicate-lines", "reverse-text", "add-line-numbers", "remove-line-numbers", "remove-empty-lines", "remove-characters", "text-repeater", "sort-lines", "shuffle-lines", "text-case-converter", "text-compare", "remove-duplicate-words", "text-to-file", "hiragana-katakana-converter", "fullwidth-halfwidth-converter", "japanese-romaji-converter", "japanese-number-kanji-converter", "simplified-traditional-chinese-converter", "lotto-number-generator", "powerball-number-generator", "mega-millions-number-generator", "japan-loto6-number-generator", "japan-loto7-number-generator", "japan-mini-loto-number-generator", "tarot-card", "daily-fortune", "saju", "random-number", "random-name-picker", "random-wheel", "draw-lots", "random-team-maker", "random-order"];
 
 test("Korean text-tool editorial cards are server-rendered and fit the mobile viewport set", async ({ request, page, baseURL }) => {
   for (const slug of koreanTextBatch) {
@@ -225,4 +225,43 @@ test("fortune, saju, and random-number examples run in the browser", async ({ pa
   expect(new Set(values).size).toBe(3);
   expect(values.every((value) => value >= 10 && value <= 20)).toBe(true);
   expect(values).toEqual([...values].sort((left, right) => left - right));
+});
+
+test("participant draws, wheel selection, team assignment, and staged order run in the browser", async ({ page, baseURL }) => {
+  for (const slug of ["random-name-picker", "draw-lots"]) {
+    await page.goto(`${baseURL}/en/tools/${slug}`);
+    await page.locator("#participant-list").fill("Ada\nBo\nCy\nDee");
+    await page.getByRole("spinbutton", { name: "Winners" }).fill("2");
+    await page.locator("main > section").first().getByRole("button").last().click();
+    const entries = await page.locator("main > section").first().locator("section.mt-5 li").allTextContents();
+    expect(entries).toHaveLength(2);
+    expect(new Set(entries).size).toBe(2);
+  }
+
+  await page.goto(`${baseURL}/en/tools/random-wheel`);
+  await page.locator("#wheel-options").fill("Tea\nTea\nCoffee");
+  const wheel = page.locator('svg[role="img"]');
+  await expect(wheel).toHaveAttribute("aria-label", "Tea, Coffee");
+  await page.getByLabel("Allow duplicate entries").check();
+  await expect(wheel).toHaveAttribute("aria-label", "Tea, Tea, Coffee");
+  await page.locator("main select").selectOption("3000");
+  await page.getByRole("button", { name: "Spin the wheel", exact: true }).click();
+  await expect(page.getByRole("heading", { name: "Selected choice", exact: true })).toBeVisible({ timeout: 6000 });
+
+  await page.goto(`${baseURL}/en/tools/random-team-maker`);
+  await page.locator("#team-participants").fill("Ada\nBo\nCy\nDee\nEli\nFlo");
+  await page.getByLabel("Number of teams").fill("2");
+  await page.locator("main > section").first().getByRole("button").last().click();
+  const teamCards = page.locator("main > section").first().locator("section.mt-5 article");
+  await expect(teamCards).toHaveCount(2);
+  const assigned = (await teamCards.locator("li").allTextContents()).sort();
+  expect(assigned).toEqual(["Ada", "Bo", "Cy", "Dee", "Eli", "Flo"].sort());
+
+  await page.goto(`${baseURL}/en/tools/random-order`);
+  await page.locator("#order-people").fill("Ada\nBo\nCy");
+  await page.locator("main > section").first().getByRole("button").filter({ hasText: "Generate numbers" }).click();
+  await expect(page.locator("main > section").first().locator("ol li")).toHaveCount(3);
+  await page.getByRole("button", { name: "Reveal all", exact: true }).click();
+  const order = (await page.locator("main > section").first().locator("ol li").allTextContents()).map((entry) => entry.replace(/^\d+\.\s*/, ""));
+  expect(new Set(order)).toEqual(new Set(["Ada", "Bo", "Cy"]));
 });

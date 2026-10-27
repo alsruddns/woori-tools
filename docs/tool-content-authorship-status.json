@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
   "publicToolCount": 176,
-  "completeCount": 33,
+  "completeCount": 38,
   "nextBatch": [
-    "random-name-picker",
-    "random-wheel",
-    "draw-lots",
-    "random-team-maker",
-    "random-order"
+    "random-seat",
+    "duty-picker",
+    "dice-roller",
+    "coin-flip",
+    "stopwatch"
   ],
   "tools": [
     {
@@ -62,27 +62,27 @@
     },
     {
       "slug": "random-name-picker",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-8"
     },
     {
       "slug": "random-wheel",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-8"
     },
     {
       "slug": "draw-lots",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-8"
     },
     {
       "slug": "random-team-maker",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-8"
     },
     {
       "slug": "random-order",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-8"
     },
     {

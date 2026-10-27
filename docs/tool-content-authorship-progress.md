@@ -112,3 +112,18 @@ The ledger now records 33/176 COMPLETE (143 remaining). Next selected PENDING ba
 - Recorded Korean drafts for `random-name-picker`, `random-wheel`, `draw-lots`, `random-team-maker`, and `random-order` in `docs/tool-content-authorship-batch-8-ko-draft.md`. Drafts distinguish participant entries from visible names, no-repeat rules, wheel weighting and 50-item cap, even team distribution, and staged order reveal.
 - Ledger state is `KO_DRAFT`; verified completion remains **33/176**. Next work is all 26 locale versions and processor, SSR/SEO, browser, and quality validation.
 - Batch 7 is committed and pushed as `ccb2fc8`; the remote `develop` is synchronized.
+
+
+## Batch 8 ? COMPLETE ? 2026-10-27
+
+| Tool | Result and evidence |
+|---|---|
+| `random-name-picker` | 26 locale pages explain per-line entries, blank-line handling, repeat rules, duplicate-name semantics, winner removal, and list shuffling. Actual unique draw helper returned the requested distinct entries; browser selected two unique names from four participants. |
+| `draw-lots` | 26 locale pages distinguish separate lot entries on separate lines, repeat and remove options, and blank-line behavior. The selection helper passed count/uniqueness checks; browser drew three of four entries without repeats. |
+| `random-wheel` | 26 locale pages cover line normalization, duplicate weighting, 2?50 UI limit, 3/5/8-second spin, and winner removal. `normalizeWheelItems` checks passed with duplicates on/off; browser verified wheel choices and selected a result. |
+| `random-team-maker` | 26 locale pages describe random round-robin distribution by team count or team size, optional team names, and remainder behavior. `divideEvenly` assigned all sample participants with team sizes differing by at most one; browser placed all six people into two teams. |
+| `random-order` | 26 locale pages explain distinct line entries, shuffled order, staged reveal, optional numbering, and copy behavior. Shuffle preserved every entry; browser revealed a full three-person order with no loss or duplication. |
+
+Batch evidence: all 216 unit tests passed; content audit confirms all 176 tools, 26 locales, 4,576 localized detail/sitemap URLs, no English editorial fallback, no noindex candidates, and no new exact duplicate sets. The audit checks all five batch-8 editorials across all 26 locales and five random behavior examples. TypeScript, ESLint, `git diff --check`, and production build passed; build generated 4,866 static pages. Playwright passed 8/8 tests, including SSR and canonical/hreflang/x-default checks for 260 batch-8 locale pages, visible cards without hidden content, eight viewport widths for authored Korean pages, and live operations for all five tools. The global repeated FAQ/how-to and near-duplicate candidate counts remain unchanged from the previous audit. Native-speaker review was not performed.
+
+The ledger now records 38/176 COMPLETE (138 remaining). Next selected PENDING batch: `random-seat`, `duty-picker`, `dice-roller`, `coin-flip`, `stopwatch`. Continue without reauthoring verified content.
