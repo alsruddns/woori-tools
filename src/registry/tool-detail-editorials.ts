@@ -1,5 +1,6 @@
 import type { PublishedTargetLocale } from "@/i18n/routing";
 import { nextBatchEditorials } from "@/registry/tool-detail-editorials-next";
+import { batch7EditorialDrafts } from "@/registry/tool-detail-editorials-batch-7";
 
 export type ToolDetailEditorial = {
   principle: string;
@@ -438,12 +439,12 @@ Object.assign(copy.ro, { "sort-lines": { principle: "Compară fiecare rând conf
 Object.assign(copy.el, { "sort-lines": { principle: "Συγκρίνει κάθε γραμμή με βάση την επιλεγμένη γλώσσα και τις επιστρέφει σε αύξουσα σειρά. Τα αριθμητικά τμήματα συγκρίνονται ως τιμές, ενώ η διάκριση πεζών και κεφαλαίων αγνοείται στο βασικό επίπεδο.", useCase: "Τακτοποιήστε λίστες ονομάτων ή εκδόσεων. Με αριθμητική σύγκριση, τα `item10`, `item2`, `item1` γίνονται `item1`, `item2`, `item10`.", troubleshooting: "Τα κενά στην αρχή και στο τέλος δεν αφαιρούνται. Ελέγξτε τα κενά και την επιλεγμένη γλώσσα αν η σειρά φαίνεται απρόσμενη. Οι κενές γραμμές μετρούν ως στοιχεία· η φθίνουσα λειτουργία αντιστρέφει τη σύγκριση.", faqQuestion: "Οι γραμμές με αριθμούς ταξινομούνται λεξικογραφικά;", faqAnswer: "Όχι. Η αριθμητική σύγκριση τοποθετεί το `item2` πριν από το `item10`. Ισχύουν οι κανόνες της επιλεγμένης γλώσσας και τα κείμενα που διαφέρουν μόνο ως προς τα κεφαλαία θεωρούνται ισότιμα στο βασικό επίπεδο." } });
 
 export function getToolDetailEditorial(locale: PublishedTargetLocale, slug: string) {
-  const editorial = copy[locale][slug] ?? nextBatchEditorials[locale][slug];
+  const editorial = copy[locale][slug] ?? nextBatchEditorials[locale][slug] ?? batch7EditorialDrafts[locale]?.[slug];
   return editorial ? { ...editorial, labels: labels[locale] } : undefined;
 }
 
 export function hasToolDetailEditorial(slug: string) {
-  return Object.values(copy).some((entries) => slug in entries) || Object.values(nextBatchEditorials).some((entries) => slug in entries);
+  return Object.values(copy).some((entries) => slug in entries) || Object.values(nextBatchEditorials).some((entries) => slug in entries) || Object.values(batch7EditorialDrafts).some((entries) => Boolean(entries && slug in entries));
 }
 
-export const authoredEditorialSlugs = Object.freeze([...new Set([...Object.keys(copy.en), ...Object.keys(nextBatchEditorials.en)])]);
+export const authoredEditorialSlugs = Object.freeze([...new Set([...Object.keys(copy.en), ...Object.keys(nextBatchEditorials.en), ...Object.keys(batch7EditorialDrafts.en ?? {})])]);

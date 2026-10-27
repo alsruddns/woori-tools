@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
   "publicToolCount": 176,
-  "completeCount": 28,
+  "completeCount": 33,
   "nextBatch": [
-    "japan-mini-loto-number-generator",
-    "tarot-card",
-    "daily-fortune",
-    "saju",
-    "random-number"
+    "random-name-picker",
+    "random-wheel",
+    "draw-lots",
+    "random-team-maker",
+    "random-order"
   ],
   "tools": [
     {
@@ -37,27 +37,27 @@
     },
     {
       "slug": "japan-mini-loto-number-generator",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-7"
     },
     {
       "slug": "tarot-card",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-7"
     },
     {
       "slug": "daily-fortune",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-7"
     },
     {
       "slug": "saju",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-7"
     },
     {
       "slug": "random-number",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-7"
     },
     {

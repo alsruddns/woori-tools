@@ -23,6 +23,11 @@ import { processText } from "../src/lib/text/process-text";
 import { formatPhone, runCountryTool } from "../src/lib/country-tools";
 import { convertKana, convertWidth, kanaToRomaji, numberToKanji } from "../src/lib/japanese-tools";
 import { generateLottoGames, generateSpecialBalls } from "../src/lib/lotto.mjs";
+import { fortuneIndices } from "../src/lib/fortune/daily-fortune.mjs";
+import { tarotDeck } from "../src/lib/fortune/tarot-deck";
+import { calculateFourPillars } from "manseryeok";
+import { pickUniqueRange } from "../src/lib/random";
+import { batch7EditorialDrafts } from "../src/registry/tool-detail-editorials-batch-7";
 
 const slugs = new Set(tools.map((tool) => tool.slug));
 assert.equal(slugs.size, tools.length, "duplicate public slug");
@@ -279,6 +284,7 @@ const lotteryEditorialSamples = [
   { slug: "mega-millions-number-generator", min: 1, max: 70, count: 5, sample: [5, 16, 28, 47, 69], special: { max: 24, sample: 8 } },
   { slug: "japan-loto6-number-generator", min: 1, max: 43, count: 6, sample: [3, 11, 20, 26, 34, 42] },
   { slug: "japan-loto7-number-generator", min: 1, max: 37, count: 7, sample: [2, 8, 14, 21, 27, 33, 37] },
+  { slug: "japan-mini-loto-number-generator", min: 1, max: 31, count: 5, sample: [2, 7, 14, 23, 31] },
 ];
 for (const example of lotteryEditorialSamples) {
   assert.equal(example.sample.length, example.count, `${example.slug}: sample must have the documented count`);
@@ -295,6 +301,26 @@ for (const example of lotteryEditorialSamples) {
     assert.ok(generateSpecialBalls({ count: 1, min: 1, max: example.special.max, mode: "exclude", number: example.special.sample })[0] !== example.special.sample, `${example.slug}: excluded special ball must not appear`);
   }
 }
+assert.deepEqual(new Set(Object.keys(batch7EditorialDrafts)), new Set(publishedTargetLocales), "batch 7 editorial drafts must cover every published locale before integration");
+for (const [locale, drafts] of Object.entries(batch7EditorialDrafts)) {
+  assert.equal(Object.keys(drafts).length, 5, `${locale}: batch 7 draft must cover all five selected tools`);
+  for (const [slug, editorial] of Object.entries(drafts)) {
+    assert.ok(["japan-mini-loto-number-generator", "tarot-card", "daily-fortune", "saju", "random-number"].includes(slug), `${locale}/${slug}: unexpected batch 7 draft`);
+    assert.ok([editorial.principle, editorial.useCase, editorial.troubleshooting, editorial.faqQuestion, editorial.faqAnswer].every((value) => value.trim()), `${locale}/${slug}: draft fields must be populated`);
+  }
+}
+assert.deepEqual(fortuneIndices("1990-05-17", "2026-10-27", [6, 6, 6, 6, 6, 6, 6, 6]), [1, 5, 5, 0, 2, 1, 5, 4], "daily-fortune example must match the deterministic engine");
+assert.equal(tarotDeck.length, 22, "tarot example must use the 22-card Major Arcana deck");
+assert.equal(new Set(tarotDeck.map(({ id }) => id)).size, 22, "tarot deck IDs must be unique");
+assert.ok(tarotDeck.some(({ id }) => id === "magician"), "tarot example card must exist in the real deck");
+const sajuExample = calculateFourPillars({ year: 1990, month: 5, day: 17, hour: 12, minute: 0, isLunar: false, isLeapMonth: false, dayBoundary: "midnight" });
+assert.deepEqual([sajuExample.yearHanja, sajuExample.monthHanja, sajuExample.dayHanja, sajuExample.hourHanja], ["庚午", "辛巳", "壬午", "丙午"], "saju sample pillars must match the calculation library");
+assert.deepEqual([sajuExample.yearElement.stem, sajuExample.yearElement.branch, sajuExample.monthElement.stem, sajuExample.monthElement.branch, sajuExample.dayElement.stem, sajuExample.dayElement.branch, sajuExample.hourElement.stem, sajuExample.hourElement.branch].reduce((counts, element) => { counts[element] += 1; return counts; }, { 목: 0, 화: 0, 토: 0, 금: 0, 수: 0 }), { 목: 0, 화: 5, 토: 0, 금: 2, 수: 1 }, "saju element example must match visible-character counting");
+const randomNumberOutput = pickUniqueRange(10, 20, 3).sort((left, right) => left - right);
+assert.equal(randomNumberOutput.length, 3, "random-number example must return the requested count");
+assert.equal(new Set(randomNumberOutput).size, 3, "random-number unique example must not repeat");
+assert.ok(randomNumberOutput.every((number) => number >= 10 && number <= 20), "random-number example must stay within the inclusive range");
+assert.deepEqual(randomNumberOutput, [...randomNumberOutput].sort((left, right) => left - right), "random-number sorted example must be ascending");
 for (const [slug, example] of Object.entries(verifiedTextExamples)) {
   const runExample = () => processText(slug, example.input, example.secondText ?? "", example.option ?? "", example.amount ?? 1, "en");
   if (example.resultIsError) {
@@ -375,6 +401,8 @@ console.log(JSON.stringify({
   verifiedPhoneFormatterExamples: 2,
   verifiedSpecializedExamples: 5,
   verifiedLotteryExamples: lotteryEditorialSamples.length,
+   batch7DraftLocales: Object.keys(batch7EditorialDrafts).length,
+   verifiedBatch7SpecializedExamples: 4,
   duplicateTotals,
   expandedLocaleQuality,
   repeatedUsagePatterns,

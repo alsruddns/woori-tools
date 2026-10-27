@@ -76,3 +76,32 @@ The machine-readable [tool status ledger](tool-content-authorship-status.json) c
 - Ledger statuses for these five are `KO_DRAFT`; overall verified completion remains **28/176**. They are not included in the localized editorial registry and are not counted as complete.
 - Pending work: write and integrate all 26 locale versions; verify each described example against its processor or calculation library; run content audit, affected unit tests, TypeScript, lint, build and browser checks; then update statuses only after passing evidence.
 - No native-speaker review has been performed. No external translation service was used.
+
+
+### Batch 7 translation and engine checkpoint
+
+- Status is now `TRANSLATING`. Original Korean drafts and direct English, Japanese, and Simplified Chinese versions cover all five tools in `src/registry/tool-detail-editorials-batch-7-draft.ts`; this unpublished working file is intentionally separate from the live editorial registry until all 26 locales are ready.
+- The quality audit now runs concrete examples: Mini LOTO generation constraints, tarot deck size/unique IDs, the daily-fortune fixed selection vector, the Saju library result for 1990-05-17 12:00, and random-number count/range/uniqueness/sort properties. The five selected tools are not counted complete.
+- Locales authored so far: 4/26 (ko, en, ja, zh); native-speaker review has not been performed.
+
+
+### Batch 7 content checkpoint ? 2026-10-27
+
+- Original tool-specific editorial content is now authored for all five selected tools in all 26 published locales in `src/registry/tool-detail-editorials-batch-7-draft.ts`. The entries describe each tool?s distinct processor behavior, example, use steps, limits, and FAQ; native-speaker review has not been performed.
+- The editorial registry serves these entries while the ledger records `VALIDATING`. Verified completion remains 28/176 until all processor, SSR/SEO, browser, locale, lint/type, and build checks pass.
+- The checker exercises Mini LOTO?s 5-of-31 output, tarot deck size and unique IDs, the deterministic daily-fortune example, the Saju library vector and visible-element totals, and random-number count/range/uniqueness/order. Current aggregate route and sitemap count remains 4,576.
+
+
+## Batch 7 ? COMPLETE ? 2026-10-27
+
+| Tool | Result and evidence |
+|---|---|
+| `japan-mini-loto-number-generator` | 26 locale editorial cards describe five distinct numbers from 1?31, inclusion/exclusion and parity choices, one/five games, sorted output, no bonus number, and no prediction. Sample combination passed range/uniqueness checks; the actual processor generated a valid constrained game. |
+| `tarot-card` | 26 locale cards describe the 22-card Major Arcana, one/three distinct cards, orientation, topics, optional 240-character question, browser-only handling, and entertainment limits. Deck IDs were checked; the browser confirmed a unique three-card draw and valid orientations. |
+| `daily-fortune` | 26 locale cards describe deterministic selections from birth date plus device-local date, the five reading categories, lucky number/color, browser-only handling, and limits. The documented fixed vector matched `fortuneIndices`; browser output returned a lucky number in 1?6. |
+| `saju` | 26 locale cards document calendar choice, leap month, supported year ranges, KST/midnight boundary, equal visible-character element counts, and absent true-solar-time/hidden-stem weighting. The 1990-05-17 12:00 sample matched the `manseryeok` pillars ??/??/??/?? and element totals; browser rendered the result. |
+| `random-number` | 26 locale cards cover inclusive integer bounds, 1?100 count, uniqueness, sorting, safe-range limits, and changing random results. The live processor output passed count/range/uniqueness/order assertions; the browser did too. |
+
+Batch evidence: all 216 unit tests passed; content quality audit passed with 176 tools, 26 locales, 4,576 detail/sitemap entries, no English editorial fallbacks, and no noindex candidates. The audit now validates six lottery examples and four batch-7 processor examples. TypeScript, ESLint, `git diff --check`, and production build passed; build generated 4,866 static pages. Playwright passed 7/7 tests, including SSR and canonical/hreflang/x-default checks for the 130 batch-7 locale pages, no hidden editorial cards, eight viewport widths for authored Korean pages, and tool execution checks. Duplicate audit counts remained at the prior 171 repeated FAQ sets, 52 exact how-to sets, and 1,060 near-duplicate candidates; batch 7 introduced no new exact description/example/FAQ duplicate set. Native-speaker review was not performed.
+
+The ledger now records 33/176 COMPLETE (143 remaining). Next selected PENDING batch: `random-name-picker`, `random-wheel`, `draw-lots`, `random-team-maker`, `random-order`. Continue without reauthoring verified content.
