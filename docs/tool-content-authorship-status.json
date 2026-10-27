@@ -1,13 +1,11 @@
 {
   "schemaVersion": 1,
   "publicToolCount": 176,
-  "completeCount": 168,
+  "completeCount": 173,
   "nextBatch": [
-    "italy-number-format-converter",
-    "italian-date-format-converter",
-    "us-phone-number-formatter",
-    "us-zip-code-formatter",
-    "canada-postal-code-formatter"
+    "uk-postcode-formatter",
+    "australia-postcode-formatter",
+    "english-date-format-converter"
   ],
   "tools": [
     {
@@ -852,28 +850,28 @@
     },
     {
       "slug": "italy-number-format-converter",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": 35
     },
     {
       "slug": "italian-date-format-converter",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": 35
     },
     {
       "slug": "us-phone-number-formatter",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": 35
     },
     {
       "slug": "us-zip-code-formatter",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": 35
     },
     {
       "slug": "canada-postal-code-formatter",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": 35
     },
     {
       "slug": "uk-postcode-formatter",

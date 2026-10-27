@@ -592,3 +592,15 @@ Selected dutch-date-format-converter, vietnam-phone-number-formatter, vietnam-nu
 Completed dutch-date-format-converter, vietnam-phone-number-formatter, vietnam-number-format-converter, italy-fiscal-code-format-validator, and italy-vat-number-validator. All five have original content in 26 locales, specific verified examples, limits, troubleshooting, and FAQs. Processor tests passed (16); content audit, TypeScript, ESLint, diff check, production build (4,866 static pages), and Playwright (3/3: SSR/SEO across 50 routes, five browser workflows, 320px/390px mobile widths) passed. No native-speaker review was performed. Global historical repetition counts remain recorded for editorial review.
 
 The ledger records 168/176 COMPLETE (8 remaining). Continue with the next PENDING tools in the ledger.
+
+
+## Batch 35 IN PROGRESS - 2026-10-28
+
+Selected italy-number-format-converter, italian-date-format-converter, us-phone-number-formatter, us-zip-code-formatter, and canada-postal-code-formatter. Verified example outputs and drafted Korean notes in docs/tool-content-authorship-batch-35-ko-draft.md. Locale content and browser/SSR checks are underway; these tools remain outside COMPLETE.
+
+
+## Batch 35 COMPLETE - 2026-10-28
+
+Completed italy-number-format-converter, italian-date-format-converter, us-phone-number-formatter, us-zip-code-formatter, and canada-postal-code-formatter with 26 locale original content for each. Processor tests passed (17), with verified Italian number and date round trip, US phone and ZIP, and Canadian postal examples. Content audit, TypeScript, ESLint, diff check, production build (4,866 static pages), and Playwright (3/3: SSR/SEO across 50 routes, five example workflows, 320px/390px mobile widths) passed. No native-speaker review was performed.
+
+The ledger records 173/176 COMPLETE (3 remaining). Next are uk-postcode-formatter, australia-postcode-formatter, and english-date-format-converter.

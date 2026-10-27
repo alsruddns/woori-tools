@@ -125,6 +125,15 @@ test("Vietnamese phone and number examples and Italian identifier checks match t
   assert.deepEqual(tools.validateItalianVat("01114601007"), { valid:false, level:"checksum" });
 });
 
+test("Italian number and date plus North American phone and postal examples match processors", () => {
+  assert.equal(tools.formatNumber("1234567.89", "italy-number-format-converter"), "1.234.567,89");
+  assert.equal(tools.convertLocalizedDate("2026-10-13", "IT"), "13/10/2026");
+  assert.equal(tools.convertLocalizedDate("13/10/2026", "IT", "to-iso"), "2026-10-13");
+  assert.equal(tools.formatPhone("us-phone-number-formatter", "2125550123"), "+1 (212) 555-0123");
+  assert.equal(tools.formatUsZip("123456789"), "12345-6789");
+  assert.equal(tools.formatCanadaPostalCode("k1a0b1"), "K1A 0B1");
+});
+
 test("localized dates round trip with leap-day validation and explicit US or UK order", () => {
   assert.equal(tools.convertLocalizedDate("2026-10-13", "ES"), "13/10/2026");
   assert.equal(tools.convertLocalizedDate("2026-10-13", "NL"), "13-10-2026");
