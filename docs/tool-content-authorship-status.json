@@ -87,28 +87,28 @@
     },
     {
       "slug": "random-seat",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-9"
     },
     {
       "slug": "duty-picker",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-9"
     },
     {
       "slug": "dice-roller",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-9"
     },
     {
       "slug": "coin-flip",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-9"
     },
     {
       "slug": "stopwatch",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-9"
     },
     {
       "slug": "timer",

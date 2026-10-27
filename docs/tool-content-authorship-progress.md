@@ -127,3 +127,9 @@ The ledger now records 33/176 COMPLETE (143 remaining). Next selected PENDING ba
 Batch evidence: all 216 unit tests passed; content audit confirms all 176 tools, 26 locales, 4,576 localized detail/sitemap URLs, no English editorial fallback, no noindex candidates, and no new exact duplicate sets. The audit checks all five batch-8 editorials across all 26 locales and five random behavior examples. TypeScript, ESLint, `git diff --check`, and production build passed; build generated 4,866 static pages. Playwright passed 8/8 tests, including SSR and canonical/hreflang/x-default checks for 260 batch-8 locale pages, visible cards without hidden content, eight viewport widths for authored Korean pages, and live operations for all five tools. The global repeated FAQ/how-to and near-duplicate candidate counts remain unchanged from the previous audit. Native-speaker review was not performed.
 
 The ledger now records 38/176 COMPLETE (138 remaining). Next selected PENDING batch: `random-seat`, `duty-picker`, `dice-roller`, `coin-flip`, `stopwatch`. Continue without reauthoring verified content.
+
+
+## Batch 9 checkpoint — 2026-10-27
+
+- 한국어 원고 초안을 docs/tool-content-authorship-batch-9-ko-draft.md에 기록했습니다. 좌석 용량/중복 이름, 당번 순환 배정, 주사위 화면별 개수 제한, 동전 앞면 비율, 스톱워치 랩 동작을 소스 기준으로 구분했습니다.
+- 원장은 다섯 도구를 KO_DRAFT로 표시하며 검증 완료 수는 **38/176** 그대로입니다. 다음 단계는 26개 locale 원고, processor 예제, SSR/SEO 및 브라우저 검증입니다.
