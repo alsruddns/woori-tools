@@ -121,11 +121,12 @@ for (const locale of locales) {
   assert.ok(repeatedStep2.length <= 8, `${locale}: too many shared action-step variants (${repeatedStep2.length})`);
 
   const normalized = descriptions.map(({ slug, text }) => ({ slug, value: text.toLocaleLowerCase().replace(/[\p{P}\p{S}\s]/gu, "") }));
+  const grams = (value: string) => new Set(Array.from({ length: value.length - 2 }, (_, n) => value.slice(n, n + 3)));
+  const gramSets = normalized.map(({ value }) => grams(value));
   for (let i = 0; i < normalized.length; i++) for (let j = i + 1; j < normalized.length; j++) {
     const a = normalized[i].value, b = normalized[j].value;
     if (Math.min(a.length, b.length) < 24) continue;
-    const grams = (s: string) => new Set(Array.from({ length: s.length - 2 }, (_, n) => s.slice(n, n + 3)));
-    const ga = grams(a), gb = grams(b);
+    const ga = gramSets[i], gb = gramSets[j];
     let intersection = 0;
     for (const gram of ga) if (gb.has(gram)) intersection++;
     const score = (2 * intersection) / (ga.size + gb.size);
@@ -166,6 +167,13 @@ for (const locale of publishedTargetLocales.filter((item) => !locales.includes(i
   };
   const english = tools.map((tool) => localizeTool(tool, "en").description);
   const englishDescriptionFallbacks = translations.filter((translation, index) => translation.description === english[index]).length;
+  const lotterySlugs = ["lotto-number-generator", "powerball-number-generator", "mega-millions-number-generator", "japan-loto6-number-generator", "japan-loto7-number-generator", "japan-mini-loto-number-generator"];
+  const lotterySteps = lotterySlugs.map((slug) => translations[tools.findIndex((tool) => tool.slug === slug)].steps.join("\n"));
+  assert.equal(new Set(lotterySteps).size, lotterySlugs.length, `${locale}: lottery how-to must reflect each game's number rules`);
+  const powerballSteps = translations[tools.findIndex((tool) => tool.slug === "powerball-number-generator")].steps.join(" ");
+  const megaSteps = translations[tools.findIndex((tool) => tool.slug === "mega-millions-number-generator")].steps.join(" ");
+  assert.ok(powerballSteps.includes("Powerball") && powerballSteps.includes("69") && /(?:26|২৬)/u.test(powerballSteps), `${locale}: Powerball how-to must state the white-ball and Powerball ranges`);
+  assert.ok(megaSteps.includes("Mega Ball") && megaSteps.includes("70") && /(?:24|২৪)/u.test(megaSteps), `${locale}: Mega Millions how-to must state the main-ball and Mega Ball ranges`);
   expandedLocaleQuality[locale] = {
     tools: translations.length,
     exactDescriptionDuplicates: duplicateCount(translations.map(({ description }) => description)),
@@ -178,11 +186,12 @@ for (const locale of publishedTargetLocales.filter((item) => !locales.includes(i
   };
   assert.equal(englishDescriptionFallbacks, 0, `${locale}: published descriptions fell back to English`);
   const normalized = translations.map(({ description }, index) => ({ slug: tools[index].slug, value: description.toLocaleLowerCase().replace(/[\p{P}\p{S}\s]/gu, "") }));
+  const grams = (value: string) => new Set(Array.from({ length: value.length - 2 }, (_, n) => value.slice(n, n + 3)));
+  const gramSets = normalized.map(({ value }) => grams(value));
   for (let i = 0; i < normalized.length; i++) for (let j = i + 1; j < normalized.length; j++) {
     const a = normalized[i].value, b = normalized[j].value;
     if (Math.min(a.length, b.length) < 24) continue;
-    const grams = (s: string) => new Set(Array.from({ length: s.length - 2 }, (_, n) => s.slice(n, n + 3)));
-    const ga = grams(a), gb = grams(b);
+    const ga = gramSets[i], gb = gramSets[j];
     let intersection = 0;
     for (const gram of ga) if (gb.has(gram)) intersection++;
     const score = (2 * intersection) / (ga.size + gb.size);

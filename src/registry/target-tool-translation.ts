@@ -32,7 +32,7 @@ export function getTargetToolTranslation(locale: PlannedLocale, slug: string): T
         : locale === "fil"
           ? getTargetFilipinoToolTranslation(slug) ?? getTargetLotteryTranslation(locale, slug)
           : isSevenTargetLocale(locale)
-            ? getTargetSevenToolTranslation(locale, slug) ?? getTargetLotteryTranslation(locale, slug)
+            ? getTargetLotteryTranslation(locale, slug) ?? getTargetSevenToolTranslation(locale, slug)
             : undefined;
 
   return translation;
