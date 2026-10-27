@@ -11,11 +11,9 @@ export function VerifiedTextExample({ slug, toolName, labels }: Props) {
   if (!example) return null;
 
   return (
-    <details className="mt-4 rounded-xl border border-indigo-200 bg-indigo-50/60 p-4">
-      <summary className="cursor-pointer font-semibold text-indigo-950">
-        {toolName}: {labels.input} / {labels.result}
-      </summary>
-      <div className="mt-4 grid gap-3 md:grid-cols-2">
+    <section aria-label={`${toolName}: ${labels.input} / ${labels.result}`} className="mt-4 min-w-0 rounded-2xl border border-indigo-200 bg-indigo-50/60 p-4 [overflow-wrap:anywhere] sm:p-6">
+      <h2 className="font-semibold text-indigo-950">{toolName}: {labels.input} / {labels.result}</h2>
+      <div className="mt-4 grid min-w-0 gap-3 md:grid-cols-2">
         <div className="min-w-0">
           <h3 className="text-sm font-medium text-slate-700">{labels.input}</h3>
           <pre className="mt-2 max-h-56 overflow-auto whitespace-pre-wrap break-words rounded-lg bg-white p-3 text-sm text-slate-900">{example.input}</pre>
@@ -31,6 +29,6 @@ export function VerifiedTextExample({ slug, toolName, labels }: Props) {
           <pre className="mt-2 max-h-56 overflow-auto whitespace-pre-wrap break-words rounded-lg bg-white p-3 text-sm text-slate-900">{example.output}</pre>
         </div>
       </div>
-    </details>
+    </section>
   );
 }
