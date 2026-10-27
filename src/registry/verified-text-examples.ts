@@ -9,6 +9,7 @@ export type VerifiedTextExample = {
 };
 
 export const verifiedTextExamples: Record<string, VerifiedTextExample> = {
+  "character-count": { input: "Woori Tools", output: "Characters (with spaces): 11\nCharacters (without spaces): 10\nLines: 1\nWords: 2" },
   "json-formatter": { input: '{"name":"Mina","active":true}', output: '{\n  "name": "Mina",\n  "active": true\n}' },
   "json-validator": { input: '{"name":}', output: "", resultIsError: true },
   "json-to-yaml": { input: '{"name":"Mina","active":true}', output: "name: Mina\nactive: true\n" },

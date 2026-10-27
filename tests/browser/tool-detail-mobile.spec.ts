@@ -3,6 +3,31 @@ import { expect, test } from "@playwright/test";
 const locales = ["ko", "en", "ja", "zh", "es", "pt-br", "de", "fr", "vi", "id", "th", "zh-tw", "it", "nl", "hi", "ru", "tr", "pl", "fil", "bn", "uk", "ms", "sv", "cs", "ro", "el"];
 const viewports = [320, 360, 375, 390, 430, 768, 1024, 1440];
 const selectedTools = ["json-formatter", "json-validator"];
+const koreanTextBatch = ["character-count", "remove-spaces", "remove-line-breaks", "remove-duplicate-lines", "reverse-text"];
+
+test("Korean text-tool editorial cards are server-rendered and fit the mobile viewport set", async ({ request, page, baseURL }) => {
+  for (const slug of koreanTextBatch) {
+    const route = `${baseURL}/ko/tools/${slug}`;
+    const response = await request.get(route);
+    expect(response.status(), route).toBe(200);
+    const html = await response.text();
+    expect(html, route).toContain('data-testid="tool-detail-editorial"');
+    expect(html, route).toContain("도구별 질문");
+    expect(html, route).toContain("</p>");
+    expect(html, route).toContain('rel="canonical"');
+    expect(html, route).toContain("x-default");
+    expect(html, route).not.toMatch(/<meta[^>]+name="robots"[^>]+content="[^"]*noindex/i);
+
+    await page.goto(route, { waitUntil: "domcontentloaded" });
+    for (const width of viewports) {
+      await page.setViewportSize({ width, height: 900 });
+      await expect(page.locator("[data-testid=tool-detail-editorial] article").first()).toBeVisible();
+      const dimensions = await page.evaluate(() => ({ document: document.documentElement.scrollWidth, body: document.body.scrollWidth }));
+      expect(dimensions.document, `${slug} document overflow at ${width}px`).toBeLessThanOrEqual(width);
+      expect(dimensions.body, `${slug} body overflow at ${width}px`).toBeLessThanOrEqual(width);
+    }
+  }
+});
 
 test("all authored locale pages render editorial cards in initial server HTML", async ({ request, baseURL }) => {
   const routes = locales.flatMap((locale) => selectedTools.map((slug) => `${baseURL}/${locale}/tools/${slug}`));
