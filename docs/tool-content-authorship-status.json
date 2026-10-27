@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
   "publicToolCount": 176,
-  "completeCount": 108,
+  "completeCount": 113,
   "nextBatch": [
-    "csv-to-json",
-    "json-to-csv",
-    "base64",
-    "url-encode-decode",
-    "uuid-generator"
+    "timestamp-converter",
+    "wareki-converter",
+    "yakudoshi-calculator",
+    "japanese-zodiac-calculator",
+    "numbers3-number-generator"
   ],
   "tools": [
     {
@@ -527,28 +527,28 @@
     },
     {
       "slug": "csv-to-json",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-23"
     },
     {
       "slug": "json-to-csv",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-23"
     },
     {
       "slug": "base64",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-23"
     },
     {
       "slug": "url-encode-decode",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-23"
     },
     {
       "slug": "uuid-generator",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-23"
     },
     {
       "slug": "timestamp-converter",

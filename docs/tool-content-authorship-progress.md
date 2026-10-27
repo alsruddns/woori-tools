@@ -412,3 +412,23 @@ The ledger records **103/176 COMPLETE** (73 remaining). Next PENDING batch: pdf-
 All five have authored cards in 26 locales, distinct use cases and FAQ questions, and no English field fallback. Content audit reports 176 public tools, 4,576 localized detail URLs, zero noindex candidates, and 26 batch locales. All 216 unit tests, TypeScript, ESLint, git diff --check, and production build passed; build generated 4,866 static pages. Playwright passed 3/3 tests: SSR/SEO on 50 routes, actual PDF and text conversion workflows, and 320px/390px mobile checks. No native-speaker review was performed. The audit still reports 171 repeated FAQ-question groups and 52 exact how-to sets globally.
 
 The ledger records **108/176 COMPLETE** (68 remaining). Next PENDING batch: csv-to-json, json-to-csv, base64, url-encode-decode, uuid-generator. Continue without reauthoring verified editorials.
+
+## Batch 23 checkpoint - 2026-10-27
+
+- Selected csv-to-json, json-to-csv, ase64, url-encode-decode, and uuid-generator from PENDING.
+- Confirmed processor rules: CSV parsing uses detected delimiter, first row as headers, skips empty lines and dynamically types values; JSON-to-CSV accepts an array of objects. Base64 encodes UTF-8 bytes and decodes with browser Base64 APIs. URL conversion uses encodeURIComponent/decodeURIComponent. UUID generation uses crypto.randomUUID and clamps count to 1-100.
+- Korean drafts are in progress; verified completion remains **108/176**.
+
+## Batch 23 COMPLETE - 2026-10-27
+
+| Tool | Verified behavior |
+|---|---|
+| csv-to-json | Browser converted a headed CSV row into an object and verified string, boolean, and numeric types. |
+| json-to-csv | Browser generated CSV for an object array and correctly quoted a value containing a comma. |
+| ase64 | Browser encoded Hello to Base64 and decoded UTF-8 Korean text back successfully. |
+| url-encode-decode | Browser percent-encoded spaces, slash, and Hangul in one URL component as documented. |
+| uuid-generator | Browser generated three distinct UUID v4 values. |
+
+All five have unique cards across 26 locales, distinct use cases and FAQs, and no English field fallback. Content audit remains at 176 public tools, 4,576 localized detail URLs, and zero noindex candidates. All 216 unit tests, TypeScript, ESLint, content checks, git diff --check, and production build passed; build generated 4,866 static pages. Playwright passed 3/3 tests: SSR/SEO on 50 routes, real data conversions, and 320px/390px mobile checks. No native-speaker review was performed. The global duplicate audit remains 171 repeated FAQ-question groups and 52 exact how-to sets.
+
+The ledger records **113/176 COMPLETE** (63 remaining). Next PENDING batch: timestamp-converter, wareki-converter, yakudoshi-calculator, japanese-zodiac-calculator, numbers3-number-generator. Continue without reauthoring verified editorials.
