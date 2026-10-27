@@ -1,39 +1,39 @@
 {
   "schemaVersion": 1,
   "publicToolCount": 176,
-  "completeCount": 23,
+  "completeCount": 28,
   "nextBatch": [
-    "lotto-number-generator",
-    "powerball-number-generator",
-    "mega-millions-number-generator",
-    "japan-loto6-number-generator",
-    "japan-loto7-number-generator"
+    "japan-mini-loto-number-generator",
+    "tarot-card",
+    "daily-fortune",
+    "saju",
+    "random-number"
   ],
   "tools": [
     {
       "slug": "lotto-number-generator",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-6"
     },
     {
       "slug": "powerball-number-generator",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-6"
     },
     {
       "slug": "mega-millions-number-generator",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-6"
     },
     {
       "slug": "japan-loto6-number-generator",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-6"
     },
     {
       "slug": "japan-loto7-number-generator",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-6"
     },
     {
       "slug": "japan-mini-loto-number-generator",

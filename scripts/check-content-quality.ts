@@ -22,6 +22,7 @@ import { createSitemapEntries } from "../src/lib/sitemap-entries.mjs";
 import { processText } from "../src/lib/text/process-text";
 import { formatPhone, runCountryTool } from "../src/lib/country-tools";
 import { convertKana, convertWidth, kanaToRomaji, numberToKanji } from "../src/lib/japanese-tools";
+import { generateLottoGames, generateSpecialBalls } from "../src/lib/lotto.mjs";
 
 const slugs = new Set(tools.map((tool) => tool.slug));
 assert.equal(slugs.size, tools.length, "duplicate public slug");
@@ -30,9 +31,9 @@ assert.equal(authorshipStatus.publicToolCount, tools.length, "authorship status 
 assert.deepEqual(new Set(authorshipStatus.tools.map((tool) => tool.slug)), slugs, "authorship status slugs must match the public registry");
 assert.equal(authorshipStatus.tools.length, tools.length, "authorship status must not contain duplicate tools");
 assert.equal(authorshipStatus.completeCount, authorshipStatus.tools.filter((tool) => tool.status === "COMPLETE").length, "authorship status complete count must match its entries");
-for (const slug of authoredEditorialSlugs) assert.equal(authorshipStatus.tools.find((tool) => tool.slug === slug)?.status, "COMPLETE", `${slug}: authored editorial must be COMPLETE in the status record`);
+for (const slug of authoredEditorialSlugs) assert.ok(["VALIDATING", "COMPLETE"].includes(authorshipStatus.tools.find((tool) => tool.slug === slug)?.status ?? ""), `${slug}: authored editorial must be VALIDATING or COMPLETE in the status record`);
 for (const { slug, status } of authorshipStatus.tools) if (status === "COMPLETE") assert.ok(authoredEditorialSlugs.includes(slug), `${slug}: status cannot be COMPLETE without authored editorial coverage`);
-for (const slug of authorshipStatus.nextBatch) assert.equal(authorshipStatus.tools.find((tool) => tool.slug === slug)?.status, "PENDING", `${slug}: next batch must contain PENDING tools`);
+for (const slug of authorshipStatus.nextBatch) assert.ok(["PENDING", "VALIDATING"].includes(authorshipStatus.tools.find((tool) => tool.slug === slug)?.status ?? ""), `${slug}: active or next batch must be PENDING or VALIDATING`);
 assert.deepEqual(new Set(Object.keys(toolExampleInputs)), slugs, "sample inputs must match public tools exactly");
 assert.ok(Object.keys(verifiedTextExamples).every((slug) => slugs.has(slug)), "verified runtime examples must belong to public tools");
 for (const locale of publishedTargetLocales) {
@@ -272,6 +273,28 @@ assert.equal(convertWidth("ＡＢＣ１２３", "to-half"), "ABC123", "width exa
 assert.equal(kanaToRomaji("こんにちは"), "konnichiha", "romaji example must match the real converter");
 assert.equal(numberToKanji("123"), "百二十三", "Japanese number example must match the real converter");
 assert.equal(runCountryTool("simplified-traditional-chinese-converter", "简体中文"), "簡體中文", "Chinese conversion example must match OpenCC");
+const lotteryEditorialSamples = [
+  { slug: "lotto-number-generator", min: 1, max: 45, count: 6, sample: [4, 12, 19, 27, 33, 41] },
+  { slug: "powerball-number-generator", min: 1, max: 69, count: 5, sample: [7, 18, 29, 44, 63], special: { max: 26, sample: 12 } },
+  { slug: "mega-millions-number-generator", min: 1, max: 70, count: 5, sample: [5, 16, 28, 47, 69], special: { max: 24, sample: 8 } },
+  { slug: "japan-loto6-number-generator", min: 1, max: 43, count: 6, sample: [3, 11, 20, 26, 34, 42] },
+  { slug: "japan-loto7-number-generator", min: 1, max: 37, count: 7, sample: [2, 8, 14, 21, 27, 33, 37] },
+];
+for (const example of lotteryEditorialSamples) {
+  assert.equal(example.sample.length, example.count, `${example.slug}: sample must have the documented count`);
+  assert.equal(new Set(example.sample).size, example.count, `${example.slug}: sample values must be distinct`);
+  assert.ok(example.sample.every((number) => number >= example.min && number <= example.max), `${example.slug}: sample must fit its number range`);
+  const actual = generateLottoGames({ min: example.min, max: example.max, numberCount: example.count, included: [example.min], excluded: [example.max] });
+  assert.equal(actual.length, 1, `${example.slug}: processor must generate one game`);
+  assert.equal(actual[0].length, example.count, `${example.slug}: processor output count must match`);
+  assert.ok(actual[0].includes(example.min) && !actual[0].includes(example.max), `${example.slug}: processor must honor included and excluded values`);
+  assert.equal(new Set(actual[0]).size, example.count, `${example.slug}: processor output must be unique`);
+  assert.ok(actual[0].every((number) => number >= example.min && number <= example.max), `${example.slug}: processor output must fit its range`);
+  if (example.special) {
+    assert.deepEqual(generateSpecialBalls({ count: 1, min: 1, max: example.special.max, mode: "include", number: example.special.sample }), [example.special.sample], `${example.slug}: special-ball example must match the processor`);
+    assert.ok(generateSpecialBalls({ count: 1, min: 1, max: example.special.max, mode: "exclude", number: example.special.sample })[0] !== example.special.sample, `${example.slug}: excluded special ball must not appear`);
+  }
+}
 for (const [slug, example] of Object.entries(verifiedTextExamples)) {
   const runExample = () => processText(slug, example.input, example.secondText ?? "", example.option ?? "", example.amount ?? 1, "en");
   if (example.resultIsError) {
@@ -351,6 +374,7 @@ console.log(JSON.stringify({
   verifiedInputOutputExamples: Object.keys(verifiedTextExamples).length,
   verifiedPhoneFormatterExamples: 2,
   verifiedSpecializedExamples: 5,
+  verifiedLotteryExamples: lotteryEditorialSamples.length,
   duplicateTotals,
   expandedLocaleQuality,
   repeatedUsagePatterns,

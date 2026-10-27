@@ -2,8 +2,8 @@ import { expect, test } from "@playwright/test";
 
 const locales = ["ko", "en", "ja", "zh", "es", "pt-br", "de", "fr", "vi", "id", "th", "zh-tw", "it", "nl", "hi", "ru", "tr", "pl", "fil", "bn", "uk", "ms", "sv", "cs", "ro", "el"];
 const viewports = [320, 360, 375, 390, 430, 768, 1024, 1440];
-const selectedTools = ["json-formatter", "json-validator", "character-count", "remove-spaces", "remove-line-breaks", "remove-duplicate-lines", "reverse-text", "add-line-numbers", "remove-line-numbers", "remove-empty-lines", "remove-characters", "text-repeater", "sort-lines", "shuffle-lines", "text-case-converter", "text-compare", "remove-duplicate-words", "text-to-file", "hiragana-katakana-converter", "fullwidth-halfwidth-converter", "japanese-romaji-converter", "japanese-number-kanji-converter", "simplified-traditional-chinese-converter"];
-const koreanTextBatch = ["character-count", "remove-spaces", "remove-line-breaks", "remove-duplicate-lines", "reverse-text", "add-line-numbers", "remove-line-numbers", "remove-empty-lines", "remove-characters", "text-repeater", "sort-lines", "shuffle-lines", "text-case-converter", "text-compare", "remove-duplicate-words", "text-to-file", "hiragana-katakana-converter", "fullwidth-halfwidth-converter", "japanese-romaji-converter", "japanese-number-kanji-converter", "simplified-traditional-chinese-converter"];
+const selectedTools = ["json-formatter", "json-validator", "character-count", "remove-spaces", "remove-line-breaks", "remove-duplicate-lines", "reverse-text", "add-line-numbers", "remove-line-numbers", "remove-empty-lines", "remove-characters", "text-repeater", "sort-lines", "shuffle-lines", "text-case-converter", "text-compare", "remove-duplicate-words", "text-to-file", "hiragana-katakana-converter", "fullwidth-halfwidth-converter", "japanese-romaji-converter", "japanese-number-kanji-converter", "simplified-traditional-chinese-converter", "lotto-number-generator", "powerball-number-generator", "mega-millions-number-generator", "japan-loto6-number-generator", "japan-loto7-number-generator"];
+const koreanTextBatch = ["character-count", "remove-spaces", "remove-line-breaks", "remove-duplicate-lines", "reverse-text", "add-line-numbers", "remove-line-numbers", "remove-empty-lines", "remove-characters", "text-repeater", "sort-lines", "shuffle-lines", "text-case-converter", "text-compare", "remove-duplicate-words", "text-to-file", "hiragana-katakana-converter", "fullwidth-halfwidth-converter", "japanese-romaji-converter", "japanese-number-kanji-converter", "simplified-traditional-chinese-converter", "lotto-number-generator", "powerball-number-generator", "mega-millions-number-generator", "japan-loto6-number-generator", "japan-loto7-number-generator"];
 
 test("Korean text-tool editorial cards are server-rendered and fit the mobile viewport set", async ({ request, page, baseURL }) => {
   for (const slug of koreanTextBatch) {
@@ -159,4 +159,29 @@ test("Japanese and Chinese conversion examples run in the browser", async ({ pag
   await page.locator("fieldset button").first().click();
   await page.getByRole("button", { name: "Run", exact: true }).click();
   await expect(page.locator("main > section").first().locator("pre")).toHaveText("簡體中文");
+});
+
+test("lottery tools produce valid game shapes in the browser", async ({ page, baseURL }) => {
+  const samples = [
+    { slug: "lotto-number-generator", mainCount: 6, max: 45, specialMax: null },
+    { slug: "powerball-number-generator", mainCount: 5, max: 69, specialMax: 26 },
+    { slug: "mega-millions-number-generator", mainCount: 5, max: 70, specialMax: 24 },
+    { slug: "japan-loto6-number-generator", mainCount: 6, max: 43, specialMax: null },
+    { slug: "japan-loto7-number-generator", mainCount: 7, max: 37, specialMax: null },
+  ];
+  for (const sample of samples) {
+    await page.goto(`${baseURL}/en/tools/${sample.slug}`);
+    await page.getByRole("button", { name: "Draw numbers", exact: true }).click();
+    const game = page.locator("main > section").first().locator("section.mt-6 article").first();
+    await expect(game).toBeVisible();
+    const mainNumbers = (await game.locator("span.bg-indigo-100").allTextContents()).map(Number);
+    expect(mainNumbers).toHaveLength(sample.mainCount);
+    expect(new Set(mainNumbers).size).toBe(sample.mainCount);
+    expect(mainNumbers.every((number) => number >= 1 && number <= sample.max)).toBe(true);
+    if (sample.specialMax !== null) {
+      const special = Number(await game.locator("span.bg-rose-100").textContent());
+      expect(special).toBeGreaterThanOrEqual(1);
+      expect(special).toBeLessThanOrEqual(sample.specialMax);
+    }
+  }
 });
