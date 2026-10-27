@@ -53,6 +53,7 @@ import { batch29EditorialDrafts } from "../src/registry/tool-detail-editorials-b
 import { batch30EditorialDrafts } from "../src/registry/tool-detail-editorials-batch-30";
 import { batch31EditorialDrafts } from "../src/registry/tool-detail-editorials-batch-31";
 import { batch32EditorialDrafts } from "../src/registry/tool-detail-editorials-batch-32";
+import { batch33EditorialDrafts } from "../src/registry/tool-detail-editorials-batch-33";
 import { batch10PomodoroCorrections } from "../src/registry/tool-detail-editorials-batch-10-corrections";
 import { pickUnique, secureShuffle } from "../src/lib/random";
 import { divideEvenly, normalizeWheelItems, rollDice } from "../src/lib/random-tools.mjs";
@@ -581,6 +582,19 @@ for (const [locale, drafts] of Object.entries(batch32EditorialDrafts)) {
   }
 }
 
+const batch33Slugs = ["brazil-cnpj-validator", "brazil-phone-number-formatter", "brazil-cep-formatter", "netherlands-iban-validator", "dutch-number-format-converter"];
+assert.deepEqual(new Set(Object.keys(batch33EditorialDrafts)), new Set(publishedTargetLocales), "batch 33 editorial drafts must cover every published locale");
+for (const [locale, drafts] of Object.entries(batch33EditorialDrafts)) {
+  assert.deepEqual(new Set(Object.keys(drafts ?? {})), new Set(batch33Slugs), locale + ": batch 33 drafts must cover all five selected tools");
+  assert.equal(new Set(batch33Slugs.map((slug) => drafts?.[slug]?.faqQuestion)).size, batch33Slugs.length, locale + ": batch 33 FAQ questions must be distinct by tool");
+  assert.equal(new Set(batch33Slugs.map((slug) => drafts?.[slug]?.useCase)).size, batch33Slugs.length, locale + ": batch 33 use cases must be distinct by tool");
+  for (const slug of batch33Slugs) {
+    const editorial = drafts?.[slug];
+    assert.ok(editorial && [editorial.principle, editorial.useCase, editorial.troubleshooting, editorial.faqQuestion, editorial.faqAnswer].every((value) => value.trim()), locale + "/" + slug + ": batch 33 fields must be populated");
+    if (locale !== "en" && editorial) for (const field of ["principle", "useCase", "troubleshooting", "faqQuestion", "faqAnswer"] as const) assert.notEqual(editorial[field], batch33EditorialDrafts.en?.[slug]?.[field], locale + "/" + slug + ": " + field + " must not fall back to English");
+  }
+}
+
 const batch31Slugs = ["german-number-format-converter", "german-date-format-converter", "spain-dni-validator", "spain-nie-validator", "spanish-number-format-converter"];
 assert.deepEqual(new Set(Object.keys(batch31EditorialDrafts)), new Set(publishedTargetLocales), "batch 31 editorial drafts must cover every published locale");
 for (const [locale, drafts] of Object.entries(batch31EditorialDrafts)) {
@@ -790,6 +804,7 @@ console.log(JSON.stringify({
    batch30DraftLocales: Object.keys(batch30EditorialDrafts).length,
    batch31DraftLocales: Object.keys(batch31EditorialDrafts).length,
    batch32DraftLocales: Object.keys(batch32EditorialDrafts).length,
+  batch33DraftLocales: Object.keys(batch33EditorialDrafts).length,
   duplicateTotals,
   expandedLocaleQuality,
   repeatedUsagePatterns,

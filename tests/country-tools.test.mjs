@@ -62,10 +62,13 @@ test("CPF checksum and numeric or alphanumeric CNPJ checksum validate", () => {
   assert.deepEqual(tools.validateCnpj("11.222.333/0001-81"), { valid:true, level:"checksum" });
   assert.deepEqual(tools.validateCnpj("12.ABC.345/01DE-35"), { valid:true, level:"checksum" });
   assert.equal(tools.validateCnpj("12.ABC.345/01DE-34").valid, false);
+  assert.equal(tools.validateCnpj("12.ABC.345/01DE-34").level, "checksum");
 });
 test("phone and date formatters validate supported local patterns", () => {
   assert.equal(tools.formatPhone("france-phone-number-formatter", "0612345678"), "+33 6 12 34 56 78");
   assert.equal(tools.formatPhone("brazil-phone-number-formatter", "11987654321"), "+55 (11) 98765-4321");
+  assert.equal(tools.formatPhone("brazil-phone-number-formatter", "+55 (11) 98765-4321"), "+55 (11) 98765-4321");
+  assert.throws(() => tools.formatPhone("brazil-phone-number-formatter", "12345"), { message: "invalid-phone" });
   assert.equal(tools.convertDate("2026-10-13", "DE"), "13.10.2026");
   assert.equal(tools.convertDate("2026-10-13", "FR"), "13/10/2026");
   assert.throws(() => tools.convertDate("2026-02-30", "FR"));
@@ -98,10 +101,19 @@ test("postal formatters normalize valid ZIP, Canadian, UK, Brazilian, and Austra
   assert.equal(tools.formatUkPostcode("sw1a1aa"), "SW1A 1AA");
   assert.equal(tools.formatUkPostcode("GIR 0AA"), "GIR 0AA");
   assert.equal(tools.formatBrazilCep("01001000"), "01001-000");
+  assert.equal(tools.formatBrazilCep("01310-930"), "01310-930");
+  assert.throws(() => tools.formatBrazilCep("0131093"), { message: "invalid-postal-code" });
   assert.deepEqual(tools.validateAustraliaPostcode("2000"), { valid:true, level:"format" });
   assert.throws(() => tools.formatCanadaPostalCode("D1A 0B1"));
   assert.throws(() => tools.formatUkPostcode("ABCDE"));
   assert.throws(() => tools.formatUsZip("1234"));
+});
+
+test("Dutch IBAN structure and MOD 97 and Dutch number notation match their examples", () => {
+  assert.deepEqual(tools.validateIban("NL", "NL91ABNA0417164300"), { valid:true, level:"checksum" });
+  assert.deepEqual(tools.validateIban("NL", "NL91 ABNA 0417 1643 01"), { valid:false, level:"checksum" });
+  assert.deepEqual(tools.validateIban("NL", "DE89370400440532013000"), { valid:false, level:"format" });
+  assert.equal(tools.formatNumber("1234567.89", "dutch-number-format-converter"), "1.234.567,89");
 });
 
 test("localized dates round trip with leap-day validation and explicit US or UK order", () => {

@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
   "publicToolCount": 176,
-  "completeCount": 158,
+  "completeCount": 163,
   "nextBatch": [
-    "netherlands-iban-validator",
-    "dutch-number-format-converter",
-    "brazil-phone-number-formatter",
-    "brazil-cnpj-validator",
-    "brazil-cep-formatter"
+    "dutch-date-format-converter",
+    "vietnam-phone-number-formatter",
+    "vietnam-number-format-converter",
+    "italy-fiscal-code-format-validator",
+    "italy-vat-number-validator"
   ],
   "tools": [
     {
@@ -802,27 +802,27 @@
     },
     {
       "slug": "brazil-cnpj-validator",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": 33
     },
     {
       "slug": "brazil-phone-number-formatter",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": 33
     },
     {
       "slug": "brazil-cep-formatter",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": 33
     },
     {
       "slug": "netherlands-iban-validator",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": 33
     },
     {
       "slug": "dutch-number-format-converter",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": 33
     },
     {
