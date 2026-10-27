@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
   "publicToolCount": 176,
-  "completeCount": 43,
+  "completeCount": 48,
   "nextBatch": [
-    "timer",
-    "pomodoro-timer",
-    "world-clock",
-    "password-generator",
-    "random-string-generator"
+    "wifi-qr",
+    "contact-qr",
+    "phone-qr",
+    "email-qr",
+    "barcode-checker"
   ],
   "tools": [
     {
@@ -112,27 +112,27 @@
     },
     {
       "slug": "timer",
-      "status": "TRANSLATING",
+      "status": "COMPLETE",
       "batch": "batch-10"
     },
     {
       "slug": "pomodoro-timer",
-      "status": "TRANSLATING",
+      "status": "COMPLETE",
       "batch": "batch-10"
     },
     {
       "slug": "world-clock",
-      "status": "TRANSLATING",
+      "status": "COMPLETE",
       "batch": "batch-10"
     },
     {
       "slug": "password-generator",
-      "status": "TRANSLATING",
+      "status": "COMPLETE",
       "batch": "batch-10"
     },
     {
       "slug": "random-string-generator",
-      "status": "TRANSLATING",
+      "status": "COMPLETE",
       "batch": "batch-10"
     },
     {

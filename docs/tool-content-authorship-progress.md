@@ -161,15 +161,17 @@ The ledger now records **43/176 COMPLETE** (133 remaining). Next selected PENDIN
 
 ### Translation checkpoint
 
-- Direct editorial drafts for the five Batch 10 tools cover all 26 locales in `src/registry/tool-detail-editorials-batch-10.ts`. They are disconnected from public rendering while the feature descriptions are corrected against the actual workspaces.
-- Browser inspection found Pomodoro supports editable focus, short-break and long-break durations, a configurable focus-cycle length, and automatic phase progression; the current draft incorrectly describes fixed durations and manual switching. Timer starts with five minutes selected. These facts must be reflected in all locales before validation.
+- Direct editorial drafts for the five Batch 10 tools cover all 26 locales in `src/registry/tool-detail-editorials-batch-10.ts`. The corrected set is now registered so SSR, SEO, and viewport checks can validate the actual rendered cards.
+- Browser inspection found Pomodoro supports editable focus, short-break and long-break durations, and a configurable focus-cycle length; completion selects the next phase, while starting its timer remains manual. These behaviors are now reflected in all locales. Timer starts with five minutes selected.
 - The world-clock 320px overflow is fixed by constraining the search controls; its 8/20-zone persistence behavior passed a mobile browser check. Timer and Pomodoro countdown browser check passed with configurable values.
-- The ledger state is `TRANSLATING`; verified completion remains **43/176**. Native-speaker review has not been performed.
+- Batch 10 is `COMPLETE`; verified completion is **48/176**. Native-speaker review has not been performed.
 
 ### Pomodoro correction checkpoint
 
 - Rechecked `CountdownWorkspace`: focus, short break, and long break are editable from 1–180 minutes; the cycle length is 1–12 focus sessions; defaults are 25/5/15 minutes and 4 focus sessions; settings persist in this browser. Completion selects the next phase, but its timer must be started manually.
-- Re-authored the Pomodoro principle, usage, troubleshooting, and FAQ directly in all 26 locales and overlaid the correction on the Batch 10 draft module. The draft remains unpublished while the other four tools and whole-batch examples are audited.
+- Re-authored the Pomodoro principle, usage, troubleshooting, and FAQ directly in all 26 locales and overlaid the correction on the Batch 10 editorial module.
 - Added a browser check covering timer completion, Pomodoro defaults and editing, world-clock addition/persistence, and password/random-string length and character-group behavior. It passed; the quality checker, TypeScript, ESLint, and `git diff --check` also passed in this checkpoint.
 - Generator checks now exercise the valid four-character minimum with all four character groups enabled. Every required group is included and the result length remains exact; the full unit suite also passed (216/216).
-- Verified completion remains **43/176**. Next: validate edge constraints for both generators, check examples and editorial factual accuracy for all five tools, then SSR/SEO and viewport browser checks before public integration.
+- Batch 10 editorial cards passed SSR and canonical/hreflang/x-default checks for all 130 locale routes, along with the eight-width Korean viewport suite. The complete Playwright suite passed 10/10 tests.
+- The content audit confirmed 26 locale drafts with no English fallbacks, 176 public tools, 4,576 detail/sitemap entries, no noindex candidates, and no new exact duplicate sets. All 216 unit tests, TypeScript, lint, diff check, and production build passed; build output included 4,866 static pages.
+- Batch 10 is verified **COMPLETE (48/176)**. Next PENDING batch: `wifi-qr`, `contact-qr`, `phone-qr`, `email-qr`, and `barcode-checker`. Native-speaker review was not performed.

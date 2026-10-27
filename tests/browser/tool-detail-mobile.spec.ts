@@ -2,8 +2,8 @@ import { expect, test } from "@playwright/test";
 
 const locales = ["ko", "en", "ja", "zh", "es", "pt-br", "de", "fr", "vi", "id", "th", "zh-tw", "it", "nl", "hi", "ru", "tr", "pl", "fil", "bn", "uk", "ms", "sv", "cs", "ro", "el"];
 const viewports = [320, 360, 375, 390, 430, 768, 1024, 1440];
-const selectedTools = ["json-formatter", "json-validator", "character-count", "remove-spaces", "remove-line-breaks", "remove-duplicate-lines", "reverse-text", "add-line-numbers", "remove-line-numbers", "remove-empty-lines", "remove-characters", "text-repeater", "sort-lines", "shuffle-lines", "text-case-converter", "text-compare", "remove-duplicate-words", "text-to-file", "hiragana-katakana-converter", "fullwidth-halfwidth-converter", "japanese-romaji-converter", "japanese-number-kanji-converter", "simplified-traditional-chinese-converter", "lotto-number-generator", "powerball-number-generator", "mega-millions-number-generator", "japan-loto6-number-generator", "japan-loto7-number-generator", "japan-mini-loto-number-generator", "tarot-card", "daily-fortune", "saju", "random-number", "random-name-picker", "random-wheel", "draw-lots", "random-team-maker", "random-order", "random-seat", "duty-picker", "dice-roller", "coin-flip", "stopwatch"];
-const koreanTextBatch = ["character-count", "remove-spaces", "remove-line-breaks", "remove-duplicate-lines", "reverse-text", "add-line-numbers", "remove-line-numbers", "remove-empty-lines", "remove-characters", "text-repeater", "sort-lines", "shuffle-lines", "text-case-converter", "text-compare", "remove-duplicate-words", "text-to-file", "hiragana-katakana-converter", "fullwidth-halfwidth-converter", "japanese-romaji-converter", "japanese-number-kanji-converter", "simplified-traditional-chinese-converter", "lotto-number-generator", "powerball-number-generator", "mega-millions-number-generator", "japan-loto6-number-generator", "japan-loto7-number-generator", "japan-mini-loto-number-generator", "tarot-card", "daily-fortune", "saju", "random-number", "random-name-picker", "random-wheel", "draw-lots", "random-team-maker", "random-order", "random-seat", "duty-picker", "dice-roller", "coin-flip", "stopwatch"];
+const selectedTools = ["json-formatter", "json-validator", "character-count", "remove-spaces", "remove-line-breaks", "remove-duplicate-lines", "reverse-text", "add-line-numbers", "remove-line-numbers", "remove-empty-lines", "remove-characters", "text-repeater", "sort-lines", "shuffle-lines", "text-case-converter", "text-compare", "remove-duplicate-words", "text-to-file", "hiragana-katakana-converter", "fullwidth-halfwidth-converter", "japanese-romaji-converter", "japanese-number-kanji-converter", "simplified-traditional-chinese-converter", "lotto-number-generator", "powerball-number-generator", "mega-millions-number-generator", "japan-loto6-number-generator", "japan-loto7-number-generator", "japan-mini-loto-number-generator", "tarot-card", "daily-fortune", "saju", "random-number", "random-name-picker", "random-wheel", "draw-lots", "random-team-maker", "random-order", "random-seat", "duty-picker", "dice-roller", "coin-flip", "stopwatch", "timer", "pomodoro-timer", "world-clock", "password-generator", "random-string-generator"];
+const koreanTextBatch = ["character-count", "remove-spaces", "remove-line-breaks", "remove-duplicate-lines", "reverse-text", "add-line-numbers", "remove-line-numbers", "remove-empty-lines", "remove-characters", "text-repeater", "sort-lines", "shuffle-lines", "text-case-converter", "text-compare", "remove-duplicate-words", "text-to-file", "hiragana-katakana-converter", "fullwidth-halfwidth-converter", "japanese-romaji-converter", "japanese-number-kanji-converter", "simplified-traditional-chinese-converter", "lotto-number-generator", "powerball-number-generator", "mega-millions-number-generator", "japan-loto6-number-generator", "japan-loto7-number-generator", "japan-mini-loto-number-generator", "tarot-card", "daily-fortune", "saju", "random-number", "random-name-picker", "random-wheel", "draw-lots", "random-team-maker", "random-order", "random-seat", "duty-picker", "dice-roller", "coin-flip", "stopwatch", "timer", "pomodoro-timer", "world-clock", "password-generator", "random-string-generator"];
 
 test("Korean text-tool editorial cards are server-rendered and fit the mobile viewport set", async ({ request, page, baseURL }) => {
   for (const slug of koreanTextBatch) {
@@ -345,27 +345,35 @@ test("Batch 10 workspaces honor their documented countdown, timezone, and genera
   await expect(clocks).toHaveCount(9);
 
   await page.goto(`${baseURL}/en/tools/password-generator`);
-  await page.getByLabel("Length").fill("4");
+  await page.getByLabel("Length").fill("16");
   await page.getByRole("button", { name: "Generate", exact: true }).click();
   const password = (await page.locator("main > section").first().locator("pre").textContent())!.trim();
-  expect(password).toHaveLength(4);
+  expect(password).toHaveLength(16);
   expect(password).toMatch(/[A-Z]/);
   expect(password).toMatch(/[a-z]/);
   expect(password).toMatch(/[0-9]/);
   expect(password).toMatch(/[!@#$%^&*()\-_=+\[\]{}:,.?]/);
   expect(password).not.toMatch(/[O0Il1]/);
+  await page.getByLabel("Length").fill("4");
+  await page.getByRole("button", { name: "Generate", exact: true }).click();
+  expect((await page.locator("main > section").first().locator("pre").textContent())!.trim()).toHaveLength(4);
 
   await page.goto(`${baseURL}/en/tools/random-string-generator`);
-  await page.getByLabel("Length").fill("4");
+  await page.getByLabel("Length").fill("12");
   await page.getByLabel("Number to generate").fill("3");
   await page.getByRole("button", { name: "Generate", exact: true }).click();
   const strings = (await page.locator("main > section").first().locator("pre").textContent())!.trim().split("\n");
   expect(strings).toHaveLength(3);
   for (const value of strings) {
-    expect(value).toHaveLength(4);
+    expect(value).toHaveLength(12);
     expect(value).toMatch(/[A-Z]/);
     expect(value).toMatch(/[a-z]/);
     expect(value).toMatch(/[0-9]/);
     expect(value).toMatch(/[!@#$%^&*()\-_=+\[\]{}:,.?]/);
   }
+  await page.getByLabel("Length").fill("4");
+  await page.getByRole("button", { name: "Generate", exact: true }).click();
+  const minimumStrings = (await page.locator("main > section").first().locator("pre").textContent())!.trim().split("\n");
+  expect(minimumStrings).toHaveLength(3);
+  expect(minimumStrings.every((value) => value.length === 4)).toBe(true);
 });
