@@ -62,28 +62,28 @@
     },
     {
       "slug": "random-name-picker",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-8"
     },
     {
       "slug": "random-wheel",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-8"
     },
     {
       "slug": "draw-lots",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-8"
     },
     {
       "slug": "random-team-maker",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-8"
     },
     {
       "slug": "random-order",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-8"
     },
     {
       "slug": "random-seat",

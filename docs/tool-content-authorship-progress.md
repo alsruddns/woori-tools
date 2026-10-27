@@ -105,3 +105,10 @@ The machine-readable [tool status ledger](tool-content-authorship-status.json) c
 Batch evidence: all 216 unit tests passed; content quality audit passed with 176 tools, 26 locales, 4,576 detail/sitemap entries, no English editorial fallbacks, and no noindex candidates. The audit now validates six lottery examples and four batch-7 processor examples. TypeScript, ESLint, `git diff --check`, and production build passed; build generated 4,866 static pages. Playwright passed 7/7 tests, including SSR and canonical/hreflang/x-default checks for the 130 batch-7 locale pages, no hidden editorial cards, eight viewport widths for authored Korean pages, and tool execution checks. Duplicate audit counts remained at the prior 171 repeated FAQ sets, 52 exact how-to sets, and 1,060 near-duplicate candidates; batch 7 introduced no new exact description/example/FAQ duplicate set. Native-speaker review was not performed.
 
 The ledger now records 33/176 COMPLETE (143 remaining). Next selected PENDING batch: `random-name-picker`, `random-wheel`, `draw-lots`, `random-team-maker`, `random-order`. Continue without reauthoring verified content.
+
+
+## Batch 8 checkpoint ? 2026-10-27
+
+- Recorded Korean drafts for `random-name-picker`, `random-wheel`, `draw-lots`, `random-team-maker`, and `random-order` in `docs/tool-content-authorship-batch-8-ko-draft.md`. Drafts distinguish participant entries from visible names, no-repeat rules, wheel weighting and 50-item cap, even team distribution, and staged order reveal.
+- Ledger state is `KO_DRAFT`; verified completion remains **33/176**. Next work is all 26 locale versions and processor, SSR/SEO, browser, and quality validation.
+- Batch 7 is committed and pushed as `ccb2fc8`; the remote `develop` is synchronized.
