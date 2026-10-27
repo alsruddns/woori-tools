@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
   "publicToolCount": 176,
-  "completeCount": 63,
+  "completeCount": 68,
   "nextBatch": [
-    "zip-files",
-    "bulk-file-renamer",
-    "filename-cleaner",
-    "lorem-ipsum",
-    "regex-tester"
+    "color-converter",
+    "cron-parser",
+    "sql-formatter",
+    "html-formatter",
+    "css-formatter"
   ],
   "tools": [
     {
@@ -212,17 +212,17 @@
     },
     {
       "slug": "zip-files",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-14"
     },
     {
       "slug": "bulk-file-renamer",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-14"
     },
     {
       "slug": "filename-cleaner",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-14"
     },
     {
@@ -262,12 +262,12 @@
     },
     {
       "slug": "lorem-ipsum",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-14"
     },
     {
       "slug": "regex-tester",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-14"
     },
     {
@@ -891,4 +891,4 @@
       "batch": null
     }
   ]
-}
+}\n

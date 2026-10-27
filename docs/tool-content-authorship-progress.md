@@ -242,3 +242,17 @@ The ledger records **63/176 COMPLETE** (113 remaining). Next PENDING batch: `zip
 - Selected `zip-files`, `bulk-file-renamer`, `filename-cleaner`, `lorem-ipsum`, and `regex-tester` from the next PENDING entries.
 - Inspected archive naming/collision handling, the six rename options and preview, NFKC filename cleanup, the fixed Lorem ipsum paragraph generator, and the regex worker's input caps, safety rejects, match indexing, and timeout.
 - Korean originals are recorded in `docs/tool-content-authorship-batch-14-ko-draft.md`. All five remain `KO_DRAFT`; verified completion remains **63/176**. The Lorem ipsum control advertises 100 while its processor clamps output to 20, so the UI limit will be aligned to the processor before the example is validated. Next: author 26 locales and verify archive, renaming, generator and regex examples.
+
+## Batch 14 COMPLETE - 2026-10-27
+
+| Tool | Verified content and behavior |
+|---|---|
+| `zip-files` | 26 locale cards describe local ZIP creation, unique conflicting entry names, size/count limits and preserved originals. Browser test selected `notes.txt` and `photo.jpg`, processed them, and confirmed `zip-files.zip`. |
+| `bulk-file-renamer` | Cards cover prefix/suffix, stem search/replace, optional sequence, preview and ZIP copies. Browser preview and output report confirmed `photo-1.jpg` with `trip-` becomes `trip-photo-1.jpg`. |
+| `filename-cleaner` | Cards describe NFKC normalization, forbidden-character removal, whitespace underscores, unique entries and unchanged bytes. Browser report confirmed `my photo?.jpg` becomes `my_photo.jpg`. |
+| `lorem-ipsum` | Cards document the fixed repeated paragraph and 1-20 range. The control now starts at 3 and caps at 20, aligned with the processor. Browser output confirmed repeated paragraphs. |
+| `regex-tester` | Cards cover `/pattern/flags`, global matching, worker limits and unsafe pattern rejection. Browser output for `/\\d+/g` and `A12` showed `12 (index 1)`. |
+
+Batch 14 quality audit passed: all five tools have populated authored cards in 26 locales, distinct use cases and FAQ questions, with no English field fallback. The content audit still recognizes 176 public tools, 4,576 localized detail/sitemap URLs and no noindex candidates. Unit tests: 216/216 passed; TypeScript, ESLint and `git diff --check` passed; production build generated all 4,866 static pages. Batch-specific Playwright: archive/rename/cleaner/Lorem/regex examples passed and SSR/canonical/hreflang checks passed for five tools across eight representative locales (40 routes). The full browser spec was also attempted but its existing broad mobile viewport test exceeded 60 seconds in `page.evaluate`; targeted Batch 14 browser checks passed. Existing global duplicate audit remains 171 repeated FAQ-question groups and 52 exact how-to sets. No native-speaker review was performed.
+
+The ledger records **68/176 COMPLETE** (108 remaining). Next PENDING batch: `color-converter`, `cron-parser`, `sql-formatter`, `html-formatter`, and `css-formatter`. Continue without reauthoring verified editorials.
