@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
   "publicToolCount": 176,
-  "completeCount": 118,
+  "completeCount": 123,
   "nextBatch": [
-    "numbers4-number-generator",
-    "bingo5-number-generator",
-    "jwt-decoder",
-    "url-query-parameter-parser",
-    "user-agent-parser"
+    "ip-cidr-calculator",
+    "base32-encoder-decoder",
+    "ulid-generator",
+    "uuid-v7-generator",
+    "hash-compare"
   ],
   "tools": [
     {
@@ -597,28 +597,28 @@
     },
     {
       "slug": "numbers4-number-generator",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-25"
     },
     {
       "slug": "bingo5-number-generator",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-25"
     },
     {
       "slug": "jwt-decoder",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-25"
     },
     {
       "slug": "url-query-parameter-parser",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-25"
     },
     {
       "slug": "user-agent-parser",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-25"
     },
     {
       "slug": "ip-cidr-calculator",

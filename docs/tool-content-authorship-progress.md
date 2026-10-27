@@ -452,3 +452,17 @@ The ledger records **113/176 COMPLETE** (63 remaining). Next PENDING batch: time
 All five tools have unique cards in 26 locales; content audit verified full locale coverage, unique FAQ questions and use cases, and no English field fallbacks. The audit reports 176 public tools, 4,576 localized detail URLs, zero noindex candidates, and 26 batch locales. The eight Japanese-tool unit tests passed, TypeScript, ESLint, content audit, and git diff --check passed, and production build generated 4,866 static pages. Playwright passed 3/3 tests: SSR/SEO across 50 routes, actual workflows for all five tools, and 320px/390px mobile checks. No native-speaker review was performed. Global audit still reports 171 repeated FAQ-question groups and 52 exact how-to sets.
 
 The ledger records **118/176 COMPLETE** (58 remaining). Next PENDING batch: numbers4-number-generator, bingo5-number-generator, jwt-decoder, url-query-parameter-parser, user-agent-parser. Continue without reauthoring verified editorials.
+
+## Batch 25 COMPLETE - 2026-10-28
+
+| Tool | Verified behavior |
+|---|---|
+| numbers4-number-generator | Browser generated 0000 with deterministic random input; unit coverage confirms four-character results and repeat rules. |
+| bingo5-number-generator | Browser verified the eight range-minimum values and free center; all displayed values matched the official per-cell ranges. |
+| jwt-decoder | Browser decoded a test payload and displayed expiry status; unit tests verify payload decoding, exp handling, and that no signature validity is claimed. |
+| url-query-parameter-parser | Browser retained both a=1 and a=2 and displayed the empty parameter; unit tests verify repeated key retention. |
+| user-agent-parser | Browser classified a Chrome 122 Windows desktop sample; unit tests cover heuristic output. |
+
+All five have unique content in 26 locales, unique FAQ questions/use cases within each locale, and no English field fallbacks. The content audit reports 176 public tools, 4,576 localized detail URLs, zero noindex candidates, and 26 draft locales. All 16 relevant unit tests, TypeScript, ESLint, content audit, git diff --check, and production build passed; the build generated 4,866 static pages. Playwright passed 3/3 tests: SSR/SEO across 50 routes, real processing examples for all five tools, and 320px/390px mobile checks. No native-speaker review was performed. The global duplicate audit still reports 171 repeated FAQ-question groups and 52 exact how-to sets.
+
+The ledger records **123/176 COMPLETE** (53 remaining). Next PENDING batch: ip-cidr-calculator, base32-encoder-decoder, ulid-generator, uuid-v7-generator, hash-compare. Continue without reauthoring verified editorials.
