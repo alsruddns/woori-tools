@@ -152,3 +152,9 @@ The ledger now records 38/176 COMPLETE (138 remaining). Next selected PENDING ba
 Batch evidence: the content-quality audit passed with all 176 public tools, 26 locales, 4,576 localized detail/sitemap URLs, zero editorial English fallbacks and no new exact duplicate sets. It verifies the batch 9 five-locale coverage and five processor examples. All 216 unit tests, TypeScript, ESLint, `git diff --check`, and production build passed; the build generated 4,866 static pages. Playwright passed 9/9 tests, including SSR, visible editorial cards and canonical/hreflang/x-default on all 130 batch 9 locale routes, eight viewport widths on the Korean pages, and browser execution for all five tools. Global duplicate candidate counts remained unchanged. Native-speaker review was not performed.
 
 The ledger now records **43/176 COMPLETE** (133 remaining). Next selected PENDING batch: `timer`, `pomodoro-timer`, `world-clock`, `password-generator`, `random-string-generator`. Continue without rewriting verified editorials.
+
+## Batch 10 checkpoint — 2026-10-27
+
+- Recorded Korean drafts for `timer`, `pomodoro-timer`, `world-clock`, `password-generator`, and `random-string-generator` in `docs/tool-content-authorship-batch-10-ko-draft.md`.
+- The drafts distinguish the timer's visual completion from an audio alarm, the Pomodoro tool's manual fixed 25/5-minute modes, browser-local time-zone persistence, password character-group guarantees, and random-string count/length limits.
+- The ledger marks all five as `KO_DRAFT`; verified completion remains **43/176**. Next: direct 26-locale authoring, generator-engine examples, SSR/SEO, and browser validation.
