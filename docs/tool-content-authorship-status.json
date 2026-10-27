@@ -137,28 +137,28 @@
     },
     {
       "slug": "wifi-qr",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-11"
     },
     {
       "slug": "contact-qr",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-11"
     },
     {
       "slug": "phone-qr",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-11"
     },
     {
       "slug": "email-qr",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-11"
     },
     {
       "slug": "barcode-checker",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-11"
     },
     {
       "slug": "barcode-generator",

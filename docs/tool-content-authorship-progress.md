@@ -175,3 +175,10 @@ The ledger now records **43/176 COMPLETE** (133 remaining). Next selected PENDIN
 - Batch 10 editorial cards passed SSR and canonical/hreflang/x-default checks for all 130 locale routes, along with the eight-width Korean viewport suite. The complete Playwright suite passed 10/10 tests.
 - The content audit confirmed 26 locale drafts with no English fallbacks, 176 public tools, 4,576 detail/sitemap entries, no noindex candidates, and no new exact duplicate sets. All 216 unit tests, TypeScript, lint, diff check, and production build passed; build output included 4,866 static pages.
 - Batch 10 is verified **COMPLETE (48/176)**. Next PENDING batch: `wifi-qr`, `contact-qr`, `phone-qr`, `email-qr`, and `barcode-checker`. Native-speaker review was not performed.
+
+## Batch 11 Korean checkpoint - 2026-10-27
+
+- Selected the next five PENDING tools: `wifi-qr`, `contact-qr`, `phone-qr`, `email-qr`, and `barcode-checker`.
+- Read the QR payload builder, barcode processor, and Russian/Turkish barcode UI. Drafts document actual formats: escaped Wi-Fi payload fields, vCard 3.0, `tel:` normalization, `mailto:` query encoding, and UPC-A/EAN-13 check-digit limits.
+- Browser execution matched the documented Wi-Fi, vCard, phone, and email payload examples, including delimiter escaping and `mailto:` parameter encoding. EAN-13 `4006381333931` returned check digit 1 as valid; changing the final digit to 2 returned invalid with expected digit 1.
+- Added Korean content drafts to `docs/tool-content-authorship-batch-11-ko-draft.md`. All five ledger entries are `KO_DRAFT`; verified completion remains **48/176**. Next: validate the sample payloads against the browser workspaces and barcode engine, then author all 26 locales.

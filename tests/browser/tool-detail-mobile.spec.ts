@@ -377,3 +377,42 @@ test("Batch 10 workspaces honor their documented countdown, timezone, and genera
   expect(minimumStrings).toHaveLength(3);
   expect(minimumStrings.every((value) => value.length === 4)).toBe(true);
 });
+
+test("Batch 11 QR payloads stay local and barcode checks report the calculated digit", async ({ page, baseURL }) => {
+  await page.goto(`${baseURL}/en/tools/wifi-qr`);
+  await page.getByLabel("Wi-Fi name (SSID)").fill("Cafe, Guest");
+  await page.locator("main > section input").nth(1).fill("a:b;1");
+  await page.getByRole("button", { name: "Create QR code" }).click();
+  await page.getByText("View encoded content", { exact: true }).click();
+  await expect(page.locator("main > section").first().locator("details pre")).toHaveText("WIFI:T:WPA;S:Cafe\\, Guest;P:a\\:b\\;1;H:false;;");
+
+  await page.goto(`${baseURL}/en/tools/contact-qr`);
+  await page.locator("main > section input").nth(0).fill("Ada Lovelace");
+  await page.locator("main > section input").nth(1).fill("+44 20 7946 0958");
+  await page.locator("main > section input").nth(2).fill("ada@example.com");
+  await page.getByRole("button", { name: "Create QR code" }).click();
+  await page.getByText("View encoded content", { exact: true }).click();
+  await expect(page.locator("main > section").first().locator("details pre")).toHaveText("BEGIN:VCARD\r\nVERSION:3.0\r\nFN:Ada Lovelace\r\nTEL:+44 20 7946 0958\r\nEMAIL:ada@example.com\r\nEND:VCARD");
+
+  await page.goto(`${baseURL}/en/tools/phone-qr`);
+  await page.locator("main > section input").first().fill("+82 10 1234 5678");
+  await page.getByRole("button", { name: "Create QR code" }).click();
+  await page.getByText("View encoded content", { exact: true }).click();
+  await expect(page.locator("main > section").first().locator("details pre")).toHaveText("tel:+821012345678");
+
+  await page.goto(`${baseURL}/en/tools/email-qr`);
+  await page.locator("main > section input").first().fill("hello@example.com");
+  await page.locator("main > section input").nth(1).fill("Hi there");
+  await page.locator("main > section textarea").fill("Thanks");
+  await page.getByRole("button", { name: "Create QR code" }).click();
+  await page.getByText("View encoded content", { exact: true }).click();
+  await expect(page.locator("main > section").first().locator("details pre")).toHaveText("mailto:hello@example.com?subject=Hi+there&body=Thanks");
+
+  await page.goto(`${baseURL}/en/tools/barcode-checker`);
+  await page.locator("#input-text").fill("4006381333931");
+  await page.getByRole("button", { name: "Run", exact: true }).click();
+  await expect(page.locator("main > section").first().locator("pre")).toHaveText("EAN-13: Valid\nExpected check digit: 1");
+  await page.locator("#input-text").fill("4006381333932");
+  await page.getByRole("button", { name: "Run", exact: true }).click();
+  await expect(page.locator("main > section").first().locator("pre")).toHaveText("EAN-13: Invalid\nExpected check digit: 1");
+});
