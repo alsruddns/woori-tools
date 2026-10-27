@@ -332,3 +332,9 @@ The ledger records **83/176 COMPLETE** (93 remaining). Next PENDING batch: `imag
 All five have authored cards in 26 locales, distinct use cases and FAQs, and no English field fallback. Content audit totals: 176 public tools, 4,576 localized detail/sitemap URLs, and zero noindex candidates. All 216 unit tests, TypeScript, ESLint, `git diff --check`, and production build passed; build generated 4,866 static pages. Batch Playwright passed 3/3 tests: SSR/editorials/SEO across 50 routes, all five actual image edits, and 320px/390px overflow checks. Existing global duplicate audit remains 171 repeated FAQ-question groups and 52 exact how-to sets. No native-speaker review was performed.
 
 The ledger records **88/176 COMPLETE** (88 remaining). Next PENDING batch: `image-brightness`, `image-contrast`, `image-blur`, `image-pixelate`, and `remove-image-metadata`. Continue without reauthoring verified editorials.
+
+## Batch 19 checkpoint - 2026-10-27
+
+- Selected `image-brightness`, `image-contrast`, `image-blur`, `image-pixelate`, and `remove-image-metadata` from the PENDING ledger.
+- Inspected actual Canvas filters and controls: brightness/contrast range 0–200 with current default 25 (100 is neutral); blur range 0–100 maps to `value / 10` CSS pixels; pixelation range 4–80 scales down then enlarges without smoothing. Metadata removal re-encodes as JPEG. Shared limits are 30 MB and 40 million decoded pixels.
+- Korean drafts are in `docs/tool-content-authorship-batch-19-ko-draft.md`. Ledger status is `KO_DRAFT` for all five; verified completion remains **88/176**. Next: author all locale cards and verify filter outputs, pixel blocks, and EXIF removal in browser.

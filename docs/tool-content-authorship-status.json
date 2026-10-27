@@ -372,28 +372,28 @@
     },
     {
       "slug": "image-brightness",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-19"
     },
     {
       "slug": "image-contrast",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-19"
     },
     {
       "slug": "image-blur",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-19"
     },
     {
       "slug": "image-pixelate",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-19"
     },
     {
       "slug": "remove-image-metadata",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-19"
     },
     {
       "slug": "image-info",
