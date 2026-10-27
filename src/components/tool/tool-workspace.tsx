@@ -84,6 +84,7 @@ export function ToolWorkspace({ tool, phaseLocale, optionLocale = phaseLocale, m
   const randomWorkspaceCopy = isPlannedLocale(phaseLocale) ? getTargetRandomProcessorCopy(phaseLocale) : undefined;
   const targetCollageCopy = isPlannedLocale(phaseLocale) ? getTargetImageCollageCopy(phaseLocale) : undefined;
   const isImage = tool.category === "image";
+  const isImagesToPdf = tool.slug === "images-to-pdf";
   const isPdf = tool.category === "pdf" || tool.slug === "images-to-pdf";
   const isFileTool = ["file-hash","mime-type-checker","file-extension-checker","file-size-checker","duplicate-file-checker","zip-files","bulk-file-renamer","filename-cleaner"].includes(tool.slug);
   const inputlessExpandedRandom = expandedRandomWorkspace && ["dice-roller", "coin-flip"].includes(tool.slug);
@@ -158,13 +159,13 @@ export function ToolWorkspace({ tool, phaseLocale, optionLocale = phaseLocale, m
     if (!list) return;
     const incoming = Array.from(list);
     const selectionLimits = isPlannedToolOptionLocale(phaseLocale) ? targetSelectionLimitMessages[phaseLocale] : selectionLimitMessages[phaseLocale];
-    const limit = isImage ? MAX_IMAGE : isPdf ? MAX_PDF : 100 * 1024 * 1024;
+    const limit = isImage || isImagesToPdf ? MAX_IMAGE : isPdf ? MAX_PDF : 100 * 1024 * 1024;
     const bad = incoming.find((file) => file.size > limit);
-    if (bad) { setError(messages.errors.tooLarge.replace("{size}", String(isImage ? 30 : 50))); return; }
+    if (bad) { setError(messages.errors.tooLarge.replace("{size}", String(isImage || isImagesToPdf ? 30 : 50))); return; }
     if(isFileTool&&(incoming.length>100||incoming.reduce((sum,file)=>sum+file.size,0)>200*1024*1024)){setError(selectionLimits.files);return;}
     if(tool.slug==="image-collage"&&(incoming.length>6||incoming.reduce((sum,file)=>sum+file.size,0)>100*1024*1024)){setError(selectionLimits.images);return;}
-    const valid = incoming.filter((file) => isImage ? (/^image\//.test(file.type) || /\.heic$/i.test(file.name) || /\.heif$/i.test(file.name)) : isPdf ? (file.type === "application/pdf" || /\.pdf$/i.test(file.name)) : true);
-    if (valid.length !== incoming.length) { setError(isImage ? messages.errors.imageOnly : messages.errors.pdfOnly); return; }
+    const valid = incoming.filter((file) => isImage || isImagesToPdf ? (/^image\//.test(file.type) || /\.heic$/i.test(file.name) || /\.heif$/i.test(file.name)) : isPdf ? (file.type === "application/pdf" || /\.pdf$/i.test(file.name)) : true);
+    if (valid.length !== incoming.length) { setError(isImage || isImagesToPdf ? messages.errors.imageOnly : messages.errors.pdfOnly); return; }
     const selected = tool.slug==="image-collage" || isFileTool || (isPdf && tool.slug !== "pdf-split" && tool.slug !== "pdf-delete-pages" && tool.slug !== "pdf-rotate-pages" && tool.slug !== "pdf-add-page-numbers" && tool.slug !== "pdf-watermark" && tool.slug !== "pdf-metadata-viewer" && tool.slug !== "pdf-remove-metadata") ? valid : valid.slice(0, 1);
     setFiles(selected);
     setPreviewUrl(selected[0] && isImage && !/\.(heic|heif)$/i.test(selected[0].name) ? URL.createObjectURL(selected[0]) : "");
@@ -210,9 +211,9 @@ export function ToolWorkspace({ tool, phaseLocale, optionLocale = phaseLocale, m
   const needsFiles=isImage||isPdf||isFileTool;
   const needsSecond=tool.slug==="text-compare"||tool.slug==="regex-tester"||tool.slug==="remove-characters"||tool.slug==="duty-picker";
   return <section className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-7" aria-label={messages.workspaceLabel.replace("{tool}", tool.title)}>
-    {needsFiles ? <div>
-      <label htmlFor="tool-files" onDragOver={(e)=>e.preventDefault()} onDrop={(e)=>{e.preventDefault();selectFiles(e.dataTransfer.files);}} className="flex min-h-36 cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 p-6 text-center hover:border-indigo-400"><span className="font-semibold text-slate-800">{messages.chooseOrDrop}</span><span className="mt-2 text-sm text-slate-500">{messages.fileLimit.replace("{size}",isImage?"30":"50")}</span></label>
-      <input id="tool-files" type="file" accept={isImage?"image/*,.heic,.heif":isPdf?"application/pdf,.pdf":undefined} multiple={isFileTool||tool.slug==="image-collage"||tool.slug==="pdf-merge"||tool.slug==="images-to-pdf"} onChange={(e)=>selectFiles(e.target.files)} className="sr-only" />
+      {needsFiles ? <div>
+      <label htmlFor="tool-files" onDragOver={(e)=>e.preventDefault()} onDrop={(e)=>{e.preventDefault();selectFiles(e.dataTransfer.files);}} className="flex min-h-36 cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 p-6 text-center hover:border-indigo-400"><span className="font-semibold text-slate-800">{messages.chooseOrDrop}</span><span className="mt-2 text-sm text-slate-500">{messages.fileLimit.replace("{size}",isImage||isImagesToPdf?"30":"50")}</span></label>
+      <input id="tool-files" type="file" accept={isImage||isImagesToPdf?"image/*,.heic,.heif":isPdf?"application/pdf,.pdf":undefined} multiple={isFileTool||tool.slug==="image-collage"||tool.slug==="pdf-merge"||isImagesToPdf} onChange={(e)=>selectFiles(e.target.files)} className="sr-only" />
       {files.length>0&&<div className="mt-4 rounded-xl bg-slate-50 p-4"><ul className="space-y-2">{files.map((file,i)=><li key={`${file.name}-${i}`} className="flex justify-between gap-3 text-sm"><span className="truncate">{file.name}</span><span className="shrink-0 text-slate-500">{(file.size/1024/1024).toFixed(2)} MB</span></li>)}</ul><button type="button" onClick={()=>{setFiles([]);setPreviewUrl("");setResult("");setOutputUrl("");}} className="mt-3 text-sm font-medium text-rose-700 underline">{messages.resetSelection}</button></div>}
       {previewUrl&&tool.slug!=="image-color-picker"&&<NextImage unoptimized src={previewUrl} alt={messages.selectedImageAlt} width={960} height={600} className="mt-4 max-h-72 max-w-full rounded-xl border border-slate-200 object-contain" />}
       {previewUrl&&tool.slug==="image-color-picker"&&<div className="mt-4"><p className="mb-2 text-sm">{messages.clickImageColor}</p><ColorPicker src={previewUrl} label={messages.colorPickerLabel} onPick={setResult}/></div>}

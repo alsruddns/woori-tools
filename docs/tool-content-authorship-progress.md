@@ -352,3 +352,23 @@ The ledger records **88/176 COMPLETE** (88 remaining). Next PENDING batch: `imag
 All five have authored cards in 26 locales, distinct use cases and FAQs, and no English field fallback. Content audit totals: 176 public tools, 4,576 localized detail/sitemap URLs, and zero noindex candidates. All 216 unit tests, TypeScript, ESLint, `git diff --check`, and production build passed; build generated 4,866 static pages. Batch Playwright passed 3/3 tests: initial SSR/editorials/SEO on 50 routes, real filter and metadata processing, and 320px/390px overflow checks. Existing global duplicate audit remains 171 repeated FAQ-question groups and 52 exact how-to sets. No native-speaker review was performed.
 
 The ledger records **93/176 COMPLETE** (83 remaining). Next PENDING batch: `image-info`, `favicon-generator`, `image-color-picker`, `images-to-pdf`, and `pdf-merge`. Continue without reauthoring verified editorials.
+
+## Batch 20 checkpoint - 2026-10-27
+
+- Selected image-info, avicon-generator, image-color-picker, images-to-pdf, and pdf-merge from the PENDING ledger.
+- Inspected image inspection, Canvas favicon/color sampling, image-to-PDF, and PDF merge processors. Found and fixed the shared Workspace upload filter so images-to-PDF accepts multiple image files; it was incorrectly restricted to PDFs.
+- Korean drafts are in docs/tool-content-authorship-batch-20-ko-draft.md. All five are marked VALIDATING; verified completion remains **93/176**. Next: run locale/content checks, actual image/PDF workflows, SEO/SSR and mobile checks, and build.
+
+## Batch 20 COMPLETE - 2026-10-27
+
+| Tool | Verified behavior |
+|---|---|
+| image-info | Browser showed the selected PNG name, MIME, 12 x 8 pixel dimensions, and metadata values without reading camera or GPS EXIF. |
+| avicon-generator | Browser converted the uploaded image into a 32 x 32 PNG download. |
+| image-color-picker | Browser canvas click sampled the red pixel and returned #FF0000 and RGB(255, 0, 0). |
+| images-to-pdf | Fixed Workspace image-only input validation; browser accepted two images, produced a two-page PDF, and preserved page dimensions and file order. |
+| pdf-merge | Browser merged two PDFs and preserved input order and page dimensions. |
+
+All five have distinct authored content in 26 locales with no English fallback. The content audit reports 176 public tools, 4,576 localized detail URLs, zero noindex candidates, and 26 locale drafts for this batch. All 216 unit tests, TypeScript, ESLint, content audit, and git diff --check passed. Production build generated all 4,866 static pages. Batch Playwright passed 3/3 tests: SSR cards and SEO across 50 routes, real image/PDF workflows, and 320px/390px mobile widths. No native-speaker review was performed. Existing global duplicate audit remains 171 repeated FAQ-question groups and 52 exact how-to sets.
+
+The ledger records **98/176 COMPLETE** (78 remaining). Next PENDING batch: pdf-split, pdf-delete-pages, pdf-reorder-pages, pdf-rotate-pages, pdf-add-page-numbers. Continue without reauthoring verified editorials.

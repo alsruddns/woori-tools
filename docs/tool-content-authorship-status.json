@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
   "publicToolCount": 176,
-  "completeCount": 93,
+  "completeCount": 98,
   "nextBatch": [
-    "image-info",
-    "favicon-generator",
-    "image-color-picker",
-    "images-to-pdf",
-    "pdf-merge"
+    "pdf-split",
+    "pdf-delete-pages",
+    "pdf-reorder-pages",
+    "pdf-rotate-pages",
+    "pdf-add-page-numbers"
   ],
   "tools": [
     {
@@ -397,28 +397,28 @@
     },
     {
       "slug": "image-info",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-20"
     },
     {
       "slug": "favicon-generator",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-20"
     },
     {
       "slug": "image-color-picker",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-20"
     },
     {
       "slug": "images-to-pdf",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-20"
     },
     {
       "slug": "pdf-merge",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-20"
     },
     {
       "slug": "pdf-split",
