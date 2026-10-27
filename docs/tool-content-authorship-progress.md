@@ -312,3 +312,9 @@ The ledger records **78/176 COMPLETE** (98 remaining). Next PENDING batch is rec
 All five have authored cards in 26 locales, distinct use cases and FAQ questions, and no English field fallback. Content audit totals: 176 public tools, 4,576 localized detail/sitemap URLs, and zero noindex candidates. All 216 unit tests, TypeScript, ESLint, `git diff --check`, and production build passed; build generated 4,866 static pages. Batch Playwright passed 3/3 tests: editorials/SEO on 50 routes (five tools × ten representative locales), real image processing for all five tools, and mobile overflow at 320px/390px. The HEIC test fixture is synthetic and CC0; details and SHA-256 are in `tests/fixtures/heic/README.md`. Existing global duplicate audit remains 171 repeated FAQ-question groups and 52 exact how-to sets. No native-speaker review was performed.
 
 The ledger records **83/176 COMPLETE** (93 remaining). Next PENDING batch: `image-resize`, `image-crop`, `image-rotate`, `image-flip`, and `image-grayscale`. Continue without reauthoring verified editorials.
+
+## Batch 18 checkpoint - 2026-10-27
+
+- Selected `image-resize`, `image-crop`, `image-rotate`, `image-flip`, and `image-grayscale` from the PENDING ledger.
+- Inspected Canvas implementation and controls: resize dimensions clamp to 1–12,000 px and optional ratio lock derives height from width; crop uses a centered 1:1, 16:9, or 3:4 rectangle; rotate selects 90/180/270 degrees; flip selects horizontal/vertical; grayscale applies Canvas `grayscale(1)`. These tools export a separate JPEG. Input limits remain 30 MB and 40 million decoded pixels.
+- Korean drafts are in `docs/tool-content-authorship-batch-18-ko-draft.md`. Ledger status is `KO_DRAFT` for all five; verified completion remains **83/176**. Next: author all locales and verify dimensions, selected crop, rotation/flip orientation, grayscale pixels, and download output.

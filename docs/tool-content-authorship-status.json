@@ -347,28 +347,28 @@
     },
     {
       "slug": "image-resize",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-18"
     },
     {
       "slug": "image-crop",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-18"
     },
     {
       "slug": "image-rotate",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-18"
     },
     {
       "slug": "image-flip",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-18"
     },
     {
       "slug": "image-grayscale",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-18"
     },
     {
       "slug": "image-brightness",
