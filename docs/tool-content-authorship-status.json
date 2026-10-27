@@ -272,28 +272,28 @@
     },
     {
       "slug": "color-converter",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-15"
     },
     {
       "slug": "cron-parser",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-15"
     },
     {
       "slug": "sql-formatter",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-15"
     },
     {
       "slug": "html-formatter",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-15"
     },
     {
       "slug": "css-formatter",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-15"
     },
     {
       "slug": "javascript-formatter",
@@ -891,4 +891,4 @@
       "batch": null
     }
   ]
-}\n
+}
