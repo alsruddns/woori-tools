@@ -29,8 +29,9 @@ import { calculateFourPillars } from "manseryeok";
 import { pickUniqueRange } from "../src/lib/random";
 import { batch7EditorialDrafts } from "../src/registry/tool-detail-editorials-batch-7";
 import { batch8EditorialDrafts } from "../src/registry/tool-detail-editorials-batch-8";
+import { batch9EditorialDrafts } from "../src/registry/tool-detail-editorials-batch-9";
 import { pickUnique, secureShuffle } from "../src/lib/random";
-import { divideEvenly, normalizeWheelItems } from "../src/lib/random-tools.mjs";
+import { divideEvenly, normalizeWheelItems, rollDice } from "../src/lib/random-tools.mjs";
 
 const slugs = new Set(tools.map((tool) => tool.slug));
 assert.equal(slugs.size, tools.length, "duplicate public slug");
@@ -333,6 +334,15 @@ for (const [locale, drafts] of Object.entries(batch8EditorialDrafts)) {
     if (locale !== "en") for (const field of ["principle", "useCase", "troubleshooting", "faqQuestion", "faqAnswer"] as const) assert.notEqual(editorial[field], batch8EditorialDrafts.en?.[slug][field], `${locale}/${slug}: ${field} must not fall back to English`);
   }
 }
+assert.deepEqual(new Set(Object.keys(batch9EditorialDrafts)), new Set(publishedTargetLocales), "batch 9 editorial drafts must cover every published locale before integration");
+const batch9Slugs = ["random-seat", "duty-picker", "dice-roller", "coin-flip", "stopwatch"];
+for (const [locale, drafts] of Object.entries(batch9EditorialDrafts)) {
+  assert.deepEqual(new Set(Object.keys(drafts ?? {})), new Set(batch9Slugs), `${locale}: batch 9 drafts must cover all five selected tools`);
+  for (const [slug, editorial] of Object.entries(drafts ?? {})) {
+    assert.ok([editorial.principle, editorial.useCase, editorial.troubleshooting, editorial.faqQuestion, editorial.faqAnswer].every((value) => value.trim()), `${locale}/${slug}: draft fields must be populated`);
+    if (locale !== "en") for (const field of ["principle", "useCase", "troubleshooting", "faqQuestion", "faqAnswer"] as const) assert.notEqual(editorial[field], batch9EditorialDrafts.en?.[slug][field], `${locale}/${slug}: ${field} must not fall back to English`);
+  }
+}
 const exampleNames = ["Mina", "Joon", "Kai", "Lina", "Bo", "Ari"];
 const pickedNames = pickUnique(exampleNames, 2);
 assert.equal(pickedNames.length, 2, "random-name-picker must return the requested number of entries");
@@ -347,6 +357,27 @@ assert.equal(balancedTeams.flat().length, exampleNames.length, "random-team-make
 assert.ok(Math.max(...balancedTeams.map((team) => team.length)) - Math.min(...balancedTeams.map((team) => team.length)) <= 1, "random-team-maker team sizes must differ by at most one");
 const shuffledOrder = secureShuffle(exampleNames);
 assert.deepEqual([...shuffledOrder].sort(), [...exampleNames].sort(), "random-order must preserve every participant entry");
+const seatOutput = (await processText("random-seat", "Mina\n\nJoon\nMina", "", "", 1, "en")).result.split("\n").map((line) => line.replace(/^\d+\. /, ""));
+assert.deepEqual([...seatOutput].sort(), ["Joon", "Mina", "Mina"], "random-seat must ignore blank lines and preserve duplicate participants");
+const dutyOutput = (await processText("duty-picker", "Mina\nJoon\nKai", "Clean\nGuide", "", 1, "en")).result.split("\n");
+assert.equal(dutyOutput.length, 3, "duty-picker must assign once per participant");
+for (const person of ["Mina", "Joon", "Kai"]) assert.equal(dutyOutput.filter((line) => line.startsWith(person)).length, 1, `duty-picker must assign ${person} exactly once`);
+assert.ok(dutyOutput.every((line) => ["Clean", "Guide"].some((duty) => line.includes(duty))), "duty-picker must use only entered duties and cycle when needed");
+const standardDice = (await processText("dice-roller", "", "", "6", 100, "en")).result.split("\n");
+const standardRolls = standardDice[0].split(", ").map(Number);
+assert.equal(standardRolls.length, 100, "standard dice processor must accept 100 dice");
+assert.ok(standardRolls.every((value) => value >= 1 && value <= 6), "standard dice results must fit D6");
+assert.equal(Number(standardDice[1].replace(/^Total: /, "")), standardRolls.reduce((sum, value) => sum + value, 0), "standard dice total must match its results");
+for (const sides of [4, 6, 8, 10, 12, 20]) {
+  const expandedRolls = rollDice(sides, 20);
+  assert.equal(expandedRolls.length, 20, `expanded D${sides} panel must return the requested dice count`);
+  assert.ok(expandedRolls.every((value) => value >= 1 && value <= sides), `expanded D${sides} results must fit the selected die`);
+}
+const coinOutput = (await processText("coin-flip", "", "", "", 1000, "en")).result.split("\n");
+const heads = Number(coinOutput[0].replace(/^Heads: /, ""));
+const tails = Number(coinOutput[1].replace(/^Tails: /, ""));
+assert.equal(heads + tails, 1000, "coin-flip counts must add up to the requested number of flips");
+assert.equal(coinOutput[2], `Heads ratio: ${(heads / 1000 * 100).toFixed(1)}%`, "coin-flip ratio must match the observed heads count");
 for (const [slug, example] of Object.entries(verifiedTextExamples)) {
   const runExample = () => processText(slug, example.input, example.secondText ?? "", example.option ?? "", example.amount ?? 1, "en");
   if (example.resultIsError) {
@@ -431,6 +462,8 @@ console.log(JSON.stringify({
    verifiedBatch7SpecializedExamples: 4,
    batch8DraftLocales: Object.keys(batch8EditorialDrafts).length,
    verifiedBatch8RandomExamples: 5,
+   batch9DraftLocales: Object.keys(batch9EditorialDrafts).length,
+   verifiedBatch9RandomExamples: 5,
   duplicateTotals,
   expandedLocaleQuality,
   repeatedUsagePatterns,

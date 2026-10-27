@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
   "publicToolCount": 176,
-  "completeCount": 38,
+  "completeCount": 43,
   "nextBatch": [
-    "random-seat",
-    "duty-picker",
-    "dice-roller",
-    "coin-flip",
-    "stopwatch"
+    "timer",
+    "pomodoro-timer",
+    "world-clock",
+    "password-generator",
+    "random-string-generator"
   ],
   "tools": [
     {
@@ -87,27 +87,27 @@
     },
     {
       "slug": "random-seat",
-      "status": "TRANSLATING",
+      "status": "COMPLETE",
       "batch": "batch-9"
     },
     {
       "slug": "duty-picker",
-      "status": "TRANSLATING",
+      "status": "COMPLETE",
       "batch": "batch-9"
     },
     {
       "slug": "dice-roller",
-      "status": "TRANSLATING",
+      "status": "COMPLETE",
       "batch": "batch-9"
     },
     {
       "slug": "coin-flip",
-      "status": "TRANSLATING",
+      "status": "COMPLETE",
       "batch": "batch-9"
     },
     {
       "slug": "stopwatch",
-      "status": "TRANSLATING",
+      "status": "COMPLETE",
       "batch": "batch-9"
     },
     {

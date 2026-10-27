@@ -138,3 +138,17 @@ The ledger now records 38/176 COMPLETE (138 remaining). Next selected PENDING ba
 
 - `src/registry/tool-detail-editorials-batch-9.ts` contains direct editorial drafts for `ko`, `en`, `ja`, `zh`, `es`, `pt-br`, `de`, `fr`, `vi`, and `id` (10/26 locales). The module is not connected to page rendering, so incomplete locale coverage is not published.
 - The ledger records these five tools as `TRANSLATING`; verified completion remains 38/176. Native-speaker review has not been performed.
+
+## Batch 9 — COMPLETE — 2026-10-27
+
+| Tool | Verified behavior |
+|---|---|
+| `random-seat` | 26 locale cards describe line-based distinct participants, row-first seat assignment, 1–20 row/column controls, 200-seat capacity and empty seats. The processor retained duplicate participant entries and skipped blank lines; browser output filled a 2 × 2 grid with three people and one empty seat. |
+| `duty-picker` | 26 locale cards describe independently shuffled lists, one assignment per person, cyclic reuse when duties are fewer, and unused duties when they are more numerous. The processor and browser confirmed all three people received one of the two supplied duties. |
+| `dice-roller` | 26 locale cards distinguish the standard 1–100 input from the expanded D4/D6/D8/D10/D12/D20 panel with 1–20 dice, including their different result summaries. Processor checks validated 100 standard D6 outcomes and totals plus 20 values in range for each supported die; browser exercised the expanded D6 panel. |
+| `coin-flip` | 26 locale cards document 1–1,000 flips, heads/tails counts and observed heads ratio without prediction claims. Processor and browser checks confirmed counts sum to the requested flips and ratio matches the count. |
+| `stopwatch` | 26 locale cards describe start, pause/resume, reset, hundredth-second display, lap/split values and the 100-lap in-memory limit. Browser verified two laps, pause and reset. |
+
+Batch evidence: the content-quality audit passed with all 176 public tools, 26 locales, 4,576 localized detail/sitemap URLs, zero editorial English fallbacks and no new exact duplicate sets. It verifies the batch 9 five-locale coverage and five processor examples. All 216 unit tests, TypeScript, ESLint, `git diff --check`, and production build passed; the build generated 4,866 static pages. Playwright passed 9/9 tests, including SSR, visible editorial cards and canonical/hreflang/x-default on all 130 batch 9 locale routes, eight viewport widths on the Korean pages, and browser execution for all five tools. Global duplicate candidate counts remained unchanged. Native-speaker review was not performed.
+
+The ledger now records **43/176 COMPLETE** (133 remaining). Next selected PENDING batch: `timer`, `pomodoro-timer`, `world-clock`, `password-generator`, `random-string-generator`. Continue without rewriting verified editorials.

@@ -2,8 +2,8 @@ import { expect, test } from "@playwright/test";
 
 const locales = ["ko", "en", "ja", "zh", "es", "pt-br", "de", "fr", "vi", "id", "th", "zh-tw", "it", "nl", "hi", "ru", "tr", "pl", "fil", "bn", "uk", "ms", "sv", "cs", "ro", "el"];
 const viewports = [320, 360, 375, 390, 430, 768, 1024, 1440];
-const selectedTools = ["json-formatter", "json-validator", "character-count", "remove-spaces", "remove-line-breaks", "remove-duplicate-lines", "reverse-text", "add-line-numbers", "remove-line-numbers", "remove-empty-lines", "remove-characters", "text-repeater", "sort-lines", "shuffle-lines", "text-case-converter", "text-compare", "remove-duplicate-words", "text-to-file", "hiragana-katakana-converter", "fullwidth-halfwidth-converter", "japanese-romaji-converter", "japanese-number-kanji-converter", "simplified-traditional-chinese-converter", "lotto-number-generator", "powerball-number-generator", "mega-millions-number-generator", "japan-loto6-number-generator", "japan-loto7-number-generator", "japan-mini-loto-number-generator", "tarot-card", "daily-fortune", "saju", "random-number", "random-name-picker", "random-wheel", "draw-lots", "random-team-maker", "random-order"];
-const koreanTextBatch = ["character-count", "remove-spaces", "remove-line-breaks", "remove-duplicate-lines", "reverse-text", "add-line-numbers", "remove-line-numbers", "remove-empty-lines", "remove-characters", "text-repeater", "sort-lines", "shuffle-lines", "text-case-converter", "text-compare", "remove-duplicate-words", "text-to-file", "hiragana-katakana-converter", "fullwidth-halfwidth-converter", "japanese-romaji-converter", "japanese-number-kanji-converter", "simplified-traditional-chinese-converter", "lotto-number-generator", "powerball-number-generator", "mega-millions-number-generator", "japan-loto6-number-generator", "japan-loto7-number-generator", "japan-mini-loto-number-generator", "tarot-card", "daily-fortune", "saju", "random-number", "random-name-picker", "random-wheel", "draw-lots", "random-team-maker", "random-order"];
+const selectedTools = ["json-formatter", "json-validator", "character-count", "remove-spaces", "remove-line-breaks", "remove-duplicate-lines", "reverse-text", "add-line-numbers", "remove-line-numbers", "remove-empty-lines", "remove-characters", "text-repeater", "sort-lines", "shuffle-lines", "text-case-converter", "text-compare", "remove-duplicate-words", "text-to-file", "hiragana-katakana-converter", "fullwidth-halfwidth-converter", "japanese-romaji-converter", "japanese-number-kanji-converter", "simplified-traditional-chinese-converter", "lotto-number-generator", "powerball-number-generator", "mega-millions-number-generator", "japan-loto6-number-generator", "japan-loto7-number-generator", "japan-mini-loto-number-generator", "tarot-card", "daily-fortune", "saju", "random-number", "random-name-picker", "random-wheel", "draw-lots", "random-team-maker", "random-order", "random-seat", "duty-picker", "dice-roller", "coin-flip", "stopwatch"];
+const koreanTextBatch = ["character-count", "remove-spaces", "remove-line-breaks", "remove-duplicate-lines", "reverse-text", "add-line-numbers", "remove-line-numbers", "remove-empty-lines", "remove-characters", "text-repeater", "sort-lines", "shuffle-lines", "text-case-converter", "text-compare", "remove-duplicate-words", "text-to-file", "hiragana-katakana-converter", "fullwidth-halfwidth-converter", "japanese-romaji-converter", "japanese-number-kanji-converter", "simplified-traditional-chinese-converter", "lotto-number-generator", "powerball-number-generator", "mega-millions-number-generator", "japan-loto6-number-generator", "japan-loto7-number-generator", "japan-mini-loto-number-generator", "tarot-card", "daily-fortune", "saju", "random-number", "random-name-picker", "random-wheel", "draw-lots", "random-team-maker", "random-order", "random-seat", "duty-picker", "dice-roller", "coin-flip", "stopwatch"];
 
 test("Korean text-tool editorial cards are server-rendered and fit the mobile viewport set", async ({ request, page, baseURL }) => {
   for (const slug of koreanTextBatch) {
@@ -264,4 +264,51 @@ test("participant draws, wheel selection, team assignment, and staged order run 
   await page.getByRole("button", { name: "Reveal all", exact: true }).click();
   const order = (await page.locator("main > section").first().locator("ol li").allTextContents()).map((entry) => entry.replace(/^\d+\.\s*/, ""));
   expect(new Set(order)).toEqual(new Set(["Ada", "Bo", "Cy"]));
+});
+
+test("seat assignment, duty rotation, dice, coin flips, and stopwatch work in the browser", async ({ page, baseURL }) => {
+  await page.goto(`${baseURL}/en/tools/random-seat`);
+  await page.locator("#seat-people").fill("Ada\nBo\nCy");
+  await page.getByLabel("Rows").fill("2");
+  await page.getByLabel("Columns").fill("2");
+  await page.getByRole("button", { name: "Assign seats", exact: true }).click();
+  const seatCells = page.locator("main > section").first().locator(".mt-5.grid.gap-2 > div");
+  await expect(seatCells).toHaveCount(4);
+  const seatText = await seatCells.allTextContents();
+  for (const person of ["Ada", "Bo", "Cy"]) expect(seatText.join(" ")).toContain(person);
+  expect(seatText.join(" ")).toContain("Empty");
+
+  await page.goto(`${baseURL}/en/tools/duty-picker`);
+  await page.locator("#input-text").fill("Ada\nBo\nCy");
+  await page.locator("#second-text").fill("Clean\nGuide");
+  await page.getByRole("button", { name: "Run", exact: true }).click();
+  const dutyLines = (await page.locator("main > section").first().locator("pre").textContent())!.split("\n");
+  expect(dutyLines).toHaveLength(3);
+  for (const person of ["Ada", "Bo", "Cy"]) expect(dutyLines.filter((line) => line.startsWith(person))).toHaveLength(1);
+  expect(dutyLines.every((line) => line.includes("Clean") || line.includes("Guide"))).toBe(true);
+
+  await page.goto(`${baseURL}/en/tools/dice-roller`);
+  await page.getByLabel("Number of dice").fill("20");
+  await page.getByRole("button", { name: "Roll dice", exact: true }).click();
+  await expect(page.locator("main > section").first().locator(".size-14")).toHaveCount(20);
+  const dice = (await page.locator("main > section").first().locator(".size-14").allTextContents()).map(Number);
+  expect(dice.every((value) => value >= 1 && value <= 6)).toBe(true);
+
+  await page.goto(`${baseURL}/en/tools/coin-flip`);
+  await page.getByRole("spinbutton").fill("100");
+  await page.getByRole("button", { name: "Run", exact: true }).click();
+  const coinText = (await page.locator("main > section").first().locator("pre").textContent())!;
+  const heads = Number(coinText.match(/Heads: (\d+)/)?.[1]);
+  const tails = Number(coinText.match(/Tails: (\d+)/)?.[1]);
+  expect(heads + tails).toBe(100);
+  expect(coinText).toContain(`Heads ratio: ${((heads / 100) * 100).toFixed(1)}%`);
+
+  await page.goto(`${baseURL}/en/tools/stopwatch`);
+  await page.getByRole("button", { name: "Start", exact: true }).click();
+  await page.getByRole("button", { name: "Lap", exact: true }).click();
+  await page.getByRole("button", { name: "Lap", exact: true }).click();
+  await page.getByRole("button", { name: "Pause", exact: true }).click();
+  await expect(page.locator("main > section").first().locator("ol li")).toHaveCount(2);
+  await page.getByRole("button", { name: "Reset", exact: true }).click();
+  await expect(page.locator("main > section").first().locator("ol li")).toHaveCount(0);
 });
