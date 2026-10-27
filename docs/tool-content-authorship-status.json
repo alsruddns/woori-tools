@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
   "publicToolCount": 176,
-  "completeCount": 78,
+  "completeCount": 83,
   "nextBatch": [
-    "webp-to-png",
-    "jpg-to-webp",
-    "png-to-webp",
-    "heic-to-jpg",
-    "image-compress"
+    "image-resize",
+    "image-crop",
+    "image-rotate",
+    "image-flip",
+    "image-grayscale"
   ],
   "tools": [
     {
@@ -322,27 +322,27 @@
     },
     {
       "slug": "webp-to-png",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-17"
     },
     {
       "slug": "jpg-to-webp",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-17"
     },
     {
       "slug": "png-to-webp",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-17"
     },
     {
       "slug": "heic-to-jpg",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-17"
     },
     {
       "slug": "image-compress",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-17"
     },
     {

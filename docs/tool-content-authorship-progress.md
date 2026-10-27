@@ -298,3 +298,17 @@ The ledger records **78/176 COMPLETE** (98 remaining). Next PENDING batch is rec
 - Selected the next five PENDING image tools: `webp-to-png`, `jpg-to-webp`, `png-to-webp`, `heic-to-jpg`, and `image-compress`.
 - Inspected the Canvas image processor and workspace quality control. All selected inputs share a 30 MB file limit and 40-million decoded-pixel limit. WebP and JPEG output use the quality slider (default 82%); HEIC/HEIF uses the browser-loaded `heic2any` decoder before Canvas JPEG encoding. `image-compress` always encodes JPEG; JPEG outputs flatten transparency onto white. Batch-specific browser examples and tests are pending.
 - Korean originals are in `docs/tool-content-authorship-batch-17-ko-draft.md`. Ledger status is `KO_DRAFT` for all five; verified completion remains **78/176**. Next: author all 26 locales and verify dimensions, MIME, transparency, quality controls, and example output against the running processors.
+
+## Batch 17 COMPLETE - 2026-10-27
+
+| Tool | Verified content and behavior |
+|---|---|
+| `webp-to-png` | Browser test converted a transparent 12×8 WebP to transparent 12×8 PNG; MIME and `.png` filename matched. Cards explain lossless PNG can be larger. |
+| `jpg-to-webp` | Browser test verified WebP MIME, 12×8 dimensions, opaque JPEG output, and `.webp` filename. Cards describe lossy quality control and no guaranteed size reduction. |
+| `png-to-webp` | Browser test verified WebP MIME, 12×8 dimensions, transparency, and `.webp` filename. Cards qualify transparency on browser encoder support. |
+| `heic-to-jpg` | CC0 synthetic 1600×1200 HEIC fixture converted to JPEG at 1600×1200 with `.jpg` filename. Cards describe browser-loaded heic2any, white JPEG background, limits, and metadata caveat. |
+| `image-compress` | Browser test verified PNG input is always JPEG output, 12×8, opaque white-flattened result, and `.jpg` filename. Cards specify 82% default quality and that size reduction is not guaranteed. |
+
+All five have authored cards in 26 locales, distinct use cases and FAQ questions, and no English field fallback. Content audit totals: 176 public tools, 4,576 localized detail/sitemap URLs, and zero noindex candidates. All 216 unit tests, TypeScript, ESLint, `git diff --check`, and production build passed; build generated 4,866 static pages. Batch Playwright passed 3/3 tests: editorials/SEO on 50 routes (five tools × ten representative locales), real image processing for all five tools, and mobile overflow at 320px/390px. The HEIC test fixture is synthetic and CC0; details and SHA-256 are in `tests/fixtures/heic/README.md`. Existing global duplicate audit remains 171 repeated FAQ-question groups and 52 exact how-to sets. No native-speaker review was performed.
+
+The ledger records **83/176 COMPLETE** (93 remaining). Next PENDING batch: `image-resize`, `image-crop`, `image-rotate`, `image-flip`, and `image-grayscale`. Continue without reauthoring verified editorials.
