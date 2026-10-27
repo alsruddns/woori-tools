@@ -480,3 +480,17 @@ The ledger records **123/176 COMPLETE** (53 remaining). Next PENDING batch: ip-c
 All five have feature-specific editorial cards in 26 locales, unique FAQ questions/use cases by locale, and no English field fallback. Content audit reports 176 tools, 4,576 localized detail URLs, zero noindex candidates, and 26 locales. All 8 relevant processor tests, TypeScript, ESLint, content audit, git diff --check, and production build passed; 4,866 static pages were generated. Playwright passed 3/3 tests: SSR/SEO across 50 routes, processor workflows for all five tools, and 320px/390px mobile checks. No native-speaker review was performed. Global duplicate audit still reports 171 repeated FAQ-question groups and 52 exact how-to sets.
 
 The ledger records **128/176 COMPLETE** (48 remaining). Next PENDING batch: regex-replace, html-entity-encoder-decoder, chmod-calculator, json-path-tester, csv-tsv-converter. Continue without reauthoring verified editorials.
+
+## Batch 27 COMPLETE - 2026-10-28
+
+| Tool | Verified behavior |
+|---|---|
+| regex-replace | Browser replaced both case variants with dog; unit test covers global, case-insensitive replacement and rejects risky nested quantifiers. |
+| html-entity-encoder-decoder | Browser encoded angle brackets, ampersand, and quotes to the expected entities; unit test verifies output. |
+| chmod-calculator | Browser converted 755 to rwxr-xr-x; unit test rejects invalid octal input. |
+| json-path-tester | Browser selected A and B with $.items[*].name; unit test covers property, index, wildcard, and unsupported filters. |
+| csv-tsv-converter | Browser converted CSV to TSV while preserving the quoted comma as one field; unit test covers both directions. |
+
+All five have distinct feature-specific cards in 26 locales, unique FAQ questions/use cases per locale, and no English field fallback. The audit reports 176 public tools, 4,576 localized detail URLs, zero noindex candidates, and 26 locales. All 8 processor tests, TypeScript, ESLint, content audit, git diff --check, and production build passed; build generated 4,866 static pages. Playwright passed 3/3 tests: SSR/SEO across 50 routes, real workflows for all five tools, and 320px/390px mobile checks. No native-speaker review was performed. The global duplicate audit still reports 171 repeated FAQ-question groups and 52 exact how-to sets.
+
+The ledger records **133/176 COMPLETE** (43 remaining). Next PENDING batch: url-slug-generator, unicode-code-point-checker, pdf-page-size-checker, chinese-number-kanji-converter, rmb-uppercase-converter. Continue without reauthoring verified editorials.

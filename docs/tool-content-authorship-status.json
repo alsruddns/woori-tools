@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
   "publicToolCount": 176,
-  "completeCount": 128,
+  "completeCount": 133,
   "nextBatch": [
-    "regex-replace",
-    "html-entity-encoder-decoder",
-    "chmod-calculator",
-    "json-path-tester",
-    "csv-tsv-converter"
+    "url-slug-generator",
+    "unicode-code-point-checker",
+    "pdf-page-size-checker",
+    "chinese-number-kanji-converter",
+    "rmb-uppercase-converter"
   ],
   "tools": [
     {
@@ -647,28 +647,28 @@
     },
     {
       "slug": "regex-replace",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-27"
     },
     {
       "slug": "html-entity-encoder-decoder",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-27"
     },
     {
       "slug": "chmod-calculator",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-27"
     },
     {
       "slug": "json-path-tester",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-27"
     },
     {
       "slug": "csv-tsv-converter",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": "batch-27"
     },
     {
       "slug": "url-slug-generator",
