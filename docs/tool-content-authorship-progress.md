@@ -292,3 +292,9 @@ The ledger records **73/176 COMPLETE** (103 remaining). Next PENDING batch: `jav
 Batch 16 audit passed: all five tools have distinct authored cards in 26 locales, distinct use cases and FAQs, and no English field fallback. Totals remain 176 public tools, 4,576 detail/sitemap URLs, and no noindex candidates. All 216 unit tests, TypeScript, ESLint, `git diff --check`, and production build passed; 4,866 static pages generated. Batch Playwright passed 3/3 tests, covering five processor examples and Markdown sanitization, SSR/canonical/hreflang/x-default on 50 routes (five tools × ten representative locales), and 320px/390px overflow checks. Existing global duplicate audit remains 171 repeated FAQ-question groups and 52 exact how-to sets. No native-speaker review was performed.
 
 The ledger records **78/176 COMPLETE** (98 remaining). Next PENDING batch is recorded in the ledger; continue without reauthoring verified editorials.
+
+## Batch 17 checkpoint - 2026-10-27
+
+- Selected the next five PENDING image tools: `webp-to-png`, `jpg-to-webp`, `png-to-webp`, `heic-to-jpg`, and `image-compress`.
+- Inspected the Canvas image processor and workspace quality control. All selected inputs share a 30 MB file limit and 40-million decoded-pixel limit. WebP and JPEG output use the quality slider (default 82%); HEIC/HEIF uses the browser-loaded `heic2any` decoder before Canvas JPEG encoding. `image-compress` always encodes JPEG; JPEG outputs flatten transparency onto white. Batch-specific browser examples and tests are pending.
+- Korean originals are in `docs/tool-content-authorship-batch-17-ko-draft.md`. Ledger status is `KO_DRAFT` for all five; verified completion remains **78/176**. Next: author all 26 locales and verify dimensions, MIME, transparency, quality controls, and example output against the running processors.

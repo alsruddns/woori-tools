@@ -322,28 +322,28 @@
     },
     {
       "slug": "webp-to-png",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-17"
     },
     {
       "slug": "jpg-to-webp",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-17"
     },
     {
       "slug": "png-to-webp",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-17"
     },
     {
       "slug": "heic-to-jpg",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-17"
     },
     {
       "slug": "image-compress",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-17"
     },
     {
       "slug": "image-resize",
