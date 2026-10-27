@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ToolWorkspace } from "@/components/tool/tool-workspace";
 import { VerifiedTextExample } from "@/components/tool/verified-text-example";
+import { ToolDetailEditorial } from "@/components/tool/tool-detail-editorial";
 import { BarcodeWorkspace } from "@/components/tool/barcode-workspace";
 import { RussianBarcodeCheckerWorkspace } from "@/components/tool/russian-barcode-checker-workspace";
 import { RussianInstagramGridWorkspace } from "@/components/tool/russian-instagram-grid-workspace";
@@ -66,6 +67,7 @@ import { findLocalizedCategory } from "@/registry/category-translations";
 import { localizeTool, localizeTools } from "@/registry/tool-translations";
 import { getTool, tools } from "@/registry/tools";
 import { getToolContent, getToolStorageNote } from "@/registry/tool-content";
+import { hasToolDetailEditorial } from "@/registry/tool-detail-editorials";
 import { getFileGuidance } from "@/registry/file-guidance";
 import { getToolFaqQuestions } from "@/registry/tool-faq";
 import { localizePublishedTool } from "@/registry/published-tool-translations";
@@ -172,7 +174,8 @@ export default async function ToolPage({ params }: Props) {
       </header>
 
       <ToolWorkspace key={`${locale}-${tool.slug}`} tool={tool} phaseLocale={locale} messages={messages} />
-      <VerifiedTextExample slug={slug} toolName={tool.title} labels={{ input: messages.input, secondInput: messages.secondText, result: messages.result }} />
+      <VerifiedTextExample slug={slug} toolName={tool.title} labels={{ input: messages.input, secondInput: messages.secondText, result: messages.result, invalidInput: messages.errors.invalidJson }} />
+      <ToolDetailEditorial locale={locale} slug={slug} />
 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
         "@context": "https://schema.org",
@@ -212,13 +215,13 @@ export default async function ToolPage({ params }: Props) {
         <article className="min-w-0 rounded-2xl border border-slate-200 bg-white p-4 sm:p-6"><h2 className="text-xl font-bold">{seoContent.headings.privacy}</h2><p className="mt-2 rounded-xl bg-emerald-50 p-4 text-sm leading-6 text-emerald-900">{seoContent.headings.privacyAnswer} {storageNote && <span className="mt-2 block">{storageNote}</span>} <Link href={localizePath(locale, "/privacy")} className="font-semibold underline underline-offset-2">{messages.privacy}</Link></p></article>
       </section>
 
-      <section className="mt-4 min-w-0 rounded-2xl border border-slate-200 bg-white p-4 [overflow-wrap:anywhere] sm:p-6">
+      {!hasToolDetailEditorial(slug) && <section className="mt-4 min-w-0 rounded-2xl border border-slate-200 bg-white p-4 [overflow-wrap:anywhere] sm:p-6">
         <h2 className="text-xl font-bold sm:text-2xl">{seoContent.headings.faq}</h2>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
           <article className="min-w-0 rounded-xl border border-slate-200 p-4"><h3 className="font-semibold">{faqQuestions.example}</h3><p className="mt-2 leading-7 text-slate-700">{seoContent.example}</p></article>
           <article className="min-w-0 rounded-xl border border-slate-200 p-4"><h3 className="font-semibold">{faqQuestions.caution}</h3><p className="mt-2 leading-7 text-slate-700">{seoContent.caution}</p></article>
         </div>
-      </section>
+      </section>}
 
       {localizedTools.length > 0 && (
         <section className="mt-10">
@@ -254,14 +257,15 @@ function PolishPublishedToolPage({ slug }: { slug: string }) {
     <nav aria-label="Okruszki nawigacyjne" className="mb-6 flex flex-wrap items-center gap-2 text-sm text-slate-500"><Link href="/pl/tools" className="hover:text-indigo-700">Narzędzia</Link><span aria-hidden="true">/</span><span aria-current="page" className="text-slate-700">{tool.shortTitle}</span></nav>
     <header className="mb-7"><p className="text-sm font-semibold text-indigo-700">Narzędzia online</p><h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">{translation.title}</h1><p className="mt-3 max-w-3xl text-lg leading-8 text-slate-600">{translation.description}</p></header>
     {slug === "instagram-grid-split" ? <RussianInstagramGridWorkspace locale="pl" /> : slug === "image-collage" ? <RussianImageCollageWorkspace locale="pl" /> : <ToolWorkspace key={`pl-${tool.slug}`} tool={tool} phaseLocale="pl" optionLocale="pl" messages={messages} />}
-    <VerifiedTextExample slug={slug} toolName={translation.title} labels={{ input: messages.input, secondInput: messages.secondText, result: messages.result }} />
+    <VerifiedTextExample slug={slug} toolName={translation.title} labels={{ input: messages.input, secondInput: messages.secondText, result: messages.result, invalidInput: messages.errors.invalidJson }} />
+    <ToolDetailEditorial locale="pl" slug={slug} />
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@context": "https://schema.org", "@type": "WebApplication", name: translation.title, description: translation.description, url, inLanguage: "pl", applicationCategory: "UtilitiesApplication", operatingSystem: "Any", offers: { "@type": "Offer", price: "0", priceCurrency: "KRW" } }).replace(/</g, "\\u003c") }} />
     <section className="mt-10 grid min-w-0 gap-4 [overflow-wrap:anywhere]">
       <article className="min-w-0 rounded-2xl border border-slate-200 bg-white p-4 sm:p-6"><h2 className="text-xl font-bold">Jak korzystać</h2><ol className="mt-4 list-inside list-decimal space-y-2 text-slate-700">{translation.steps.map((step) => <li key={step}>{step}</li>)}</ol></article>
       <article className="min-w-0 rounded-2xl border border-slate-200 bg-white p-4 sm:p-6"><h2 className="text-xl font-bold">Opcje i wynik</h2><p className="mt-2 leading-7 text-slate-700">{translation.options}</p></article>
       <article className="min-w-0 rounded-2xl border border-slate-200 bg-white p-4 sm:p-6"><h2 className="text-xl font-bold">Prywatność</h2><p className="mt-2 rounded-xl bg-emerald-50 p-4 text-sm leading-6 text-emerald-900">Pliki są przetwarzane lokalnie w przeglądarce i nie są wysyłane na serwer.</p></article>
     </section>
-    <section className="mt-4 min-w-0 rounded-2xl border border-slate-200 bg-white p-4 [overflow-wrap:anywhere] sm:p-6"><h2 className="text-xl font-bold sm:text-2xl">Częste pytania</h2><div className="mt-4 grid gap-4 sm:grid-cols-2"><article className="min-w-0 rounded-xl border border-slate-200 p-4"><h3 className="font-semibold">{translation.faq.example}</h3><p className="mt-2 leading-7 text-slate-700">{translation.example}</p></article><article className="min-w-0 rounded-xl border border-slate-200 p-4"><h3 className="font-semibold">{translation.faq.caution}</h3><p className="mt-2 leading-7 text-slate-700">{translation.caution}</p></article></div></section>
+    {!hasToolDetailEditorial(slug) && <section className="mt-4 min-w-0 rounded-2xl border border-slate-200 bg-white p-4 [overflow-wrap:anywhere] sm:p-6"><h2 className="text-xl font-bold sm:text-2xl">Częste pytania</h2><div className="mt-4 grid gap-4 sm:grid-cols-2"><article className="min-w-0 rounded-xl border border-slate-200 p-4"><h3 className="font-semibold">{translation.faq.example}</h3><p className="mt-2 leading-7 text-slate-700">{translation.example}</p></article><article className="min-w-0 rounded-xl border border-slate-200 p-4"><h3 className="font-semibold">{translation.faq.caution}</h3><p className="mt-2 leading-7 text-slate-700">{translation.caution}</p></article></div></section>}
     {related.length > 0 && <section className="mt-10"><h2 className="text-2xl font-bold">Podobne narzędzia</h2><div className="mt-4 grid gap-3 sm:grid-cols-2">{related.map((item) => <Link key={item.slug} href={`/pl/tools/${item.slug}`} className="rounded-xl border border-slate-200 bg-white p-4 hover:border-indigo-300"><span className="font-semibold">{item.title}</span><span className="mt-1 block text-sm text-slate-600">{item.description}</span></Link>)}</div></section>}
   </main>;
 }
@@ -280,13 +284,14 @@ async function ExpandedToolDetailPage({ locale, slug }: { locale: ExpandedLocale
       <nav aria-label={messages.breadcrumb} className="mb-6 text-sm text-slate-500"><Link href={localizePath(locale, "/tools")} className="hover:text-indigo-700">{messages.tools}</Link><span aria-hidden="true"> / </span><span aria-current="page" className="text-slate-700">{tool.title}</span></nav>
       <header className="mb-7"><p className="mb-2 text-sm font-semibold text-indigo-700">{category}</p><h1 className="text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">{tool.title}</h1><p className="mt-3 max-w-3xl text-lg leading-8 text-slate-600">{tool.description}</p></header>
       <ToolWorkspace key={`${locale}-${tool.slug}`} tool={tool} phaseLocale={locale} messages={messages} />
-      <VerifiedTextExample slug={slug} toolName={tool.title} labels={{ input: messages.input, secondInput: messages.secondText, result: messages.result }} />
+      <VerifiedTextExample slug={slug} toolName={tool.title} labels={{ input: messages.input, secondInput: messages.secondText, result: messages.result, invalidInput: messages.errors.invalidJson }} />
+      <ToolDetailEditorial locale={locale} slug={slug} />
       <section className="mt-10 grid min-w-0 gap-4 [overflow-wrap:anywhere]">
         <article className="min-w-0 rounded-2xl border border-slate-200 bg-white p-4 sm:p-6"><h2 className="text-xl font-bold">{messages.howTo}</h2><ol className="mt-4 list-inside list-decimal space-y-2 text-slate-700">{translation.steps.map((step) => <li key={step}>{step}</li>)}</ol></article>
         <article className="min-w-0 rounded-2xl border border-slate-200 bg-white p-4 sm:p-6"><h2 className="text-xl font-bold">{messages.option}</h2><p className="mt-2 leading-7 text-slate-700">{translation.options}</p></article>
         <article className="min-w-0 rounded-2xl border border-slate-200 bg-white p-4 sm:p-6"><h2 className="text-xl font-bold">{messages.filePrivacy}</h2><p className="mt-2 rounded-xl bg-emerald-50 p-4 text-sm leading-6 text-emerald-900">{messages.privacyNotice}</p></article>
       </section>
-      <section className="mt-4 min-w-0 rounded-2xl border border-slate-200 bg-white p-4 [overflow-wrap:anywhere] sm:p-6"><h2 className="text-xl font-bold sm:text-2xl">{messages.faq}</h2><div className="mt-4 grid gap-4 sm:grid-cols-2"><article className="min-w-0 rounded-xl border border-slate-200 p-4"><h3 className="font-semibold">{translation.faq.example}</h3><p className="mt-2 leading-7 text-slate-700">{translation.example}</p></article><article className="min-w-0 rounded-xl border border-slate-200 p-4"><h3 className="font-semibold">{translation.faq.caution}</h3><p className="mt-2 leading-7 text-slate-700">{translation.caution}</p></article></div></section>
+      {!hasToolDetailEditorial(slug) && <section className="mt-4 min-w-0 rounded-2xl border border-slate-200 bg-white p-4 [overflow-wrap:anywhere] sm:p-6"><h2 className="text-xl font-bold sm:text-2xl">{messages.faq}</h2><div className="mt-4 grid gap-4 sm:grid-cols-2"><article className="min-w-0 rounded-xl border border-slate-200 p-4"><h3 className="font-semibold">{translation.faq.example}</h3><p className="mt-2 leading-7 text-slate-700">{translation.example}</p></article><article className="min-w-0 rounded-xl border border-slate-200 p-4"><h3 className="font-semibold">{translation.faq.caution}</h3><p className="mt-2 leading-7 text-slate-700">{translation.caution}</p></article></div></section>}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@context": "https://schema.org", "@type": "WebApplication", name: tool.title, description: tool.description, url, inLanguage: locale, applicationCategory: "UtilitiesApplication", operatingSystem: "Any", offers: { "@type": "Offer", price: "0", priceCurrency: "KRW" } }).replace(/</g, "\\u003c") }} />
     </main>
   </ToolDetailLayout>;
@@ -420,13 +425,14 @@ function TurkishPublishedToolPage({ slug }: { slug: string }) {
       <p className="mt-3 max-w-3xl text-lg leading-8 text-slate-600">{translation.description}</p>
     </header>
     {workspace}
-    <VerifiedTextExample slug={slug} toolName={translation.title} labels={{ input: messages.input, secondInput: messages.secondText, result: messages.result }} />
+    <VerifiedTextExample slug={slug} toolName={translation.title} labels={{ input: messages.input, secondInput: messages.secondText, result: messages.result, invalidInput: messages.errors.invalidJson }} />
+    <ToolDetailEditorial locale="tr" slug={slug} />
     <section className="mt-10 grid min-w-0 gap-4 [overflow-wrap:anywhere]">
       <article className="min-w-0 rounded-2xl border border-slate-200 bg-white p-4 sm:p-6"><h2 className="text-xl font-bold">{messages.howTo}</h2><ol className="mt-4 list-inside list-decimal space-y-2 text-slate-700">{translation.steps.map((step) => <li key={step}>{step}</li>)}</ol></article>
       <article className="min-w-0 rounded-2xl border border-slate-200 bg-white p-4 sm:p-6"><h2 className="text-xl font-bold">Seçenekler ve sonuç</h2><p className="mt-2 leading-7 text-slate-700">{translation.options}</p></article>
       <article className="min-w-0 rounded-2xl border border-slate-200 bg-white p-4 sm:p-6"><h2 className="text-xl font-bold">Gizlilik</h2><p className="mt-2 rounded-xl bg-emerald-50 p-4 text-sm leading-6 text-emerald-900">{messages.filePrivacy} <Link href="/tr/tools" className="font-semibold underline underline-offset-2">{messages.allTools}</Link></p></article>
     </section>
-    <section className="mt-4 min-w-0 rounded-2xl border border-slate-200 bg-white p-4 [overflow-wrap:anywhere] sm:p-6"><h2 className="text-xl font-bold sm:text-2xl">{messages.faq}</h2><div className="mt-4 grid gap-4 sm:grid-cols-2"><article className="min-w-0 rounded-xl border border-slate-200 p-4"><h3 className="font-semibold">{translation.faq.example}</h3><p className="mt-2 leading-7 text-slate-700">{translation.example}</p></article><article className="min-w-0 rounded-xl border border-slate-200 p-4"><h3 className="font-semibold">{translation.faq.caution}</h3><p className="mt-2 leading-7 text-slate-700">{translation.caution}</p></article></div></section>
+    {!hasToolDetailEditorial(slug) && <section className="mt-4 min-w-0 rounded-2xl border border-slate-200 bg-white p-4 [overflow-wrap:anywhere] sm:p-6"><h2 className="text-xl font-bold sm:text-2xl">{messages.faq}</h2><div className="mt-4 grid gap-4 sm:grid-cols-2"><article className="min-w-0 rounded-xl border border-slate-200 p-4"><h3 className="font-semibold">{translation.faq.example}</h3><p className="mt-2 leading-7 text-slate-700">{translation.example}</p></article><article className="min-w-0 rounded-xl border border-slate-200 p-4"><h3 className="font-semibold">{translation.faq.caution}</h3><p className="mt-2 leading-7 text-slate-700">{translation.caution}</p></article></div></section>}
     {related.length > 0 && <section className="mt-10"><h2 className="text-2xl font-bold">{messages.relatedTools}</h2><div className="mt-4 grid gap-3 sm:grid-cols-2">{related.map((item) => <Link key={item.slug} href={`/tr/tools/${item.slug}`} className="rounded-xl border border-slate-200 p-4 hover:border-indigo-300"><span className="font-semibold">{item.title}</span><span className="mt-1 block text-sm text-slate-600">{item.description}</span></Link>)}</div></section>}
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@context": "https://schema.org", "@type": "WebApplication", name: translation.title, description: translation.description, url, inLanguage: "tr-TR", applicationCategory: "UtilitiesApplication", operatingSystem: "Any", offers: { "@type": "Offer", price: "0", priceCurrency: "KRW" } }).replace(/</g, "\\u003c") }} />
   </main>;
@@ -625,13 +631,14 @@ function RussianPublishedToolPage({ slug }: { slug: string }) {
     <nav aria-label={messages.breadcrumb} className="mb-6 text-sm text-slate-500"><Link href="/ru/tools" className="hover:text-indigo-700">{messages.tools}</Link><span aria-hidden="true"> / </span><span aria-current="page" className="text-slate-700">{tool.title}</span></nav>
     <header className="mb-7"><p className="mb-2 text-sm font-semibold text-indigo-700">{category}</p><h1 className="text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">{tool.title}</h1><p className="mt-3 max-w-3xl text-lg leading-8 text-slate-600">{tool.description}</p></header>
     {workspace}
-    <VerifiedTextExample slug={slug} toolName={tool.title} labels={{ input: messages.input, secondInput: messages.secondText, result: messages.result }} />
+    <VerifiedTextExample slug={slug} toolName={tool.title} labels={{ input: messages.input, secondInput: messages.secondText, result: messages.result, invalidInput: messages.errors.invalidJson }} />
+    <ToolDetailEditorial locale="ru" slug={slug} />
     <section className="mt-10 grid min-w-0 gap-4 [overflow-wrap:anywhere] [&>article]:min-w-0 [&>article]:rounded-2xl [&>article]:border [&>article]:border-slate-200 [&>article]:bg-white [&>article]:p-4 sm:[&>article]:p-6">
       <article><h2 className="text-xl font-bold">Как пользоваться</h2><ol className="mt-4 list-inside list-decimal space-y-2 text-slate-700">{translation.steps.map((step) => <li key={step}>{step}</li>)}</ol></article>
       <article><h2 className="text-xl font-bold">Параметры</h2><p className="mt-2 leading-7 text-slate-700">{translation.options}</p></article>
       <article><h2 className="text-xl font-bold">Конфиденциальность</h2><p className="mt-2 rounded-xl bg-emerald-50 p-4 text-sm leading-6 text-emerald-900">Данные обрабатываются в браузере и не отправляются на сервер.</p></article>
     </section>
-    <section className="mt-4 min-w-0 rounded-2xl border border-slate-200 bg-white p-4 [overflow-wrap:anywhere] sm:p-6"><h2 className="text-xl font-bold sm:text-2xl">Частые вопросы</h2><div className="mt-4 grid gap-4 sm:grid-cols-2"><article className="min-w-0 rounded-xl border border-slate-200 p-4"><h3 className="font-semibold">{translation.faq.example}</h3><p className="mt-2 leading-7 text-slate-700">{translation.example}</p></article><article className="min-w-0 rounded-xl border border-slate-200 p-4"><h3 className="font-semibold">{translation.faq.caution}</h3><p className="mt-2 leading-7 text-slate-700">{translation.caution}</p></article></div></section>
+    {!hasToolDetailEditorial(slug) && <section className="mt-4 min-w-0 rounded-2xl border border-slate-200 bg-white p-4 [overflow-wrap:anywhere] sm:p-6"><h2 className="text-xl font-bold sm:text-2xl">Частые вопросы</h2><div className="mt-4 grid gap-4 sm:grid-cols-2"><article className="min-w-0 rounded-xl border border-slate-200 p-4"><h3 className="font-semibold">{translation.faq.example}</h3><p className="mt-2 leading-7 text-slate-700">{translation.example}</p></article><article className="min-w-0 rounded-xl border border-slate-200 p-4"><h3 className="font-semibold">{translation.faq.caution}</h3><p className="mt-2 leading-7 text-slate-700">{translation.caution}</p></article></div></section>}
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@context": "https://schema.org", "@type": "WebApplication", name: tool.title, description: tool.description, url, inLanguage: "ru", applicationCategory: "UtilitiesApplication", operatingSystem: "Any", offers: { "@type": "Offer", price: "0", priceCurrency: "KRW" } }).replace(/</g, "\\u003c") }} />
   </main>;
 }

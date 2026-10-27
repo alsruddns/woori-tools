@@ -3,7 +3,7 @@ import { verifiedTextExamples } from "@/registry/verified-text-examples";
 type Props = {
   slug: string;
   toolName: string;
-  labels: { input: string; secondInput: string; result: string };
+  labels: { input: string; secondInput: string; result: string; invalidInput: string };
 };
 
 export function VerifiedTextExample({ slug, toolName, labels }: Props) {
@@ -26,7 +26,7 @@ export function VerifiedTextExample({ slug, toolName, labels }: Props) {
         )}
         <div className="min-w-0">
           <h3 className="text-sm font-medium text-slate-700">{labels.result}</h3>
-          <pre className="mt-2 max-h-56 overflow-auto whitespace-pre-wrap break-words rounded-lg bg-white p-3 text-sm text-slate-900">{example.output}</pre>
+          <pre className="mt-2 max-h-56 overflow-auto whitespace-pre-wrap break-words rounded-lg bg-white p-3 text-sm text-slate-900">{example.resultIsError ? labels.invalidInput : example.output}</pre>
         </div>
       </div>
     </section>

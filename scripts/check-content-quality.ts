@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { access, readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { locales, publishedTargetLocales, type PlannedLocale, type PublishedTargetLocale } from "../src/i18n/routing";
+import { getMessages } from "../src/i18n/messages";
 import { getLocalizedCategories } from "../src/registry/category-translations";
 import { getFileGuidance } from "../src/registry/file-guidance";
 import { homeContent } from "../src/registry/home-content";
@@ -10,6 +11,7 @@ import { toolExampleInputs } from "../src/registry/tool-example-inputs";
 import { verifiedTextExamples } from "../src/registry/verified-text-examples";
 import { getToolFaqQuestions } from "../src/registry/tool-faq";
 import { getToolRiskNote } from "../src/registry/tool-risk-notes";
+import { authoredEditorialSlugs, getToolDetailEditorial } from "../src/registry/tool-detail-editorials";
 import { localizeTool } from "../src/registry/tool-translations";
 import { getTargetToolTranslation } from "../src/registry/target-tool-translation";
 import { renameCopy, selectionCopy } from "../src/registry/tool-option-copy";
@@ -23,6 +25,18 @@ const slugs = new Set(tools.map((tool) => tool.slug));
 assert.equal(slugs.size, tools.length, "duplicate public slug");
 assert.deepEqual(new Set(Object.keys(toolExampleInputs)), slugs, "sample inputs must match public tools exactly");
 assert.ok(Object.keys(verifiedTextExamples).every((slug) => slugs.has(slug)), "verified runtime examples must belong to public tools");
+for (const locale of publishedTargetLocales) {
+  for (const slug of authoredEditorialSlugs) {
+    const editorial = getToolDetailEditorial(locale, slug);
+    const english = getToolDetailEditorial("en", slug);
+    assert.ok(editorial && [editorial.principle, editorial.useCase, editorial.troubleshooting, editorial.faqQuestion, editorial.faqAnswer].every((value) => value.trim()), `${locale}/${slug}: editorial content is complete`);
+    if (locale !== "en" && editorial && english) {
+      for (const field of ["principle", "useCase", "troubleshooting", "faqQuestion", "faqAnswer"] as const) {
+        assert.notEqual(editorial[field], english[field], `${locale}/${slug}: ${field} must not fall back to English`);
+      }
+    }
+  }
+}
 const duplicateCounts = (values: string[]) => {
   const counts = new Map<string, number>();
   for (const value of values) counts.set(value, (counts.get(value) ?? 0) + 1);
@@ -242,8 +256,19 @@ assert.equal((await processText("reverse-text", exampleInput("reverse-text"), ""
 assert.equal(formatPhone("france-phone-number-formatter", "0612345678"), "+33 6 12 34 56 78");
 assert.equal(formatPhone("us-phone-number-formatter", "2025550123"), "+1 (202) 555-0123");
 for (const [slug, example] of Object.entries(verifiedTextExamples)) {
-  const actual = await processText(slug, example.input, example.secondText ?? "", example.option ?? "", example.amount ?? 1, "en");
-  assert.equal(actual.result, example.output, `${slug}: displayed input/output example must match the real processor`);
+  const runExample = () => processText(slug, example.input, example.secondText ?? "", example.option ?? "", example.amount ?? 1, "en");
+  if (example.resultIsError) {
+    let failure: unknown;
+    try {
+      await runExample();
+    } catch (error) {
+      failure = error;
+    }
+    assert.equal(failure instanceof Error ? failure.message : "", getMessages("en").errors.invalidJson, `${slug}: displayed error text must match the real processor`);
+  } else {
+    const actual = await runExample();
+    assert.equal(actual.result, example.output, `${slug}: displayed input/output example must match the real processor`);
+  }
 }
 
 const srcFiles = await sourceFiles(path.resolve("src"));

@@ -13,6 +13,7 @@ export function SiteHeader({ locale }: { locale: Locale }) {
       <div className="mx-auto flex min-h-16 max-w-7xl items-center justify-between gap-2 px-4 py-2 sm:px-6 lg:px-8">
         <Link
           href={`/${locale}`}
+          prefetch={false}
           aria-label={chrome.logoHome}
           className="flex shrink-0 items-center gap-2"
         >

@@ -5,10 +5,12 @@ export type VerifiedTextExample = {
   secondText?: string;
   option?: string;
   amount?: number;
+  resultIsError?: boolean;
 };
 
 export const verifiedTextExamples: Record<string, VerifiedTextExample> = {
   "json-formatter": { input: '{"name":"Mina","active":true}', output: '{\n  "name": "Mina",\n  "active": true\n}' },
+  "json-validator": { input: '{"name":}', output: "", resultIsError: true },
   "json-to-yaml": { input: '{"name":"Mina","active":true}', output: "name: Mina\nactive: true\n" },
   "yaml-to-json": { input: "name: Mina\nactive: true", output: '{\n  "name": "Mina",\n  "active": true\n}' },
   "csv-to-json": { input: "name,city\nMina,Seoul", output: '[\n  {\n    "name": "Mina",\n    "city": "Seoul"\n  }\n]' },
