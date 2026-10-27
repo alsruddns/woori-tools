@@ -37,28 +37,28 @@
     },
     {
       "slug": "japan-mini-loto-number-generator",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-7"
     },
     {
       "slug": "tarot-card",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-7"
     },
     {
       "slug": "daily-fortune",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-7"
     },
     {
       "slug": "saju",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-7"
     },
     {
       "slug": "random-number",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-7"
     },
     {
       "slug": "random-name-picker",

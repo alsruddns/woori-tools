@@ -33,7 +33,7 @@ assert.equal(authorshipStatus.tools.length, tools.length, "authorship status mus
 assert.equal(authorshipStatus.completeCount, authorshipStatus.tools.filter((tool) => tool.status === "COMPLETE").length, "authorship status complete count must match its entries");
 for (const slug of authoredEditorialSlugs) assert.ok(["VALIDATING", "COMPLETE"].includes(authorshipStatus.tools.find((tool) => tool.slug === slug)?.status ?? ""), `${slug}: authored editorial must be VALIDATING or COMPLETE in the status record`);
 for (const { slug, status } of authorshipStatus.tools) if (status === "COMPLETE") assert.ok(authoredEditorialSlugs.includes(slug), `${slug}: status cannot be COMPLETE without authored editorial coverage`);
-for (const slug of authorshipStatus.nextBatch) assert.ok(["PENDING", "VALIDATING"].includes(authorshipStatus.tools.find((tool) => tool.slug === slug)?.status ?? ""), `${slug}: active or next batch must be PENDING or VALIDATING`);
+for (const slug of authorshipStatus.nextBatch) assert.ok(["PENDING", "KO_DRAFT", "TRANSLATING", "VALIDATING"].includes(authorshipStatus.tools.find((tool) => tool.slug === slug)?.status ?? ""), `${slug}: active or next batch must be in an editable state`);
 assert.deepEqual(new Set(Object.keys(toolExampleInputs)), slugs, "sample inputs must match public tools exactly");
 assert.ok(Object.keys(verifiedTextExamples).every((slug) => slugs.has(slug)), "verified runtime examples must belong to public tools");
 for (const locale of publishedTargetLocales) {

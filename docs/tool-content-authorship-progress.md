@@ -69,3 +69,10 @@ Batch 5 verification: content audit covers 176 tools, all 26 locales, 4,576 loca
 Batch 6 verification: the content audit reports five lottery examples checked against `generateLottoGames` and `generateSpecialBalls`, 176 public tools, 26 locales, 4,576 localized detail/sitemap URLs, no English editorial fallbacks, and zero noindex candidates. All 216 unit tests, TypeScript, lint, `git diff --check`, and production build (4,866 static pages) passed. Playwright passed six tests; SSR covered all 26 locales for 28 authored tools (728 pages), all 26 authored Korean pages passed the eight-width viewport check, and the browser generated valid game shapes for all five tools. Canonical, hreflang, x-default, visible content, and noindex checks passed. Native-speaker review was not performed.
 
 The machine-readable [tool status ledger](tool-content-authorship-status.json) covers all 176 public tools and is checked by the content audit. Cumulative editorial completion is 28/176, with 148 remaining. Next selected batch (all `PENDING`): `japan-mini-loto-number-generator`, `tarot-card`, `daily-fortune`, `saju`, and `random-number`. Continue from the first PENDING tool and preserve all COMPLETE content. Native-speaker review has not been performed for authored batches.
+
+## Batch 7 checkpoint — 2026-10-27
+
+- Durable Korean drafts are recorded for `japan-mini-loto-number-generator`, `tarot-card`, `daily-fortune`, `saju`, and `random-number` in `docs/tool-content-authorship-batch-7-ko-draft.md`.
+- Ledger statuses for these five are `KO_DRAFT`; overall verified completion remains **28/176**. They are not included in the localized editorial registry and are not counted as complete.
+- Pending work: write and integrate all 26 locale versions; verify each described example against its processor or calculation library; run content audit, affected unit tests, TypeScript, lint, build and browser checks; then update statuses only after passing evidence.
+- No native-speaker review has been performed. No external translation service was used.
