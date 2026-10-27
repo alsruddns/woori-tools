@@ -7,6 +7,7 @@ import { getFileGuidance } from "../src/registry/file-guidance";
 import { homeContent } from "../src/registry/home-content";
 import { getToolContent, getToolStorageNote } from "../src/registry/tool-content";
 import { toolExampleInputs } from "../src/registry/tool-example-inputs";
+import { verifiedTextExamples } from "../src/registry/verified-text-examples";
 import { getToolFaqQuestions } from "../src/registry/tool-faq";
 import { getToolRiskNote } from "../src/registry/tool-risk-notes";
 import { localizeTool } from "../src/registry/tool-translations";
@@ -16,10 +17,12 @@ import { tools } from "../src/registry/tools";
 import { languageAlternates, SITE_ORIGIN } from "../src/lib/seo";
 import { createSitemapEntries } from "../src/lib/sitemap-entries.mjs";
 import { processText } from "../src/lib/text/process-text";
+import { formatPhone } from "../src/lib/country-tools";
 
 const slugs = new Set(tools.map((tool) => tool.slug));
 assert.equal(slugs.size, tools.length, "duplicate public slug");
 assert.deepEqual(new Set(Object.keys(toolExampleInputs)), slugs, "sample inputs must match public tools exactly");
+assert.ok(Object.keys(verifiedTextExamples).every((slug) => slugs.has(slug)), "verified runtime examples must belong to public tools");
 const duplicateCounts = (values: string[]) => {
   const counts = new Map<string, number>();
   for (const value of values) counts.set(value, (counts.get(value) ?? 0) + 1);
@@ -184,6 +187,7 @@ for (const locale of publishedTargetLocales.filter((item) => !locales.includes(i
     englishDescriptionFallbacks,
     repeatedHowToSlugs: repeatedSlugs(translations.map(({ steps }) => steps.join("\n"))),
   };
+  if (locale === "pl") assert.equal(expandedLocaleQuality.pl.exactHowToDuplicates, 0, "Polish phone-format guides must explain the distinct France and US input rules");
   assert.equal(englishDescriptionFallbacks, 0, `${locale}: published descriptions fell back to English`);
   const normalized = translations.map(({ description }, index) => ({ slug: tools[index].slug, value: description.toLocaleLowerCase().replace(/[\p{P}\p{S}\s]/gu, "") }));
   const grams = (value: string) => new Set(Array.from({ length: value.length - 2 }, (_, n) => value.slice(n, n + 3)));
@@ -235,6 +239,12 @@ assert.match((await processText("json-to-yaml", exampleInput("json-to-yaml"), ""
 assert.deepEqual(JSON.parse((await processText("yaml-to-json", exampleInput("yaml-to-json"), "", "", 1, "en")).result), { name: "A" });
 assert.equal((await processText("remove-duplicate-lines", exampleInput("remove-duplicate-lines"), "", "", 1, "en")).result, "A\nB");
 assert.equal((await processText("reverse-text", exampleInput("reverse-text"), "", "", 1, "en")).result, "cba");
+assert.equal(formatPhone("france-phone-number-formatter", "0612345678"), "+33 6 12 34 56 78");
+assert.equal(formatPhone("us-phone-number-formatter", "2025550123"), "+1 (202) 555-0123");
+for (const [slug, example] of Object.entries(verifiedTextExamples)) {
+  const actual = await processText(slug, example.input, example.secondText ?? "", example.option ?? "", example.amount ?? 1, "en");
+  assert.equal(actual.result, example.output, `${slug}: displayed input/output example must match the real processor`);
+}
 
 const srcFiles = await sourceFiles(path.resolve("src"));
 const brokenLinkFiles: string[] = [];
@@ -288,6 +298,8 @@ console.log(JSON.stringify({
   locales: publishedTargetLocales,
   localizedDetailPages: tools.reduce((sum, tool) => sum + tool.supportedLocales.length, 0),
   fileInputTools: tools.filter((tool) => tool.usesFileInput).length,
+  verifiedInputOutputExamples: Object.keys(verifiedTextExamples).length,
+  verifiedPhoneFormatterExamples: 2,
   duplicateTotals,
   expandedLocaleQuality,
   repeatedUsagePatterns,

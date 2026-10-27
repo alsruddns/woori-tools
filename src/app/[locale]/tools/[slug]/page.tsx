@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ToolWorkspace } from "@/components/tool/tool-workspace";
+import { VerifiedTextExample } from "@/components/tool/verified-text-example";
 import { BarcodeWorkspace } from "@/components/tool/barcode-workspace";
 import { RussianBarcodeCheckerWorkspace } from "@/components/tool/russian-barcode-checker-workspace";
 import { RussianInstagramGridWorkspace } from "@/components/tool/russian-instagram-grid-workspace";
@@ -171,6 +172,7 @@ export default async function ToolPage({ params }: Props) {
       </header>
 
       <ToolWorkspace key={`${locale}-${tool.slug}`} tool={tool} phaseLocale={locale} messages={messages} />
+      <VerifiedTextExample slug={slug} toolName={tool.title} labels={{ input: messages.input, secondInput: messages.secondText, result: messages.result }} />
 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
         "@context": "https://schema.org",
@@ -261,6 +263,7 @@ function PolishPublishedToolPage({ slug }: { slug: string }) {
     <nav aria-label="Okruszki nawigacyjne" className="mb-6 flex flex-wrap items-center gap-2 text-sm text-slate-500"><Link href="/pl/tools" className="hover:text-indigo-700">Narzędzia</Link><span aria-hidden="true">/</span><span aria-current="page" className="text-slate-700">{tool.shortTitle}</span></nav>
     <header className="mb-7"><p className="text-sm font-semibold text-indigo-700">Narzędzia online</p><h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">{translation.title}</h1><p className="mt-3 max-w-3xl text-lg leading-8 text-slate-600">{translation.description}</p></header>
     {slug === "instagram-grid-split" ? <RussianInstagramGridWorkspace locale="pl" /> : slug === "image-collage" ? <RussianImageCollageWorkspace locale="pl" /> : <ToolWorkspace key={`pl-${tool.slug}`} tool={tool} phaseLocale="pl" optionLocale="pl" messages={messages} />}
+    <VerifiedTextExample slug={slug} toolName={translation.title} labels={{ input: messages.input, secondInput: messages.secondText, result: messages.result }} />
     <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ "@context": "https://schema.org", "@type": "WebApplication", name: translation.title, description: translation.description, url, inLanguage: "pl", applicationCategory: "UtilitiesApplication", operatingSystem: "Any", offers: { "@type": "Offer", price: "0", priceCurrency: "KRW" } }).replace(/</g, "\\u003c") }} />
     <section className="mt-10 space-y-8">
       <article><h2 className="text-2xl font-bold">Jak korzystać</h2><ol className="mt-4 list-inside list-decimal space-y-2 text-slate-700">{translation.steps.map((step) => <li key={step}>{step}</li>)}</ol></article>
@@ -288,6 +291,7 @@ async function ExpandedToolDetailPage({ locale, slug }: { locale: ExpandedLocale
       <nav aria-label={messages.breadcrumb} className="mb-6 text-sm text-slate-500"><Link href={localizePath(locale, "/tools")} className="hover:text-indigo-700">{messages.tools}</Link><span aria-hidden="true"> / </span><span aria-current="page" className="text-slate-700">{tool.title}</span></nav>
       <header className="mb-7"><p className="mb-2 text-sm font-semibold text-indigo-700">{category}</p><h1 className="text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">{tool.title}</h1><p className="mt-3 max-w-3xl text-lg leading-8 text-slate-600">{tool.description}</p></header>
       <ToolWorkspace key={`${locale}-${tool.slug}`} tool={tool} phaseLocale={locale} messages={messages} />
+      <VerifiedTextExample slug={slug} toolName={tool.title} labels={{ input: messages.input, secondInput: messages.secondText, result: messages.result }} />
       <section className="mt-12 space-y-8">
         <article><h2 className="text-2xl font-bold">{messages.introduction}</h2><p className="mt-3 leading-7 text-slate-700">{translation.description}</p></article>
         <article><h2 className="text-xl font-bold">{messages.howTo}</h2><ol className="mt-4 list-inside list-decimal space-y-2 text-slate-700">{translation.steps.map((step) => <li key={step}>{step}</li>)}</ol></article>
@@ -430,6 +434,7 @@ function TurkishPublishedToolPage({ slug }: { slug: string }) {
       <p className="mt-3 max-w-3xl text-lg leading-8 text-slate-600">{translation.description}</p>
     </header>
     {workspace}
+    <VerifiedTextExample slug={slug} toolName={translation.title} labels={{ input: messages.input, secondInput: messages.secondText, result: messages.result }} />
     <section className="mt-10 space-y-8">
       <article><h2 className="text-2xl font-bold">{messages.howTo}</h2><ol className="mt-4 list-inside list-decimal space-y-2 text-slate-700">{translation.steps.map((step) => <li key={step}>{step}</li>)}</ol></article>
       <article><h2 className="text-xl font-bold">Örnek kullanım</h2><p className="mt-2 leading-7 text-slate-700">{translation.example}</p></article>
@@ -641,6 +646,7 @@ function RussianPublishedToolPage({ slug }: { slug: string }) {
     <nav aria-label={messages.breadcrumb} className="mb-6 text-sm text-slate-500"><Link href="/ru/tools" className="hover:text-indigo-700">{messages.tools}</Link><span aria-hidden="true"> / </span><span aria-current="page" className="text-slate-700">{tool.title}</span></nav>
     <header className="mb-7"><p className="mb-2 text-sm font-semibold text-indigo-700">{category}</p><h1 className="text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">{tool.title}</h1><p className="mt-3 max-w-3xl text-lg leading-8 text-slate-600">{tool.description}</p></header>
     {workspace}
+    <VerifiedTextExample slug={slug} toolName={tool.title} labels={{ input: messages.input, secondInput: messages.secondText, result: messages.result }} />
     <section className="mt-12 space-y-8">
       <article><h2 className="text-2xl font-bold">Об этом инструменте</h2><p className="mt-3 leading-7 text-slate-700">{translation.description}</p></article>
       <article><h2 className="text-xl font-bold">Как пользоваться</h2><ol className="mt-4 list-inside list-decimal space-y-2 text-slate-700">{translation.steps.map((step) => <li key={step}>{step}</li>)}</ol></article>
