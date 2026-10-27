@@ -513,4 +513,18 @@ The ledger records **138/176 COMPLETE** (38 remaining). Next PENDING batch: chin
 
 ## Batch 29 IN PROGRESS - 2026-10-28
 
-Selected from the next PENDING entries after Batch 28: chinese-zodiac-calculator, chinese-sexagenary-cycle-calculator, chinese-phone-number-formatter, taiwan-phone-number-formatter, indian-number-format-converter. Processor behavior was inspected. Korean drafts are saved in `docs/tool-content-authorship-batch-29-ko-draft.md`; locale authoring and validation are still pending, so these tools are not counted COMPLETE. Resume with translating all 26 locales and add processor/SSR/mobile checks before marking completion.
+Checkpoint at batch start: selected chinese-zodiac-calculator, chinese-sexagenary-cycle-calculator, chinese-phone-number-formatter, taiwan-phone-number-formatter, and indian-number-format-converter from the next PENDING entries. The Korean draft was saved before locale authoring and validation.
+
+## Batch 29 COMPLETE - 2026-10-28
+
+| Tool | Verified behavior |
+|---|---|
+| chinese-zodiac-calculator | Browser returned the Dragon branch for 2024; country processor tests cover 1984 Rat and the cycle mapping. |
+| chinese-sexagenary-cycle-calculator | Browser returned 甲子 for 1984; processor tests cover 1984 and 2024 cycle results. |
+| chinese-phone-number-formatter | Browser and unit test formatted 13800138000 as +86 138 0013 8000; international-prefix input is covered by the unit test. |
+| taiwan-phone-number-formatter | Browser and unit test formatted 0912345678 as +886 0912 345 678. |
+| indian-number-format-converter | Browser and unit test formatted 100000 as 1,00,000. |
+
+All five have original cards in 26 locales, unique FAQ questions and use cases per locale, and no English fallback. Content audit reports 176 tools, 4,576 localized detail URLs, zero noindex candidates, and 26 locales. Country processor tests passed (14), along with TypeScript, ESLint, content audit, git diff --check, and production build (4,866 static pages). Playwright passed 3/3: SSR/SEO across 50 routes, all five processor flows, and 320px/390px mobile checks. No native-speaker review was performed. The global audit still reports 171 repeated FAQ-question groups and 52 exact how-to sets.
+
+The ledger records **143/176 COMPLETE** (33 remaining). Continue with the next PENDING tools recorded in `docs/tool-content-authorship-status.json`.

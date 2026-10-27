@@ -75,6 +75,8 @@ test("Italian VAT validates its modulo-10 control digit and rejects malformed id
 });
 
 test("new country phone formats normalize local and international numbers without lookup", () => {
+  assert.equal(tools.formatPhone("chinese-phone-number-formatter", "13800138000"), "+86 138 0013 8000");
+  assert.equal(tools.formatPhone("chinese-phone-number-formatter", "+86 13800138000"), "+86 138 0013 8000");
   assert.equal(tools.formatPhone("taiwan-phone-number-formatter", "0912345678"), "+886 0912 345 678");
   assert.equal(tools.formatPhone("india-phone-number-formatter", "+91 9876543210"), "+91 98765 43210");
   assert.equal(tools.formatPhone("us-phone-number-formatter", "2125550123"), "+1 (212) 555-0123");

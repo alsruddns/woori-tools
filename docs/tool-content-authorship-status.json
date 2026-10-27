@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
   "publicToolCount": 176,
-  "completeCount": 138,
+  "completeCount": 143,
   "nextBatch": [
-    "chinese-zodiac-calculator",
-    "chinese-sexagenary-cycle-calculator",
-    "chinese-phone-number-formatter",
-    "taiwan-phone-number-formatter",
-    "indian-number-format-converter"
+    "lakh-crore-converter",
+    "pan-format-validator",
+    "gstin-format-validator",
+    "india-phone-number-formatter",
+    "germany-iban-validator"
   ],
   "tools": [
     {
@@ -702,27 +702,27 @@
     },
     {
       "slug": "chinese-zodiac-calculator",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-29"
     },
     {
       "slug": "chinese-sexagenary-cycle-calculator",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-29"
     },
     {
       "slug": "chinese-phone-number-formatter",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-29"
     },
     {
       "slug": "taiwan-phone-number-formatter",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-29"
     },
     {
       "slug": "indian-number-format-converter",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-29"
     },
     {
