@@ -604,3 +604,16 @@ Selected italy-number-format-converter, italian-date-format-converter, us-phone-
 Completed italy-number-format-converter, italian-date-format-converter, us-phone-number-formatter, us-zip-code-formatter, and canada-postal-code-formatter with 26 locale original content for each. Processor tests passed (17), with verified Italian number and date round trip, US phone and ZIP, and Canadian postal examples. Content audit, TypeScript, ESLint, diff check, production build (4,866 static pages), and Playwright (3/3: SSR/SEO across 50 routes, five example workflows, 320px/390px mobile widths) passed. No native-speaker review was performed.
 
 The ledger records 173/176 COMPLETE (3 remaining). Next are uk-postcode-formatter, australia-postcode-formatter, and english-date-format-converter.
+
+
+## Batch 36 IN PROGRESS - 2026-10-28
+
+Final three tools selected: uk-postcode-formatter, australia-postcode-formatter, and english-date-format-converter. Verified examples and scope are in docs/tool-content-authorship-batch-36-ko-draft.md. Locale content is in place; final validation is underway.
+
+## Batch 36 COMPLETE - 2026-10-28
+
+Completed uk-postcode-formatter, australia-postcode-formatter, and english-date-format-converter. Each has original editorial content in all 26 locales, with processor-checked examples, tool-specific instructions, limitations, troubleshooting, and FAQs. The three examples passed processor tests (18 country-tool tests total). Content audit, TypeScript, ESLint, diff check, production build (4,866 generated pages), target-locale audit, and Playwright (83/83) passed. Final browser checks covered all 4,576 localized tool routes for SSR content/canonical/hreflang/x-default and all 176 tools at eight viewport widths. The full unit suite passed 220/220.
+
+Historical target-translation audit still reports repeated how-to sets and FAQ example/caution pairs in legacy shared guidance (52 and 171 groups respectively); review showed these arise in a handful of locale/tool-family combinations such as regional date/number formats and phone formats. The 26-locale authored editorial layer has distinct tool-specific entries and its checker reports no exact duplicate descriptions, examples, or FAQ content. No native-speaker review was performed.
+
+The ledger records 176/176 COMPLETE. No next batch remains.

@@ -134,6 +134,16 @@ test("Italian number and date plus North American phone and postal examples matc
   assert.equal(tools.formatCanadaPostalCode("k1a0b1"), "K1A 0B1");
 });
 
+test("UK and Australian postcode checks and explicitly selected English date orders match processors", () => {
+  assert.equal(tools.formatUkPostcode("sw1a1aa"), "SW1A 1AA");
+  assert.deepEqual(tools.validateAustraliaPostcode("2000"), { valid:true, level:"format" });
+  assert.deepEqual(tools.validateAustraliaPostcode("20A0"), { valid:false, level:"format" });
+  assert.equal(tools.convertLocalizedDate("2026-03-04", "US"), "03/04/2026");
+  assert.equal(tools.convertLocalizedDate("2026-03-04", "UK"), "04/03/2026");
+  assert.equal(tools.convertLocalizedDate("03/04/2026", "US", "to-iso"), "2026-03-04");
+  assert.equal(tools.convertLocalizedDate("04/03/2026", "UK", "to-iso"), "2026-03-04");
+});
+
 test("localized dates round trip with leap-day validation and explicit US or UK order", () => {
   assert.equal(tools.convertLocalizedDate("2026-10-13", "ES"), "13/10/2026");
   assert.equal(tools.convertLocalizedDate("2026-10-13", "NL"), "13-10-2026");

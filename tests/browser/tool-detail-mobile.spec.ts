@@ -360,7 +360,7 @@ test("Batch 10 workspaces honor their documented countdown, timezone, and genera
 
   await page.goto(`${baseURL}/en/tools/random-string-generator`);
   await page.getByLabel("Length").fill("12");
-  await page.locator("main > section input[type=number]").fill("3");
+  await page.getByRole("spinbutton", { name: "Number to generate" }).fill("3");
   await page.getByRole("button", { name: "Generate", exact: true }).click();
   const strings = (await page.locator("main > section").first().locator("pre").textContent())!.trim().split("\n");
   expect(strings).toHaveLength(3);

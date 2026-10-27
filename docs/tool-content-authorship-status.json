@@ -1,12 +1,8 @@
 {
   "schemaVersion": 1,
   "publicToolCount": 176,
-  "completeCount": 173,
-  "nextBatch": [
-    "uk-postcode-formatter",
-    "australia-postcode-formatter",
-    "english-date-format-converter"
-  ],
+  "completeCount": 176,
+  "nextBatch": [],
   "tools": [
     {
       "slug": "lotto-number-generator",
@@ -875,18 +871,18 @@
     },
     {
       "slug": "uk-postcode-formatter",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": 36
     },
     {
       "slug": "australia-postcode-formatter",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": 36
     },
     {
       "slug": "english-date-format-converter",
-      "status": "PENDING",
-      "batch": null
+      "status": "COMPLETE",
+      "batch": 36
     }
   ]
 }
