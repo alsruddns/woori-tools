@@ -338,3 +338,17 @@ The ledger records **88/176 COMPLETE** (88 remaining). Next PENDING batch: `imag
 - Selected `image-brightness`, `image-contrast`, `image-blur`, `image-pixelate`, and `remove-image-metadata` from the PENDING ledger.
 - Inspected actual Canvas filters and controls: brightness/contrast range 0–200 with current default 25 (100 is neutral); blur range 0–100 maps to `value / 10` CSS pixels; pixelation range 4–80 scales down then enlarges without smoothing. Metadata removal re-encodes as JPEG. Shared limits are 30 MB and 40 million decoded pixels.
 - Korean drafts are in `docs/tool-content-authorship-batch-19-ko-draft.md`. Ledger status is `KO_DRAFT` for all five; verified completion remains **88/176**. Next: author all locale cards and verify filter outputs, pixel blocks, and EXIF removal in browser.
+
+## Batch 19 COMPLETE - 2026-10-27
+
+| Tool | Verified content and behavior |
+|---|---|
+| `image-brightness` | Browser checked default 25% brightness on gray test pixels; dimensions stayed 12×8 and output was JPEG. |
+| `image-contrast` | Browser confirmed default 25% reduced the light/dark pixel gap versus the source; output dimensions and format were retained as documented. |
+| `image-blur` | Browser confirmed the default 2.5px blur blended a sharp black/white edge; output remains 12×8 JPEG. |
+| `image-pixelate` | Browser confirmed the default block value of 25 reduced a checker pattern to nearly uniform enlarged blocks; output is separate JPEG. |
+| `remove-image-metadata` | Browser processed a JPEG with an injected EXIF APP1 segment; output stayed 12×8 JPEG and contained no EXIF marker. |
+
+All five have authored cards in 26 locales, distinct use cases and FAQs, and no English field fallback. Content audit totals: 176 public tools, 4,576 localized detail/sitemap URLs, and zero noindex candidates. All 216 unit tests, TypeScript, ESLint, `git diff --check`, and production build passed; build generated 4,866 static pages. Batch Playwright passed 3/3 tests: initial SSR/editorials/SEO on 50 routes, real filter and metadata processing, and 320px/390px overflow checks. Existing global duplicate audit remains 171 repeated FAQ-question groups and 52 exact how-to sets. No native-speaker review was performed.
+
+The ledger records **93/176 COMPLETE** (83 remaining). Next PENDING batch: `image-info`, `favicon-generator`, `image-color-picker`, `images-to-pdf`, and `pdf-merge`. Continue without reauthoring verified editorials.

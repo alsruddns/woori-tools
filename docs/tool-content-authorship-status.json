@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
   "publicToolCount": 176,
-  "completeCount": 88,
+  "completeCount": 93,
   "nextBatch": [
-    "image-brightness",
-    "image-contrast",
-    "image-blur",
-    "image-pixelate",
-    "remove-image-metadata"
+    "image-info",
+    "favicon-generator",
+    "image-color-picker",
+    "images-to-pdf",
+    "pdf-merge"
   ],
   "tools": [
     {
@@ -372,27 +372,27 @@
     },
     {
       "slug": "image-brightness",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-19"
     },
     {
       "slug": "image-contrast",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-19"
     },
     {
       "slug": "image-blur",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-19"
     },
     {
       "slug": "image-pixelate",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-19"
     },
     {
       "slug": "remove-image-metadata",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-19"
     },
     {
