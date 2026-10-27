@@ -509,3 +509,8 @@ The ledger records **133/176 COMPLETE** (43 remaining). Next PENDING batch: url-
 All five have feature-specific content across 26 locales, distinct FAQ questions/use cases per locale, and no English field fallback. The audit reports 176 public tools, 4,576 localized detail URLs, zero noindex candidates, and 26 locales. All 22 relevant processor tests, TypeScript, ESLint, content audit, git diff --check, and production build passed; 4,866 static pages were generated. Playwright passed 3/3 tests: SSR/SEO across 50 routes, real workflows for all five tools, and 320px/390px mobile checks. No native-speaker review was performed. The global duplicate audit still reports 171 repeated FAQ-question groups and 52 exact how-to sets.
 
 The ledger records **138/176 COMPLETE** (38 remaining). Next PENDING batch: chinese-zodiac-calculator, chinese-sexagenary-cycle-calculator, chinese-phone-number-formatter, taiwan-phone-number-formatter, indian-number-format-converter. Continue without reauthoring verified editorials.
+
+
+## Batch 29 IN PROGRESS - 2026-10-28
+
+Selected from the next PENDING entries after Batch 28: chinese-zodiac-calculator, chinese-sexagenary-cycle-calculator, chinese-phone-number-formatter, taiwan-phone-number-formatter, indian-number-format-converter. Processor behavior was inspected. Korean drafts are saved in `docs/tool-content-authorship-batch-29-ko-draft.md`; locale authoring and validation are still pending, so these tools are not counted COMPLETE. Resume with translating all 26 locales and add processor/SSR/mobile checks before marking completion.

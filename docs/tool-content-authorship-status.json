@@ -702,28 +702,28 @@
     },
     {
       "slug": "chinese-zodiac-calculator",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-29"
     },
     {
       "slug": "chinese-sexagenary-cycle-calculator",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-29"
     },
     {
       "slug": "chinese-phone-number-formatter",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-29"
     },
     {
       "slug": "taiwan-phone-number-formatter",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-29"
     },
     {
       "slug": "indian-number-format-converter",
-      "status": "PENDING",
-      "batch": null
+      "status": "KO_DRAFT",
+      "batch": "batch-29"
     },
     {
       "slug": "lakh-crore-converter",
