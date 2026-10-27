@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
   "publicToolCount": 176,
-  "completeCount": 58,
+  "completeCount": 63,
   "nextBatch": [
-    "file-hash",
-    "mime-type-checker",
-    "file-extension-checker",
-    "file-size-checker",
-    "duplicate-file-checker"
+    "zip-files",
+    "bulk-file-renamer",
+    "filename-cleaner",
+    "lorem-ipsum",
+    "regex-tester"
   ],
   "tools": [
     {
@@ -187,27 +187,27 @@
     },
     {
       "slug": "file-hash",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-13"
     },
     {
       "slug": "mime-type-checker",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-13"
     },
     {
       "slug": "file-extension-checker",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-13"
     },
     {
       "slug": "file-size-checker",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-13"
     },
     {
       "slug": "duplicate-file-checker",
-      "status": "KO_DRAFT",
+      "status": "COMPLETE",
       "batch": "batch-13"
     },
     {

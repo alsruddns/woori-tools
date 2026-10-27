@@ -2,8 +2,8 @@ import { expect, test } from "@playwright/test";
 
 const locales = ["ko", "en", "ja", "zh", "es", "pt-br", "de", "fr", "vi", "id", "th", "zh-tw", "it", "nl", "hi", "ru", "tr", "pl", "fil", "bn", "uk", "ms", "sv", "cs", "ro", "el"];
 const viewports = [320, 360, 375, 390, 430, 768, 1024, 1440];
-const selectedTools = ["json-formatter", "json-validator", "character-count", "remove-spaces", "remove-line-breaks", "remove-duplicate-lines", "reverse-text", "add-line-numbers", "remove-line-numbers", "remove-empty-lines", "remove-characters", "text-repeater", "sort-lines", "shuffle-lines", "text-case-converter", "text-compare", "remove-duplicate-words", "text-to-file", "hiragana-katakana-converter", "fullwidth-halfwidth-converter", "japanese-romaji-converter", "japanese-number-kanji-converter", "simplified-traditional-chinese-converter", "lotto-number-generator", "powerball-number-generator", "mega-millions-number-generator", "japan-loto6-number-generator", "japan-loto7-number-generator", "japan-mini-loto-number-generator", "tarot-card", "daily-fortune", "saju", "random-number", "random-name-picker", "random-wheel", "draw-lots", "random-team-maker", "random-order", "random-seat", "duty-picker", "dice-roller", "coin-flip", "stopwatch", "timer", "pomodoro-timer", "world-clock", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr", "barcode-checker", "barcode-generator", "social-image-resize", "add-text-to-image", "instagram-grid-split", "image-collage"];
-const koreanTextBatch = ["character-count", "remove-spaces", "remove-line-breaks", "remove-duplicate-lines", "reverse-text", "add-line-numbers", "remove-line-numbers", "remove-empty-lines", "remove-characters", "text-repeater", "sort-lines", "shuffle-lines", "text-case-converter", "text-compare", "remove-duplicate-words", "text-to-file", "hiragana-katakana-converter", "fullwidth-halfwidth-converter", "japanese-romaji-converter", "japanese-number-kanji-converter", "simplified-traditional-chinese-converter", "lotto-number-generator", "powerball-number-generator", "mega-millions-number-generator", "japan-loto6-number-generator", "japan-loto7-number-generator", "japan-mini-loto-number-generator", "tarot-card", "daily-fortune", "saju", "random-number", "random-name-picker", "random-wheel", "draw-lots", "random-team-maker", "random-order", "random-seat", "duty-picker", "dice-roller", "coin-flip", "stopwatch", "timer", "pomodoro-timer", "world-clock", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr", "barcode-checker", "barcode-generator", "social-image-resize", "add-text-to-image", "instagram-grid-split", "image-collage"];
+const selectedTools = ["json-formatter", "json-validator", "character-count", "remove-spaces", "remove-line-breaks", "remove-duplicate-lines", "reverse-text", "add-line-numbers", "remove-line-numbers", "remove-empty-lines", "remove-characters", "text-repeater", "sort-lines", "shuffle-lines", "text-case-converter", "text-compare", "remove-duplicate-words", "text-to-file", "hiragana-katakana-converter", "fullwidth-halfwidth-converter", "japanese-romaji-converter", "japanese-number-kanji-converter", "simplified-traditional-chinese-converter", "lotto-number-generator", "powerball-number-generator", "mega-millions-number-generator", "japan-loto6-number-generator", "japan-loto7-number-generator", "japan-mini-loto-number-generator", "tarot-card", "daily-fortune", "saju", "random-number", "random-name-picker", "random-wheel", "draw-lots", "random-team-maker", "random-order", "random-seat", "duty-picker", "dice-roller", "coin-flip", "stopwatch", "timer", "pomodoro-timer", "world-clock", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr", "barcode-checker", "barcode-generator", "social-image-resize", "add-text-to-image", "instagram-grid-split", "image-collage", "file-hash", "mime-type-checker", "file-extension-checker", "file-size-checker", "duplicate-file-checker"];
+const koreanTextBatch = ["character-count", "remove-spaces", "remove-line-breaks", "remove-duplicate-lines", "reverse-text", "add-line-numbers", "remove-line-numbers", "remove-empty-lines", "remove-characters", "text-repeater", "sort-lines", "shuffle-lines", "text-case-converter", "text-compare", "remove-duplicate-words", "text-to-file", "hiragana-katakana-converter", "fullwidth-halfwidth-converter", "japanese-romaji-converter", "japanese-number-kanji-converter", "simplified-traditional-chinese-converter", "lotto-number-generator", "powerball-number-generator", "mega-millions-number-generator", "japan-loto6-number-generator", "japan-loto7-number-generator", "japan-mini-loto-number-generator", "tarot-card", "daily-fortune", "saju", "random-number", "random-name-picker", "random-wheel", "draw-lots", "random-team-maker", "random-order", "random-seat", "duty-picker", "dice-roller", "coin-flip", "stopwatch", "timer", "pomodoro-timer", "world-clock", "password-generator", "random-string-generator", "wifi-qr", "contact-qr", "phone-qr", "email-qr", "barcode-checker", "barcode-generator", "social-image-resize", "add-text-to-image", "instagram-grid-split", "image-collage", "file-hash", "mime-type-checker", "file-extension-checker", "file-size-checker", "duplicate-file-checker"];
 
 test("Korean text-tool editorial cards are server-rendered and fit the mobile viewport set", async ({ request, page, baseURL }) => {
   for (const slug of koreanTextBatch) {
@@ -468,4 +468,47 @@ test("Batch 12 barcode and image examples match their documented formats and dim
   await page.getByRole("button", { name: "Process", exact: true }).click();
   await expect(page.locator("main > section pre")).toContainText(/996\D+996px/);
   await expect(page.locator("main > section a[download]")).toBeVisible();
+});
+
+test("Batch 13 file checks report content hashes, file hints, and per-file sizes locally", async ({ page, baseURL }) => {
+  const hello = Buffer.from("hello", "utf8");
+  await page.goto(`${baseURL}/en/tools/file-hash`);
+  await page.locator("#tool-files").setInputFiles({ name: "hello.txt", mimeType: "text/plain", buffer: hello });
+  await page.getByRole("button", { name: "Run", exact: true }).click();
+  await expect(page.locator("main > section pre")).toContainText("2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824");
+
+  const pngBase64 = await page.evaluate(() => {
+    const canvas = document.createElement("canvas");
+    canvas.width = 12;
+    canvas.height = 8;
+    canvas.getContext("2d")!.fillRect(0, 0, canvas.width, canvas.height);
+    return canvas.toDataURL("image/png").split(",")[1];
+  });
+  const png = Buffer.from(pngBase64, "base64");
+  await page.goto(`${baseURL}/en/tools/mime-type-checker`);
+  await page.locator("#tool-files").setInputFiles({ name: "photo.png", mimeType: "image/png", buffer: png });
+  await page.getByRole("button", { name: "Run", exact: true }).click();
+  await expect(page.locator("main > section pre")).toContainText("image/png");
+  await expect(page.locator("main > section pre")).toContainText("PNG signature");
+
+  await page.goto(`${baseURL}/en/tools/file-extension-checker`);
+  await page.locator("#tool-files").setInputFiles({ name: "report.PDF", mimeType: "application/pdf", buffer: Buffer.from("%PDF-1.7") });
+  await page.getByRole("button", { name: "Run", exact: true }).click();
+  await expect(page.locator("main > section pre")).toContainText(".pdf");
+  await expect(page.locator("main > section pre")).toContainText("application/pdf");
+
+  await page.goto(`${baseURL}/en/tools/file-size-checker`);
+  await page.locator("#tool-files").setInputFiles({ name: "1536-bytes.bin", mimeType: "application/octet-stream", buffer: Buffer.alloc(1536, 65) });
+  await page.getByRole("button", { name: "Run", exact: true }).click();
+  await expect(page.locator("main > section pre")).toContainText("1.5 KB");
+
+  await page.goto(`${baseURL}/en/tools/duplicate-file-checker`);
+  await page.locator("#tool-files").setInputFiles([
+    { name: "copy-a.txt", mimeType: "text/plain", buffer: hello },
+    { name: "copy-b.txt", mimeType: "text/plain", buffer: hello },
+  ]);
+  await page.getByRole("button", { name: "Run", exact: true }).click();
+  const duplicateResult = page.locator("main > section pre");
+  await expect(duplicateResult).toContainText("copy-a.txt");
+  await expect(duplicateResult).toContainText("copy-b.txt");
 });

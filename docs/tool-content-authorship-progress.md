@@ -222,3 +222,17 @@ The ledger records **58/176 COMPLETE** (118 remaining). Next PENDING batch: `fil
 - Selected the next five PENDING file-inspection tools: `file-hash`, `mime-type-checker`, `file-extension-checker`, `file-size-checker`, and `duplicate-file-checker`.
 - Inspected `processFileTool`, file selection limits, MIME signature detection, and browser hashing. Drafts distinguish browser-provided MIME from the small set of recognized byte signatures, report filename extension without validating content, display per-file sizes only, and group exact content matches by SHA-256 without deleting files.
 - Korean originals are recorded in `docs/tool-content-authorship-batch-13-ko-draft.md`. All five remain `KO_DRAFT`; verified completion remains **58/176**. Next: author all 26 locale versions, exercise the documented examples with synthetic local files, and run the usual content, SSR, browser, unit, TypeScript, lint and build checks.
+
+## Batch 13 COMPLETE - 2026-10-27
+
+| Tool | Verified content and behavior |
+|---|---|
+| `file-hash` | 26 locale cards explain full-file SHA-256 and limits of a digest. Browser SHA-256 of UTF-8 `hello` matched `2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824`. |
+| `mime-type-checker` | Cards distinguish browser MIME from the limited opening-byte signatures. A synthetic PNG reported `image/png` and `PNG signature`. |
+| `file-extension-checker` | Cards clarify that the last filename suffix is listed beside browser MIME, with no validation or mismatch warning. `report.PDF` showed `.pdf` and `application/pdf`. |
+| `file-size-checker` | Cards accurately describe per-file sizes only, using 1024-based units. A 1,536-byte fixture displayed as `1.5 KB`; no aggregate is reported. |
+| `duplicate-file-checker` | Cards describe full-content SHA-256 grouping and no automatic deletion. Two byte-identical files with different names appeared in the same browser result group. |
+
+Batch 13 verification: content audit passed for 176 tools, 26 locales and 4,576 localized detail/sitemap URLs; all five tools have populated locale-specific content, distinct FAQ questions and use cases, and no English field fallback. All 216 unit tests, TypeScript, ESLint, `git diff --check`, and production build passed; 4,866 static pages were generated. Playwright passed 13/13 tests, including SSR plus canonical/hreflang/x-default checks for selected authored locale pages, eight-width Korean viewport checks, and browser examples for the five local file tools. No file was uploaded. Existing global duplicate audit totals remain 171 repeated FAQ-question groups and 52 exact how-to sets. No native-speaker review was performed.
+
+The ledger records **63/176 COMPLETE** (113 remaining). Next PENDING batch: `zip-files`, `bulk-file-renamer`, `filename-cleaner`, `lorem-ipsum`, and `regex-tester`. Continue without reauthoring verified editorials.
