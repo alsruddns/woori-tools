@@ -312,3 +312,60 @@ test("seat assignment, duty rotation, dice, coin flips, and stopwatch work in th
   await page.getByRole("button", { name: "Reset", exact: true }).click();
   await expect(page.locator("main > section").first().locator("ol li")).toHaveCount(0);
 });
+
+test("Batch 10 workspaces honor their documented countdown, timezone, and generator settings", async ({ page, baseURL }) => {
+  await page.goto(`${baseURL}/en/tools/timer`);
+  await page.getByLabel("Minutes").fill("0");
+  await page.getByLabel("Seconds").fill("1");
+  await page.getByRole("button", { name: "Start", exact: true }).click();
+  await expect(page.getByRole("status")).toContainText("Time is up", { timeout: 4000 });
+
+  await page.goto(`${baseURL}/en/tools/pomodoro-timer`);
+  await expect(page.getByRole("spinbutton", { name: "Focus", exact: true })).toHaveValue("25");
+  await expect(page.getByRole("spinbutton", { name: "Short break", exact: true })).toHaveValue("5");
+  await expect(page.getByRole("spinbutton", { name: "Long break", exact: true })).toHaveValue("15");
+  await expect(page.getByRole("spinbutton", { name: "Focus sessions before long break", exact: true })).toHaveValue("4");
+  await page.getByRole("spinbutton", { name: "Focus", exact: true }).fill("1");
+  await page.getByRole("spinbutton", { name: "Short break", exact: true }).fill("1");
+  await page.getByRole("spinbutton", { name: "Long break", exact: true }).fill("1");
+  await page.getByRole("spinbutton", { name: "Focus sessions before long break", exact: true }).fill("1");
+  await page.getByRole("button", { name: "Start", exact: true }).click();
+  await expect(page.locator("main > section").first().locator("p.font-mono")).toHaveText(/^00:00:5\d$/);
+
+  await page.goto(`${baseURL}/en/tools/world-clock`);
+  await page.evaluate(() => localStorage.removeItem("woori-world-clock-zones"));
+  await page.reload();
+  const clocks = page.locator("main > section").first().locator("article");
+  await expect(clocks).toHaveCount(8);
+  await page.locator("#zone-search").fill("Europe/Madrid");
+  await page.locator("#zone-select").selectOption("Europe/Madrid");
+  await page.getByRole("button", { name: "Add city", exact: true }).click();
+  await expect(clocks).toHaveCount(9);
+  await page.reload();
+  await expect(clocks).toHaveCount(9);
+
+  await page.goto(`${baseURL}/en/tools/password-generator`);
+  await page.getByLabel("Length").fill("16");
+  await page.getByRole("button", { name: "Generate", exact: true }).click();
+  const password = (await page.locator("main > section").first().locator("pre").textContent())!.trim();
+  expect(password).toHaveLength(16);
+  expect(password).toMatch(/[A-Z]/);
+  expect(password).toMatch(/[a-z]/);
+  expect(password).toMatch(/[0-9]/);
+  expect(password).toMatch(/[!@#$%^&*()\-_=+\[\]{}:,.?]/);
+  expect(password).not.toMatch(/[O0Il1]/);
+
+  await page.goto(`${baseURL}/en/tools/random-string-generator`);
+  await page.getByLabel("Length").fill("12");
+  await page.getByLabel("Number to generate").fill("3");
+  await page.getByRole("button", { name: "Generate", exact: true }).click();
+  const strings = (await page.locator("main > section").first().locator("pre").textContent())!.trim().split("\n");
+  expect(strings).toHaveLength(3);
+  for (const value of strings) {
+    expect(value).toHaveLength(12);
+    expect(value).toMatch(/[A-Z]/);
+    expect(value).toMatch(/[a-z]/);
+    expect(value).toMatch(/[0-9]/);
+    expect(value).toMatch(/[!@#$%^&*()\-_=+\[\]{}:,.?]/);
+  }
+});

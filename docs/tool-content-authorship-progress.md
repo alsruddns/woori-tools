@@ -165,3 +165,10 @@ The ledger now records **43/176 COMPLETE** (133 remaining). Next selected PENDIN
 - Browser inspection found Pomodoro supports editable focus, short-break and long-break durations, a configurable focus-cycle length, and automatic phase progression; the current draft incorrectly describes fixed durations and manual switching. Timer starts with five minutes selected. These facts must be reflected in all locales before validation.
 - The world-clock 320px overflow is fixed by constraining the search controls; its 8/20-zone persistence behavior passed a mobile browser check. Timer and Pomodoro countdown browser check passed with configurable values.
 - The ledger state is `TRANSLATING`; verified completion remains **43/176**. Native-speaker review has not been performed.
+
+### Pomodoro correction checkpoint
+
+- Rechecked `CountdownWorkspace`: focus, short break, and long break are editable from 1–180 minutes; the cycle length is 1–12 focus sessions; defaults are 25/5/15 minutes and 4 focus sessions; settings persist in this browser. Completion selects the next phase, but its timer must be started manually.
+- Re-authored the Pomodoro principle, usage, troubleshooting, and FAQ directly in all 26 locales and overlaid the correction on the Batch 10 draft module. The draft remains unpublished while the other four tools and whole-batch examples are audited.
+- Added a browser check covering timer completion, Pomodoro defaults and editing, world-clock addition/persistence, and password/random-string length and character-group behavior. It passed; the quality checker, TypeScript, ESLint, and `git diff --check` also passed in this checkpoint.
+- Verified completion remains **43/176**. Next: validate edge constraints for both generators, check examples and editorial factual accuracy for all five tools, then SSR/SEO and viewport browser checks before public integration.

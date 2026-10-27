@@ -1,5 +1,6 @@
 import type { PublishedTargetLocale } from "@/i18n/routing";
 import type { ToolDetailEditorial } from "@/registry/tool-detail-editorials";
+import { batch10PomodoroCorrections } from "@/registry/tool-detail-editorials-batch-10-corrections";
 
 const e = (principle: string, useCase: string, troubleshooting: string, faqQuestion: string, faqAnswer: string): ToolDetailEditorial => ({ principle, useCase, troubleshooting, faqQuestion, faqAnswer });
 
@@ -188,3 +189,8 @@ export const batch10EditorialDrafts: Partial<Record<PublishedTargetLocale, Recor
     "random-string-generator": e("Δημιουργεί συμβολοσειρές ζητούμενου μήκους από τις επιλεγμένες ομάδες χαρακτήρων. Κάθε συμβολοσειρά περιλαμβάνει τουλάχιστον έναν χαρακτήρα από κάθε επιλεγμένη ομάδα και έπειτα ανακατεύεται η σειρά.", "Δημιουργήστε πολλά δοκιμαστικά αναγνωριστικά ή τυχαίες συμβολοσειρές ορίζοντας μήκος, πλήθος και ομάδες. Μήκος 12 και πλήθος 3 δημιουργούν τρεις συμβολοσειρές των 12 χαρακτήρων.", "Το μήκος είναι 4–256 χαρακτήρες και το πλήθος 1–100. Επιλέξτε τουλάχιστον μία ομάδα χαρακτήρων. Δεν εγγυάται ότι οι συμβολοσειρές θα είναι μοναδικές.", "Είναι όλες οι παραγόμενες συμβολοσειρές διαφορετικές;", "Δεν είναι εγγυημένο. Κάθε συμβολοσειρά παράγεται ξεχωριστά, οπότε μπορεί τυχαία να επαναληφθεί ίδια τιμή."),
   },
 };
+
+for (const locale of Object.keys(batch10PomodoroCorrections) as PublishedTargetLocale[]) {
+  const correction = batch10PomodoroCorrections[locale];
+  if (correction && batch10EditorialDrafts[locale]) batch10EditorialDrafts[locale]!["pomodoro-timer"] = correction;
+}

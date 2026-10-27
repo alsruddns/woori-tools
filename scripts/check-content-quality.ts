@@ -31,6 +31,7 @@ import { batch7EditorialDrafts } from "../src/registry/tool-detail-editorials-ba
 import { batch8EditorialDrafts } from "../src/registry/tool-detail-editorials-batch-8";
 import { batch9EditorialDrafts } from "../src/registry/tool-detail-editorials-batch-9";
 import { batch10EditorialDrafts } from "../src/registry/tool-detail-editorials-batch-10";
+import { batch10PomodoroCorrections } from "../src/registry/tool-detail-editorials-batch-10-corrections";
 import { pickUnique, secureShuffle } from "../src/lib/random";
 import { divideEvenly, normalizeWheelItems, rollDice } from "../src/lib/random-tools.mjs";
 
@@ -353,6 +354,11 @@ for (const [locale, drafts] of Object.entries(batch10EditorialDrafts)) {
     if (locale !== "en") for (const field of ["principle", "useCase", "troubleshooting", "faqQuestion", "faqAnswer"] as const) assert.notEqual(editorial[field], batch10EditorialDrafts.en?.[slug][field], `${locale}/${slug}: ${field} must not fall back to English`);
   }
 }
+assert.deepEqual(new Set(Object.keys(batch10PomodoroCorrections)), new Set(publishedTargetLocales), "Pomodoro behavior corrections must cover every published locale");
+for (const [locale, editorial] of Object.entries(batch10PomodoroCorrections)) {
+  assert.ok([editorial.principle, editorial.useCase, editorial.troubleshooting, editorial.faqQuestion, editorial.faqAnswer].every((value) => value.trim()), `${locale}/pomodoro-timer: corrected fields must be populated`);
+  if (locale !== "en") for (const field of ["principle", "useCase", "troubleshooting", "faqQuestion", "faqAnswer"] as const) assert.notEqual(editorial[field], batch10PomodoroCorrections.en?.[field], `${locale}/pomodoro-timer: ${field} must be authored in locale`);
+}
 const exampleNames = ["Mina", "Joon", "Kai", "Lina", "Bo", "Ari"];
 const pickedNames = pickUnique(exampleNames, 2);
 assert.equal(pickedNames.length, 2, "random-name-picker must return the requested number of entries");
@@ -475,6 +481,7 @@ console.log(JSON.stringify({
    batch9DraftLocales: Object.keys(batch9EditorialDrafts).length,
    verifiedBatch9RandomExamples: 5,
    batch10DraftLocales: Object.keys(batch10EditorialDrafts).length,
+   batch10PomodoroCorrectionLocales: Object.keys(batch10PomodoroCorrections).length,
   duplicateTotals,
   expandedLocaleQuality,
   repeatedUsagePatterns,
