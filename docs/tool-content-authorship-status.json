@@ -112,27 +112,27 @@
     },
     {
       "slug": "timer",
-      "status": "KO_DRAFT",
+      "status": "TRANSLATING",
       "batch": "batch-10"
     },
     {
       "slug": "pomodoro-timer",
-      "status": "KO_DRAFT",
+      "status": "TRANSLATING",
       "batch": "batch-10"
     },
     {
       "slug": "world-clock",
-      "status": "KO_DRAFT",
+      "status": "TRANSLATING",
       "batch": "batch-10"
     },
     {
       "slug": "password-generator",
-      "status": "KO_DRAFT",
+      "status": "TRANSLATING",
       "batch": "batch-10"
     },
     {
       "slug": "random-string-generator",
-      "status": "KO_DRAFT",
+      "status": "TRANSLATING",
       "batch": "batch-10"
     },
     {

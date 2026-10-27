@@ -158,3 +158,10 @@ The ledger now records **43/176 COMPLETE** (133 remaining). Next selected PENDIN
 - Recorded Korean drafts for `timer`, `pomodoro-timer`, `world-clock`, `password-generator`, and `random-string-generator` in `docs/tool-content-authorship-batch-10-ko-draft.md`.
 - The drafts distinguish the timer's visual completion from an audio alarm, the Pomodoro tool's manual fixed 25/5-minute modes, browser-local time-zone persistence, password character-group guarantees, and random-string count/length limits.
 - The ledger marks all five as `KO_DRAFT`; verified completion remains **43/176**. Next: direct 26-locale authoring, generator-engine examples, SSR/SEO, and browser validation.
+
+### Translation checkpoint
+
+- Direct editorial drafts for the five Batch 10 tools cover all 26 locales in `src/registry/tool-detail-editorials-batch-10.ts`. They are disconnected from public rendering while the feature descriptions are corrected against the actual workspaces.
+- Browser inspection found Pomodoro supports editable focus, short-break and long-break durations, a configurable focus-cycle length, and automatic phase progression; the current draft incorrectly describes fixed durations and manual switching. Timer starts with five minutes selected. These facts must be reflected in all locales before validation.
+- The world-clock 320px overflow is fixed by constraining the search controls; its 8/20-zone persistence behavior passed a mobile browser check. Timer and Pomodoro countdown browser check passed with configurable values.
+- The ledger state is `TRANSLATING`; verified completion remains **43/176**. Native-speaker review has not been performed.

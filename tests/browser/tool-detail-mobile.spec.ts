@@ -23,12 +23,12 @@ test("Korean text-tool editorial cards are server-rendered and fit the mobile vi
       await page.setViewportSize({ width, height: 900 });
       await expect(page.locator("[data-testid=tool-detail-editorial] article").first()).toBeVisible();
       const dimensions = await page.evaluate(() => ({ document: document.documentElement.scrollWidth, body: document.body.scrollWidth }));
-      expect(dimensions.document, `${slug} document overflow at ${width}px`).toBeLessThanOrEqual(width);
+      const offenders = await page.evaluate(() => [...document.querySelectorAll("body *")].map((element) => ({ tag: element.tagName, text: (element.textContent || "").trim().slice(0, 70), width: element.getBoundingClientRect().width, right: element.getBoundingClientRect().right, className: typeof element.className === "string" ? element.className : "" })).filter((item) => item.right > window.innerWidth + 1).slice(0, 8));
+      expect(dimensions.document, `${slug} document overflow at ${width}px: ${JSON.stringify(offenders)}`).toBeLessThanOrEqual(width);
       expect(dimensions.body, `${slug} body overflow at ${width}px`).toBeLessThanOrEqual(width);
     }
   }
 });
-
 test("all authored locale pages render editorial cards in initial server HTML", async ({ request, baseURL }) => {
   const routes = locales.flatMap((locale) => selectedTools.map((slug) => `${baseURL}/${locale}/tools/${slug}`));
   for (let start = 0; start < routes.length; start += 8) {

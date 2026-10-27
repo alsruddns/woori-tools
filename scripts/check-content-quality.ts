@@ -30,6 +30,7 @@ import { pickUniqueRange } from "../src/lib/random";
 import { batch7EditorialDrafts } from "../src/registry/tool-detail-editorials-batch-7";
 import { batch8EditorialDrafts } from "../src/registry/tool-detail-editorials-batch-8";
 import { batch9EditorialDrafts } from "../src/registry/tool-detail-editorials-batch-9";
+import { batch10EditorialDrafts } from "../src/registry/tool-detail-editorials-batch-10";
 import { pickUnique, secureShuffle } from "../src/lib/random";
 import { divideEvenly, normalizeWheelItems, rollDice } from "../src/lib/random-tools.mjs";
 
@@ -343,6 +344,15 @@ for (const [locale, drafts] of Object.entries(batch9EditorialDrafts)) {
     if (locale !== "en") for (const field of ["principle", "useCase", "troubleshooting", "faqQuestion", "faqAnswer"] as const) assert.notEqual(editorial[field], batch9EditorialDrafts.en?.[slug][field], `${locale}/${slug}: ${field} must not fall back to English`);
   }
 }
+assert.deepEqual(new Set(Object.keys(batch10EditorialDrafts)), new Set(publishedTargetLocales), "batch 10 editorial drafts must cover every published locale before integration");
+const batch10Slugs = ["timer", "pomodoro-timer", "world-clock", "password-generator", "random-string-generator"];
+for (const [locale, drafts] of Object.entries(batch10EditorialDrafts)) {
+  assert.deepEqual(new Set(Object.keys(drafts ?? {})), new Set(batch10Slugs), `${locale}: batch 10 drafts must cover all five selected tools`);
+  for (const [slug, editorial] of Object.entries(drafts ?? {})) {
+    assert.ok([editorial.principle, editorial.useCase, editorial.troubleshooting, editorial.faqQuestion, editorial.faqAnswer].every((value) => value.trim()), `${locale}/${slug}: draft fields must be populated`);
+    if (locale !== "en") for (const field of ["principle", "useCase", "troubleshooting", "faqQuestion", "faqAnswer"] as const) assert.notEqual(editorial[field], batch10EditorialDrafts.en?.[slug][field], `${locale}/${slug}: ${field} must not fall back to English`);
+  }
+}
 const exampleNames = ["Mina", "Joon", "Kai", "Lina", "Bo", "Ari"];
 const pickedNames = pickUnique(exampleNames, 2);
 assert.equal(pickedNames.length, 2, "random-name-picker must return the requested number of entries");
@@ -464,6 +474,7 @@ console.log(JSON.stringify({
    verifiedBatch8RandomExamples: 5,
    batch9DraftLocales: Object.keys(batch9EditorialDrafts).length,
    verifiedBatch9RandomExamples: 5,
+   batch10DraftLocales: Object.keys(batch10EditorialDrafts).length,
   duplicateTotals,
   expandedLocaleQuality,
   repeatedUsagePatterns,
