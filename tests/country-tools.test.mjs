@@ -34,6 +34,9 @@ test("Indian digit grouping and lakh/crore conversions use the Indian scale", ()
   assert.deepEqual(tools.validateIban("DE", "DE89370400440532013000"), { valid:true, level:"checksum" });
   assert.equal(tools.lakhCrore("2 crore"), "20000000");
   assert.equal(tools.formatNumber("1.234,56", "german-number-format-converter"), "1.234,56");
+  assert.equal(tools.formatNumber("1234567.89", "spanish-number-format-converter"), "1.234.567,89");
+  assert.equal(tools.convertDate("2026-10-13", "DE"), "13.10.2026");
+  assert.throws(() => tools.convertDate("2026-02-31", "DE"));
   assert.equal(tools.formatNumber("1 234 567,89", "french-number-format-converter"), "1 234 567,89");
 });
 test("IBAN validation checks country structure and MOD 97", () => {

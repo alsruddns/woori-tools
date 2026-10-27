@@ -542,3 +542,22 @@ The ledger records **143/176 COMPLETE** (33 remaining). Continue with the next P
 All five have original content in 26 locales, distinct FAQ questions and use cases per locale, and no English fallback. Content audit reports 176 tools, 4,576 localized detail URLs, zero noindex candidates, and 26 locales. Country processor tests passed (14), along with TypeScript, ESLint, content audit, git diff --check, and production build (4,866 static pages). Playwright passed 3/3: SSR/SEO across 50 routes, all five real workflows, and 320px/390px mobile checks. During browser validation, the shared country workspace's English validation action was found using the wrong label-array index; the action now displays the normal Run label in English and the localized check label when available. No native-speaker review was performed. The global audit still reports 171 repeated FAQ-question groups and 52 exact how-to sets.
 
 The ledger records **148/176 COMPLETE** (28 remaining). Continue with the next PENDING tools in the ledger.
+
+
+## Batch 31 IN PROGRESS - 2026-10-28
+
+Checkpoint at batch start: selected german-number-format-converter, german-date-format-converter, spain-dni-validator, spain-nie-validator, and spanish-number-format-converter from the next PENDING entries. Korean drafts were saved before locale translation and validation.
+
+## Batch 31 COMPLETE - 2026-10-28
+
+| Tool | Verified behavior |
+|---|---|
+| german-number-format-converter | Browser and unit tests formatted 1234567.89 as 1.234.567,89. |
+| german-date-format-converter | Browser and unit tests converted 2026-10-13 to 13.10.2026; impossible dates are rejected. |
+| spain-dni-validator | Browser accepted 12345678Z; unit tests also reject a wrong control letter. |
+| spain-nie-validator | Browser accepted X1234567L; unit tests cover modulo-23 control-letter validation. |
+| spanish-number-format-converter | Browser and unit tests formatted 1234567.89 as 1.234.567,89. |
+
+All five have original content in 26 locales, distinct FAQ questions/use cases per locale, and no English fallback. Content audit reports 176 tools, 4,576 localized detail URLs, zero noindex candidates, and 26 locales. Country processor tests passed (14), TypeScript, ESLint, content audit, git diff --check, and production build (4,866 static pages). Playwright passed 3/3: SSR/SEO across 50 routes, five browser workflows, and 320px/390px mobile checks. No native-speaker review was performed. The batch 30 audit's global duplicate counts remain at 171 repeated FAQ-question groups and 52 exact how-to sets pending a cross-tool editorial review.
+
+The ledger records **153/176 COMPLETE** (23 remaining). Continue with the next PENDING tools in the ledger.
