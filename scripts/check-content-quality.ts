@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { access, readdir, readFile } from "node:fs/promises";
 import path from "node:path";
-import { locales, publishedTargetLocales, type PublishedTargetLocale } from "../src/i18n/routing";
+import { locales, publishedTargetLocales, type PlannedLocale, type PublishedTargetLocale } from "../src/i18n/routing";
 import { getLocalizedCategories } from "../src/registry/category-translations";
 import { getFileGuidance } from "../src/registry/file-guidance";
 import { homeContent } from "../src/registry/home-content";
@@ -10,10 +10,12 @@ import { toolExampleInputs } from "../src/registry/tool-example-inputs";
 import { getToolFaqQuestions } from "../src/registry/tool-faq";
 import { getToolRiskNote } from "../src/registry/tool-risk-notes";
 import { localizeTool } from "../src/registry/tool-translations";
+import { getTargetToolTranslation } from "../src/registry/target-tool-translation";
 import { renameCopy, selectionCopy } from "../src/registry/tool-option-copy";
 import { tools } from "../src/registry/tools";
 import { languageAlternates, SITE_ORIGIN } from "../src/lib/seo";
 import { createSitemapEntries } from "../src/lib/sitemap-entries.mjs";
+import { processText } from "../src/lib/text/process-text";
 
 const slugs = new Set(tools.map((tool) => tool.slug));
 assert.equal(slugs.size, tools.length, "duplicate public slug");
@@ -26,6 +28,7 @@ const duplicateCounts = (values: string[]) => {
 const exactDuplicateSummary: Record<string, { descriptions: number; faqSets: number; howToSets: number; repeatedStep2Phrases: number; repeatedStep2Occurrences: number; repeatedStep3Phrases: number; repeatedStep3Occurrences: number }> = {};
 const nearDuplicateCandidates: Array<{ locale: string; left: string; right: string; similarity: number }> = [];
 const thinPageCandidates: Array<{ locale: string; slug: string; chars: number }> = [];
+const expandedLocaleQuality: Record<string, { tools: number; exactDescriptionDuplicates: number; exactExampleDuplicates: number; exactFaqContentDuplicates: number; repeatedFaqQuestionSets: number; exactHowToDuplicates: number; englishDescriptionFallbacks: number; repeatedHowToSlugs: string[][] }> = {};
 
 for (const locale of locales) {
   assert.ok(Object.values(homeContent[locale]).every((value) => value.trim()), `missing ${locale} home editorial copy`);
@@ -130,6 +133,63 @@ for (const locale of locales) {
   }
 }
 
+// The original editorial loop covered the first 15 locales only. Target locales
+// use a separate registry, so audit their rendered tool copy through that source
+// of truth as well instead of counting their routes without inspecting content.
+for (const locale of publishedTargetLocales.filter((item) => !locales.includes(item as (typeof locales)[number]))) {
+  assert.equal(tools.filter((tool) => tool.supportedLocales.includes(locale)).length, 176, `${locale}: expected 176 localized tool routes`);
+  const translations = tools.map((tool) => {
+    const translation = getTargetToolTranslation(locale as PlannedLocale, tool.slug);
+    assert.ok(translation, `${tool.slug}: missing published ${locale} translation`);
+    for (const [field, value] of Object.entries({
+      title: translation.title,
+      description: translation.description,
+      seoTitle: translation.seoTitle,
+      seoDescription: translation.seoDescription,
+      example: translation.example,
+      options: translation.options,
+      caution: translation.caution,
+      faqExample: translation.faq.example,
+      faqCaution: translation.faq.caution,
+      ...Object.fromEntries(translation.steps.map((step, index) => [`step${index + 1}`, step])),
+    })) {
+      assert.ok(value.trim(), `${tool.slug}: empty ${locale} ${field}`);
+      assert.ok(!/^[a-z]+(?:\.[a-z]+)+$/.test(value), `${tool.slug}: raw ${locale} key ${field}`);
+    }
+    return translation;
+  });
+  const duplicateCount = (values: string[]) => duplicateCounts(values).length;
+  const repeatedSlugs = (values: string[]) => {
+    const byCopy = new Map<string, string[]>();
+    values.forEach((value, index) => byCopy.set(value, [...(byCopy.get(value) ?? []), tools[index].slug]));
+    return [...byCopy.values()].filter((slugs) => slugs.length > 1).slice(0, 5);
+  };
+  const english = tools.map((tool) => localizeTool(tool, "en").description);
+  const englishDescriptionFallbacks = translations.filter((translation, index) => translation.description === english[index]).length;
+  expandedLocaleQuality[locale] = {
+    tools: translations.length,
+    exactDescriptionDuplicates: duplicateCount(translations.map(({ description }) => description)),
+    exactExampleDuplicates: duplicateCount(translations.map(({ example }) => example)),
+    exactFaqContentDuplicates: duplicateCount(translations.map(({ faq, example, caution }) => `${faq.example}\n${example}\n${faq.caution}\n${caution}`)),
+    repeatedFaqQuestionSets: duplicateCount(translations.map(({ faq }) => `${faq.example}\n${faq.caution}`)),
+    exactHowToDuplicates: duplicateCount(translations.map(({ steps }) => steps.join("\n"))),
+    englishDescriptionFallbacks,
+    repeatedHowToSlugs: repeatedSlugs(translations.map(({ steps }) => steps.join("\n"))),
+  };
+  assert.equal(englishDescriptionFallbacks, 0, `${locale}: published descriptions fell back to English`);
+  const normalized = translations.map(({ description }, index) => ({ slug: tools[index].slug, value: description.toLocaleLowerCase().replace(/[\p{P}\p{S}\s]/gu, "") }));
+  for (let i = 0; i < normalized.length; i++) for (let j = i + 1; j < normalized.length; j++) {
+    const a = normalized[i].value, b = normalized[j].value;
+    if (Math.min(a.length, b.length) < 24) continue;
+    const grams = (s: string) => new Set(Array.from({ length: s.length - 2 }, (_, n) => s.slice(n, n + 3)));
+    const ga = grams(a), gb = grams(b);
+    let intersection = 0;
+    for (const gram of ga) if (gb.has(gram)) intersection++;
+    const score = (2 * intersection) / (ga.size + gb.size);
+    if (score >= 0.9) nearDuplicateCandidates.push({ locale, left: normalized[i].slug, right: normalized[j].slug, similarity: Number(score.toFixed(2)) });
+  }
+}
+
 const sitemapEntries = createSitemapEntries({ tools, locales: publishedTargetLocales, siteOrigin: SITE_ORIGIN, languageAlternates: (path: string, supported?: readonly string[]) => languageAlternates(path, supported as PublishedTargetLocale[] | undefined) });
 const expectedToolUrls = tools.reduce((sum, tool) => sum + tool.supportedLocales.length, 0);
 const toolSitemapEntries = sitemapEntries.filter((entry) => /\/tools\/[^/]+$/.test(entry.url));
@@ -149,6 +209,24 @@ async function sourceFiles(directory: string): Promise<string[]> {
   return result;
 }
 async function runExtendedChecks() {
+const exampleInput = (slug: string) => {
+  const sample = toolExampleInputs[slug];
+  const separator = sample.indexOf(" → ");
+  assert.ok(separator > 0 && separator + 3 < sample.length, `${slug}: example must contain a concrete input and expected result`);
+  return sample.slice(0, separator);
+};
+const jsonSample = exampleInput("json-formatter");
+assert.equal((await processText("json-formatter", jsonSample, "", "format", 1, "en")).result, JSON.stringify(JSON.parse(jsonSample), null, 2), "JSON formatter example must match the real processor");
+await assert.rejects(() => processText("json-validator", exampleInput("json-validator"), "", "", 1, "en"), "invalid JSON example must be rejected by the real processor");
+assert.equal((await processText("base64", exampleInput("base64"), "", "encode", 1, "en")).result, "SGVsbG8=", "Base64 example must match the real processor");
+assert.equal((await processText("url-encode-decode", exampleInput("url-encode-decode"), "", "encode", 1, "en")).result, "hello%20world", "URL encoding example must match the real processor");
+assert.match((await processText("character-count", exampleInput("character-count"), "", "", 1, "en")).result, /11/);
+assert.deepEqual(JSON.parse((await processText("csv-to-json", exampleInput("csv-to-json"), "", "", 1, "en")).result), [{ name: "A", city: "Seoul" }], "CSV example must parse as two records with the real processor");
+assert.match((await processText("json-to-yaml", exampleInput("json-to-yaml"), "", "", 1, "en")).result, /name: A/);
+assert.deepEqual(JSON.parse((await processText("yaml-to-json", exampleInput("yaml-to-json"), "", "", 1, "en")).result), { name: "A" });
+assert.equal((await processText("remove-duplicate-lines", exampleInput("remove-duplicate-lines"), "", "", 1, "en")).result, "A\nB");
+assert.equal((await processText("reverse-text", exampleInput("reverse-text"), "", "", 1, "en")).result, "cba");
+
 const srcFiles = await sourceFiles(path.resolve("src"));
 const brokenLinkFiles: string[] = [];
 for (const file of srcFiles) {
@@ -189,12 +267,20 @@ assert.equal(tools.filter((tool) => Boolean(getToolStorageNote(tool.slug, "en"))
 
 const repeatedUsagePatterns = [...new Set(Object.values(exactDuplicateSummary).map((counts) => `${counts.repeatedStep2Phrases} repeated step-2 variants; ${counts.repeatedStep3Phrases} repeated step-3 variants`))];
 const nearPairs = [...new Map(nearDuplicateCandidates.map((item) => [[item.left, item.right].sort().join("::"), item])).values()].sort((a, b) => b.similarity - a.similarity);
+const duplicateTotals = {
+  exactDescriptionSets: Object.values(exactDuplicateSummary).reduce((sum, item) => sum + item.descriptions, 0) + Object.values(expandedLocaleQuality).reduce((sum, item) => sum + item.exactDescriptionDuplicates, 0),
+  exactExampleSets: Object.values(expandedLocaleQuality).reduce((sum, item) => sum + item.exactExampleDuplicates, 0),
+  exactFaqContentSets: Object.values(exactDuplicateSummary).reduce((sum, item) => sum + item.faqSets, 0) + Object.values(expandedLocaleQuality).reduce((sum, item) => sum + item.exactFaqContentDuplicates, 0),
+  repeatedFaqQuestionSets: Object.values(expandedLocaleQuality).reduce((sum, item) => sum + item.repeatedFaqQuestionSets, 0),
+  exactHowToSets: Object.values(exactDuplicateSummary).reduce((sum, item) => sum + item.howToSets, 0) + Object.values(expandedLocaleQuality).reduce((sum, item) => sum + item.exactHowToDuplicates, 0),
+};
 console.log(JSON.stringify({
   publicTools: tools.length,
-  locales,
+  locales: publishedTargetLocales,
   localizedDetailPages: tools.reduce((sum, tool) => sum + tool.supportedLocales.length, 0),
   fileInputTools: tools.filter((tool) => tool.usesFileInput).length,
-  exactDuplicateSummary: { descriptions: 0, faqSets: 0, howToSets: 0 },
+  duplicateTotals,
+  expandedLocaleQuality,
   repeatedUsagePatterns,
   nearDuplicatePairCount: nearPairs.length,
   nearDuplicateCandidates: nearPairs.slice(0, 12),

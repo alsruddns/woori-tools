@@ -2,7 +2,9 @@
 
 This audit records checks against the public registry and source on `develop`. It is a content and UX review, not a prediction or guarantee of AdSense approval. Google's guidance asks publishers to provide original, useful content and a clear reason to visit; the site must also be complete and navigable ([AdSense site approval guidance](https://support.google.com/adsense/answer/81904?hl=en), [publisher compliance guidance](https://support.google.com/adsense/answer/1261929?hl=en)).
 
-## Scope and result
+## Original 15-locale audit baseline
+
+The figures in this baseline section describe the original audit snapshot. The current 26-locale results and limits are recorded in the final section below.
 
 - **176 public tools**, each registered for **15 locales**, produce **2,640 localized detail URLs**.
 - All 176 slugs have a localized title, description, overview or H1 summary, three usage steps, a concrete example, options, a caution, two FAQ entries, and related-tool/category data where available.
@@ -49,3 +51,13 @@ This audit records checks against the public registry and source on `develop`. I
 ## Automated check
 
 Run `pnpm check:content-quality`. It checks locale completeness and fallback, blank/raw-key copy, examples, FAQ and how-to duplicates, repeated generic step patterns, file guidance and limits, privacy notices for local storage, related/category links, placeholder links, browser-processing network APIs, ads-disabled rail/placeholder conditions, tools-home sections, privacy/terms routes, and public sitemap URLs and alternates. `pnpm test` also runs the content-quality check.
+
+## Published 26-locale audit (2026-10-27)
+
+The current published registry contains **176 tools × 26 locales = 4,576 detail URLs**. The checker now reads target-locale tool content from its own translation registry in addition to the original 15-locale editorial registry. It verifies that every tool is published in each locale, all target-locale title/description/SEO/example/options/caution/FAQ/step fields are present, and target-locale descriptions do not exactly fall back to English. The sitemap still has 4,576 unique tool URLs with the expected locale alternates.
+
+Current exact-copy results for the 11 target locales: **0 repeated descriptions, 0 repeated examples, 0 repeated full FAQ question-and-answer sets, and 0 exact English-description fallbacks**. Repeated FAQ question pairs remain a review signal in `bn` (27 sets) and `uk`, `ms`, `sv`, `cs`, `ro`, and `el` (24 each), totaling 171 repeated question sets; their paired answers differ by tool, so these are not counted as duplicate FAQ content. Exact how-to sets also remain for review: lottery generators share one set in `ru`, `tr`, `fil`, and all seven locales; Poland has one additional phone-format pair, while the seven-locale group has several repeated country-format and encoding pairs. There are 64 exact how-to sets across the 11 target locales. These are reported with their slugs by the checker and are not treated as proof of equivalent tools.
+
+The checker now runs ten deterministic examples through the text processor, covering JSON formatting and invalid-JSON rejection, Base64, URL encoding, character count, CSV-to-JSON, JSON/YAML conversion, duplicate-line removal, and text reversal. This exposed and corrected the CSV example's escaped `\\n`, which had been interpreted as literal characters instead of a line break.
+
+The checker found **1,060 unique near-duplicate slug pairs across the 26 published locales** using character-trigram similarity. These remain review signals, not evidence that tools are equivalent or low quality. The **536 compact-page signals** still come from the original 15-locale editorial-field loop and are not a 26-locale coverage metric. Exact string comparisons do not certify translation quality or capture semantic similarity. A local production build was checked in Chrome with a 390 CSS-pixel mobile viewport on the JSON Formatter page: document width matched the viewport and no ad slot appeared between the input and Run action. This is a representative page check, not a 176-tool mobile audit. The ten executable examples cover deterministic text-processing cases; manual and executable input/output review remains incomplete across the 176 tools, as does real-file browser QA.

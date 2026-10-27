@@ -156,7 +156,7 @@ export const toolExampleInputs: Record<string, string> = {
   "remove-duplicate-words": "red blue red → red blue",
   "json-to-yaml": "{\"name\":\"A\"} → name: A",
   "yaml-to-json": "name: A → {\"name\":\"A\"}",
-  "csv-to-json": "name,city\\nA,Seoul → JSON objects",
+  "csv-to-json": "name,city\nA,Seoul → JSON objects",
   "json-to-csv": "[{\"name\":\"A\"}] → CSV table",
   "url-encode-decode": "hello world → hello%20world",
   "timestamp-converter": "1700000000 → calendar date and ISO time",
