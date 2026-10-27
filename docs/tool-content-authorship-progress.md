@@ -494,3 +494,18 @@ The ledger records **128/176 COMPLETE** (48 remaining). Next PENDING batch: rege
 All five have distinct feature-specific cards in 26 locales, unique FAQ questions/use cases per locale, and no English field fallback. The audit reports 176 public tools, 4,576 localized detail URLs, zero noindex candidates, and 26 locales. All 8 processor tests, TypeScript, ESLint, content audit, git diff --check, and production build passed; build generated 4,866 static pages. Playwright passed 3/3 tests: SSR/SEO across 50 routes, real workflows for all five tools, and 320px/390px mobile checks. No native-speaker review was performed. The global duplicate audit still reports 171 repeated FAQ-question groups and 52 exact how-to sets.
 
 The ledger records **133/176 COMPLETE** (43 remaining). Next PENDING batch: url-slug-generator, unicode-code-point-checker, pdf-page-size-checker, chinese-number-kanji-converter, rmb-uppercase-converter. Continue without reauthoring verified editorials.
+
+
+## Batch 28 COMPLETE - 2026-10-28
+
+| Tool | Verified behavior |
+|---|---|
+| url-slug-generator | Browser normalized ?Cr?me br?l?e: A Guide? to `creme-brulee-a-guide`; unit tests cover normalization and Unicode code points. |
+| unicode-code-point-checker | Browser showed A as U+0041 and ?? as U+1F600 with four UTF-8 bytes. |
+| pdf-page-size-checker | Browser processed a local 612?792 pt PDF fixture and displayed 215.90?279.40 mm; no upload is involved. |
+| chinese-number-kanji-converter | Browser converted 10001 to ????; unit tests cover reverse conversion and place values. |
+| rmb-uppercase-converter | Browser formatted 123.45 as ??????????; unit tests cover fractional units. |
+
+All five have feature-specific content across 26 locales, distinct FAQ questions/use cases per locale, and no English field fallback. The audit reports 176 public tools, 4,576 localized detail URLs, zero noindex candidates, and 26 locales. All 22 relevant processor tests, TypeScript, ESLint, content audit, git diff --check, and production build passed; 4,866 static pages were generated. Playwright passed 3/3 tests: SSR/SEO across 50 routes, real workflows for all five tools, and 320px/390px mobile checks. No native-speaker review was performed. The global duplicate audit still reports 171 repeated FAQ-question groups and 52 exact how-to sets.
+
+The ledger records **138/176 COMPLETE** (38 remaining). Next PENDING batch: chinese-zodiac-calculator, chinese-sexagenary-cycle-calculator, chinese-phone-number-formatter, taiwan-phone-number-formatter, indian-number-format-converter. Continue without reauthoring verified editorials.
