@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
-import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
+import { chmod, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
@@ -55,6 +55,7 @@ else if (args[0] === "image" && args[1] === "rm") {
   removed.push(args[2]); fs.writeFileSync(data.removedPath, JSON.stringify(removed)); console.log("Deleted: " + args[2]);
 } else { console.error("Unexpected Docker call: " + key); process.exit(2); }
 `);
+  await chmod(dockerPath, 0o755);
   const result = spawnSync(bashCommand, [bashCleanupPath, current, previousImage, expectedDigest], {
     cwd: directory,
     encoding: "utf8",

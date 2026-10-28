@@ -20,6 +20,8 @@ jobs:
     permissions:
       contents: read
     steps:
+      - name: Check out pull request
+        uses: actions/checkout@v6
       - name: Check remote Tools Compose configuration without changing services
         env:
           SERVER_HOST: ${{ secrets.SERVER_HOST }}
