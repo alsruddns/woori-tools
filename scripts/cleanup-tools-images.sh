@@ -5,6 +5,7 @@ readonly TOOLS_REPOSITORY='ghcr.io/alsruddns/woori-tools'
 readonly CURRENT_IMAGE_ID="${1:-}"
 readonly PREVIOUS_IMAGE_ID="${2:-}"
 readonly EXPECTED_DIGEST="${3:-}"
+readonly STALE_ROLLBACK_IMAGE_ID="${4:-}"
 readonly DRY_RUN="${DRY_RUN:-0}"
 
 log() { printf '%s\n' "$*"; }
@@ -17,6 +18,9 @@ if [[ -n "$PREVIOUS_IMAGE_ID" ]] && ! valid_image_id "$PREVIOUS_IMAGE_ID"; then
 fi
 if [[ -n "$EXPECTED_DIGEST" && ! "$EXPECTED_DIGEST" =~ ^sha256:[a-f0-9]{64}$ ]]; then
   fail 'Expected deployed digest must be a sha256 digest.'
+fi
+if [[ -n "$STALE_ROLLBACK_IMAGE_ID" ]] && ! valid_image_id "$STALE_ROLLBACK_IMAGE_ID"; then
+  fail 'Older rollback image ID must be a full sha256 image ID.'
 fi
 
 running_tools_image_id="$(docker inspect tools --format '{{.Image}}')" || fail 'Could not inspect the Tools container.'
@@ -36,6 +40,18 @@ disk_snapshot() {
 }
 
 before_available="$(disk_snapshot 'Before cleanup')"
+if [[ -n "$EXPECTED_DIGEST" ]]; then
+  current_digests="$(docker image inspect "$CURRENT_IMAGE_ID" --format '{{json .RepoDigests}}')" || fail 'Could not inspect the deployed image digests.'
+  [[ "$current_digests" == *"${TOOLS_REPOSITORY}@${EXPECTED_DIGEST}"* ]] || fail "Running Tools image does not carry expected digest ${EXPECTED_DIGEST}; refusing cleanup."
+  log "Verified running Tools digest: ${EXPECTED_DIGEST}"
+fi
+if [[ -n "$PREVIOUS_IMAGE_ID" && "$PREVIOUS_IMAGE_ID" != "$CURRENT_IMAGE_ID" ]]; then
+  previous_verified="$(docker image inspect "$PREVIOUS_IMAGE_ID" --format '{{.Id}}')" || fail 'Could not verify the previous Tools image for rollback.'
+  [[ "$previous_verified" == "$PREVIOUS_IMAGE_ID" ]] || fail 'Previous Tools image ID verification failed; refusing cleanup.'
+  docker image tag "$PREVIOUS_IMAGE_ID" "${TOOLS_REPOSITORY}:rollback" || fail 'Could not retain the previous Tools image under the rollback tag.'
+  log "Pinned previous Tools image for rollback: ${TOOLS_REPOSITORY}:rollback -> ${PREVIOUS_IMAGE_ID}"
+fi
+
 listing="$(docker image ls --all --no-trunc --format '{{.ID}}\t{{.Repository}}\t{{.Tag}}\t{{.Digest}}')" || fail 'Could not list Docker images; refusing cleanup.'
 declare -A tools_image_ids=()
 declare -A foreign_repository_ids=()
@@ -49,13 +65,8 @@ while IFS=$'\t' read -r id repository tag digest; do
 done <<< "$listing"
 
 [[ -n "${tools_image_ids[$CURRENT_IMAGE_ID]:-}" ]] || fail "Current image $CURRENT_IMAGE_ID has no exact $TOOLS_REPOSITORY repository reference."
-if [[ -n "$EXPECTED_DIGEST" ]]; then
-  current_digests="$(docker image inspect "$CURRENT_IMAGE_ID" --format '{{json .RepoDigests}}')" || fail 'Could not inspect the deployed image digests.'
-  [[ "$current_digests" == *"${TOOLS_REPOSITORY}@${EXPECTED_DIGEST}"* ]] || fail "Running Tools image does not carry expected digest ${EXPECTED_DIGEST}; refusing cleanup."
-  log "Verified running Tools digest: ${EXPECTED_DIGEST}"
-fi
 if [[ -n "$PREVIOUS_IMAGE_ID" && "$PREVIOUS_IMAGE_ID" != "$CURRENT_IMAGE_ID" && -z "${tools_image_ids[$PREVIOUS_IMAGE_ID]:-}" ]]; then
-  fail "Previous rollback image $PREVIOUS_IMAGE_ID has no exact $TOOLS_REPOSITORY repository reference; refusing cleanup."
+  fail "Previous rollback image $PREVIOUS_IMAGE_ID was not retained in $TOOLS_REPOSITORY; refusing cleanup."
 fi
 
 containers="$(docker ps --all --quiet --no-trunc)" || fail 'Could not list containers; refusing cleanup.'
@@ -70,6 +81,11 @@ declare -a candidates=()
 for id in "${!tools_image_ids[@]}"; do
   [[ "$id" != "$CURRENT_IMAGE_ID" && "$id" != "$PREVIOUS_IMAGE_ID" ]] && candidates+=("$id")
 done
+if [[ -n "$STALE_ROLLBACK_IMAGE_ID" && "$STALE_ROLLBACK_IMAGE_ID" != "$CURRENT_IMAGE_ID" && "$STALE_ROLLBACK_IMAGE_ID" != "$PREVIOUS_IMAGE_ID" ]]; then
+  already_listed=0
+  for id in "${candidates[@]}"; do [[ "$id" == "$STALE_ROLLBACK_IMAGE_ID" ]] && already_listed=1; done
+  ((already_listed)) || candidates+=("$STALE_ROLLBACK_IMAGE_ID")
+fi
 log "Current Tools image preserved: $CURRENT_IMAGE_ID"
 log "Previous rollback image preserved: ${PREVIOUS_IMAGE_ID:-none (first deployment)}"
 if ((${#candidates[@]})); then log "Deletion candidates (unique image IDs): ${candidates[*]}"; else log 'Deletion candidates (unique image IDs): none'; fi
