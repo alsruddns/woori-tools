@@ -62,7 +62,7 @@ const entries: Array<[string, ToolCategory, string, string, string[], boolean]> 
   ["remove-empty-lines","text","빈 줄 제거","내용이 없는 줄만 제거하고 나머지 줄바꿈은 유지합니다.",["빈 줄 제거","공백 줄"],true],
   ["remove-characters","text","특정 문자 제거","숫자, 영문, 한글, 특수문자 또는 지정 문자를 제거합니다.",["문자 제거","특수문자 제거"],true],
   ["text-repeater","text","텍스트 반복","텍스트를 원하는 횟수만큼 반복하고 구분자를 추가합니다.",["텍스트 반복","문장 반복"],true],
-  ["text-to-file","text","텍스트 파일 만들기","입력한 내용을 TXT 또는 CSV 파일로 저장합니다.",["텍스트 파일","TXT 저장","CSV 만들기"],true],
+  ["text-to-file","text","텍스트 파일 만들기","입력한 내용을 브라우저에서 UTF-8 TXT 파일로 저장합니다.",["텍스트 파일","TXT 저장","텍스트 다운로드"],true],
   ["lorem-ipsum","developer","Lorem Ipsum 생성기","레이아웃 시안에 사용할 더미 텍스트를 생성합니다.",["lorem ipsum","더미 텍스트"],true],
   ["regex-tester","developer","정규식 테스트","샘플 텍스트에서 정규식 일치 결과를 확인합니다.",["regex","정규식 검사"],true],
   ["color-converter","developer","HEX RGB 색상 변환","HEX, RGB, HSL 색상 값을 서로 변환합니다.",["HEX RGB 변환","색상 코드","HSL"],true],

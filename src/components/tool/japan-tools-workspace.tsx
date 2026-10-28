@@ -26,8 +26,11 @@ const copy: Record<RouteLocale, Copy> = {
   nl:{source:"Invoer",target:"Uitvoer",input:"Invoer",date:"Datum",era:"Tijdperk",year:"Jaar",month:"Maand",day:"Dag",gender:"Geslacht",male:"Man",female:"Vrouw",convert:"Converteren",toHira:"Katakana → hiragana",toKata:"Hiragana → katakana",toFull:"Halve breedte → volle breedte",toHalf:"Volle breedte → halve breedte",generate:"Nummers genereren",count:"Aantal spellen",note:"Regels en culturele informatie gelden voor Japan. Nummers voorspellen geen trekking en garanderen geen prijs.",result:"Resultaat",history:"Recente resultaten",copy:"Resultaat kopiëren",reset:"Herstellen",direction:"Conversierichting",currentYear:"Referentiejaar",before:"Mae-yaku (ervoor)",main:"Hon-yaku (hoofduur)",after:"Ato-yaku (erna)",branch:"Dierenriemteken",eto:"Zestigjarige cyclus",free:"VRIJ",error:"Controleer de ingevoerde gegevens.",placeholder:"Voer hier tekst in."},
   hi:{source:"इनपुट",target:"आउटपुट",input:"इनपुट",date:"तारीख",era:"युग",year:"वर्ष",month:"महीना",day:"दिन",gender:"लिंग",male:"पुरुष",female:"महिला",convert:"बदलें",toHira:"काताकाना → हिरागाना",toKata:"हिरागाना → काताकाना",toFull:"आधी चौड़ाई → पूरी चौड़ाई",toHalf:"पूरी चौड़ाई → आधी चौड़ाई",generate:"नंबर बनाएँ",count:"खेलों की संख्या",note:"नियम और सांस्कृतिक जानकारी जापान पर आधारित हैं। नंबर ड्रॉ की भविष्यवाणी या इनाम की गारंटी नहीं देते।",result:"परिणाम",history:"हाल के परिणाम",copy:"परिणाम कॉपी करें",reset:"रीसेट करें",direction:"रूपांतरण दिशा",currentYear:"आधार वर्ष",before:"माए-याकु (पहले)",main:"होन-याकु (मुख्य)",after:"आतो-याकु (बाद)",branch:"राशि पशु",eto:"साठ-वर्षीय चक्र",free:"मुफ़्त",error:"दर्ज जानकारी जाँचें।",placeholder:"यहाँ लिखें।"},
 };
+const assignLocalized = (additions: Partial<Record<RouteLocale, Partial<Copy>>>) => {
+  for (const [locale, values] of Object.entries(additions) as [RouteLocale, Partial<Copy>][]) Object.assign(copy[locale], values);
+};
 
-Object.assign(copy, {
+assignLocalized({
   ko:{warekiForward:"서기 → 일본 연호",warekiReverse:"일본 연호 → 서기",kanjiForward:"숫자 → 한자 숫자",kanjiReverse:"한자 숫자 → 숫자",romajiWarning:"한자와 사전에 없는 고유명사의 읽기는 추정하지 않습니다.",yakudoshiWarning:"액년은 지역·신사·관습에 따라 다를 수 있습니다. 문화적 참고 정보로 이용하세요.",numbers3Rules:"0–9에서 3자리 선택 · 중복 및 앞자리 0 허용 · 스트레이트·박스·세트·미니 방식 안내",numbers4Rules:"0–9에서 4자리 선택 · 중복 및 앞자리 0 허용 · 스트레이트·박스·세트 방식 안내",bingo5Rules:"각 범위에서 하나씩 선택: 1–5, 6–10, 11–15, 16–20, FREE, 21–25, 26–30, 31–35, 36–40"},
   en:{warekiForward:"Gregorian → Japanese era",warekiReverse:"Japanese era → Gregorian",kanjiForward:"Number → kanji",kanjiReverse:"Kanji → number",romajiWarning:"Kana only: readings for kanji and unknown proper names are not inferred.",yakudoshiWarning:"Yakudoshi customs vary by region, shrine, and tradition. Use this as cultural reference only.",numbers3Rules:"Choose 3 digits from 0–9; repeats and a leading zero are allowed. Purchase types: Straight, Box, Set, and Mini.",numbers4Rules:"Choose 4 digits from 0–9; repeats and a leading zero are allowed. Purchase types: Straight, Box, and Set.",bingo5Rules:"Choose one number per range: 1–5, 6–10, 11–15, 16–20, FREE, 21–25, 26–30, 31–35, and 36–40."},
   ja:{warekiForward:"西暦 → 和暦",warekiReverse:"和暦 → 西暦",kanjiForward:"数字 → 漢数字",kanjiReverse:"漢数字 → 数字",romajiWarning:"漢字や辞書にない固有名詞の読みは推測しません。",yakudoshiWarning:"厄年は地域・神社・慣習により異なる場合があります。文化的な参考情報としてご利用ください。",numbers3Rules:"0～9から3桁を選択 · 重複・先頭の0可 · ストレート、ボックス、セット、ミニの申込タイプがあります。",numbers4Rules:"0～9から4桁を選択 · 重複・先頭の0可 · ストレート、ボックス、セットの申込タイプがあります。",bingo5Rules:"各範囲から1個選択：1～5、6～10、11～15、16～20、FREE、21～25、26～30、31～35、36～40。"},
@@ -52,10 +55,10 @@ const integerNote: Record<RouteLocale, string> = {
   es: "Solo se admiten enteros; no se admiten decimales.", "pt-br": "São aceitos apenas números inteiros; decimales não são compatíveis.", de: "Nur ganze Zahlen werden unterstützt; Dezimalzahlen nicht.", fr: "Seuls les nombres entiers sont pris en charge, pas les décimaux.",
   vi: "Chỉ hỗ trợ số nguyên, không hỗ trợ số thập phân.", id: "Hanya bilangan bulat yang didukung; desimal tidak didukung.", th: "รองรับเฉพาะจำนวนเต็ม ไม่รองรับทศนิยม", "zh-tw": "僅支援整數，不支援小數。", it: "Sono supportati solo numeri interi, non decimali.", nl: "Alleen gehele getallen worden ondersteund; decimalen niet.", hi: "केवल पूर्णांक समर्थित हैं; दशमलव समर्थित नहीं हैं।",
 };
-Object.assign(copy, {
+assignLocalized({
   ko:{numbersBoxNote:"숫자 세 개/네 개가 모두 같으면 박스·세트 구매 방식에는 사용할 수 없습니다."},en:{numbersBoxNote:"An all-identical digit pattern cannot be entered as a Box or Set purchase."},ja:{numbersBoxNote:"3桁または4桁がすべて同じ数字の場合、ボックス・セットでは申し込めません。"},zh:{numbersBoxNote:"三位或四位数字全部相同时，不能选择 Box 或 Set 购买方式。"},es:{numbersBoxNote:"Un patrón con todas las cifras iguales no se puede jugar en Box ni Set."},"pt-br":{numbersBoxNote:"Uma combinação com todos os dígitos iguais não pode ser usada em Box ou Set."},de:{numbersBoxNote:"Eine Folge mit ausschließlich gleichen Ziffern ist bei Box oder Set nicht zulässig."},fr:{numbersBoxNote:"Une combinaison composée uniquement de chiffres identiques ne peut pas être jouée en Box ou Set."},vi:{numbersBoxNote:"Bộ số gồm toàn chữ số giống nhau không thể chọn kiểu Box hoặc Set."},id:{numbersBoxNote:"Pola dengan semua digit sama tidak dapat digunakan untuk pilihan Box atau Set."},th:{numbersBoxNote:"ชุดตัวเลขที่ทุกหลักเหมือนกันไม่สามารถเลือกแบบ Box หรือ Set ได้"},"zh-tw":{numbersBoxNote:"三位或四位數字全部相同時，不能選擇 Box 或 Set 購買方式。"},it:{numbersBoxNote:"Una combinazione con tutte le cifre uguali non è ammessa per Box o Set."},nl:{numbersBoxNote:"Een combinatie met alleen dezelfde cijfers is niet toegestaan bij Box of Set."},hi:{numbersBoxNote:"सभी अंक समान होने पर Box या Set प्रकार में नंबर दर्ज नहीं किया जा सकता।"},
 });
-Object.assign(copy, {
+assignLocalized({
   ko:{again:"다시 생성"},en:{again:"Generate again"},ja:{again:"もう一度生成"},zh:{again:"重新生成"},es:{again:"Generar de nuevo"},"pt-br":{again:"Gerar novamente"},de:{again:"Erneut erstellen"},fr:{again:"Générer à nouveau"},vi:{again:"Tạo lại"},id:{again:"Buat lagi"},th:{again:"สร้างอีกครั้ง"},"zh-tw":{again:"重新產生"},it:{again:"Genera di nuovo"},nl:{again:"Opnieuw genereren"},hi:{again:"फिर से बनाएँ"},
 });
 
@@ -81,7 +84,7 @@ const ERAS = ["明治", "大正", "昭和", "平成", "令和"];
 
 export function JapanToolsWorkspace({ slug, locale }: { slug: string; locale: TargetLocale }) {
   const targetCopy = isTargetPageMessageLocale(locale) ? targetJapanWorkspaceCopy[locale] : undefined;
-  const t: Copy = targetCopy?.labels ?? (locale === "pl" ? polishCopy : copy[locale as RouteLocale]);
+  const t: Copy = locale === "en" ? copy.en : targetCopy?.labels ?? (locale === "pl" ? polishCopy : copy[locale as RouteLocale]);
   const m = getMessages(locale);
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");

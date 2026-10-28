@@ -160,6 +160,65 @@ const copy = {
   },
 } satisfies Record<PlannedLocale, LotteryCopy>;
 
+type LotteryKind = (typeof lotteryTools)[LotterySlug]["kind"];
+const drawDetails: Record<PlannedLocale, (count: number, range: string, kind: LotteryKind) => string> = {
+  ru: (count, range, kind) => kind === "powerball"
+    ? `В каждом наборе ${count} белых шаров из диапазона ${range} и отдельный красный Powerball из 1–26.`
+    : kind === "mega"
+      ? `В каждом наборе ${count} основных чисел из диапазона ${range} и отдельный Mega Ball из 1–24.`
+      : `В каждом наборе ${count} разных чисел из диапазона ${range}.`,
+  tr: (count, range, kind) => kind === "powerball"
+    ? `Her oyunda ${range} aralığından ${count} beyaz top ve ayrıca 1–26 aralığından bir Powerball bulunur.`
+    : kind === "mega"
+      ? `Her oyunda ${range} aralığından ${count} ana sayı ve ayrıca 1–24 aralığından bir Mega Ball bulunur.`
+      : `Her oyunda ${range} aralığından ${count} farklı sayı bulunur.`,
+  pl: (count, range, kind) => kind === "powerball"
+    ? `Każdy zestaw zawiera ${count} białych kul z zakresu ${range} oraz osobną czerwoną kulę Powerball z zakresu 1–26.`
+    : kind === "mega"
+      ? `Każdy zestaw zawiera ${count} głównych liczb z zakresu ${range} oraz osobną kulę Mega Ball z zakresu 1–24.`
+      : `Każdy zestaw zawiera ${count} różnych liczb z zakresu ${range}.`,
+  fil: (count, range, kind) => kind === "powerball"
+    ? `May ${count} puting bola mula ${range} at hiwalay na pulang Powerball mula 1–26 sa bawat laro.`
+    : kind === "mega"
+      ? `May ${count} pangunahing numero mula ${range} at hiwalay na Mega Ball mula 1–24 sa bawat laro.`
+      : `May ${count} magkakaibang numero mula ${range} sa bawat laro.`,
+  bn: (count, range, kind) => kind === "powerball"
+    ? `প্রতি খেলায় ${range} সীমার ${count}টি সাদা বল এবং আলাদা ১–২৬ সীমার একটি Powerball থাকে।`
+    : kind === "mega"
+      ? `প্রতি খেলায় ${range} সীমার ${count}টি মূল সংখ্যা এবং আলাদা ১–২৪ সীমার একটি Mega Ball থাকে।`
+      : `প্রতি খেলায় ${range} সীমার ${count}টি ভিন্ন সংখ্যা থাকে।`,
+  uk: (count, range, kind) => kind === "powerball"
+    ? `У кожному наборі є ${count} білих куль із діапазону ${range} та окрема червона куля Powerball із діапазону 1–26.`
+    : kind === "mega"
+      ? `У кожному наборі є ${count} основних чисел із діапазону ${range} та окрема куля Mega Ball із діапазону 1–24.`
+      : `У кожному наборі є ${count} різних чисел із діапазону ${range}.`,
+  ms: (count, range, kind) => kind === "powerball"
+    ? `Setiap permainan mengandungi ${count} bola putih daripada julat ${range} dan satu Powerball merah berasingan daripada julat 1–26.`
+    : kind === "mega"
+      ? `Setiap permainan mengandungi ${count} nombor utama daripada julat ${range} dan satu Mega Ball berasingan daripada julat 1–24.`
+      : `Setiap permainan mengandungi ${count} nombor berbeza daripada julat ${range}.`,
+  sv: (count, range, kind) => kind === "powerball"
+    ? `Varje rad har ${count} vita bollar från intervallet ${range} och en separat röd Powerball från 1–26.`
+    : kind === "mega"
+      ? `Varje rad har ${count} huvudtal från intervallet ${range} och en separat Mega Ball från 1–24.`
+      : `Varje rad har ${count} unika tal från intervallet ${range}.`,
+  cs: (count, range, kind) => kind === "powerball"
+    ? `Každý sloupec obsahuje ${count} bílých koulí z rozsahu ${range} a samostatnou červenou Powerball z rozsahu 1–26.`
+    : kind === "mega"
+      ? `Každý sloupec obsahuje ${count} hlavních čísel z rozsahu ${range} a samostatnou Mega Ball z rozsahu 1–24.`
+      : `Každý sloupec obsahuje ${count} různých čísel z rozsahu ${range}.`,
+  ro: (count, range, kind) => kind === "powerball"
+    ? `Fiecare variantă conține ${count} bile albe din intervalul ${range} și o bilă roșie Powerball separată din intervalul 1–26.`
+    : kind === "mega"
+      ? `Fiecare variantă conține ${count} numere principale din intervalul ${range} și o bilă Mega Ball separată din intervalul 1–24.`
+      : `Fiecare variantă conține ${count} numere diferite din intervalul ${range}.`,
+  el: (count, range, kind) => kind === "powerball"
+    ? `Κάθε παιχνίδι έχει ${count} λευκές μπάλες από το εύρος ${range} και μία ξεχωριστή κόκκινη Powerball από το 1–26.`
+    : kind === "mega"
+      ? `Κάθε παιχνίδι έχει ${count} βασικούς αριθμούς από το εύρος ${range} και μία ξεχωριστή Mega Ball από το 1–24.`
+      : `Κάθε παιχνίδι έχει ${count} διαφορετικούς αριθμούς από το εύρος ${range}.`,
+};
+
 export type TargetLotteryTranslation = {
   title: string;
   description: string;
@@ -192,7 +251,7 @@ export function getTargetLotteryTranslation(locale: PlannedLocale, slug: string)
     seoTitle: title,
     seoDescription: description,
     keywords: [title, ...language.keywords],
-    steps: language.steps,
+    steps: [language.steps[0], `${language.steps[1]} ${drawDetails[locale](tool.count, tool.range, tool.kind)}`, language.steps[2]],
     example: language.example(tool.count, tool.range),
     options: language.options,
     caution: language.caution,

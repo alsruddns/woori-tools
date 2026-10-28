@@ -28,7 +28,15 @@ test("Indian digit grouping and lakh/crore conversions use the Indian scale", ()
   assert.equal(tools.indianNumber("100000"), "1,00,000");
   assert.equal(tools.lakhCrore("100000"), "1 lakh");
   assert.equal(tools.lakhCrore("2 crore"), "20000000");
+  assert.deepEqual(tools.validatePan("ABCPA1234F"), { valid:true, level:"format" });
+  assert.deepEqual(tools.validateGstin("27AAPFU0939F1ZV"), { valid:true, level:"checksum" });
+  assert.deepEqual(tools.validateGstin("27AAPFU0939F1ZA"), { valid:false, level:"checksum" });
+  assert.deepEqual(tools.validateIban("DE", "DE89370400440532013000"), { valid:true, level:"checksum" });
+  assert.equal(tools.lakhCrore("2 crore"), "20000000");
   assert.equal(tools.formatNumber("1.234,56", "german-number-format-converter"), "1.234,56");
+  assert.equal(tools.formatNumber("1234567.89", "spanish-number-format-converter"), "1.234.567,89");
+  assert.equal(tools.convertDate("2026-10-13", "DE"), "13.10.2026");
+  assert.throws(() => tools.convertDate("2026-02-31", "DE"));
   assert.equal(tools.formatNumber("1 234 567,89", "french-number-format-converter"), "1 234 567,89");
 });
 test("IBAN validation checks country structure and MOD 97", () => {
@@ -54,10 +62,13 @@ test("CPF checksum and numeric or alphanumeric CNPJ checksum validate", () => {
   assert.deepEqual(tools.validateCnpj("11.222.333/0001-81"), { valid:true, level:"checksum" });
   assert.deepEqual(tools.validateCnpj("12.ABC.345/01DE-35"), { valid:true, level:"checksum" });
   assert.equal(tools.validateCnpj("12.ABC.345/01DE-34").valid, false);
+  assert.equal(tools.validateCnpj("12.ABC.345/01DE-34").level, "checksum");
 });
 test("phone and date formatters validate supported local patterns", () => {
   assert.equal(tools.formatPhone("france-phone-number-formatter", "0612345678"), "+33 6 12 34 56 78");
   assert.equal(tools.formatPhone("brazil-phone-number-formatter", "11987654321"), "+55 (11) 98765-4321");
+  assert.equal(tools.formatPhone("brazil-phone-number-formatter", "+55 (11) 98765-4321"), "+55 (11) 98765-4321");
+  assert.throws(() => tools.formatPhone("brazil-phone-number-formatter", "12345"), { message: "invalid-phone" });
   assert.equal(tools.convertDate("2026-10-13", "DE"), "13.10.2026");
   assert.equal(tools.convertDate("2026-10-13", "FR"), "13/10/2026");
   assert.throws(() => tools.convertDate("2026-02-30", "FR"));
@@ -75,8 +86,11 @@ test("Italian VAT validates its modulo-10 control digit and rejects malformed id
 });
 
 test("new country phone formats normalize local and international numbers without lookup", () => {
+  assert.equal(tools.formatPhone("chinese-phone-number-formatter", "13800138000"), "+86 138 0013 8000");
+  assert.equal(tools.formatPhone("chinese-phone-number-formatter", "+86 13800138000"), "+86 138 0013 8000");
   assert.equal(tools.formatPhone("taiwan-phone-number-formatter", "0912345678"), "+886 0912 345 678");
   assert.equal(tools.formatPhone("india-phone-number-formatter", "+91 9876543210"), "+91 98765 43210");
+  assert.equal(tools.formatPhone("india-phone-number-formatter", "9876543210"), "+91 98765 43210");
   assert.equal(tools.formatPhone("us-phone-number-formatter", "2125550123"), "+1 (212) 555-0123");
   assert.throws(() => tools.formatPhone("us-phone-number-formatter", "1125550123"));
 });
@@ -87,13 +101,55 @@ test("postal formatters normalize valid ZIP, Canadian, UK, Brazilian, and Austra
   assert.equal(tools.formatUkPostcode("sw1a1aa"), "SW1A 1AA");
   assert.equal(tools.formatUkPostcode("GIR 0AA"), "GIR 0AA");
   assert.equal(tools.formatBrazilCep("01001000"), "01001-000");
+  assert.equal(tools.formatBrazilCep("01310-930"), "01310-930");
+  assert.throws(() => tools.formatBrazilCep("0131093"), { message: "invalid-postal-code" });
   assert.deepEqual(tools.validateAustraliaPostcode("2000"), { valid:true, level:"format" });
   assert.throws(() => tools.formatCanadaPostalCode("D1A 0B1"));
   assert.throws(() => tools.formatUkPostcode("ABCDE"));
   assert.throws(() => tools.formatUsZip("1234"));
 });
 
+test("Dutch IBAN structure and MOD 97 and Dutch number notation match their examples", () => {
+  assert.deepEqual(tools.validateIban("NL", "NL91ABNA0417164300"), { valid:true, level:"checksum" });
+  assert.deepEqual(tools.validateIban("NL", "NL91 ABNA 0417 1643 01"), { valid:false, level:"checksum" });
+  assert.deepEqual(tools.validateIban("NL", "DE89370400440532013000"), { valid:false, level:"format" });
+  assert.equal(tools.formatNumber("1234567.89", "dutch-number-format-converter"), "1.234.567,89");
+});
+
+test("Vietnamese phone and number examples and Italian identifier checks match their processors", () => {
+  assert.equal(tools.formatPhone("vietnam-phone-number-formatter", "0912345678"), "+84 0912 345678");
+  assert.equal(tools.formatNumber("1234567.89", "vietnam-number-format-converter"), "1.234.567,89");
+  assert.deepEqual(tools.validateCodiceFiscale("RSSMRA85T10A562S"), { valid:true, level:"checksum" });
+  assert.deepEqual(tools.validateCodiceFiscale("RSSMRA85T10A562A"), { valid:false, level:"checksum" });
+  assert.deepEqual(tools.validateItalianVat("01114601006"), { valid:true, level:"checksum" });
+  assert.deepEqual(tools.validateItalianVat("01114601007"), { valid:false, level:"checksum" });
+});
+
+test("Italian number and date plus North American phone and postal examples match processors", () => {
+  assert.equal(tools.formatNumber("1234567.89", "italy-number-format-converter"), "1.234.567,89");
+  assert.equal(tools.convertLocalizedDate("2026-10-13", "IT"), "13/10/2026");
+  assert.equal(tools.convertLocalizedDate("13/10/2026", "IT", "to-iso"), "2026-10-13");
+  assert.equal(tools.formatPhone("us-phone-number-formatter", "2125550123"), "+1 (212) 555-0123");
+  assert.equal(tools.formatUsZip("123456789"), "12345-6789");
+  assert.equal(tools.formatCanadaPostalCode("k1a0b1"), "K1A 0B1");
+});
+
+test("UK and Australian postcode checks and explicitly selected English date orders match processors", () => {
+  assert.equal(tools.formatUkPostcode("sw1a1aa"), "SW1A 1AA");
+  assert.deepEqual(tools.validateAustraliaPostcode("2000"), { valid:true, level:"format" });
+  assert.deepEqual(tools.validateAustraliaPostcode("20A0"), { valid:false, level:"format" });
+  assert.equal(tools.convertLocalizedDate("2026-03-04", "US"), "03/04/2026");
+  assert.equal(tools.convertLocalizedDate("2026-03-04", "UK"), "04/03/2026");
+  assert.equal(tools.convertLocalizedDate("03/04/2026", "US", "to-iso"), "2026-03-04");
+  assert.equal(tools.convertLocalizedDate("04/03/2026", "UK", "to-iso"), "2026-03-04");
+});
+
 test("localized dates round trip with leap-day validation and explicit US or UK order", () => {
+  assert.equal(tools.convertLocalizedDate("2026-10-13", "ES"), "13/10/2026");
+  assert.equal(tools.convertLocalizedDate("2026-10-13", "NL"), "13-10-2026");
+  assert.equal(tools.convertLocalizedDate("13-10-2026", "NL", "to-iso"), "2026-10-13");
+  assert.equal(tools.convertLocalizedDate("13/10/2026", "ES", "to-iso"), "2026-10-13");
+  assert.equal(tools.convertDate("2026-10-13", "FR"), "13/10/2026");
   assert.equal(tools.convertLocalizedDate("2024-02-29", "ES"), "29/02/2024");
   assert.equal(tools.convertLocalizedDate("29/02/2024", "NL", "to-iso"), "2024-02-29");
   assert.equal(tools.convertLocalizedDate("31/12/2026", "IT", "to-iso"), "2026-12-31");

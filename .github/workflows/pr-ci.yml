@@ -20,6 +20,8 @@ jobs:
     permissions:
       contents: read
     steps:
+      - name: Check out pull request
+        uses: actions/checkout@v6
       - name: Check remote Tools Compose configuration without changing services
         env:
           SERVER_HOST: ${{ secrets.SERVER_HOST }}
@@ -71,6 +73,9 @@ jobs:
           docker inspect --format 'Tools image={{.Config.Image}} id={{.Image}}' "$container_id"
           test "$(docker inspect --format '{{.State.Running}}' "$container_id")" = true
           REMOTE
+          CURRENT_TOOLS_IMAGE_ID="$(ssh -o BatchMode=yes "$SERVER_USER@$SERVER_HOST" 'docker inspect --format "{{.Image}}" tools')"
+          echo "Read-only image cleanup dry run using current production image $CURRENT_TOOLS_IMAGE_ID"
+          ssh -o BatchMode=yes "$SERVER_USER@$SERVER_HOST" "DRY_RUN=1 bash -s -- '$CURRENT_TOOLS_IMAGE_ID' '' ''" < scripts/cleanup-tools-images.sh
 
   validate:
     runs-on: ubuntu-latest

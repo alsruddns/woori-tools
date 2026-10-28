@@ -57,4 +57,4 @@ async function splitImageGrid(bitmap:ImageBitmap,tileCount:number,locale:TargetL
   const data=await new Promise<Uint8Array>((resolve,reject)=>zip(files,{level:2},(error,result)=>error?reject(error):resolve(result)));const buffer=new ArrayBuffer(data.byteLength);new Uint8Array(buffer).set(data);return{blob:new Blob([buffer],{type:"application/zip"}),result:targetCopy?.imageGridResult(tileCount,size)??(russian?`${tileCount} квадратных фрагментов PNG подготовлено · ${size} × ${size} пикс.`:turkish?`${tileCount} kare PNG parçası hazır · ${size} × ${size} piksel`:`${tileCount} square PNG tiles · ${size} × ${size}px`)};
 }
 
-function outputMime(slug:string){if(slug.includes("png")||slug==="favicon-generator")return"image/png";if(slug.includes("webp"))return"image/webp";return"image/jpeg";}
+function outputMime(slug:string){if(slug.endsWith("-to-png")||slug==="favicon-generator")return"image/png";if(slug.endsWith("-to-webp"))return"image/webp";if(slug.endsWith("-to-jpg"))return"image/jpeg";if(slug.includes("png"))return"image/png";if(slug.includes("webp"))return"image/webp";return"image/jpeg";}

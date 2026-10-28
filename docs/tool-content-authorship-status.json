@@ -1,0 +1,888 @@
+{
+  "schemaVersion": 1,
+  "publicToolCount": 176,
+  "completeCount": 176,
+  "nextBatch": [],
+  "tools": [
+    {
+      "slug": "lotto-number-generator",
+      "status": "COMPLETE",
+      "batch": "batch-6"
+    },
+    {
+      "slug": "powerball-number-generator",
+      "status": "COMPLETE",
+      "batch": "batch-6"
+    },
+    {
+      "slug": "mega-millions-number-generator",
+      "status": "COMPLETE",
+      "batch": "batch-6"
+    },
+    {
+      "slug": "japan-loto6-number-generator",
+      "status": "COMPLETE",
+      "batch": "batch-6"
+    },
+    {
+      "slug": "japan-loto7-number-generator",
+      "status": "COMPLETE",
+      "batch": "batch-6"
+    },
+    {
+      "slug": "japan-mini-loto-number-generator",
+      "status": "COMPLETE",
+      "batch": "batch-7"
+    },
+    {
+      "slug": "tarot-card",
+      "status": "COMPLETE",
+      "batch": "batch-7"
+    },
+    {
+      "slug": "daily-fortune",
+      "status": "COMPLETE",
+      "batch": "batch-7"
+    },
+    {
+      "slug": "saju",
+      "status": "COMPLETE",
+      "batch": "batch-7"
+    },
+    {
+      "slug": "random-number",
+      "status": "COMPLETE",
+      "batch": "batch-7"
+    },
+    {
+      "slug": "random-name-picker",
+      "status": "COMPLETE",
+      "batch": "batch-8"
+    },
+    {
+      "slug": "random-wheel",
+      "status": "COMPLETE",
+      "batch": "batch-8"
+    },
+    {
+      "slug": "draw-lots",
+      "status": "COMPLETE",
+      "batch": "batch-8"
+    },
+    {
+      "slug": "random-team-maker",
+      "status": "COMPLETE",
+      "batch": "batch-8"
+    },
+    {
+      "slug": "random-order",
+      "status": "COMPLETE",
+      "batch": "batch-8"
+    },
+    {
+      "slug": "random-seat",
+      "status": "COMPLETE",
+      "batch": "batch-9"
+    },
+    {
+      "slug": "duty-picker",
+      "status": "COMPLETE",
+      "batch": "batch-9"
+    },
+    {
+      "slug": "dice-roller",
+      "status": "COMPLETE",
+      "batch": "batch-9"
+    },
+    {
+      "slug": "coin-flip",
+      "status": "COMPLETE",
+      "batch": "batch-9"
+    },
+    {
+      "slug": "stopwatch",
+      "status": "COMPLETE",
+      "batch": "batch-9"
+    },
+    {
+      "slug": "timer",
+      "status": "COMPLETE",
+      "batch": "batch-10"
+    },
+    {
+      "slug": "pomodoro-timer",
+      "status": "COMPLETE",
+      "batch": "batch-10"
+    },
+    {
+      "slug": "world-clock",
+      "status": "COMPLETE",
+      "batch": "batch-10"
+    },
+    {
+      "slug": "password-generator",
+      "status": "COMPLETE",
+      "batch": "batch-10"
+    },
+    {
+      "slug": "random-string-generator",
+      "status": "COMPLETE",
+      "batch": "batch-10"
+    },
+    {
+      "slug": "wifi-qr",
+      "status": "COMPLETE",
+      "batch": "batch-11"
+    },
+    {
+      "slug": "contact-qr",
+      "status": "COMPLETE",
+      "batch": "batch-11"
+    },
+    {
+      "slug": "phone-qr",
+      "status": "COMPLETE",
+      "batch": "batch-11"
+    },
+    {
+      "slug": "email-qr",
+      "status": "COMPLETE",
+      "batch": "batch-11"
+    },
+    {
+      "slug": "barcode-checker",
+      "status": "COMPLETE",
+      "batch": "batch-11"
+    },
+    {
+      "slug": "barcode-generator",
+      "status": "COMPLETE",
+      "batch": "batch-12"
+    },
+    {
+      "slug": "social-image-resize",
+      "status": "COMPLETE",
+      "batch": "batch-12"
+    },
+    {
+      "slug": "add-text-to-image",
+      "status": "COMPLETE",
+      "batch": "batch-12"
+    },
+    {
+      "slug": "instagram-grid-split",
+      "status": "COMPLETE",
+      "batch": "batch-12"
+    },
+    {
+      "slug": "image-collage",
+      "status": "COMPLETE",
+      "batch": "batch-12"
+    },
+    {
+      "slug": "file-hash",
+      "status": "COMPLETE",
+      "batch": "batch-13"
+    },
+    {
+      "slug": "mime-type-checker",
+      "status": "COMPLETE",
+      "batch": "batch-13"
+    },
+    {
+      "slug": "file-extension-checker",
+      "status": "COMPLETE",
+      "batch": "batch-13"
+    },
+    {
+      "slug": "file-size-checker",
+      "status": "COMPLETE",
+      "batch": "batch-13"
+    },
+    {
+      "slug": "duplicate-file-checker",
+      "status": "COMPLETE",
+      "batch": "batch-13"
+    },
+    {
+      "slug": "zip-files",
+      "status": "COMPLETE",
+      "batch": "batch-14"
+    },
+    {
+      "slug": "bulk-file-renamer",
+      "status": "COMPLETE",
+      "batch": "batch-14"
+    },
+    {
+      "slug": "filename-cleaner",
+      "status": "COMPLETE",
+      "batch": "batch-14"
+    },
+    {
+      "slug": "shuffle-lines",
+      "status": "COMPLETE",
+      "batch": "batch-4"
+    },
+    {
+      "slug": "add-line-numbers",
+      "status": "COMPLETE",
+      "batch": "prior-verified"
+    },
+    {
+      "slug": "remove-line-numbers",
+      "status": "COMPLETE",
+      "batch": "prior-verified"
+    },
+    {
+      "slug": "remove-empty-lines",
+      "status": "COMPLETE",
+      "batch": "prior-verified"
+    },
+    {
+      "slug": "remove-characters",
+      "status": "COMPLETE",
+      "batch": "prior-verified"
+    },
+    {
+      "slug": "text-repeater",
+      "status": "COMPLETE",
+      "batch": "prior-verified"
+    },
+    {
+      "slug": "text-to-file",
+      "status": "COMPLETE",
+      "batch": "batch-4"
+    },
+    {
+      "slug": "lorem-ipsum",
+      "status": "COMPLETE",
+      "batch": "batch-14"
+    },
+    {
+      "slug": "regex-tester",
+      "status": "COMPLETE",
+      "batch": "batch-14"
+    },
+    {
+      "slug": "color-converter",
+      "status": "COMPLETE",
+      "batch": "batch-15"
+    },
+    {
+      "slug": "cron-parser",
+      "status": "COMPLETE",
+      "batch": "batch-15"
+    },
+    {
+      "slug": "sql-formatter",
+      "status": "COMPLETE",
+      "batch": "batch-15"
+    },
+    {
+      "slug": "html-formatter",
+      "status": "COMPLETE",
+      "batch": "batch-15"
+    },
+    {
+      "slug": "css-formatter",
+      "status": "COMPLETE",
+      "batch": "batch-15"
+    },
+    {
+      "slug": "javascript-formatter",
+      "status": "COMPLETE",
+      "batch": "batch-16"
+    },
+    {
+      "slug": "markdown-preview",
+      "status": "COMPLETE",
+      "batch": "batch-16"
+    },
+    {
+      "slug": "jpg-to-png",
+      "status": "COMPLETE",
+      "batch": "batch-16"
+    },
+    {
+      "slug": "png-to-jpg",
+      "status": "COMPLETE",
+      "batch": "batch-16"
+    },
+    {
+      "slug": "webp-to-jpg",
+      "status": "COMPLETE",
+      "batch": "batch-16"
+    },
+    {
+      "slug": "webp-to-png",
+      "status": "COMPLETE",
+      "batch": "batch-17"
+    },
+    {
+      "slug": "jpg-to-webp",
+      "status": "COMPLETE",
+      "batch": "batch-17"
+    },
+    {
+      "slug": "png-to-webp",
+      "status": "COMPLETE",
+      "batch": "batch-17"
+    },
+    {
+      "slug": "heic-to-jpg",
+      "status": "COMPLETE",
+      "batch": "batch-17"
+    },
+    {
+      "slug": "image-compress",
+      "status": "COMPLETE",
+      "batch": "batch-17"
+    },
+    {
+      "slug": "image-resize",
+      "status": "COMPLETE",
+      "batch": "batch-18"
+    },
+    {
+      "slug": "image-crop",
+      "status": "COMPLETE",
+      "batch": "batch-18"
+    },
+    {
+      "slug": "image-rotate",
+      "status": "COMPLETE",
+      "batch": "batch-18"
+    },
+    {
+      "slug": "image-flip",
+      "status": "COMPLETE",
+      "batch": "batch-18"
+    },
+    {
+      "slug": "image-grayscale",
+      "status": "COMPLETE",
+      "batch": "batch-18"
+    },
+    {
+      "slug": "image-brightness",
+      "status": "COMPLETE",
+      "batch": "batch-19"
+    },
+    {
+      "slug": "image-contrast",
+      "status": "COMPLETE",
+      "batch": "batch-19"
+    },
+    {
+      "slug": "image-blur",
+      "status": "COMPLETE",
+      "batch": "batch-19"
+    },
+    {
+      "slug": "image-pixelate",
+      "status": "COMPLETE",
+      "batch": "batch-19"
+    },
+    {
+      "slug": "remove-image-metadata",
+      "status": "COMPLETE",
+      "batch": "batch-19"
+    },
+    {
+      "slug": "image-info",
+      "status": "COMPLETE",
+      "batch": "batch-20"
+    },
+    {
+      "slug": "favicon-generator",
+      "status": "COMPLETE",
+      "batch": "batch-20"
+    },
+    {
+      "slug": "image-color-picker",
+      "status": "COMPLETE",
+      "batch": "batch-20"
+    },
+    {
+      "slug": "images-to-pdf",
+      "status": "COMPLETE",
+      "batch": "batch-20"
+    },
+    {
+      "slug": "pdf-merge",
+      "status": "COMPLETE",
+      "batch": "batch-20"
+    },
+    {
+      "slug": "pdf-split",
+      "status": "COMPLETE",
+      "batch": "batch-21"
+    },
+    {
+      "slug": "pdf-delete-pages",
+      "status": "COMPLETE",
+      "batch": "batch-21"
+    },
+    {
+      "slug": "pdf-reorder-pages",
+      "status": "COMPLETE",
+      "batch": "batch-21"
+    },
+    {
+      "slug": "pdf-rotate-pages",
+      "status": "COMPLETE",
+      "batch": "batch-21"
+    },
+    {
+      "slug": "pdf-add-page-numbers",
+      "status": "COMPLETE",
+      "batch": "batch-21"
+    },
+    {
+      "slug": "pdf-watermark",
+      "status": "COMPLETE",
+      "batch": "batch-22"
+    },
+    {
+      "slug": "pdf-metadata-viewer",
+      "status": "COMPLETE",
+      "batch": "batch-22"
+    },
+    {
+      "slug": "pdf-remove-metadata",
+      "status": "COMPLETE",
+      "batch": "batch-22"
+    },
+    {
+      "slug": "character-count",
+      "status": "COMPLETE",
+      "batch": "prior-verified"
+    },
+    {
+      "slug": "remove-spaces",
+      "status": "COMPLETE",
+      "batch": "prior-verified"
+    },
+    {
+      "slug": "remove-line-breaks",
+      "status": "COMPLETE",
+      "batch": "prior-verified"
+    },
+    {
+      "slug": "remove-duplicate-lines",
+      "status": "COMPLETE",
+      "batch": "prior-verified"
+    },
+    {
+      "slug": "sort-lines",
+      "status": "COMPLETE",
+      "batch": "batch-3"
+    },
+    {
+      "slug": "text-case-converter",
+      "status": "COMPLETE",
+      "batch": "batch-4"
+    },
+    {
+      "slug": "text-compare",
+      "status": "COMPLETE",
+      "batch": "batch-4"
+    },
+    {
+      "slug": "reverse-text",
+      "status": "COMPLETE",
+      "batch": "prior-verified"
+    },
+    {
+      "slug": "remove-duplicate-words",
+      "status": "COMPLETE",
+      "batch": "batch-4"
+    },
+    {
+      "slug": "json-formatter",
+      "status": "COMPLETE",
+      "batch": "prior-verified"
+    },
+    {
+      "slug": "json-validator",
+      "status": "COMPLETE",
+      "batch": "prior-verified"
+    },
+    {
+      "slug": "json-to-yaml",
+      "status": "COMPLETE",
+      "batch": "batch-22"
+    },
+    {
+      "slug": "yaml-to-json",
+      "status": "COMPLETE",
+      "batch": "batch-22"
+    },
+    {
+      "slug": "csv-to-json",
+      "status": "COMPLETE",
+      "batch": "batch-23"
+    },
+    {
+      "slug": "json-to-csv",
+      "status": "COMPLETE",
+      "batch": "batch-23"
+    },
+    {
+      "slug": "base64",
+      "status": "COMPLETE",
+      "batch": "batch-23"
+    },
+    {
+      "slug": "url-encode-decode",
+      "status": "COMPLETE",
+      "batch": "batch-23"
+    },
+    {
+      "slug": "uuid-generator",
+      "status": "COMPLETE",
+      "batch": "batch-23"
+    },
+    {
+      "slug": "timestamp-converter",
+      "status": "COMPLETE",
+      "batch": "batch-24"
+    },
+    {
+      "slug": "wareki-converter",
+      "status": "COMPLETE",
+      "batch": "batch-24"
+    },
+    {
+      "slug": "hiragana-katakana-converter",
+      "status": "COMPLETE",
+      "batch": "batch-5"
+    },
+    {
+      "slug": "fullwidth-halfwidth-converter",
+      "status": "COMPLETE",
+      "batch": "batch-5"
+    },
+    {
+      "slug": "japanese-romaji-converter",
+      "status": "COMPLETE",
+      "batch": "batch-5"
+    },
+    {
+      "slug": "japanese-number-kanji-converter",
+      "status": "COMPLETE",
+      "batch": "batch-5"
+    },
+    {
+      "slug": "yakudoshi-calculator",
+      "status": "COMPLETE",
+      "batch": "batch-24"
+    },
+    {
+      "slug": "japanese-zodiac-calculator",
+      "status": "COMPLETE",
+      "batch": "batch-24"
+    },
+    {
+      "slug": "numbers3-number-generator",
+      "status": "COMPLETE",
+      "batch": "batch-24"
+    },
+    {
+      "slug": "numbers4-number-generator",
+      "status": "COMPLETE",
+      "batch": "batch-25"
+    },
+    {
+      "slug": "bingo5-number-generator",
+      "status": "COMPLETE",
+      "batch": "batch-25"
+    },
+    {
+      "slug": "jwt-decoder",
+      "status": "COMPLETE",
+      "batch": "batch-25"
+    },
+    {
+      "slug": "url-query-parameter-parser",
+      "status": "COMPLETE",
+      "batch": "batch-25"
+    },
+    {
+      "slug": "user-agent-parser",
+      "status": "COMPLETE",
+      "batch": "batch-25"
+    },
+    {
+      "slug": "ip-cidr-calculator",
+      "status": "COMPLETE",
+      "batch": "batch-26"
+    },
+    {
+      "slug": "base32-encoder-decoder",
+      "status": "COMPLETE",
+      "batch": "batch-26"
+    },
+    {
+      "slug": "ulid-generator",
+      "status": "COMPLETE",
+      "batch": "batch-26"
+    },
+    {
+      "slug": "uuid-v7-generator",
+      "status": "COMPLETE",
+      "batch": "batch-26"
+    },
+    {
+      "slug": "hash-compare",
+      "status": "COMPLETE",
+      "batch": "batch-26"
+    },
+    {
+      "slug": "regex-replace",
+      "status": "COMPLETE",
+      "batch": "batch-27"
+    },
+    {
+      "slug": "html-entity-encoder-decoder",
+      "status": "COMPLETE",
+      "batch": "batch-27"
+    },
+    {
+      "slug": "chmod-calculator",
+      "status": "COMPLETE",
+      "batch": "batch-27"
+    },
+    {
+      "slug": "json-path-tester",
+      "status": "COMPLETE",
+      "batch": "batch-27"
+    },
+    {
+      "slug": "csv-tsv-converter",
+      "status": "COMPLETE",
+      "batch": "batch-27"
+    },
+    {
+      "slug": "url-slug-generator",
+      "status": "COMPLETE",
+      "batch": "batch-28"
+    },
+    {
+      "slug": "unicode-code-point-checker",
+      "status": "COMPLETE",
+      "batch": "batch-28"
+    },
+    {
+      "slug": "pdf-page-size-checker",
+      "status": "COMPLETE",
+      "batch": "batch-28"
+    },
+    {
+      "slug": "simplified-traditional-chinese-converter",
+      "status": "COMPLETE",
+      "batch": "batch-5"
+    },
+    {
+      "slug": "chinese-number-kanji-converter",
+      "status": "COMPLETE",
+      "batch": "batch-28"
+    },
+    {
+      "slug": "rmb-uppercase-converter",
+      "status": "COMPLETE",
+      "batch": "batch-28"
+    },
+    {
+      "slug": "chinese-zodiac-calculator",
+      "status": "COMPLETE",
+      "batch": "batch-29"
+    },
+    {
+      "slug": "chinese-sexagenary-cycle-calculator",
+      "status": "COMPLETE",
+      "batch": "batch-29"
+    },
+    {
+      "slug": "chinese-phone-number-formatter",
+      "status": "COMPLETE",
+      "batch": "batch-29"
+    },
+    {
+      "slug": "taiwan-phone-number-formatter",
+      "status": "COMPLETE",
+      "batch": "batch-29"
+    },
+    {
+      "slug": "indian-number-format-converter",
+      "status": "COMPLETE",
+      "batch": "batch-29"
+    },
+    {
+      "slug": "lakh-crore-converter",
+      "status": "COMPLETE",
+      "batch": "batch-30"
+    },
+    {
+      "slug": "pan-format-validator",
+      "status": "COMPLETE",
+      "batch": "batch-30"
+    },
+    {
+      "slug": "gstin-format-validator",
+      "status": "COMPLETE",
+      "batch": "batch-30"
+    },
+    {
+      "slug": "india-phone-number-formatter",
+      "status": "COMPLETE",
+      "batch": "batch-30"
+    },
+    {
+      "slug": "germany-iban-validator",
+      "status": "COMPLETE",
+      "batch": "batch-30"
+    },
+    {
+      "slug": "german-number-format-converter",
+      "status": "COMPLETE",
+      "batch": "batch-31"
+    },
+    {
+      "slug": "german-date-format-converter",
+      "status": "COMPLETE",
+      "batch": "batch-31"
+    },
+    {
+      "slug": "spain-dni-validator",
+      "status": "COMPLETE",
+      "batch": "batch-31"
+    },
+    {
+      "slug": "spain-nie-validator",
+      "status": "COMPLETE",
+      "batch": "batch-31"
+    },
+    {
+      "slug": "spanish-number-format-converter",
+      "status": "COMPLETE",
+      "batch": "batch-31"
+    },
+    {
+      "slug": "spanish-date-format-converter",
+      "status": "COMPLETE",
+      "batch": 32
+    },
+    {
+      "slug": "france-phone-number-formatter",
+      "status": "COMPLETE",
+      "batch": 32
+    },
+    {
+      "slug": "french-number-format-converter",
+      "status": "COMPLETE",
+      "batch": 32
+    },
+    {
+      "slug": "french-date-format-converter",
+      "status": "COMPLETE",
+      "batch": 32
+    },
+    {
+      "slug": "brazil-cpf-validator",
+      "status": "COMPLETE",
+      "batch": 32
+    },
+    {
+      "slug": "brazil-cnpj-validator",
+      "status": "COMPLETE",
+      "batch": 33
+    },
+    {
+      "slug": "brazil-phone-number-formatter",
+      "status": "COMPLETE",
+      "batch": 33
+    },
+    {
+      "slug": "brazil-cep-formatter",
+      "status": "COMPLETE",
+      "batch": 33
+    },
+    {
+      "slug": "netherlands-iban-validator",
+      "status": "COMPLETE",
+      "batch": 33
+    },
+    {
+      "slug": "dutch-number-format-converter",
+      "status": "COMPLETE",
+      "batch": 33
+    },
+    {
+      "slug": "dutch-date-format-converter",
+      "status": "COMPLETE",
+      "batch": 34
+    },
+    {
+      "slug": "vietnam-phone-number-formatter",
+      "status": "COMPLETE",
+      "batch": 34
+    },
+    {
+      "slug": "vietnam-number-format-converter",
+      "status": "COMPLETE",
+      "batch": 34
+    },
+    {
+      "slug": "italy-fiscal-code-format-validator",
+      "status": "COMPLETE",
+      "batch": 34
+    },
+    {
+      "slug": "italy-vat-number-validator",
+      "status": "COMPLETE",
+      "batch": 34
+    },
+    {
+      "slug": "italy-number-format-converter",
+      "status": "COMPLETE",
+      "batch": 35
+    },
+    {
+      "slug": "italian-date-format-converter",
+      "status": "COMPLETE",
+      "batch": 35
+    },
+    {
+      "slug": "us-phone-number-formatter",
+      "status": "COMPLETE",
+      "batch": 35
+    },
+    {
+      "slug": "us-zip-code-formatter",
+      "status": "COMPLETE",
+      "batch": 35
+    },
+    {
+      "slug": "canada-postal-code-formatter",
+      "status": "COMPLETE",
+      "batch": 35
+    },
+    {
+      "slug": "uk-postcode-formatter",
+      "status": "COMPLETE",
+      "batch": 36
+    },
+    {
+      "slug": "australia-postcode-formatter",
+      "status": "COMPLETE",
+      "batch": 36
+    },
+    {
+      "slug": "english-date-format-converter",
+      "status": "COMPLETE",
+      "batch": 36
+    }
+  ]
+}

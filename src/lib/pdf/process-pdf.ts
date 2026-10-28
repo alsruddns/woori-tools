@@ -12,7 +12,7 @@ export async function processPdf(slug:string,files:File[],option:string,text:str
   if(files.reduce((sum,file)=>sum+file.size,0)>MAX_PDF)throw new Error(messages.errors.pdfTotal);
   const {PDFDocument,StandardFonts,degrees,rgb}=await import("pdf-lib");
   let docs;
-  try { docs=await Promise.all(files.map(async(file)=>PDFDocument.load(await file.arrayBuffer()))); }
+  try { docs=await Promise.all(files.map(async(file)=>PDFDocument.load(await file.arrayBuffer(),{updateMetadata:slug!=="pdf-remove-metadata"}))); }
   catch { throw new Error(messages.errors.invalidPdf); }
   if(slug==="pdf-metadata-viewer"){const pdf=docs[0];return{result:`${messages.title}: ${pdf.getTitle()||"(—)"}\n${messages.author}: ${pdf.getAuthor()||"(—)"}\n${messages.subject}: ${pdf.getSubject()||"(—)"}\n${messages.keywords}: ${pdf.getKeywords()||"(—)"}\n${messages.pageCount}: ${pdf.getPageCount()}\n${messages.creator}: ${pdf.getCreator()||"(—)"}`};}
   let output:PdfDocumentType;
@@ -21,7 +21,7 @@ export async function processPdf(slug:string,files:File[],option:string,text:str
   }else{
     output=docs[0];const count=output.getPageCount();
     if(slug==="pdf-split"||slug==="pdf-delete-pages"){
-      const selected=parsePageList(option,count,messages.errors.invalidPage);const keep=slug==="pdf-split"?selected:output.getPageIndices().filter((index)=>!selected.includes(index+1));
+      const selected=parsePageList(option,count,messages.errors.invalidPage);const keep=slug==="pdf-split"?selected.map((page)=>page-1):output.getPageIndices().filter((index)=>!selected.includes(index+1));
       if(!keep.length)throw new Error(messages.errors.emptyPdf);
       const next=await PDFDocument.create();for(const page of await next.copyPages(output,keep))next.addPage(page);output=next;
     }else if(slug==="pdf-reorder-pages"){
