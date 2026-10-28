@@ -64,6 +64,7 @@ jobs:
       - name: Record immutable Tools image digest
         run: |
           echo "Tools image digest: ${{ steps.image.outputs.digest }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "Tools image reference: ghcr.io/alsruddns/woori-tools@${{ steps.image.outputs.digest }}" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Deploy on iwinv
         id: deploy
@@ -72,28 +73,38 @@ jobs:
           SERVER_USER: ${{ secrets.SERVER_USER }}
           SERVER_SSH_KEY: ${{ secrets.SERVER_SSH_KEY }}
           IMAGE_SHA: ${{ github.sha }}
+          IMAGE_DIGEST: ${{ steps.image.outputs.digest }}
         run: |
           install -m 700 -d ~/.ssh
           printf '%s\n' "$SERVER_SSH_KEY" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
           ssh-keyscan -H "$SERVER_HOST" >> ~/.ssh/known_hosts
-          OLD_IMAGE_ID="$(ssh "$SERVER_USER@$SERVER_HOST" 'docker inspect --format "{{.Image}}" tools')"
+          OLD_IMAGE_ID="$(ssh "$SERVER_USER@$SERVER_HOST" 'docker inspect --format "{{.Image}}" tools 2>/dev/null || true')"
           echo "old_image_id=$OLD_IMAGE_ID" >> "$GITHUB_OUTPUT"
-          ssh "$SERVER_USER@$SERVER_HOST" "bash -s -- '$IMAGE_SHA'" <<'REMOTE'
+          ssh "$SERVER_USER@$SERVER_HOST" "bash -s -- '$IMAGE_SHA' '$IMAGE_DIGEST'" <<'REMOTE'
             set -euo pipefail
             image_sha="$1"
+            image_digest="$2"
+            [[ "$image_digest" =~ ^sha256:[0-9a-f]{64}$ ]]
             cd /opt/services/compose
             compose=(docker compose --env-file .env.moneybook --env-file .env.portal)
-            image="ghcr.io/alsruddns/woori-tools:sha-${image_sha}"
+            repository="ghcr.io/alsruddns/woori-tools"
+            image="${repository}@${image_digest}"
+            sha_tag="${repository}:sha-${image_sha}"
             latest="ghcr.io/alsruddns/woori-tools:latest"
             docker exec nginx nginx -t
             "${compose[@]}" config --quiet
             docker pull "$image"
+            docker image inspect "$image" --format '{{range .RepoDigests}}{{println .}}{{end}}' | grep -Fx "$image"
+            docker image tag "$image" "$sha_tag"
             docker image tag "$image" "$latest"
             "${compose[@]}" up -d --no-deps --pull never --wait --wait-timeout 120 tools
             expected="$(docker image inspect "$image" --format '{{.Id}}')"
             running="$(docker inspect tools --format '{{.Image}}')"
             test "$running" = "$expected"
+            echo "Running Tools image ID: $running"
+            echo "Running Tools image digest: $image_digest"
+            docker image inspect "$running" --format 'Tools image refs: {{json .RepoTags}}; digests: {{json .RepoDigests}}'
             docker exec nginx nginx -t
             docker exec nginx nginx -s reload
             echo "Tools image verified at $running; Nginx validated and gracefully reloaded."
@@ -142,6 +153,26 @@ jobs:
         run: |
           set -euo pipefail
           node scripts/check-production-tools-smoke.mjs
+
+      - name: Clean up old Tools-only Docker images
+        id: cleanup
+        env:
+          SERVER_HOST: ${{ secrets.SERVER_HOST }}
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+          SERVER_SSH_KEY: ${{ secrets.SERVER_SSH_KEY }}
+          PREVIOUS_IMAGE_ID: ${{ steps.deploy.outputs.old_image_id }}
+          EXPECTED_IMAGE_DIGEST: ${{ steps.image.outputs.digest }}
+        run: |
+          set -euo pipefail
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SERVER_SSH_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -H "$SERVER_HOST" >> ~/.ssh/known_hosts
+          CURRENT_IMAGE_ID="$(ssh -o BatchMode=yes "$SERVER_USER@$SERVER_HOST" 'docker inspect --format "{{.Image}}" tools')"
+          echo "Current Tools image ID: $CURRENT_IMAGE_ID"
+          echo "Previous rollback image ID: ${PREVIOUS_IMAGE_ID:-none}"
+          printf '\nImage cleanup logs and Docker disk use:\n' >> "$GITHUB_STEP_SUMMARY"
+          ssh -o BatchMode=yes "$SERVER_USER@$SERVER_HOST" "bash -s -- '$CURRENT_IMAGE_ID' '${PREVIOUS_IMAGE_ID:-}' '$EXPECTED_IMAGE_DIGEST'" < scripts/cleanup-tools-images.sh | tee -a "$GITHUB_STEP_SUMMARY"
 
       - name: Roll back Tools if deployment health check fails
         id: rollback
