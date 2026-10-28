@@ -27,7 +27,7 @@ function row(id, repository = toolsRepo, tag = "latest") {
   return { id, repository, tag };
 }
 
-async function runCleanup({ rows = [], containers = {}, failRemove = [], running = current, previousImage = previous, digest = expectedDigest, dryRun = false } = {}) {
+async function runCleanup({ rows = [], containers = {}, failRemove = [], running = current, previousImage = previous, digest = expectedDigest, staleRollback = "", dryRun = false } = {}) {
   const directory = await mkdtemp(path.join(os.tmpdir(), "tools-image-cleanup-"));
   const fixturePath = path.join(directory, "fixture.json");
   const callsPath = path.join(directory, "calls.json");
@@ -44,8 +44,10 @@ fs.writeFileSync(data.callsPath, JSON.stringify(calls));
 const key = args.join(" ");
 if (args[0] === "inspect" && args[1] === "tools") console.log(data.running);
 else if (args[0] === "inspect") console.log(data.containers[args[1]]);
+else if (args[0] === "image" && args[1] === "inspect" && args[4] === "{{.Id}}") { if (data.rows.some((row) => row.id === args[2])) console.log(args[2]); else { console.error("No such image"); process.exit(1); } }
 else if (args[0] === "image" && args[1] === "inspect") console.log(JSON.stringify(["${toolsRepo}@" + data.digest]));
 else if (args[0] === "image" && args[1] === "ls") for (const row of data.rows) console.log([row.id,row.repository,row.tag ?? "latest","<none>"].join("\\t"));
+else if (args[0] === "image" && args[1] === "tag") { data.rows.push({ id: args[2], repository: "${toolsRepo}", tag: args[3].split(":").at(-1) }); fs.writeFileSync(process.env.DOCKER_FIXTURE, JSON.stringify(data)); }
 else if (args[0] === "ps") console.log(Object.keys(data.containers).join("\\n"));
 else if (args[0] === "system" && args[1] === "df") console.log("TYPE TOTAL ACTIVE SIZE RECLAIMABLE\\nImages 3 2 1GB 500MB");
 else if (args[0] === "info") console.log(process.cwd());
@@ -56,7 +58,7 @@ else if (args[0] === "image" && args[1] === "rm") {
 } else { console.error("Unexpected Docker call: " + key); process.exit(2); }
 `);
   await chmod(dockerPath, 0o755);
-  const result = spawnSync(bashCommand, [bashCleanupPath, current, previousImage, expectedDigest], {
+  const result = spawnSync(bashCommand, [bashCleanupPath, current, previousImage, expectedDigest, staleRollback], {
     cwd: directory,
     encoding: "utf8",
     env: { ...process.env, PATH: `${directory}${path.delimiter}${process.env.PATH}`, DOCKER_FIXTURE: fixturePath, DRY_RUN: dryRun ? "1" : "0" },
@@ -83,6 +85,19 @@ test("duplicate Tools tags for the same image ID yield one removal", { skip: !ba
   const result = await runCleanup({ rows: [row(current), row(previous), row(old, toolsRepo, "sha-a"), row(old, toolsRepo, "sha-b")] });
   assert.equal(result.status, 0, result.stderr);
   assert.deepEqual(result.removed, [old]);
+});
+
+test("previous image without an existing Tools tag is pinned as rollback before pruning", { skip: !bashAvailable }, async () => {
+  const result = await runCleanup({ rows: [row(current), row(previous, "<none>", "<none>"), row(old)] });
+  assert.equal(result.status, 0, result.stderr);
+  assert.ok(result.calls.some((args) => args[0] === "image" && args[1] === "tag" && args[2] === previous && args[3] === `${toolsRepo}:rollback`));
+  assert.deepEqual(result.removed, [old]);
+});
+
+test("superseded rollback-only image is removed when no container or other repo uses it", { skip: !bashAvailable }, async () => {
+  const result = await runCleanup({ rows: [row(current), row(previous), row(old, "<none>", "<none>")], staleRollback: old });
+  assert.equal(result.status, 0, result.stderr);
+  assert.ok(result.removed.includes(old));
 });
 
 test("images used by running or stopped containers are excluded", { skip: !bashAvailable }, async () => {
@@ -131,7 +146,7 @@ test("cleanup aborts when the running image digest does not match the built rele
 test("cleanup aborts if it cannot verify the previous rollback image", { skip: !bashAvailable }, async () => {
   const result = await runCleanup({ rows: [row(current), row(old)] });
   assert.notEqual(result.status, 0);
-  assert.match(result.stderr, /Previous rollback image.*refusing cleanup/u);
+  assert.match(result.stderr, /Could not verify the previous Tools image/u);
   assert.deepEqual(result.removed, []);
 });
 
@@ -144,5 +159,7 @@ test("deployment workflow uses image digest and only reaches cleanup after healt
   assert.match(workflow, /image="\$\{repository\}@\$\{image_digest\}"/u);
   assert.match(workflow.slice(cleanup, rollback), /scripts\/cleanup-tools-images\.sh/u);
   assert.match(workflow.slice(cleanup, rollback), /EXPECTED_IMAGE_DIGEST/u);
+  assert.match(workflow.slice(cleanup, rollback), /STALE_ROLLBACK_IMAGE_ID/u);
+  assert.match(workflow, /docker image tag "\$previous_image_id" "\$\{repository\}:rollback"/u);
   assert.match(workflow, /docker inspect tools --format/u);
 });
