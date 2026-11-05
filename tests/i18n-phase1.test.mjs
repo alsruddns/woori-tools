@@ -151,6 +151,14 @@ test("legacy registry tools retain all 15 route locales and RU is limited to ver
   }
 });
 
+test("JSON Formatter uses a Korean registry title while keeping English and Japanese titles localized", () => {
+  const tool = tools.find(({ slug }) => slug === "json-formatter");
+  assert.ok(tool, "JSON Formatter remains registered");
+  assert.equal(localizeTool(tool, "ko").title, "JSON 포맷터");
+  assert.equal(localizeTool(tool, "en").title, "JSON Formatter");
+  assert.equal(localizeTool(tool, "ja").title, "JSONを整形");
+});
+
 test("the eight expansion locales provide every expanded shared UI key without English fallback", () => {
   const source = getMessages("en");
   const keys = expandedModule.expandedMessageKeys;

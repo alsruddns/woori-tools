@@ -112,7 +112,7 @@ const entries: Array<[string, ToolCategory, string, string, string[], boolean]> 
   ["text-compare","text","텍스트 비교","두 텍스트를 비교하고 달라진 줄을 표시합니다.",["diff","compare"], true],
   ["reverse-text","text","텍스트 뒤집기","문자 순서를 반대로 바꿉니다.",["reverse","text"], true],
   ["remove-duplicate-words","text","중복 단어 제거","문장 안에서 반복되는 단어를 제거합니다.",["duplicate","words"], true],
-  ["json-formatter","developer","JSON Formatter","JSON을 보기 좋게 정렬하거나 압축하고 복사합니다.",["json","format","minify"], true],
+  ["json-formatter","developer","JSON 포맷터","JSON을 보기 좋게 정렬하거나 압축하고 복사합니다.",["json","format","minify"], true],
   ["json-validator","developer","JSON Validator","JSON 문법을 검사하고 오류 위치를 안내합니다.",["json","validate"], true],
   ["json-to-yaml","developer","JSON → YAML","JSON 데이터를 YAML 형식으로 변환합니다.",["json","yaml","convert"], true],
   ["yaml-to-json","developer","YAML → JSON","YAML 데이터를 JSON 형식으로 변환합니다.",["yaml","json","convert"], true],
